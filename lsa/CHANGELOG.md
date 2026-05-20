@@ -7,7 +7,18 @@ All notable changes to the `lsa` plugin are documented here. Format follows [Kee
 ### Known follow-ups (v0.2.0 candidates)
 - **Repo-root override.** Skills assume `/CLAUDE.md` at repo root and write specs to `/specs/`. To dogfood LSA on this marketplace (which uses `vision/VISION.md` and `vision/specs/`), `lsa-init` needs to accept a constitution-path override and a specs-root override.
 - **Doc-mode.** This marketplace is markdown-only — no `/src/`. LSA's "every code change traces to a spec requirement" needs to generalize to "every artifact change" so it can verify spec/docs/skill changes.
-- **Fact-grounding alignment.** LSA's §7 Fact-Check Policy duplicates `core/ground-rules` Rule 1. Should reference rather than restate, and adopt Core's lowercase `[assumption: <why>]` / `[cannot verify]` markers (LSA currently uses uppercase `[ASSUMPTION]`).
+- **Skill body shape.** Reshape LSA skill bodies to match `core/actor-template`'s Goal/Input/Steps/Output/Constraints labels.
+- **Marker reconciliation.** LSA uppercase `[ASSUMPTION]` → Core lowercase `[assumption: <why>]` / `[cannot verify]`.
+
+## [0.1.1] — 2026-05-20
+
+### Changed
+- `ARCHITECTURE.md` §2 P4 and §7 Fact-Check Policy now defer to [`core/ground-rules`](../core/skills/ground-rules/SKILL.md) rather than restating its content. Eliminates a DRY violation against the marketplace's "core + packs" architecture (`vision/VISION.md` §3).
+- `README.md` adds a **Depends on** section: install `core` before `lsa`.
+- Plugin manifest `description` notes the dependency on `core`.
+
+### Notes
+- Claude Code's plugin manifest does not (as of writing) expose a `dependencies` field. The LSA→Core dependency is prose-only in `README.md` and `plugin.json` `description`. If a manifest field becomes available, adopt it in a future patch.
 
 ## [0.1.0] — 2026-05-20
 

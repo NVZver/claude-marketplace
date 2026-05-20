@@ -11,15 +11,29 @@ Spec-first development methodology installable as a Claude Code plugin. Specs ar
 - **`lsa-sync`** — Extract delta into permanent module specs; archive feature spec.
 - **`lsa-revise-constitution`** — Propose and apply changes to `/CLAUDE.md` and `/specs/standards/` only.
 
+## Depends on
+
+LSA's fact-grounding discipline is provided by the [`core`](../core/) plugin — specifically [`core/ground-rules`](../core/skills/ground-rules/SKILL.md). `ARCHITECTURE.md` §2 P4 and §7 defer to it rather than restating its content.
+
+Install `core` first, then `lsa`:
+
+```
+/plugin install core@nz-vision
+/plugin install lsa@nz-vision
+```
+
+The dependency is documented in prose; the Claude Code plugin manifest does not enforce a `dependencies` field as of v0.1.1. Order matters for the discipline contract — `core/ground-rules` should be loaded when LSA skills cite it.
+
 ## Install on Claude Code
 
 ```
 /plugin marketplace add NVZver/claude-marketplace
+/plugin install core@nz-vision
 /plugin install lsa@nz-vision
 /reload-plugins
 ```
 
-Invoke directly via `/lsa:init`, `/lsa:specify`, etc., or let Claude trigger by description match.
+Invoke LSA skills directly via `/lsa:init`, `/lsa:specify`, etc., or let Claude trigger by description match. Core's `ground-rules` and `actor-template` apply automatically once installed.
 
 ## Install on Claude.ai
 

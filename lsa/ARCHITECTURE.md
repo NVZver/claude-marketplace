@@ -20,7 +20,7 @@ Humans write and own specs. Agents write and own code.
 | P1 | Specs are written before any code is generated |
 | P2 | Code always follows specs — never the other way around |
 | P3 | The human is the source of truth at every decision gate |
-| P4 | Every factual claim must cite a source with a searchable quote. If no source exists, the claim is flagged as `[ASSUMPTION]` |
+| P4 | Fact-grounding per [`core/ground-rules`](../core/skills/ground-rules/SKILL.md) Rule 1 — every factual claim carries a source + searchable quote |
 | P5 | Every code change must trace to a spec requirement |
 | P6 | Feature specs are temporary. Module specs are permanent |
 | P7 | Nothing proceeds past a gate without explicit human approval |
@@ -342,15 +342,11 @@ Source of truth: `/specs/standards/testing.md`
 
 ## 7. Fact-Check Policy
 
-Applies to: all agent-generated content in specs, reports, and code comments.
+Fact-grounding is governed by the [`core/ground-rules`](../core/skills/ground-rules/SKILL.md) skill — Rule 1 (every factual claim carries a source + searchable quote) and Rule 2 (no fake confidence). LSA does not restate those rules; it requires every spec, verification report, and constitution change to follow them.
 
-| Rule | Definition |
-|------|------------|
-| Every factual claim | Must cite a source (file path, URL, or document name) |
-| Quote requirement | A verbatim quote from the source must be provided and must be findable in the source |
-| Verification | Human or verifier agent can locate the quote in the source independently |
-| No source available | Claim must be marked `[ASSUMPTION: <reason>]` |
-| Assumption handling | Assumptions are flagged in the verification report. Human decides whether to accept or investigate |
+**Marker reconciliation pending.** Historical LSA uses `[ASSUMPTION: <reason>]` (uppercase). Core uses `[assumption: <why>]` / `[cannot verify]` (lowercase). To be aligned in LSA v0.2.0; see [`CHANGELOG.md`](./CHANGELOG.md) Unreleased.
+
+**Verifier responsibility unchanged.** `lsa-verify` checks that every code change traces to a spec requirement — LSA's distinct core contract, separate from fact-grounding.
 
 ---
 
