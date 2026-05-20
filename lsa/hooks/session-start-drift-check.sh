@@ -91,25 +91,38 @@ except Exception:
 PY
 }
 
-declare -A drift_modules=()
+# Plain (non-associative) array — bash 3.2 ships on macOS and has no `declare -A`.
+# De-dup is done inline before each append.
+drift_modules=()
 
 while IFS=$'\t' read -r module path; do
   [[ -z "${module}" || -z "${path}" ]] && continue
   sha="$(sha_for_module "${module}")"
   [[ -z "${sha}" ]] && continue
-  # Use --quiet exit code (1 = drift, 0 = clean, 128 = bad ref → silent skip).
-  if ! git diff --quiet "${sha}" -- "${path}" 2>/dev/null; then
-    # Distinguish "drift" (exit 1) from "ref unreachable" (exit 128) where possible.
-    rc=$?
-    if [[ "${rc}" -eq 1 ]]; then
-      drift_modules["${module}"]=1
+  # Run --quiet and consume its exit code via `|| rc=$?`. Two reasons:
+  #   1. Capture the actual exit code (0 = clean, 1 = drift, >=128 = bad ref).
+  #   2. The trailing `||` keeps `git diff` in a tested-exit context, so the
+  #      `trap ... ERR` above does NOT fire on the expected rc=1 (drift) case.
+  rc=0
+  git diff --quiet "${sha}" -- "${path}" 2>/dev/null || rc=$?
+  if [[ "${rc}" -eq 1 ]]; then
+    # De-dup: skip append if module is already in the array.
+    already=0
+    if [[ "${#drift_modules[@]}" -gt 0 ]]; then
+      for existing in "${drift_modules[@]}"; do
+        if [[ "${existing}" == "${module}" ]]; then
+          already=1
+          break
+        fi
+      done
     fi
+    [[ "${already}" -eq 0 ]] && drift_modules+=("${module}")
   fi
 done < <(emit_module_paths)
 
 if [[ "${#drift_modules[@]}" -gt 0 ]]; then
-  # Sort the module names for stable output.
-  names="$(printf '%s\n' "${!drift_modules[@]}" | sort | paste -sd, -)"
+  # sort -u for stable, dedup output (belt-and-braces; inner loop already dedups).
+  names="$(printf '%s\n' "${drift_modules[@]}" | sort -u | paste -sd, -)"
   echo "LSA: drift detected in modules [${names}] — run /lsa:reconcile to absorb."
 fi
 
