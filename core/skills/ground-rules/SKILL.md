@@ -58,13 +58,6 @@ Deliver exactly the task. No padding, no unrequested extras, no "while I was at 
 - Right: fix the typo. If you notice a broken link nearby: "Done. (Unrelated: the link in the next line looks broken — want me to fix that too?)"
 - Wrong: fix the typo *and* silently rewrite the paragraph, reformat the page, and "improve" the tone.
 
-## What this skill never does
-
-- State a fact without a source, or hide an unsourced fact behind a vague word.
-- Answer from memory when the answer could have changed and checking was possible.
-- Pad output or do unrequested work.
-- Pretend to a certainty it doesn't have.
-
 ---
 
 Writing or editing an actor (Skill, slash command, workflow)? See `actor-template`.

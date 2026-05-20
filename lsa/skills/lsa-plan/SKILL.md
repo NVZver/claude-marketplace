@@ -1,11 +1,6 @@
 ---
 name: lsa-plan
-description: >
-  Breaks an approved feature spec into independent implementation epics for parallel
-  agent execution. Use this skill whenever a feature spec has been approved by the human
-  and needs to be broken into tasks, when the user says "plan this feature", "break this
-  into tasks", "ready to implement", or when requirements.md and design.md exist but
-  tasks.md is empty. Always run after lsa-specify and before implementation.
+description: Breaks an approved feature spec into independent implementation epics. Use whenever a feature spec has been approved and needs decomposing into tasks — when the user says "plan this feature", "break this into tasks", "ready to implement", or when `requirements.md` + `design.md` exist but `tasks.md` is empty.
 ---
 
 # LSA Plan
@@ -17,23 +12,22 @@ Decompose an approved feature spec into ≤5 parallel-safe epics with self-verif
 ## Input
 
 - Approved `${specs_root}/features/<feature-name>/{requirements,test-suites,design}.md` and (if present) `contract.yaml`.
-- `.lsa.yaml` (or LSA defaults) for `constitution` path and `specs_root`.
+- `.lsa.yaml` for `constitution` path and `specs_root` (defaults per [`../knowledge/conventions.md`](../knowledge/conventions.md) §"`.lsa.yaml` defaults").
 
 ## Steps
 
-1. **Read sources.** Read `.lsa.yaml` (or apply defaults). Then read:
-   1. `${constitution}` (mandatory)
-   2. `${specs_root}/features/<feature-name>/requirements.md`
-   3. `${specs_root}/features/<feature-name>/test-suites.md`
-   4. `${specs_root}/features/<feature-name>/contract.yaml` (if exists)
-   5. `${specs_root}/features/<feature-name>/design.md`
-   6. `${specs_root}/modules/<name>/spec.md` for each affected module
-   7. `${specs_root}/standards/testing.md`
+1. **Read sources.** Apply the Read Protocol per [`../knowledge/conventions.md`](../knowledge/conventions.md) §"Read protocol". Skill-specific sources beyond the protocol's standard prefix:
+   - `${specs_root}/features/<feature-name>/requirements.md`
+   - `${specs_root}/features/<feature-name>/test-suites.md`
+   - `${specs_root}/features/<feature-name>/contract.yaml` (if exists)
+   - `${specs_root}/features/<feature-name>/design.md`
+   - `${specs_root}/modules/<name>/spec.md` for each affected module
+   - `${specs_root}/standards/testing.md`
 
-   Observable result: a one-line read-summary printed per source.
+   Observable result: per-source one-liner printed per the protocol.
 
 2. **Decompose into epics.** Rules:
-   - Maximum 5 epics
+   - Maximum 5 epics — chosen to keep epic-level human review tractable; if the work cannot be decomposed in five, the feature is too large and should be split at the spec level rather than at the plan level (escalate back to `lsa-specify` for scope reduction).
    - Each epic has zero runtime dependency on another epic
    - Each epic runs on its own branch
    - If a dependency is unavoidable, mark it explicitly in the Epic Overview table
@@ -122,7 +116,6 @@ Decompose an approved feature spec into ≤5 parallel-safe epics with self-verif
 - **Maximum five epics.** If the work cannot be decomposed in five parallel-safe slices, escalate back to `lsa-specify` for scope reduction before planning.
 - **Each epic is independent (or its dependency is explicit).** Implicit ordering is not permitted.
 - **Do not start implementation** until human approves `tasks.md`.
-- **Mark uncertainty with `[assumption: <why>]`.** Use `[cannot verify]` rather than guessing.
 
 ---
 

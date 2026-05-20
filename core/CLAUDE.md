@@ -1,5 +1,7 @@
 # Core — CLAUDE.md fragment
 
+> **Canonical source.** This file is the single source-of-truth for the always-on rules block. Other locations (repo `CLAUDE.md`, READMEs, module specs) point here rather than restating the rules.
+
 This is an **opt-in fragment** to merge into your project's `CLAUDE.md` when you install the `core` plugin. It declares two always-on rules: ground-rules application and tier-selector invocation. Copy the content below into your project's `CLAUDE.md`.
 
 ---

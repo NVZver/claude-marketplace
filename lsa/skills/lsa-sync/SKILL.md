@@ -1,13 +1,6 @@
 ---
 name: lsa-sync
-description: >
-  Syncs a completed feature spec into permanent module specs and archives the feature.
-  Use this skill whenever a feature has passed lsa-verify, when the user says "sync the
-  spec", "archive this feature", "merge and sync", or "feature is done". Mandatory before
-  merging any feature branch to main. Always runs after lsa-verify. Also records the new
-  per-module HEAD SHA in .lsa-sync-state.json (consumed by lsa-reconcile for drift detection)
-  and, when lsa-verify produced a per-feature metrics.md, appends an aggregate row to
-  ${specs_root}/metrics.md.
+description: Syncs a completed feature spec into permanent module specs and archives the feature. Use whenever a feature has passed `lsa-verify`, when the user says "sync the spec", "archive this feature", "merge and sync", or "feature is done". Mandatory before merging any feature branch to `main`.
 ---
 
 # LSA Sync
@@ -19,20 +12,19 @@ Extract the feature delta into permanent module specs, archive the feature spec,
 ## Input
 
 - A verified feature branch (lsa-verify returned clean PASS).
-- `.lsa.yaml` (or LSA defaults) for `constitution` path, `specs_root`, and `modules.*`.
+- `.lsa.yaml` for `constitution` path, `specs_root`, and `modules.*` (defaults per [`../knowledge/conventions.md`](../knowledge/conventions.md) §"`.lsa.yaml` defaults").
 
 ## Steps
 
-1. **Read sources.** Read `.lsa.yaml` (or apply defaults). Then read:
-   1. `${constitution}` (mandatory)
-   2. `${specs_root}/features/<feature-name>/requirements.md`
-   3. `${specs_root}/features/<feature-name>/contract.yaml` (if exists)
-   4. `${specs_root}/features/<feature-name>/design.md`
-   5. `${specs_root}/features/<feature-name>/tasks.md`
-   6. `${specs_root}/modules/<name>/spec.md` for each module this feature touched
-   7. `${specs_root}/main.spec.md`
+1. **Read sources.** Apply the Read Protocol per [`../knowledge/conventions.md`](../knowledge/conventions.md) §"Read protocol". Skill-specific sources beyond the protocol's standard prefix:
+   - `${specs_root}/features/<feature-name>/requirements.md`
+   - `${specs_root}/features/<feature-name>/contract.yaml` (if exists)
+   - `${specs_root}/features/<feature-name>/design.md`
+   - `${specs_root}/features/<feature-name>/tasks.md`
+   - `${specs_root}/modules/<name>/spec.md` for each module this feature touched
+   - `${specs_root}/main.spec.md`
 
-   Observable result: read-summary printed per source.
+   Observable result: per-source one-liner printed per the protocol.
 
 2. **Extract delta.** From the feature spec, identify only system-level decisions to carry forward:
    - New behaviors added to a module
@@ -66,7 +58,7 @@ Extract the feature delta into permanent module specs, archive the feature spec,
 3. **Merge into module specs.** For each affected module:
    1. Open `${specs_root}/modules/<module-name>/spec.md`.
    2. Append or extend the relevant sections with delta content.
-   3. Tag each addition: `<!-- added: [feature-name] [YYYY-MM-DD] -->`.
+   3. Tag each addition: `<!-- added: <feature-name> YYYY-MM-DD -->` (per [`../knowledge/conventions.md`](../knowledge/conventions.md) §"Trace-tag format").
    4. Do not rewrite or delete existing content.
    5. If a conflict exists between new and existing content, stop and ask human.
 
@@ -76,7 +68,7 @@ Extract the feature delta into permanent module specs, archive the feature spec,
    - Add new modules to the module index if created.
    - Add new global NFRs or contracts if any.
    - If `contract.yaml` exists, update the Cross-Module Contracts section with new or modified endpoints and data types.
-   - Tag each change: `<!-- added: [feature-name] [YYYY-MM-DD] -->`.
+   - Tag each change: `<!-- added: <feature-name> YYYY-MM-DD -->` (per [`../knowledge/conventions.md`](../knowledge/conventions.md) §"Trace-tag format").
 
    Observable result: `${specs_root}/main.spec.md` updated; diff shown.
 
@@ -145,9 +137,8 @@ Updated module specs (tagged), updated `${specs_root}/main.spec.md`, archived fe
 
 - **Human reviews the delta before any spec write.** No silent merges into module specs.
 - **Never delete content** during sync. Additions are tagged; conflicts halt the skill.
-- **Tag every addition** with `<!-- added: [feature-name] [YYYY-MM-DD] -->`.
+- **Tag every addition** with `<!-- added: <feature-name> YYYY-MM-DD -->` (per [`../knowledge/conventions.md`](../knowledge/conventions.md) §"Trace-tag format").
 - **Preserve other modules' state** when writing `.lsa-sync-state.json`. Only touch the keys for modules involved in this feature.
-- **Mark uncertainty with `[assumption: <why>]`.** Use `[cannot verify]` rather than guessing.
 
 ---
 

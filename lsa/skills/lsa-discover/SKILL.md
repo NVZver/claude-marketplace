@@ -1,6 +1,6 @@
 ---
 name: lsa-discover
-description: Light discovery phase used at the start of every T2 and T3 task. Asks the minimal clarifying questions needed to identify the affected module spec, the change's intent, and the acceptance criterion. Writes nothing to disk for T2 (oral output only); hands the captured context to lsa-specify for T3. Use this before any code or spec change when the tier is T2 or T3.
+description: Light three-question discovery probe at the start of every T2 and T3 task — module, change, acceptance criterion. Use before any code or spec change when tier is T2 or T3.
 ---
 
 # LSA Discover
@@ -14,7 +14,7 @@ Establish minimum-viable context — which module the change touches, what the c
 ## Input
 
 - The task description from `core/tier-selector`'s confirmed handoff, including the confirmed tier (T2 or T3).
-- `.lsa.yaml` at repo root (or LSA defaults: `constitution: /CLAUDE.md`, `specs_root: /specs/`, `mode: code`, `modules: {}`) for the list of candidate module names.
+- `.lsa.yaml` at repo root (defaults per [`../knowledge/conventions.md`](../knowledge/conventions.md) §"`.lsa.yaml` defaults") for the list of candidate module names.
 
 ## Steps
 

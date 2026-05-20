@@ -4,6 +4,62 @@ All notable changes to the `lsa` plugin are documented here. Format follows [Kee
 
 ## [Unreleased]
 
+## [0.3.1] — 2026-05-20
+
+KISS surgical edits. Per [`vision/plans/2026-05-20-simplification-refactor-plan.md`](../vision/plans/2026-05-20-simplification-refactor-plan.md) PR 3.
+
+### Changed
+- `lsa-init/SKILL.md` Step 2 — replaced the redundant human question *"Greenfield or brownfield?"* with mechanical detection: *"If `${specs_root}/modules/` is empty AND `.lsa.yaml: modules.*` contains no `artifact_paths`, the mode is greenfield; otherwise brownfield. Print the determination and ask the human to confirm."* The gate is preserved; the question is no longer wasted on something derivable from repo state.
+- `lsa-plan/SKILL.md` Step 2 — added the missing rationale for the ≤5 epics ceiling: *"chosen to keep epic-level human review tractable; if the work cannot be decomposed in five, the feature is too large and should be split at the spec level rather than at the plan level"*. Closes the magic-number gap surfaced in the simplification round-2 review.
+- `lsa-specify/SKILL.md` — split contract trigger out of Step 4 into its own Step 5 *"Determine contract requirement"* so each step has one Goal/Output (round-2 finding). Renumbered subsequent steps: old Step 5 (`test-suites.md`) → 6, old 6 (`contract.yaml`) → 7, old 7 (`design.md`) → 8, old 8 (Final review) → 9. Updated cross-references inside the file (spec-tree comment, contract-step reference, Amending section).
+
+### Removed
+- Pre-Feature Checklist orphan — already deleted in 0.2.1 when `lsa/ARCHITECTURE.md` §5 (Workflow Phases) was pruned. Listed here for traceability against the round-2 finding.
+
+### Notes
+- Kept `.lsa.yaml: mode: mixed` as-is per the plan ("marginal complexity, removing would break an existing config surface").
+- No behavioral semantics changed by these edits. The contract trigger still gates `contract.yaml` (now via Step 5 → Step 7); the ≤5 epics rule still escalates (now with the why); greenfield/brownfield still gates with explicit confirm (now mechanically pre-filled).
+
+## [0.3.0] — 2026-05-20
+
+Knowledge-vs-Actor boundary tightening across all eight LSA skills. New `lsa/knowledge/conventions.md` Knowledge surface owns cross-skill conventions formerly duplicated in skill bodies. Per [`vision/plans/2026-05-20-simplification-refactor-plan.md`](../vision/plans/2026-05-20-simplification-refactor-plan.md) PR 2.
+
+### Added
+- `lsa/knowledge/conventions.md` — single Knowledge file holding (1) `.lsa.yaml` defaults, (2) the Read Protocol, (3) Hard / Soft Confirm gate type definitions, (4) the unified trace-tag format `<!-- <action>: <source> YYYY-MM-DD -->`. Each section was formerly restated in 6–7 skill bodies.
+- `lsa/knowledge/**/*.md` added to `.lsa.yaml: modules.lsa.artifact_paths` so future Knowledge files are tracked by `lsa-verify` doc-mode.
+
+### Changed
+- All 8 LSA skill bodies (`lsa-init`, `lsa-discover`, `lsa-specify`, `lsa-plan`, `lsa-verify`, `lsa-sync`, `lsa-reconcile`, `lsa-revise-constitution`) — Step 1 read prose now cites `../knowledge/conventions.md` §"Read protocol" instead of inlining the `.lsa.yaml` defaults block + per-skill read protocol. Inputs cite conventions for the defaults.
+- `lsa-specify/SKILL.md` — "Confirm gate definitions" section deleted; cited `../knowledge/conventions.md` §"Confirm gate types" instead.
+- `lsa-sync/SKILL.md` — trace-tag format changed from `<!-- added: [feature-name] [YYYY-MM-DD] -->` to `<!-- added: <feature-name> YYYY-MM-DD -->` (unified shape per conventions.md).
+- `lsa-reconcile/SKILL.md` — trace-tag format changed from `<!-- reconciled: YYYY-MM-DD -->` (no source slot) to `<!-- reconciled: drift YYYY-MM-DD -->` (with source slot, per conventions.md). Closes a round-2 finding that `reconciled` was the outlier.
+- `lsa-revise-constitution/SKILL.md` — trace-tag format changed from `<!-- revised: [feature-name] [YYYY-MM-DD] -->` to `<!-- revised: <feature-name> YYYY-MM-DD -->` (unified shape).
+- 6 LSA skills (`lsa-init`, `lsa-specify`, `lsa-plan`, `lsa-verify`, `lsa-sync`, `lsa-revise-constitution`) — removed the redundant `[assumption: <why>]` / `[cannot verify]` Constraints line from each. The marker convention is owned by `core/skills/ground-rules/SKILL.md` Rule 1; LSA skills cite it instead of restating.
+- All 8 LSA skill frontmatter `description:` fields trimmed to ≤2 sentences (verb + trigger phrases). Implementation detail moved to skill body. Trigger phrases preserved so description-match triggering is unaffected.
+
+### Notes
+- No behavioral semantics changed. Hard/Soft Confirm gates fire identically; tag-format changes are mechanical and apply only to newly written tags.
+- `lsa/.lsa.yaml` for this repo now includes `lsa/knowledge/**/*.md` under `modules.lsa.artifact_paths` so the new Knowledge surface is tracked by `lsa-verify` doc-mode.
+- The "tag format change" is non-breaking: historical tags using the old shape (e.g., `<!-- added: [user-auth] [2026-05-15] -->`) remain valid in already-written specs; only new tags use the unified shape. No spec rewrite required.
+
+## [0.2.1] — 2026-05-20
+
+Pure DRY / SRP / KISS docs prune. No skill behavior change. Per [`vision/plans/2026-05-20-simplification-refactor-plan.md`](../vision/plans/2026-05-20-simplification-refactor-plan.md) PR 1.
+
+### Changed
+- `ARCHITECTURE.md` — shrunk ~540 → ~145 lines. Kept §1 Purpose, §2 Directory Structure, §3 `.lsa.yaml` configuration, §4 Branch Management, §5 Resolved Decisions. Deleted §2 (8 first principles — duplicated `vision/VISION.md` §2), §4.1–§4.9 component definitions (duplicated each `SKILL.md`), §5 Workflow Phases (duplicated each `SKILL.md`), §6 Testing Policy (duplicated `vision/specs/standards/testing.md`), §7 Fact-Check Policy (duplicated `core/skills/ground-rules/SKILL.md`), §8 Constitution Revision (duplicated `lsa-revise-constitution/SKILL.md`), §10 Skills Index (duplicated `README.md`). Each deleted section's content survives at its canonical source.
+- `README.md` — "Naming note" no longer lists `agents.md` (file deleted).
+- `lsa/skills/lsa-init/SKILL.md` — greenfield template no longer includes `standards/agents.md` (mechanical sweep; file deleted).
+- `lsa/skills/lsa-revise-constitution/SKILL.md` — Step 1 read list no longer includes `${specs_root}/standards/agents.md` (mechanical sweep; file deleted).
+
+### Removed
+- *(repo-level, not plugin-level, but listed here for traceability)* `vision/specs/standards/agents.md` deleted. The file self-declared as a digest of upstream sources; every section now lives at its canonical home (`vision/VISION.md` §2 for the eight first principles; `core/skills/ground-rules/SKILL.md` for the marker convention; `lsa/skills/lsa-specify/SKILL.md` for the gate types; `vision/VISION.md:124` for the boundary signals).
+
+### Notes
+- Out of scope for this patch: skill body deduplication (PR 2), KISS surgical edits (PR 3).
+- Module specs at `vision/specs/modules/{core,lsa}/spec.md` were shrunk in the same change-set (not part of this plugin's CHANGELOG; tracked in the repo-level refactor plan).
+- Repo `/CLAUDE.md` was shrunk in the same change-set; the always-on rules block now points to `core/CLAUDE.md` as the canonical source instead of restating it.
+
 ## [0.2.0] — 2026-05-20
 
 Closes the seven Vision-alignment gaps between v0.1.1 and `vision/VISION.md` v0.4. Per `vision/specs/2026-05-20-lsa-v0.2.0-design.md`.

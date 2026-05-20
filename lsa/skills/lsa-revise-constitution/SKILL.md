@@ -1,12 +1,6 @@
 ---
 name: lsa-revise-constitution
-description: >
-  Proposes and applies changes to the project constitution and standards. Use this
-  skill after a feature is merged during the replan phase, when the user says "update
-  the constitution", "revise standards", "update CLAUDE.md", or when decisions made
-  during a feature should be captured as permanent project standards. Single
-  responsibility: the configured constitution path and ${specs_root}/standards/ only.
-  Never touches specs, src, or skills.
+description: Proposes and applies changes to the project constitution and `${specs_root}/standards/`. Use after a feature is merged during replan, when the user says "update the constitution", "revise standards", "update CLAUDE.md", or when feature decisions should become permanent standards.
 ---
 
 # LSA Revise Constitution
@@ -19,20 +13,18 @@ After a feature is merged, propose and apply constitution / standards changes th
 
 ## Input
 
-- `.lsa.yaml` (or LSA defaults) for `constitution` path and `specs_root`.
+- `.lsa.yaml` for `constitution` path and `specs_root` (defaults per [`../knowledge/conventions.md`](../knowledge/conventions.md) §"`.lsa.yaml` defaults").
 - The most recently archived feature directory at `${specs_root}/archive/<latest-feature>/` — decisions made during the completed feature.
 - A human-provided change description (or proposals derivable from the feature's `design.md` / `tasks.md`).
 
 ## Steps
 
-1. **Read sources.** Read `.lsa.yaml` (or apply defaults). Then read:
-   1. `${constitution}` (mandatory)
-   2. `${specs_root}/standards/code.md`
-   3. `${specs_root}/standards/testing.md`
-   4. `${specs_root}/standards/agents.md`
-   5. `${specs_root}/archive/<latest-feature>/` — decisions made during the completed feature
+1. **Read sources.** Apply the Read Protocol per [`../knowledge/conventions.md`](../knowledge/conventions.md) §"Read protocol". Skill-specific sources beyond the protocol's standard prefix:
+   - `${specs_root}/standards/code.md`
+   - `${specs_root}/standards/testing.md`
+   - `${specs_root}/archive/<latest-feature>/` — decisions made during the completed feature
 
-   Observable result: read-summary printed per source.
+   Observable result: per-source one-liner printed per the protocol.
 
 2. **Identify proposed changes.** From the completed feature, extract decisions that should become permanent standards:
    - New coding patterns or conventions adopted
@@ -67,7 +59,7 @@ After a feature is merged, propose and apply constitution / standards changes th
 
 4. **Apply approved changes.** For each approved change:
    1. Edit the target file (the configured `${constitution}` or a file under `${specs_root}/standards/`).
-   2. Tag the change: `<!-- revised: [feature-name] [YYYY-MM-DD] -->`.
+   2. Tag the change: `<!-- revised: <feature-name> YYYY-MM-DD -->` (per [`../knowledge/conventions.md`](../knowledge/conventions.md) §"Trace-tag format").
    3. Do not rewrite surrounding content.
 
    Observable result: diff shown per file.
@@ -86,14 +78,13 @@ After a feature is merged, propose and apply constitution / standards changes th
 
 ## Output
 
-Updated `${constitution}` and/or files under `${specs_root}/standards/`, each tagged `<!-- revised: [feature-name] [YYYY-MM-DD] -->`. A `constitution/<change-description>` branch ready for PR to `main`.
+Updated `${constitution}` and/or files under `${specs_root}/standards/`, each tagged `<!-- revised: <feature-name> YYYY-MM-DD -->` (per [`../knowledge/conventions.md`](../knowledge/conventions.md) §"Trace-tag format"). A `constitution/<change-description>` branch ready for PR to `main`.
 
 ## Constraints
 
 - **Hard confirm per change.** No bulk approval; each proposal stands or falls on its own.
 - **Never touch specs, src, or skills** — only the configured constitution and `${specs_root}/standards/`.
 - **Never rewrite surrounding content.** Limit edits to the proposed section.
-- **Mark uncertainty with `[assumption: <why>]`.** Use `[cannot verify]` rather than guessing.
 
 ---
 
