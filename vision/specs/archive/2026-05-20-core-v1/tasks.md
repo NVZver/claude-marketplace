@@ -8,7 +8,7 @@
 
 **Tech Stack:** Markdown (`SKILL.md`), JSON (`plugin.json`, `marketplace.json`), shell (`zip`, `git`, `gh`), Claude Code (`/plugin`, `/help`, `/reload-plugins`), Claude.ai (Settings → Features → Custom Skills).
 
-**Source spec:** [`../specs/2026-05-20-core-v1-design.md`](../specs/2026-05-20-core-v1-design.md) — every task below traces to a spec section.
+**Source spec:** [`./design.md`](./design.md) — every task below traces to a spec section.
 
 ---
 
