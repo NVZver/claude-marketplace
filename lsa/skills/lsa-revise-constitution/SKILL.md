@@ -1,24 +1,24 @@
 ---
 name: lsa-revise-constitution
 description: >
-  Proposes and applies changes to the project constitution and ground rules. Use this
+  Proposes and applies changes to the project constitution and standards. Use this
   skill after a feature is merged during the replan phase, when the user says "update
-  the constitution", "revise ground rules", "update CLAUDE.md", or when decisions made
+  the constitution", "revise standards", "update CLAUDE.md", or when decisions made
   during a feature should be captured as permanent project standards. Single
-  responsibility: CLAUDE.md and /specs/ground-rules/ only. Never touches specs, src,
+  responsibility: CLAUDE.md and /specs/standards/ only. Never touches specs, src,
   or skills.
 ---
 
 # LSA Revise Constitution
 
-Single responsibility: propose and apply changes to `/CLAUDE.md` and `/specs/ground-rules/` only.
+Single responsibility: propose and apply changes to `/CLAUDE.md` and `/specs/standards/` only.
 
 ## Step 1 — Read Sources
 
 1. `/CLAUDE.md` (mandatory)
-2. `/specs/ground-rules/code.md`
-3. `/specs/ground-rules/testing.md`
-4. `/specs/ground-rules/agents.md`
+2. `/specs/standards/code.md`
+3. `/specs/standards/testing.md`
+4. `/specs/standards/agents.md`
 5. `/specs/archive/<latest-feature>/` — decisions made during the completed feature
 
 ## Step 2 — Identify Proposed Changes
@@ -36,7 +36,7 @@ For each proposed change, produce:
 ```markdown
 ## Proposed Change [N]
 
-**File:** /CLAUDE.md or /specs/ground-rules/[file]
+**File:** /CLAUDE.md or /specs/standards/[file]
 **Section:** [section name]
 **Type:** add / modify / remove
 
@@ -69,7 +69,7 @@ For each approved change:
 
 ```bash
 git checkout -b constitution/<change-description>
-git add CLAUDE.md specs/ground-rules/
+git add CLAUDE.md specs/standards/
 git commit -m "constitution: [summary of changes]"
 ```
 

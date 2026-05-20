@@ -1,7 +1,7 @@
 # Living Spec Architecture (LSA)
-**Version:** 0.3 (MVP)
+**Version:** 0.1.0 (plugin)
 **Author:** Nikita Zverev
-**Status:** Draft — Pending stress test
+**Status:** Installable as `lsa@nz-vision` — pending stress test on actual project use. See [`CHANGELOG.md`](./CHANGELOG.md) Unreleased for known v0.2.0 adaptations.
 
 ---
 
@@ -44,7 +44,7 @@ Humans write and own specs. Agents write and own code.
 │   ├── main.spec.md                   ← App-level behavior, module index, global contracts
 │   ├── roadmap.md                     ← Prioritized feature backlog
 │   ├── research-backlog.md            ← Mid-feature ideas, deferred decisions
-│   ├── ground-rules/
+│   ├── standards/
 │   │   ├── code.md                    ← Code structure, patterns, conventions
 │   │   ├── testing.md                 ← Test structure, coverage requirements, TDD rules
 │   │   └── agents.md                  ← Agent behavior, human interaction rules
@@ -81,7 +81,7 @@ Humans write and own specs. Agents write and own code.
 
 ---
 
-### 4.2 Ground Rules (`/specs/ground-rules/`)
+### 4.2 Standards (`/specs/standards/`)
 
 | | |
 |---|---|
@@ -92,7 +92,7 @@ Humans write and own specs. Agents write and own code.
 | | `agents.md` — how agents behave, escalation rules, human gates |
 | **Written by** | Human (extracted from CLAUDE.md during init) |
 | **Updated by** | Constitution revision skill after human approval |
-| **Relationship to constitution** | Constitution = what the project is. Ground rules = how to build it |
+| **Relationship to constitution** | Constitution = what the project is. Standards = how to build it |
 
 ---
 
@@ -283,7 +283,7 @@ Before every new feature, verify:
 
 ## 6. Testing Policy
 
-Source of truth: `/specs/ground-rules/testing.md`
+Source of truth: `/specs/standards/testing.md`
 
 ### E2E Tests
 
@@ -356,7 +356,7 @@ Applies to: all agent-generated content in specs, reports, and code comments.
 
 ## 8. Constitution Revision (`lsa-revise-constitution`)
 
-Single responsibility: propose and apply changes to `/CLAUDE.md` and `/specs/ground-rules/` files. This skill does nothing else.
+Single responsibility: propose and apply changes to `/CLAUDE.md` and `/specs/standards/` files. This skill does nothing else.
 
 | | |
 |---|---|
@@ -365,10 +365,10 @@ Single responsibility: propose and apply changes to `/CLAUDE.md` and `/specs/gro
 | **Input** | Completed feature spec + human's proposed change description |
 | **Process** | Agent proposes specific changes with diff format. Human reviews each change individually |
 | **Gate** | No change is written without explicit human approval per change |
-| **Output** | Updated `/CLAUDE.md` and/or `/specs/ground-rules/` files |
+| **Output** | Updated `/CLAUDE.md` and/or `/specs/standards/` files |
 | **Branch** | `constitution/<change-description>` |
 | **Traceability** | Every change tagged: `<!-- revised: [feature-name] [YYYY-MM-DD] -->` |
-| **Scope** | CLAUDE.md and ground-rules only. Never touches specs, src, or skills |
+| **Scope** | CLAUDE.md and standards only. Never touches specs, src, or skills |
 
 ---
 

@@ -18,7 +18,7 @@ description: >
 4. `/specs/features/<feature-name>/contract.yaml` (if exists)
 5. `/specs/features/<feature-name>/design.md`
 6. `/specs/modules/<name>/spec.md` for each affected module
-7. `/specs/ground-rules/testing.md`
+7. `/specs/standards/testing.md`
 
 ## Step 2 — Decompose into Epics
 

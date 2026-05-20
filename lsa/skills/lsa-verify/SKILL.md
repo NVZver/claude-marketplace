@@ -41,7 +41,7 @@ For each item: ✅ PASS / ❌ FAIL / ⚠️ WARNING + reason
 
 **Accuracy**
 - [ ] Implementation matches the technical approach in design.md
-- [ ] Patterns match CLAUDE.md ground rules
+- [ ] Patterns match CLAUDE.md standards
 - [ ] Data model changes match design.md
 - [ ] API/interface changes match design.md
 - [ ] API implementation matches contract.yaml (if contract exists)

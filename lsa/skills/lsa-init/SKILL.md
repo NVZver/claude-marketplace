@@ -30,14 +30,14 @@ Create this structure:
   research-backlog.md
   /modules/
   /features/
-  /ground-rules/
+  /standards/
     code.md
     testing.md
     agents.md
   /archive/
 ```
 
-Populate `/specs/ground-rules/` by extracting the relevant sections from `/CLAUDE.md`.
+Populate `/specs/standards/` by extracting the relevant sections from `/CLAUDE.md`.
 `/specs/modules/` starts empty.
 
 ### Brownfield
