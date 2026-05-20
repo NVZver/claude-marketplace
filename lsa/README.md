@@ -70,4 +70,4 @@ LSA writes spec files to disk and reads `/CLAUDE.md` — it depends on a filesys
 
 ## Naming note
 
-LSA's `/specs/standards/` directory holds technical standards (`code.md`, `testing.md`, `agents.md`) extracted from the project's `/CLAUDE.md`. It is **not** the same as the [`core/ground-rules`](../core/skills/ground-rules/) skill — Core's `ground-rules` enforces four discipline rules (fact-grounding, no fake-confidence hedging, read-the-source, only-required-output) on every prompt. The two coexist in the marketplace and are independently installable.
+LSA's `/specs/standards/` directory holds technical standards (`code.md`, `testing.md`) extracted from the project's `/CLAUDE.md`. It is **not** the same as the [`core/ground-rules`](../core/skills/ground-rules/) skill — Core's `ground-rules` enforces four discipline rules (fact-grounding, no fake-confidence hedging, read-the-source, only-required-output) on every prompt. The two coexist in the marketplace and are independently installable.

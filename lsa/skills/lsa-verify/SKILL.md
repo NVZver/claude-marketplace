@@ -1,12 +1,6 @@
 ---
 name: lsa-verify
-description: >
-  Verifies that implementation matches the feature spec and no changes exist outside
-  spec scope. Use this skill whenever an epic or feature is marked as implemented,
-  before any merge, when the user says "verify this", "check the implementation",
-  "ready to merge", or when code/artifact changes exist on a feature branch. Mandatory
-  before lsa-sync. Branches on .lsa.yaml mode (code / docs / mixed). On clean PASS for
-  T3, writes a metrics.md file to the feature archive. Never skip.
+description: Verifies that the implementation on a feature branch matches the approved feature spec, with every change traced to a requirement. Use whenever an epic or feature is marked implemented, before any merge — when the user says "verify this", "check the implementation", or "ready to merge". Mandatory before `lsa-sync`.
 ---
 
 # LSA Verify
@@ -21,22 +15,21 @@ Confirm that the implementation on the current feature branch matches the approv
 
 - The current git feature branch (assumed to be `feature/<feature-name>`).
 - The feature spec at `${specs_root}/features/<feature-name>/` (requirements, test-suites, optional contract, design, tasks).
-- `.lsa.yaml` (or LSA defaults) for `constitution`, `specs_root`, `mode`, and per-module `artifact_paths`.
+- `.lsa.yaml` for `constitution`, `specs_root`, `mode`, and per-module `artifact_paths` (defaults per [`../knowledge/conventions.md`](../knowledge/conventions.md) §"`.lsa.yaml` defaults").
 
 ## Steps
 
-1. **Read sources.** Read `.lsa.yaml` (or apply defaults). Then read:
-   1. `${constitution}` (mandatory)
-   2. `${specs_root}/features/<feature-name>/requirements.md`
-   3. `${specs_root}/features/<feature-name>/test-suites.md`
-   4. `${specs_root}/features/<feature-name>/contract.yaml` (if exists)
-   5. `${specs_root}/features/<feature-name>/design.md`
-   6. `${specs_root}/features/<feature-name>/tasks.md`
-   7. `${specs_root}/modules/<name>/spec.md` for each module in scope
+1. **Read sources.** Apply the Read Protocol per [`../knowledge/conventions.md`](../knowledge/conventions.md) §"Read protocol". Skill-specific sources beyond the protocol's standard prefix:
+   - `${specs_root}/features/<feature-name>/requirements.md`
+   - `${specs_root}/features/<feature-name>/test-suites.md`
+   - `${specs_root}/features/<feature-name>/contract.yaml` (if exists)
+   - `${specs_root}/features/<feature-name>/design.md`
+   - `${specs_root}/features/<feature-name>/tasks.md`
+   - `${specs_root}/modules/<name>/spec.md` for each module in scope
 
    **If no `${specs_root}/features/<name>/` directory is in the diff, error out cleanly with: "no active feature — use `/lsa:reconcile` for direct-edit absorption."** Verify is feature-scoped; reconcile is drift-scoped. Do not try to verify against module specs alone.
 
-   Observable result: read-summary printed per source.
+   Observable result: per-source one-liner printed per the protocol.
 
 2. **Get diffs — branched by mode.** Read `.lsa.yaml: mode` and branch:
    - **`mode: code`** (or absent — default v0.1.1 behavior): run
@@ -149,7 +142,6 @@ A verification report (PASS / FAIL / PASS WITH WARNINGS) with a per-item checkli
 - **PASS WITH WARNINGS** is allowed only with explicit warning categories in the report — never as a hand-wave.
 - **No `metrics.md` write on FAIL or PASS WITH WARNINGS.** Metrics fire only on clean PASS.
 - **No `metrics.md` for T2 or non-feature flows.** T2 has no feature spec and no sync step; T1 has no LSA ceremony.
-- **Mark uncertainty with `[assumption: <why>]`.** Use `[cannot verify]` rather than guessing.
 
 ---
 

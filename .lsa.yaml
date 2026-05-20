@@ -20,6 +20,7 @@ modules:
     spec: vision/specs/modules/lsa/spec.md
     artifact_paths:
       - lsa/skills/**/SKILL.md
+      - lsa/knowledge/**/*.md
       - lsa/hooks/hooks.json
       - lsa/hooks/**/*.sh
       - lsa/.claude-plugin/plugin.json

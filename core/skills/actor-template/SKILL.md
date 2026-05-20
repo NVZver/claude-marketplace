@@ -17,12 +17,6 @@ Every Actor file must contain exactly these five sections, in this order, no ren
 4. **Output** — what the actor returns when done. Failure mode without it: callers cannot tell success from in-progress.
 5. **Constraints** — what the actor must not do; the boundary. Failure mode without it: the actor over-reaches.
 
-## Rules
-
-- **Every Step produces an observable result.** No "consider", "think about", "review" without an artifact.
-- **No Knowledge bleed.** If the body would contain a rule, pattern, or reference table, that material belongs in a Knowledge skill — not here.
-- **No section combined or renamed.** "Goal & Input" or "Procedure" is a defect.
-
 ## One worked example — Summarize a pull request
 
 **Goal:** Produce a 3-bullet summary of a pull request so a reviewer can decide whether to dig deeper in under 30 seconds.
@@ -66,12 +60,6 @@ description: <one-paragraph trigger: when to use this actor; the specific verbs 
 - <hard limit>
 - <hard limit>
 ```
-
-## What this skill never does
-
-- Mix Knowledge (rules, patterns, references) into an Actor file.
-- Allow a Step without an observable result.
-- Rename or merge the five required sections.
 
 ---
 

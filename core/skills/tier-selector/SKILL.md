@@ -1,6 +1,6 @@
 ---
 name: tier-selector
-description: Apply before any non-trivial task — when the work touches behavior, adds a new module, changes an API or data model, exceeds ~5 files, or lacks an existing spec. Outputs a tier (T1 / T2 / T3) with visible chain-of-thought reasoning over boundary signals, then waits for human confirmation. Per Vision §4: ceremony scales to the weight of the task.
+description: Apply before any non-trivial task — when the work touches behavior, adds a new module, changes an API or data model, exceeds ~5 files, or lacks an existing spec. Outputs a tier (T1 / T2 / T3) with visible chain-of-thought reasoning over boundary signals, then waits for human confirmation.
 ---
 
 # Tier Selector
@@ -18,23 +18,11 @@ Produce a tier label (`T1`, `T2`, or `T3`) plus a 2–4-sentence rationale keyed
 
 ## Steps
 
-1. **List the boundary signals present in the task.** Apply this checklist verbatim from `vision/VISION.md:124`:
-   - **New module?** — does this introduce a module that does not already exist?
-   - **API/contract change?** — does this introduce or change an externally-visible API, slash-command surface, or hook contract?
-   - **Data-model change?** — does the persisted shape (schema, file format, on-disk state) change?
-   - **> ~5 files?** — does the change span more than roughly five files?
-   - **No existing spec?** — does the affected area lack a module spec already?
+1. **List the boundary signals present in the task.** Apply the five-item checklist at [`../../../vision/VISION.md`](../../../vision/VISION.md) §4 — new module · API/contract change · data-model change · ~5 files · no existing spec.
 
    Observable result: a five-item bulleted checklist with `yes` / `no` next to each signal, derived only from the task description (and a minimal repo read if needed for the spec-exists question).
 
-2. **Apply the classification table** (verbatim from `vision/VISION.md:128`):
-
-   | Pattern | Example | Tier |
-   | --- | --- | --- |
-   | One file, one string, no behavior change, no new contract | "Fix the typo in the login button label" | **T1** |
-   | One bug in a spec'd module, behavior change, no new API | "The date formatter returns the wrong month off-by-one" | **T2** |
-   | New behavior, new endpoint, multiple modules, no spec yet | "Add password-reset via email" | **T3** |
-   | Many files, zero behavior change, mechanical (wide-shallow) | "Rename `getUser` to `fetchUser` everywhere" | **T2** |
+2. **Apply the classification table** at [`../../../vision/VISION.md`](../../../vision/VISION.md) §4 — four worked-example rows mapping pattern → tier.
 
    Observable result: the matched row (or the closest analogue) named in the chain-of-thought.
 

@@ -4,6 +4,30 @@ All notable changes to the `core` plugin are documented here. Format follows [Ke
 
 ## [Unreleased]
 
+## [0.3.0] — 2026-05-20
+
+Knowledge-vs-Actor boundary tightening across all three core skills. Per [`vision/plans/2026-05-20-simplification-refactor-plan.md`](../vision/plans/2026-05-20-simplification-refactor-plan.md) PR 2.
+
+### Changed
+- `core/skills/tier-selector/SKILL.md` — Step 1 and Step 2 no longer inline the boundary-signal checklist or the four-row classification table. Both now cite `vision/VISION.md` §4 as the single source of truth. Resolves the self-flagged debt at the prior `lsa/ARCHITECTURE.md:459` ("revisit if a second skill restates them"). Body shrunk by ~16 lines.
+- `core/skills/actor-template/SKILL.md` — removed the duplicate "Rules" section (which restated the three rules already embedded in the "Five required sections" descriptions) and the trailing "What this skill never does" block (which restated those rules negatively). The five-section spec + worked example + copy-paste template remain authoritative.
+- `core/skills/ground-rules/SKILL.md` — removed the trailing "What this skill never does" block. The four numbered rules + their examples remain authoritative.
+- `core/skills/tier-selector/SKILL.md` — frontmatter `description:` trimmed by one sentence (removed implementation-detail tail; trigger phrases preserved).
+
+### Notes
+- No skill behavior changes. The Goal / Input / Steps / Output / Constraints shape and the tier-selector chain-of-thought protocol are preserved; only restatements removed. `core/skills/ground-rules/SKILL.md` and `core/skills/actor-template/SKILL.md` frontmatter `description:` fields left as-is — already at ≤2 sentences with trigger phrases intact.
+- Per `vision/VISION.md` §4 (*"ceremony scales to the weight of the task"*): citing the canonical table at VISION §4 means a future change to the tier classification rules is a single-edit operation, not a multi-file sweep.
+
+## [0.2.1] — 2026-05-20
+
+Docs-only patch — marks `core/CLAUDE.md` as the canonical source for the always-on rules block. Part of the repo-wide DRY / SRP prune in [`vision/plans/2026-05-20-simplification-refactor-plan.md`](../vision/plans/2026-05-20-simplification-refactor-plan.md) PR 1.
+
+### Changed
+- `core/CLAUDE.md` — added a header blockquote declaring the file as *"the single source-of-truth for the always-on rules block. Other locations (repo `CLAUDE.md`, READMEs, module specs) point here rather than restating the rules."* No change to the Ground rules or Tier selection sections.
+
+### Notes
+- The repo's `/CLAUDE.md` was shrunk in the same change-set (~108 → 34 lines) and now points to `core/CLAUDE.md` instead of duplicating its content. That edit is tracked in the repo-level refactor plan, not in this plugin's CHANGELOG.
+
 ## [0.2.0] — 2026-05-20
 
 ### Added

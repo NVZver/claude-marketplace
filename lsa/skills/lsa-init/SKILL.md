@@ -1,11 +1,6 @@
 ---
 name: lsa-init
-description: >
-  Initializes the Living Spec Architecture (LSA) for a project. Use this skill whenever
-  the user says "initialize LSA", "set up specs", "init the spec structure", starts a new
-  project from scratch, or wants to retrofit specs onto an existing codebase. Also triggers
-  when the configured constitution exists but the configured specs_root does not. This skill
-  MUST run before any other LSA skill can be used.
+description: Initializes the Living Spec Architecture (LSA) for a project (greenfield or brownfield). Use whenever the user says "initialize LSA", "set up specs", "init the spec structure", starts a new project, or wants to retrofit specs onto an existing codebase.
 ---
 
 # LSA Init
@@ -16,15 +11,15 @@ Scaffold the LSA spec tree on a project so the rest of the LSA skills (`lsa-disc
 
 ## Input
 
-- Project root containing a constitution file at the path configured by `.lsa.yaml` (default `/CLAUDE.md`).
-- Optional `.lsa.yaml` at repo root. If absent, apply LSA defaults: `constitution: /CLAUDE.md`, `specs_root: /specs/`, `mode: code`, `modules: {}`.
+- Project root containing the configured constitution file (defaults per [`../knowledge/conventions.md`](../knowledge/conventions.md) §"`.lsa.yaml` defaults").
+- Optional `.lsa.yaml` at repo root.
 - Human-confirmed mode: **greenfield** (empty project) or **brownfield** (existing codebase).
 
 ## Steps
 
-1. **Read sources.** Read `.lsa.yaml` from the repo root, or apply the LSA defaults above. Then read `${constitution}` (the file at the configured constitution path; mandatory). Also read any module-level constitution-fragment files if present. Observable result: a short note printing `constitution=<path>`, `specs_root=<path>`, `mode=<value>` so the human can confirm the config is correctly picked up.
+1. **Read sources.** Apply the Read Protocol per [`../knowledge/conventions.md`](../knowledge/conventions.md) §"Read protocol". Skill-specific sources beyond the protocol's standard prefix: any module-level constitution-fragment files if present. Observable result: a short note printing `constitution=<path>`, `specs_root=<path>`, `mode=<value>` so the human can confirm the config is correctly picked up.
 
-2. **Determine mode.** Ask the human: **"Greenfield (empty project) or brownfield (existing codebase)?"** Observable result: the answer captured.
+2. **Determine mode (mechanical).** If `${specs_root}/modules/` is empty (or absent) AND `.lsa.yaml: modules.*` contains no configured `artifact_paths`, the mode is **greenfield**; otherwise **brownfield**. Print the determination back to the human (e.g., `Detected mode: brownfield (modules.*.artifact_paths populated).`) and ask the human to confirm. Observable result: mode determined mechanically + confirmed by human.
 
    ### Greenfield
 
@@ -40,7 +35,6 @@ Scaffold the LSA spec tree on a project so the rest of the LSA skills (`lsa-disc
      standards/
        code.md
        testing.md
-       agents.md
      archive/
    ```
 
@@ -106,8 +100,7 @@ A populated spec tree at `${specs_root}` (greenfield) or skeleton module specs (
 ## Constraints
 
 - **Never overwrite existing specs.** If `${specs_root}/` already exists with non-empty content, abort with a message naming the conflicting paths and ask the human to relocate or rename before re-running.
-- **Never invent module structure** in brownfield mode that is not derivable from `artifact_paths` (or `/src/` as the documented fallback). Every inferred requirement is tagged `[assumption: inferred from <source>; verify]`.
-- Use `[cannot verify]` rather than guessing when the source for a requirement is genuinely absent.
+- **Never invent module structure** in brownfield mode that is not derivable from `artifact_paths` (or `/src/` as the documented fallback). Every inferred requirement is tagged `[assumption: inferred from <source>; verify]` per [`../../core/skills/ground-rules/SKILL.md`](../../core/skills/ground-rules/SKILL.md) Rule 1.
 
 ---
 
