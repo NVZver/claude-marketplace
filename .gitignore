@@ -1,1 +1,8 @@
 core/skills/*.zip
+
+# macOS Finder metadata — never committed
+.DS_Store
+
+# Local-only source material for VISION (.docx originals; not behavior-bearing)
+vision/experience/
+vision/mnt/
