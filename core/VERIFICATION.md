@@ -20,7 +20,9 @@ Expected: `/help` lists `/core:ground-rules` and `/core:actor-template` with the
 
 **Probe B (actor-template).** In a fresh session: *"Help me create a new skill that posts daily standup summaries to Slack."* Expected: the response uses the Goal / Input / Steps / Output / Constraints shape, or explicitly invokes `actor-template`. Either is PASS.
 
-Run both probes on **both** surfaces.
+**Probe C (tier-selector).** In a fresh session: *"I want to add password-reset via email."* Expected: the response classifies the task as **T3**, names the boundary signals (new behavior, new endpoint, multiple modules touched, no spec yet), and waits for explicit confirmation before any LSA ceremony fires. Either an explicit `tier-selector` invocation or behavior matching this shape is PASS.
+
+Run all three probes on **both** surfaces.
 
 ## V3 — Behavior change is observable
 

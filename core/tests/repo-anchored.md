@@ -96,7 +96,7 @@ Also stated in `core/.claude-plugin/plugin.json:3` description.
 
 **Task.** *"Write a one-paragraph summary of what the v1 release of `core` ships, with sources."*
 
-**Source-of-truth set.** Any of: `core/CHANGELOG.md`, `core/README.md`, `core/VERIFICATION.md`, `vision/specs/2026-05-20-core-v1-design.md`, `vision/plans/2026-05-20-core-v1-plan.md`.
+**Source-of-truth set.** Any of: `core/CHANGELOG.md`, `core/README.md`, `core/VERIFICATION.md`, `vision/specs/archive/2026-05-20-core-v1/design.md`, `vision/specs/archive/2026-05-20-core-v1/tasks.md`.
 
 **Metric — citation density.** Count distinct `path[:line]` references in the response that include a verbatim quote.
 

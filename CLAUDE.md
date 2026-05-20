@@ -2,7 +2,7 @@
 
 This repository is the **nz-vision claude-marketplace** — a personal, model-agnostic agentic engineering system distributed via Claude Code's plugin marketplace.
 
-For the design rationale (the "why"), see [`vision/VISION.md`](./vision/VISION.md).
+Operating rules live in [`vision/VISION.md`](./vision/VISION.md) — that file is the constitution. LSA configuration is at [`./.lsa.yaml`](./.lsa.yaml). This file is the slim Claude Code entry point.
 
 ## Default plugins
 
@@ -15,63 +15,93 @@ Two plugins ship from this marketplace and together form the development discipl
 /reload-plugins
 ```
 
-Install `core` first — `lsa` cites it for fact-grounding (see [`lsa/README.md`](./lsa/README.md) → "Depends on").
+Install `core` first — `lsa` cites it for fact-grounding and tier-selection (see [`lsa/README.md`](./lsa/README.md) → "Depends on").
 
-### `core` — domain-neutral discipline
+## Ground rules (always-on)
 
-[`core/README.md`](./core/README.md) for details. Two skills:
+Apply `core/ground-rules` to every substantive task. Every factual claim carries a source + searchable quote; no fake-confidence hedging; read the real source before answering; deliver only what was asked.
 
-- **`core/ground-rules`** — four rules enforced on every substantive task:
-  1. Every factual claim carries a source + searchable quote.
-  2. No fake confidence, no disguised facts.
-  3. Read the real source before answering.
-  4. Deliver only what was asked — no scope creep.
-- **`core/actor-template`** — Goal / Input / Steps / Output / Constraints shape for any skill, slash command, or workflow you author.
+## Tier selection (always-on)
 
-### `lsa` — Living Spec Architecture
+Before any non-trivial task, invoke `core/tier-selector` to classify the work as T1, T2, or T3 — and present the reasoning to the human for confirmation. Skip only for tasks that obviously stay inside T1 boundaries (single-string edits, single-question answers).
 
-[`lsa/README.md`](./lsa/README.md) and [`lsa/ARCHITECTURE.md`](./lsa/ARCHITECTURE.md) for details. Six skills enforcing spec-first development with explicit human gates:
+**The boundary signals** (Vision §4 `vision/VISION.md:124`): new module · API/contract change · data-model change · ~5 files · no existing spec.
 
-| Skill | Phase |
-|---|---|
-| `lsa-init` | Initialize spec structure (greenfield or brownfield) |
-| `lsa-specify` | Create a feature spec from a description |
-| `lsa-plan` | Decompose an approved spec into ≤5 parallel-safe epics |
-| `lsa-verify` | Verify every code change traces to a spec requirement |
-| `lsa-sync` | Merge delta into permanent module specs; archive feature spec |
-| `lsa-revise-constitution` | Propose changes to `/CLAUDE.md` and `/specs/standards/` |
-
-## Working in this repo
-
-Apply `core/ground-rules` on every substantive task. Use `core/actor-template` when authoring or editing any skill, slash command, or workflow.
-
-LSA is **not yet usable on this repo as-is** — see "Known gaps" below.
+**Tier outcomes:**
+- **T1** — single pass, no LSA ceremony. `ground-rules` still applies.
+- **T2** — `lsa-discover` (light) → agent TDD → `lsa-verify`.
+- **T3** — `lsa-discover` → `lsa-specify` → `lsa-plan` → implement → `lsa-verify` → `lsa-sync`.
 
 ## Where things live
 
-| Path | What |
+```
+.
+├── CLAUDE.md                              ← you are here (slim Claude Code entry point)
+├── README.md                              ← public one-liner ("My personal claude marketplace")
+├── LICENSE
+├── .lsa.yaml                              ← LSA config: constitution=vision/VISION.md, specs_root=vision/specs/, mode=docs
+├── .lsa-sync-state.json                   ← per-module last-sync SHA (written by lsa-sync; not yet present — first sync writes it)
+├── .claude-plugin/
+│   └── marketplace.json                   ← marketplace catalog (lists core + lsa)
+├── core/                                  ← the core plugin — v0.2.0
+│   ├── .claude-plugin/plugin.json
+│   ├── CHANGELOG.md  README.md  VERIFICATION.md
+│   ├── CLAUDE.md                          ← opt-in always-on fragment (ground-rules + tier-selector rules)
+│   ├── skills/
+│   │   ├── ground-rules/SKILL.md          ← four discipline rules
+│   │   ├── actor-template/SKILL.md        ← Goal/Input/Steps/Output/Constraints shape
+│   │   └── tier-selector/SKILL.md         ← T1/T2/T3 chain-of-thought classifier
+│   └── tests/repo-anchored.md             ← dogfood probes anchored in this repo
+├── lsa/                                   ← the lsa plugin — v0.2.0; depends on core
+│   ├── .claude-plugin/plugin.json
+│   ├── ARCHITECTURE.md  CHANGELOG.md  README.md
+│   ├── hooks/
+│   │   ├── hooks.json                     ← SessionStart drift-warning manifest
+│   │   └── session-start-drift-check.sh   ← diffs artifact_paths vs .lsa-sync-state.json
+│   └── skills/
+│       ├── lsa-init/SKILL.md              ← scaffold spec tree (greenfield or brownfield)
+│       ├── lsa-discover/SKILL.md          ← Phase 0 — three-question probe (T2 + T3)
+│       ├── lsa-specify/SKILL.md           ← Phase 1 — write the feature spec (T3)
+│       ├── lsa-plan/SKILL.md              ← Phase 2 — decompose into ≤5 epics (T3)
+│       ├── lsa-verify/SKILL.md            ← Phase 5 — code-mode/doc-mode/mixed verify
+│       ├── lsa-sync/SKILL.md              ← Phase 6 — sync to module specs + archive + state writer
+│       ├── lsa-reconcile/SKILL.md         ← Ad-hoc — absorb direct artifact edits (Level 2.5)
+│       └── lsa-revise-constitution/SKILL.md  ← Phase 7 — propose constitution / standards changes
+└── vision/
+    ├── VISION.md                          ← THE CONSTITUTION (operating rules + design rationale)
+    ├── specs/
+    │   ├── main.spec.md                   ← module index, cross-plugin contracts, NFRs
+    │   ├── roadmap.md                     ← prioritized backlog
+    │   ├── research-backlog.md            ← parking lot for mid-feature ideas
+    │   ├── 2026-05-20-lsa-v0.2.0-design.md  ← active design doc for the in-flight release
+    │   ├── standards/
+    │   │   ├── code.md  testing.md  agents.md
+    │   ├── modules/
+    │   │   ├── core/spec.md               ← the `core` module spec
+    │   │   └── lsa/spec.md                ← the `lsa` module spec
+    │   └── archive/
+    │       └── 2026-05-20-core-v1/{design.md, tasks.md}   ← read-only history
+    ├── plans/
+    │   └── 2026-05-20-lsa-v0.2.0-plan.md  ← active plan for the in-flight release
+    └── experience/                        ← source `.docx` documents (local-only; untracked)
+```
+
+Quick reference table:
+
+| Looking for… | Path |
 |---|---|
-| [`vision/VISION.md`](./vision/VISION.md) | Source of truth for design rationale |
-| [`vision/specs/`](./vision/specs/) | Permanent design specs (per LSA: never deleted) |
-| [`vision/plans/`](./vision/plans/) | Implementation plans (per LSA: temporary, archived after sync) |
-| [`vision/experience/`](./vision/experience/) | Source documents the vision distills from (`.docx`) |
-| [`core/`](./core/) | The `core` plugin |
-| [`lsa/`](./lsa/) | The `lsa` plugin |
-| [`.claude-plugin/marketplace.json`](./.claude-plugin/marketplace.json) | Marketplace catalog |
+| The constitution | [`vision/VISION.md`](./vision/VISION.md) |
+| The module map + NFRs | [`vision/specs/main.spec.md`](./vision/specs/main.spec.md) |
+| Permanent module specs | [`vision/specs/modules/core/spec.md`](./vision/specs/modules/core/spec.md), [`vision/specs/modules/lsa/spec.md`](./vision/specs/modules/lsa/spec.md) |
+| Cross-feature standards | [`vision/specs/standards/`](./vision/specs/standards/) — `code.md`, `testing.md`, `agents.md` |
+| LSA config for this repo | [`./.lsa.yaml`](./.lsa.yaml) |
+| Marketplace catalog | [`.claude-plugin/marketplace.json`](./.claude-plugin/marketplace.json) |
+| The two plugins | [`core/`](./core/), [`lsa/`](./lsa/) |
+| Completed feature history | [`vision/specs/archive/`](./vision/specs/archive/) (read-only) |
 
 ## Discipline
 
-- **Per-plugin SemVer + CHANGELOG.** Every plugin maintains `<plugin>/CHANGELOG.md` (Keep a Changelog format) paired with a SemVer in `<plugin>/.claude-plugin/plugin.json`. **Bump version in the same commit as the changelog entry.** See [`vision/VISION.md`](./vision/VISION.md) §1 "Distribution + versioning".
-- **Spec-grounding.** Every code/spec/skill change should trace to a spec or plan. Currently aspirational — LSA v0.1.1 doesn't yet adapt to this repo's `vision/specs/` layout; see [`lsa/CHANGELOG.md`](./lsa/CHANGELOG.md) `[Unreleased]` for v0.2.0 work.
+- **Per-plugin SemVer + CHANGELOG.** Every plugin maintains `<plugin>/CHANGELOG.md` (Keep a Changelog) paired with a SemVer in `<plugin>/.claude-plugin/plugin.json`. **Bump version in the same commit as the changelog entry.** See [`vision/VISION.md`](./vision/VISION.md) §1 "Distribution + versioning".
+- **Spec-grounding.** Every code/spec/skill change traces to a spec or plan; direct artifact edits are absorbed via `lsa-reconcile` (Level 2.5).
 - **Fact-grounding.** Every claim with a path:line + quote. No hedging in place of sourcing.
 - **GitHub account.** This repo lives at `github.com/NVZver/claude-marketplace`. Push under the `NVZver` GitHub account (`gh auth switch` if needed) — not the work account.
-
-## Known gaps
-
-This CLAUDE.md is a **bridge**, not yet the LSA constitution. LSA's `lsa-init` expects a `/CLAUDE.md` and writes to `/specs/` at repo root; this repo's truth source is `vision/VISION.md` and specs live under `vision/specs/`. LSA v0.2.0 will accept overrides so the two reconcile cleanly. Until then:
-
-- **Do not run `/lsa:init` against this repo.** It would create a parallel `/specs/` shadow that drifts from `vision/specs/`.
-- `core/ground-rules` and `core/actor-template` apply freely — they're filesystem-agnostic.
-- The other LSA skills (`lsa-specify`, `lsa-plan`, etc.) will trigger by description match but their I/O assumes the standard LSA layout. Treat their output as advisory until v0.2.0.
-
-For the migration history that produced this state, see [`lsa/CHANGELOG.md`](./lsa/CHANGELOG.md) v0.1.0 entry.

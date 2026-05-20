@@ -5,80 +5,96 @@ description: >
   skill after a feature is merged during the replan phase, when the user says "update
   the constitution", "revise standards", "update CLAUDE.md", or when decisions made
   during a feature should be captured as permanent project standards. Single
-  responsibility: CLAUDE.md and /specs/standards/ only. Never touches specs, src,
-  or skills.
+  responsibility: the configured constitution path and ${specs_root}/standards/ only.
+  Never touches specs, src, or skills.
 ---
 
 # LSA Revise Constitution
 
-Single responsibility: propose and apply changes to `/CLAUDE.md` and `/specs/standards/` only.
+Single responsibility: propose and apply changes to the path configured by `.lsa.yaml: constitution` (default `/CLAUDE.md`) and to `${specs_root}/standards/` only. This skill does nothing else.
 
-## Step 1 — Read Sources
+## Goal
 
-1. `/CLAUDE.md` (mandatory)
-2. `/specs/standards/code.md`
-3. `/specs/standards/testing.md`
-4. `/specs/standards/agents.md`
-5. `/specs/archive/<latest-feature>/` — decisions made during the completed feature
+After a feature is merged, propose and apply constitution / standards changes the feature taught us — one change at a time, each with explicit human approval.
 
-## Step 2 — Identify Proposed Changes
+## Input
 
-From the completed feature, extract decisions that should become permanent standards:
-- New coding patterns or conventions adopted
-- New testing rules or coverage requirements
-- New agent behavior rules
-- Corrections to existing standards that proved incorrect in practice
+- `.lsa.yaml` (or LSA defaults) for `constitution` path and `specs_root`.
+- The most recently archived feature directory at `${specs_root}/archive/<latest-feature>/` — decisions made during the completed feature.
+- A human-provided change description (or proposals derivable from the feature's `design.md` / `tasks.md`).
 
-Do NOT propose: feature-specific decisions, one-off exceptions, implementation details.
+## Steps
 
-For each proposed change, produce:
+1. **Read sources.** Read `.lsa.yaml` (or apply defaults). Then read:
+   1. `${constitution}` (mandatory)
+   2. `${specs_root}/standards/code.md`
+   3. `${specs_root}/standards/testing.md`
+   4. `${specs_root}/standards/agents.md`
+   5. `${specs_root}/archive/<latest-feature>/` — decisions made during the completed feature
 
-```markdown
-## Proposed Change [N]
+   Observable result: read-summary printed per source.
 
-**File:** /CLAUDE.md or /specs/standards/[file]
-**Section:** [section name]
-**Type:** add / modify / remove
+2. **Identify proposed changes.** From the completed feature, extract decisions that should become permanent standards:
+   - New coding patterns or conventions adopted
+   - New testing rules or coverage requirements
+   - New agent behavior rules
+   - Corrections to existing standards that proved incorrect in practice
 
-**Current:**
-[exact current content, or "none" if new]
+   Do NOT propose: feature-specific decisions, one-off exceptions, implementation details.
 
-**Proposed:**
-[exact proposed content]
+   For each proposed change, produce:
 
-**Reason:** [one sentence — what experience or decision drives this change]
-**Source:** [feature name or explicit human instruction]
-```
+   ```markdown
+   ## Proposed Change [N]
 
-## Step 3 — Human Review Gate
+   **File:** ${constitution} or ${specs_root}/standards/[file]
+   **Section:** [section name]
+   **Type:** add / modify / remove
 
-Present all proposed changes individually. For each one ask:
-**"Apply this change? Yes / No / Modify"**
+   **Current:**
+   [exact current content, or "none" if new]
 
-Do not write any file until human approves that specific change.
-If human says "Modify" — apply their correction and re-present before writing.
+   **Proposed:**
+   [exact proposed content]
 
-## Step 4 — Apply Approved Changes
+   **Reason:** [one sentence — what experience or decision drives this change]
+   **Source:** [feature name or explicit human instruction]
+   ```
 
-For each approved change:
-1. Edit the target file
-2. Tag the change: `<!-- revised: [feature-name] [YYYY-MM-DD] -->`
-3. Do not rewrite surrounding content
+   Observable result: one proposal block per change written to scratch.
 
-## Step 5 — Create Branch and Commit
+3. **Human review gate.** Present all proposed changes individually. For each one ask: **"Apply this change? Yes / No / Modify"** Do not write any file until human approves that specific change. If human says "Modify" — apply their correction and re-present before writing. Observable result: per-change decision logged.
 
-```bash
-git checkout -b constitution/<change-description>
-git add CLAUDE.md specs/standards/
-git commit -m "constitution: [summary of changes]"
-```
+4. **Apply approved changes.** For each approved change:
+   1. Edit the target file (the configured `${constitution}` or a file under `${specs_root}/standards/`).
+   2. Tag the change: `<!-- revised: [feature-name] [YYYY-MM-DD] -->`.
+   3. Do not rewrite surrounding content.
 
-Branch merges to `main` independently of any feature branch.
+   Observable result: diff shown per file.
 
-## Step 6 — Report
+5. **Create branch and commit.**
 
-List each change applied with file, section, and type. State: "Constitution updated. Branch ready for PR to main."
+   ```bash
+   git checkout -b constitution/<change-description>
+   git add ${constitution} ${specs_root}/standards/
+   git commit -m "constitution: [summary of changes]"
+   ```
+
+   Branch merges to `main` independently of any feature branch. Observable result: branch + commit exist.
+
+6. **Report.** List each change applied with file, section, and type. State: "Constitution updated. Branch ready for PR to main."
+
+## Output
+
+Updated `${constitution}` and/or files under `${specs_root}/standards/`, each tagged `<!-- revised: [feature-name] [YYYY-MM-DD] -->`. A `constitution/<change-description>` branch ready for PR to `main`.
+
+## Constraints
+
+- **Hard confirm per change.** No bulk approval; each proposal stands or falls on its own.
+- **Never touch specs, src, or skills** — only the configured constitution and `${specs_root}/standards/`.
+- **Never rewrite surrounding content.** Limit edits to the proposed section.
+- **Mark uncertainty with `[assumption: <why>]`.** Use `[cannot verify]` rather than guessing.
 
 ---
 
-`/lsa:revise-constitution` — manual invocation
+`/lsa:revise-constitution` — manual invocation.

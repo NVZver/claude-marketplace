@@ -6,6 +6,7 @@ Two domain-neutral discipline skills that make output trustworthy and any actor 
 
 - **`ground-rules`** — Apply on every substantive task. Enforces: every factual claim carries a source + quote; no fake-confidence hedging; read the real source before answering; deliver only what was asked.
 - **`actor-template`** — Apply when authoring or editing a Skill, slash command, or workflow. Enforces the Goal / Input / Steps / Output / Constraints shape and demands every Step produce an observable result.
+- **`tier-selector`** — Apply before any non-trivial task. Classifies the work as T1 / T2 / T3 by chain-of-thought reasoning over Vision §4 boundary signals, then waits for human confirmation before any LSA ceremony fires.
 
 ## Install on Claude Code
 
@@ -15,7 +16,11 @@ Two domain-neutral discipline skills that make output trustworthy and any actor 
 /reload-plugins
 ```
 
-Invoke directly via `/core:ground-rules` or `/core:actor-template`, or let Claude trigger them automatically by description match. Run `/reload-plugins` after editing skill files to pick up changes without restart.
+Invoke directly via `/core:ground-rules`, `/core:actor-template`, or `/core:tier-selector`, or let Claude trigger them automatically by description match. Run `/reload-plugins` after editing skill files to pick up changes without restart.
+
+### Merge the CLAUDE.md fragment
+
+Copy the content of [`core/CLAUDE.md`](./CLAUDE.md) into your project's `/CLAUDE.md` (or whichever path your `.lsa.yaml` configures as the constitution). The fragment declares two always-on rules: `ground-rules` application and `tier-selector` invocation before non-trivial tasks.
 
 ## Install on Claude.ai
 

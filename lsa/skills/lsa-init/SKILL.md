@@ -4,95 +4,111 @@ description: >
   Initializes the Living Spec Architecture (LSA) for a project. Use this skill whenever
   the user says "initialize LSA", "set up specs", "init the spec structure", starts a new
   project from scratch, or wants to retrofit specs onto an existing codebase. Also triggers
-  when CLAUDE.md exists but /specs/ directory does not. This skill MUST run before any
-  other LSA skill can be used.
+  when the configured constitution exists but the configured specs_root does not. This skill
+  MUST run before any other LSA skill can be used.
 ---
 
 # LSA Init
 
-## Step 1 — Read Sources
+## Goal
 
-1. `/CLAUDE.md` (mandatory)
-2. Module-level `CLAUDE.md` files if present
+Scaffold the LSA spec tree on a project so the rest of the LSA skills (`lsa-discover`, `lsa-specify`, `lsa-plan`, `lsa-verify`, `lsa-sync`, `lsa-reconcile`, `lsa-revise-constitution`) can run against it.
 
-## Step 2 — Determine Mode
+## Input
 
-Ask the human: **"Greenfield (empty project) or brownfield (existing codebase)?"**
+- Project root containing a constitution file at the path configured by `.lsa.yaml` (default `/CLAUDE.md`).
+- Optional `.lsa.yaml` at repo root. If absent, apply LSA defaults: `constitution: /CLAUDE.md`, `specs_root: /specs/`, `mode: code`, `modules: {}`.
+- Human-confirmed mode: **greenfield** (empty project) or **brownfield** (existing codebase).
 
-### Greenfield
+## Steps
 
-Create this structure:
+1. **Read sources.** Read `.lsa.yaml` from the repo root, or apply the LSA defaults above. Then read `${constitution}` (the file at the configured constitution path; mandatory). Also read any module-level constitution-fragment files if present. Observable result: a short note printing `constitution=<path>`, `specs_root=<path>`, `mode=<value>` so the human can confirm the config is correctly picked up.
 
-```
-/specs/
-  main.spec.md
-  roadmap.md
-  research-backlog.md
-  /modules/
-  /features/
-  /standards/
-    code.md
-    testing.md
-    agents.md
-  /archive/
-```
+2. **Determine mode.** Ask the human: **"Greenfield (empty project) or brownfield (existing codebase)?"** Observable result: the answer captured.
 
-Populate `/specs/standards/` by extracting the relevant sections from `/CLAUDE.md`.
-`/specs/modules/` starts empty.
+   ### Greenfield
 
-### Brownfield
+   Create this structure under `${specs_root}`:
 
-1. Scan `/src`
-2. For each logical module found, create `/specs/modules/<module-name>/spec.md`
-3. Infer functional requirements from code. Mark every inferred item `[INFERRED — verify]`
-4. Stop. Tell human: **"Skeleton specs generated. Review and confirm before I continue."**
-5. Wait for explicit human confirmation.
+   ```
+   ${specs_root}/
+     main.spec.md
+     roadmap.md
+     research-backlog.md
+     modules/
+     features/
+     standards/
+       code.md
+       testing.md
+       agents.md
+     archive/
+   ```
 
-## Step 3 — Write Spec Files
+   Populate `${specs_root}/standards/` by extracting the relevant sections from `${constitution}`. `${specs_root}/modules/` starts empty.
 
-Write `/specs/main.spec.md`:
+   ### Brownfield
 
-```markdown
-# [Project Name] — Main Spec
+   1. Scan the artifact paths configured for each module in `.lsa.yaml: modules.*.artifact_paths` (fall back to scanning `/src/` if `.lsa.yaml` is absent — the v0.1.1 behavior).
+   2. For each logical module found, create `${specs_root}/modules/<module-name>/spec.md`.
+   3. Infer functional requirements from the artifacts. Mark every inferred item `[assumption: inferred from <source>; verify]`.
+   4. **Stop.** Tell the human: **"Skeleton specs generated. Review and confirm before I continue."**
+   5. Wait for explicit human confirmation.
 
-## Purpose
-[From CLAUDE.md]
+   Observable result: the spec tree exists on disk; the human confirms the skeleton.
 
-## Module Index
-| Module | Spec | Status |
-|--------|------|--------|
-| [name] | /specs/modules/[name]/spec.md | active / stub |
+3. **Write spec files.** Write `${specs_root}/main.spec.md`:
 
-## Cross-Module Contracts
-[API boundaries, shared types, event contracts]
+   ```markdown
+   # [Project Name] — Main Spec
 
-## Non-Functional Requirements
-[From CLAUDE.md]
-```
+   ## Purpose
+   [From the constitution]
 
-Write `/specs/roadmap.md`:
+   ## Module Index
+   | Module | Spec | Status |
+   |--------|------|--------|
+   | [name] | ${specs_root}/modules/[name]/spec.md | active / stub |
 
-```markdown
-# Roadmap
+   ## Cross-Module Contracts
+   [API boundaries, shared types, event contracts]
 
-## Feature Backlog
-| Feature | Priority | Status | Notes |
-|---------|----------|--------|-------|
-```
+   ## Non-Functional Requirements
+   [From the constitution]
+   ```
 
-Write `/specs/research-backlog.md`:
+   Write `${specs_root}/roadmap.md`:
 
-```markdown
-# Research Backlog
+   ```markdown
+   # Roadmap
 
-| Date | Topic | Summary | Recommendation | Status |
-|------|-------|---------|----------------|--------|
-```
+   ## Feature Backlog
+   | Feature | Priority | Status | Notes |
+   |---------|----------|--------|-------|
+   ```
 
-## Step 4 — Report to Human
+   Write `${specs_root}/research-backlog.md`:
 
-List all files created. State: "Run `/lsa:specify` to start the first feature."
+   ```markdown
+   # Research Backlog
+
+   | Date | Topic | Summary | Recommendation | Status |
+   |------|-------|---------|----------------|--------|
+   ```
+
+   Observable result: the three files exist with the templates above.
+
+4. **Report to human.** List all files created. State: "Run `/lsa:discover` (T2/T3 entry) or `/lsa:specify` (T3 direct) to start the first feature."
+
+## Output
+
+A populated spec tree at `${specs_root}` (greenfield) or skeleton module specs (brownfield, pending human confirmation), plus an inventory printed back to the human.
+
+## Constraints
+
+- **Never overwrite existing specs.** If `${specs_root}/` already exists with non-empty content, abort with a message naming the conflicting paths and ask the human to relocate or rename before re-running.
+- **Never invent module structure** in brownfield mode that is not derivable from `artifact_paths` (or `/src/` as the documented fallback). Every inferred requirement is tagged `[assumption: inferred from <source>; verify]`.
+- Use `[cannot verify]` rather than guessing when the source for a requirement is genuinely absent.
 
 ---
 
-`/lsa:init` — manual invocation
+`/lsa:init` — manual invocation.

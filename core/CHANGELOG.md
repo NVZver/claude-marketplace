@@ -4,8 +4,20 @@ All notable changes to the `core` plugin are documented here. Format follows [Ke
 
 ## [Unreleased]
 
+## [0.2.0] — 2026-05-20
+
 ### Added
-- `core/tests/repo-anchored.md` — dogfood self-tests (4 `ground-rules` probes, 2 `actor-template` probes, 1 V3 behavior-comparison task) anchored in this repo as the source of truth. Complements `VERIFICATION.md` (generic, portable) with repo-specific probes whose expected answers can be checked against actual file content.
+- `core/skills/tier-selector/SKILL.md` — Actor skill that classifies a task into T1/T2/T3 by applying Vision §4 boundary signals, then waits for human confirmation. Per `vision/specs/2026-05-20-lsa-v0.2.0-design.md` §4.1.
+- `core/CLAUDE.md` — opt-in always-on fragment declaring both `ground-rules` and `tier-selector` as required pre-task invocations. Mirrors the always-on/on-demand split from `vision/VISION.md:106`.
+- `core/tests/repo-anchored.md` — dogfood self-tests (4 `ground-rules` probes, 2 `actor-template` probes, 1 V3 behavior-comparison task) anchored in this repo as the source of truth. Complements `VERIFICATION.md` (generic, portable) with repo-specific probes whose expected answers can be checked against actual file content. (Previously listed under `[Unreleased]`; rolled into 0.2.0 release.)
+
+### Changed
+- `core/README.md` — adds `tier-selector` to "What's here" and adds a "Merge the CLAUDE.md fragment" install step.
+- `core/VERIFICATION.md` — adds Probe C for `tier-selector` under V2.
+- Plugin description in `core/.claude-plugin/plugin.json` extended to mention `tier-selector` (T1/T2/T3) chain-of-thought.
+
+### Notes
+- `core/registry` (the lazy-load map-not-territory skill) remains deferred to v0.3.0. `vision/VISION.md:177` notes Claude Code's per-component plugin discovery partially subsumes its role.
 
 ## [0.1.0] — 2026-05-20
 

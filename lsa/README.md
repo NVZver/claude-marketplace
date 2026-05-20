@@ -4,12 +4,41 @@ Spec-first development methodology installable as a Claude Code plugin. Specs ar
 
 ## What's here
 
-- **`lsa-init`** — Initialize `/specs/` structure on a project. Greenfield or brownfield.
-- **`lsa-specify`** — Create a feature spec from a description, with hard/soft confirm gates per file.
-- **`lsa-plan`** — Decompose an approved spec into ≤5 parallel-safe epics.
-- **`lsa-verify`** — Verify every code change traces to a spec requirement. Block untraced changes.
-- **`lsa-sync`** — Extract delta into permanent module specs; archive feature spec.
-- **`lsa-revise-constitution`** — Propose and apply changes to `/CLAUDE.md` and `/specs/standards/` only.
+| Skill | Purpose |
+|---|---|
+| **`lsa-init`** | Initialize the spec tree on a project. Greenfield or brownfield. |
+| **`lsa-discover`** | Light three-question probe at the start of every T2 / T3 task. T2 oral; T3 scratch `discovery.md`. |
+| **`lsa-specify`** | Create a feature spec from a description, with hard/soft confirm gates per file. |
+| **`lsa-plan`** | Decompose an approved spec into ≤5 parallel-safe epics. |
+| **`lsa-verify`** | Verify every change traces to a spec requirement. Code-mode, doc-mode, or mixed (per `.lsa.yaml`). Block untraced changes. Emit per-feature `metrics.md` on clean T3 PASS. |
+| **`lsa-sync`** | Extract delta into permanent module specs; archive feature spec; record per-module HEAD SHA in `.lsa-sync-state.json`; append aggregate metrics row. |
+| **`lsa-reconcile`** | Absorb direct artifact edits into module specs — Level 2.5 (`vision/VISION.md:138`). Per-module hard confirm. |
+| **`lsa-revise-constitution`** | Propose and apply changes to the configured constitution and `${specs_root}/standards/` only. |
+
+## Configuration
+
+LSA is path-configurable via an optional `.lsa.yaml` at the repo root. Minimal default-overriding example:
+
+```yaml
+constitution: vision/VISION.md       # default: /CLAUDE.md
+specs_root: vision/specs/            # default: /specs/
+mode: docs                           # docs | code | mixed. default: code
+
+modules:
+  core:
+    spec: vision/specs/modules/core/spec.md
+    artifact_paths:
+      - core/skills/**/SKILL.md
+  lsa:
+    spec: vision/specs/modules/lsa/spec.md
+    artifact_paths:
+      - lsa/skills/**/SKILL.md
+      - lsa/hooks/**/*
+```
+
+When `.lsa.yaml` is absent, LSA falls back to v0.1.1 behavior (`/CLAUDE.md`, `/specs/`, code-mode). See [`ARCHITECTURE.md`](./ARCHITECTURE.md) §4.10 for the full schema.
+
+A SessionStart drift hook (`lsa/hooks/hooks.json`) compares `artifact_paths` against the per-module SHA recorded in `.lsa-sync-state.json` (written by `lsa-sync`) and surfaces a one-line notice when there's drift — pointing the user at `/lsa:reconcile`.
 
 ## Depends on
 

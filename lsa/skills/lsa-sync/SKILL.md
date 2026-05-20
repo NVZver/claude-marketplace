@@ -4,104 +4,151 @@ description: >
   Syncs a completed feature spec into permanent module specs and archives the feature.
   Use this skill whenever a feature has passed lsa-verify, when the user says "sync the
   spec", "archive this feature", "merge and sync", or "feature is done". Mandatory before
-  merging any feature branch to main. Always runs after lsa-verify.
+  merging any feature branch to main. Always runs after lsa-verify. Also records the new
+  per-module HEAD SHA in .lsa-sync-state.json (consumed by lsa-reconcile for drift detection)
+  and, when lsa-verify produced a per-feature metrics.md, appends an aggregate row to
+  ${specs_root}/metrics.md.
 ---
 
 # LSA Sync
 
-## Step 1 — Read Sources
+## Goal
 
-1. `/CLAUDE.md` (mandatory)
-2. `/specs/features/<feature-name>/requirements.md`
-3. `/specs/features/<feature-name>/contract.yaml` (if exists)
-4. `/specs/features/<feature-name>/design.md`
-5. `/specs/features/<feature-name>/tasks.md`
-6. `/specs/modules/<name>/spec.md` for each module this feature touched
-7. `/specs/main.spec.md`
+Extract the feature delta into permanent module specs, archive the feature spec, record per-module last-sync SHAs in `.lsa-sync-state.json` (used by `lsa-reconcile` and the SessionStart drift hook), and aggregate per-feature metrics into a repo-level summary.
 
-## Step 2 — Extract Delta
+## Input
 
-From the feature spec, identify only system-level decisions to carry forward:
-- New behaviors added to a module
-- New non-functional constraints
-- New or modified cross-module contracts
-- New or modified API endpoints and data types from contract.yaml (if exists)
-- Technical decisions that apply to future features
+- A verified feature branch (lsa-verify returned clean PASS).
+- `.lsa.yaml` (or LSA defaults) for `constitution` path, `specs_root`, and `modules.*`.
 
-Do NOT extract: task statuses, implementation details, scaffolding, or anything
-specific to this feature that does not affect how the system works going forward.
+## Steps
 
-Produce a delta summary:
+1. **Read sources.** Read `.lsa.yaml` (or apply defaults). Then read:
+   1. `${constitution}` (mandatory)
+   2. `${specs_root}/features/<feature-name>/requirements.md`
+   3. `${specs_root}/features/<feature-name>/contract.yaml` (if exists)
+   4. `${specs_root}/features/<feature-name>/design.md`
+   5. `${specs_root}/features/<feature-name>/tasks.md`
+   6. `${specs_root}/modules/<name>/spec.md` for each module this feature touched
+   7. `${specs_root}/main.spec.md`
 
-```markdown
-## Delta: [Feature Name]
-Date: [date]
+   Observable result: read-summary printed per source.
 
-### Module Deltas
-| Module | Type | Decision |
-|--------|------|----------|
-| ...    | new behavior / constraint / contract | ... |
+2. **Extract delta.** From the feature spec, identify only system-level decisions to carry forward:
+   - New behaviors added to a module
+   - New non-functional constraints
+   - New or modified cross-module contracts
+   - New or modified API endpoints and data types from `contract.yaml` (if exists)
+   - Technical decisions that apply to future features
 
-### Cross-Module Contracts
-[New or modified. If none, write "none"]
+   Do NOT extract: task statuses, implementation details, scaffolding, or anything specific to this feature that does not affect how the system works going forward.
 
-### main.spec.md Updates
-[Module index changes, new global NFRs. If none, write "none"]
-```
+   Produce a delta summary:
 
-Present to human: **"These are the decisions I will merge into the module specs. Correct?"**
-Wait for explicit approval before writing any files.
+   ```markdown
+   ## Delta: [Feature Name]
+   Date: [date]
 
-## Step 3 — Merge into Module Specs
+   ### Module Deltas
+   | Module | Type | Decision |
+   |--------|------|----------|
+   | ...    | new behavior / constraint / contract | ... |
 
-For each affected module:
-1. Open `/specs/modules/<module-name>/spec.md`
-2. Append or extend the relevant sections with delta content
-3. Tag each addition: `<!-- added: [feature-name] [YYYY-MM-DD] -->`
-4. Do not rewrite or delete existing content
-5. If a conflict exists between new and existing content, stop and ask human
+   ### Cross-Module Contracts
+   [New or modified. If none, write "none"]
 
-## Step 4 — Update main.spec.md
+   ### main.spec.md Updates
+   [Module index changes, new global NFRs. If none, write "none"]
+   ```
 
-- Add new modules to the module index if created
-- Add new global NFRs or contracts if any
-- If contract.yaml exists, update the Cross-Module Contracts section with new or modified endpoints and data types
-- Tag each change: `<!-- added: [feature-name] [YYYY-MM-DD] -->`
+   Present to human: **"These are the decisions I will merge into the module specs. Correct?"** Wait for explicit approval before writing any files. Observable result: delta written to scratch; human approval logged.
 
-## Step 5 — Archive Feature Spec
+3. **Merge into module specs.** For each affected module:
+   1. Open `${specs_root}/modules/<module-name>/spec.md`.
+   2. Append or extend the relevant sections with delta content.
+   3. Tag each addition: `<!-- added: [feature-name] [YYYY-MM-DD] -->`.
+   4. Do not rewrite or delete existing content.
+   5. If a conflict exists between new and existing content, stop and ask human.
 
-```bash
-mv /specs/features/<feature-name>/ /specs/archive/$(date +%Y-%m-%d)-<feature-name>/
-```
+   Observable result: per-module diff shown.
 
-`/specs/features/` must be empty after this step.
+4. **Update `main.spec.md`.**
+   - Add new modules to the module index if created.
+   - Add new global NFRs or contracts if any.
+   - If `contract.yaml` exists, update the Cross-Module Contracts section with new or modified endpoints and data types.
+   - Tag each change: `<!-- added: [feature-name] [YYYY-MM-DD] -->`.
 
-## Step 6 — Sync Report
+   Observable result: `${specs_root}/main.spec.md` updated; diff shown.
 
-```markdown
-# Sync Report: [Feature Name]
-Date: [date]
+5. **Archive feature spec.**
 
-## Module Specs Updated
-| Module | Changes |
-|--------|---------|
-| ...    | ... |
+   ```bash
+   mv ${specs_root}/features/<feature-name>/ ${specs_root}/archive/$(date +%Y-%m-%d)-<feature-name>/
+   ```
 
-## main.spec.md Updated
-[yes — what changed / no]
+   `${specs_root}/features/` must be empty after this step (for this feature). Observable result: archive directory exists at the new path; original is gone.
 
-## Archived To
-/specs/archive/[date]-[feature-name]/
+6. **Update `.lsa-sync-state.json`** at the repo root (sibling of `.lsa.yaml`). Shape:
 
-## PR Checklist
-- [ ] Module specs reviewed by human
-- [ ] main.spec.md reviewed by human
-- [ ] Feature spec archived
-- [ ] Branch ready for PR to main
-```
+   ```json
+   {
+     "modules": {
+       "<name>": {
+         "last_sync_sha": "<HEAD-SHA>",
+         "last_sync_iso": "<ISO-8601 timestamp>"
+       }
+     }
+   }
+   ```
 
-Present report. Ask: **"Sync complete. Ready to create PR to main?"**
+   If the file exists, update only the modules touched by this feature; preserve other modules' entries. If absent, create it. Observable result: the file contains a fresh SHA + ISO timestamp per touched module.
+
+7. **Aggregate metrics (optional).** If `${specs_root}/archive/$(date +%Y-%m-%d)-<feature-name>/metrics.md` exists (i.e., `lsa-verify` wrote it on clean PASS for this T3 feature), append a one-line row to `${specs_root}/metrics.md` (create the file with a header if absent). One row per archived feature. Observable result: aggregate file has the new row.
+
+8. **Sync report.**
+
+   ```markdown
+   # Sync Report: [Feature Name]
+   Date: [date]
+
+   ## Module Specs Updated
+   | Module | Changes |
+   |--------|---------|
+   | ...    | ... |
+
+   ## main.spec.md Updated
+   [yes — what changed / no]
+
+   ## Archived To
+   ${specs_root}/archive/[date]-[feature-name]/
+
+   ## .lsa-sync-state.json
+   [modules updated]
+
+   ## Aggregate metrics
+   [row appended / no metrics.md present]
+
+   ## PR Checklist
+   - [ ] Module specs reviewed by human
+   - [ ] main.spec.md reviewed by human
+   - [ ] Feature spec archived
+   - [ ] Branch ready for PR to main
+   ```
+
+   Present report. Ask: **"Sync complete. Ready to create PR to main?"** Observable result: report on screen; human decision logged.
+
+## Output
+
+Updated module specs (tagged), updated `${specs_root}/main.spec.md`, archived feature directory at `${specs_root}/archive/YYYY-MM-DD-<feature-name>/`, updated `.lsa-sync-state.json` at repo root, optional appended row in `${specs_root}/metrics.md`, and a sync report.
+
+## Constraints
+
+- **Human reviews the delta before any spec write.** No silent merges into module specs.
+- **Never delete content** during sync. Additions are tagged; conflicts halt the skill.
+- **Tag every addition** with `<!-- added: [feature-name] [YYYY-MM-DD] -->`.
+- **Preserve other modules' state** when writing `.lsa-sync-state.json`. Only touch the keys for modules involved in this feature.
+- **Mark uncertainty with `[assumption: <why>]`.** Use `[cannot verify]` rather than guessing.
 
 ---
 
-`/lsa:sync` — manual invocation
+`/lsa:sync` — manual invocation.

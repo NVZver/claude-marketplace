@@ -1,0 +1,17 @@
+{
+  "description": "LSA — surface artifact drift at session start",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/session-start-drift-check.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}
