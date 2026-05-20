@@ -44,7 +44,7 @@ claude-marketplace/                       (repo root)
 │   │       └── SKILL.md                   ← NEW
 │   ├── README.md                          ← NEW (install paths for both surfaces)
 │   └── VERIFICATION.md                    ← NEW (manual smoke checks)
-├── LSA/                                   (unchanged for v1)
+├── lsa/                                   (migrated to plugin layout post-v1 — see lsa/CHANGELOG.md)
 └── vision/
     ├── VISION.md                          (source of truth for "why")
     ├── SKILL.md                           (kept as the design draft of ground-rules)

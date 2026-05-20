@@ -7,6 +7,11 @@
       "name": "core",
       "source": "./core",
       "description": "Domain-neutral discipline: ground-rules + actor-template."
+    },
+    {
+      "name": "lsa",
+      "source": "./lsa",
+      "description": "Living Spec Architecture: spec-first methodology with six skills (init, specify, plan, verify, sync, revise-constitution) and human gates at every phase."
     }
   ]
 }
