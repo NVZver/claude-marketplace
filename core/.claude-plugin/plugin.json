@@ -1,0 +1,6 @@
+{
+  "name": "core",
+  "description": "Domain-neutral discipline for trustworthy output: fact-grounding (sources + quotes), no fake-confidence hedging, read-before-write, only-required-output, and the Goal/Input/Steps/Output/Constraints shape for any actor (skill, slash command, or workflow).",
+  "version": "0.1.0",
+  "author": { "name": "Nikita Zverev" }
+}
