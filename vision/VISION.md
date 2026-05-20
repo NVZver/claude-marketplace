@@ -41,7 +41,7 @@ Under all five sits a stable DNA. The vision keeps the DNA and discards the cere
 - **Three principles.** Separation of Concerns, DRY, KISS. Every actor is `Goal + Input + Steps + Output + Constraints`, no more. Every step produces an observable result.
 - **Source-of-truth first, runtime-discovered.** Read the truth before acting. Bind tools at runtime by description match. No hard-coded vendor names.
 - **Production prompt techniques.** Role+Goal, Chain-of-Thought via numbered steps, few-shot in frontmatter, structured output, constraints kept distinct from quality rules.
-- **Distribution + versioning.** Registry, SemVer, bump-before-publish, one-line install.
+- **Distribution + versioning.** Registry, SemVer, per-plugin CHANGELOG, bump-before-publish, one-line install.
 - **Human gates + TDD + measurement** as defaults, not afterthoughts.
 - **Dogfood.** Use the system to build the system.
 
