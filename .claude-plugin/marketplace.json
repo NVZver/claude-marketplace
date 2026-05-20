@@ -1,0 +1,12 @@
+{
+  "name": "nz-vision",
+  "owner": { "name": "Nikita Zverev" },
+  "description": "Vision — a personal, model-agnostic agentic engineering system. Domain-neutral core, on-demand packs.",
+  "plugins": [
+    {
+      "name": "core",
+      "source": "./core",
+      "description": "Domain-neutral discipline: ground-rules + actor-template."
+    }
+  ]
+}
