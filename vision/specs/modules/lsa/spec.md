@@ -2,7 +2,7 @@
 
 The Living Spec Architecture plugin. Eight skills + one SessionStart hook + a config schema.
 
-**Plugin manifest:** [`lsa/.claude-plugin/plugin.json`](../../../../lsa/.claude-plugin/plugin.json) (v0.2.1)
+**Plugin manifest:** [`lsa/.claude-plugin/plugin.json`](../../../../lsa/.claude-plugin/plugin.json) (v0.5.0)
 **Plugin README** (skill table, install, configuration): [`lsa/README.md`](../../../../lsa/README.md)
 **Architecture** (directory structure, `.lsa.yaml` schema, branch management, resolved decisions): [`lsa/ARCHITECTURE.md`](../../../../lsa/ARCHITECTURE.md)
 **Per-skill behavior** (source of truth per skill): [`lsa/skills/*/SKILL.md`](../../../../lsa/skills/)
@@ -26,8 +26,9 @@ The Living Spec Architecture plugin. Eight skills + one SessionStart hook + a co
 
 ## Invariants
 
-- **Versioning.** `lsa` evolves with its own SemVer + CHANGELOG (`vision/VISION.md` §1 *"Distribution + versioning"*). Currently v0.2.1.
+- **Versioning.** `lsa` evolves with its own SemVer + CHANGELOG (`vision/VISION.md` §1 *"Distribution + versioning"*). Currently v0.5.0.
 - **Markdown + small JSON / YAML / bash surface.** No `/src/`. Plugin manifest is JSON; config is YAML; hook is bash. Per `vision/specs/standards/code.md`.
-- **Depends on `core` v0.2.0** for `tier-selector`. Documented in `lsa/.claude-plugin/plugin.json: description` and `lsa/README.md` *"Depends on"*.
+- **Depends on `core` v0.4.0** for `tier-selector` (added v0.2.0) and `core/output` (added v0.4.0; cited from every LSA skill per `lsa/CHANGELOG.md` [0.4.0]). Documented in `lsa/.claude-plugin/plugin.json: description` and `lsa/README.md` *"Depends on"*.
 - **Spec source-of-truth.** Each skill's behavior is owned by its `SKILL.md`; this module spec carries module-level invariants only — not a per-skill catalog (that's `lsa/README.md`).
 - **Reconcile is absorptive, not blocking** (`vision/VISION.md:144`). The `lsa-reconcile` skill never blocks, reverts, or reformats artifact edits.
+- **`lsa-specify` Gate 2 — diagonal cross-artifact coverage.** Gate 2 renders a 4-row coverage table (AC→Journey, Journey→Design, Design→Contract, Contract→test-suites). Each row cites two artifact lines in `file:line` format; `✗` rows surface as Rule 6 decision blocks that block approval until resolved. Per `lsa/skills/lsa-specify/SKILL.md:154` (Step 5 body) and `vision/specs/archive/2026-05-21-diagonal-cross-artifact-analysis/` (post-`lsa-sync`).
