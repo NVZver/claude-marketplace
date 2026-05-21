@@ -20,14 +20,16 @@ Establish minimum-viable context — which module the change touches, what the c
 
 1. **Read `.lsa.yaml` and list candidate module names.** Read `modules.*` keys; if `.lsa.yaml` is absent, list module directories under `${specs_root}/modules/` instead. Observable result: the candidate-module list printed back to the human (so the answer to question (a) below is constrained, not invented).
 
-2. **Ask the three-question discovery probe.** Ask, exactly three questions, in this order:
-   - (a) **Which module(s) does this touch?** (Pick from the list printed in Step 1, or say "new module: <name>" if none fit.)
-   - (b) **What's the change in one sentence?**
-   - (c) **What's the acceptance criterion in one sentence?** (How will we know the change is done?)
+2. **Ask the three-question discovery probe — assume-then-override.** Question (a) is constrained to the candidates from Step 1. For (b) and (c), propose 2 candidate framings from the module spec(s) so the human picks rather than invents. Silence on a line = approval.
 
-   Observable result: three short answers captured in the working scratch.
+   Present:
+   - module(s) — picked from Step 1's list, or `new module: <name>`
+   - 2 candidate one-line framings for the change + `custom` option
+   - 2 candidate one-line acceptance criteria + `custom` option
 
-3. **For T2 only** — write a single-paragraph context summary (one paragraph, 2–4 sentences) naming the chosen module(s), the change, and the AC. **Stop** there. The agent then writes a failing test, implements the change, and runs `/lsa:verify`. Observable result: the context paragraph printed back to the human; no files written to `${specs_root}/`.
+   Format per [`core/output`](../../../core/skills/output/SKILL.md); `AskUserQuestion` for each pick in Claude Code. Observable result: three answers captured (module + change + AC) in the working scratch.
+
+3. **For T2 only** — render the discovery as a 3-row table (Module / Change / Acceptance) per [`core/output`](../../../core/skills/output/SKILL.md). **Stop** there. The agent then writes a failing test, implements the change, and runs `/lsa:verify`. Observable result: the table printed back to the human; no files written to `${specs_root}/`.
 
 4. **For T3 only** — write a draft `discovery.md` block under the working feature directory (a scratch file, not yet committed; `lsa-specify` consumes and expands it into the formal feature spec):
 
@@ -51,6 +53,7 @@ Establish minimum-viable context — which module the change touches, what the c
 - **Three questions, no more.** If deeper context is needed, escalate back to `tier-selector` for a tier-bump rather than asking question four.
 - **Do not write to the configured `specs_root`.** That is `lsa-specify`'s responsibility. The T3 `discovery.md` is a working scratch file, not a spec write.
 - **Do not invent module names** not present in `.lsa.yaml` (or under `${specs_root}/modules/` when `.lsa.yaml` is absent). If the chosen module does not exist, capture it explicitly as `new module: <name>` so downstream phases know to create it.
+- Outputs follow [`core/output`](../../../core/skills/output/SKILL.md) golden rules (structured, minimal, formatted, sourced).
 
 ---
 

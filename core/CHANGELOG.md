@@ -4,6 +4,19 @@ All notable changes to the `core` plugin are documented here. Format follows [Ke
 
 ## [Unreleased]
 
+## [0.4.1] — 2026-05-21
+
+Credo rollout PR 2 — `core/tier-selector` adopts its component-specific output format that satisfies `core/output` golden rules. Patch bump: skill contract unchanged (still proposes tier + waits for human confirm); only the render format updates. Per [`vision/plans/2026-05-20-credo-rollout-plan.md`](../vision/plans/2026-05-20-credo-rollout-plan.md) Layer 2.
+
+### Changed
+- `core/skills/tier-selector/SKILL.md` Step 4 — confirm prompt describes data + decision options + outcomes inline; defers format to `core/output` (no embedded template). `AskUserQuestion` is the canonical decision primitive in Claude Code.
+- `core/skills/tier-selector/SKILL.md` Constraints — adds one citation line: *"Outputs follow `core/output` golden rules."*
+- `core/skills/tier-selector/SKILL.md` footer — updated to mention both `core/ground-rules` (content) and `core/output` (format) as the two always-on disciplines.
+
+### Notes
+- No behavior change. The boundary signals + tier-classification logic + wait-for-confirm gate are unchanged.
+- Sibling LSA-skill refit ships as `lsa` v0.4.0 (PR 2) and Vision v0.6.
+
 ## [0.4.0] — 2026-05-21
 
 Codifies the user-authored credo *"LSA doesn't automate your thinking — it makes you own it."* with a DRY/KISS/SRP-clean structure. Extends `ground-rules` 4 → 6 content rules; extracts output discipline to a new dedicated skill; lifts the verdict vocabulary to a new Knowledge surface. Per [`vision/plans/2026-05-20-credo-rollout-plan.md`](../vision/plans/2026-05-20-credo-rollout-plan.md) PR 1 (audit-C restructure). Corresponds to Vision v0.5 (`vision/VISION.md` changelog).

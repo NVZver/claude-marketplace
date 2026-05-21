@@ -1,7 +1,7 @@
 # Living Spec Architecture (LSA)
-**Version:** 0.2.1 (plugin)
+**Version:** 0.4.0 (plugin)
 **Author:** Nikita Zverev
-**Status:** 0.2.1 — Vision-aligned; dogfooded on `claude-marketplace`. See [`../vision/specs/2026-05-20-lsa-v0.2.0-design.md`](../vision/specs/2026-05-20-lsa-v0.2.0-design.md).
+**Status:** 0.4.0 — Vision-aligned; dogfooded on `claude-marketplace`; each skill cites `core/output` for output discipline. See [`../vision/specs/2026-05-20-lsa-v0.2.0-design.md`](../vision/specs/2026-05-20-lsa-v0.2.0-design.md) for the earlier baseline and [`../vision/plans/2026-05-20-credo-rollout-plan.md`](../vision/plans/2026-05-20-credo-rollout-plan.md) for the credo-rollout restructure.
 
 ---
 
@@ -11,13 +11,23 @@ LSA is a spec-first development methodology where specs are the permanent source
 
 Humans write and own specs. Agents write and own artifacts. Direct artifact edits are absorbed into the spec via the **reconcile loop** rather than blocked (`vision/VISION.md:135`).
 
+### How `core/output` constrains LSA
+
+Every LSA skill's human-facing prompt and output adopts a component-specific format (the S1–S17 samples in `vision/plans/2026-05-20-credo-rollout-plan.md`) that satisfies the four golden rules in [`../core/skills/output/SKILL.md`](../core/skills/output/SKILL.md): structured, minimal, formatted, sourced. The mechanical consequences across LSA:
+
+- **`lsa-discover` Output is a 3-row table** (Module / Change / AC), not a paragraph — verdict-first, scannable.
+- **`lsa-specify` collapses 7 confirm stops to 3 bundled gates** (Gate 1 = requirements + contract-trigger; Gate 2 = test-suites + contract + design; Gate 3 = final integration) — fewer interruptions, same coverage.
+- **`lsa-verify` reports lead with the verdict** (`✅ PASS` / `❌ FAIL` / `⚠️ PASS WITH WARNINGS`); metadata moves below the fold.
+- **Every decision-bearing prompt uses `AskUserQuestion`** in Claude Code (per `vision/VISION.md` §2 principle 9 — *"Substrate-native first"*); text decision-blocks are the fallback for plain-text rendering.
+
 This document is the design-rationale narrative for `lsa`. For other concerns, see:
 
 - **Operating constitution + first principles** — [`../vision/VISION.md`](../vision/VISION.md)
 - **Per-skill behavior** — [`skills/*/SKILL.md`](./skills/) (each `SKILL.md` is the source of truth for its skill)
 - **User-facing skill list + install** — [`README.md`](./README.md)
 - **Module-level invariants** — [`../vision/specs/modules/lsa/spec.md`](../vision/specs/modules/lsa/spec.md)
-- **Fact-grounding policy** — [`../core/skills/ground-rules/SKILL.md`](../core/skills/ground-rules/SKILL.md)
+- **Content discipline** — [`../core/skills/ground-rules/SKILL.md`](../core/skills/ground-rules/SKILL.md) (6 rules)
+- **Output discipline** — [`../core/skills/output/SKILL.md`](../core/skills/output/SKILL.md) (4 golden rules)
 - **Tier flow (T1 / T2 / T3) + boundary signals** — [`../vision/VISION.md`](../vision/VISION.md) §4
 - **Testing policy** — [`../vision/specs/standards/testing.md`](../vision/specs/standards/testing.md)
 

@@ -2,6 +2,12 @@
 
 Spec-first development methodology installable as a Claude Code plugin. Specs are the permanent source of truth; every code change traces to a spec requirement; human gates at every phase. For the design rationale, see [`ARCHITECTURE.md`](./ARCHITECTURE.md).
 
+## LSA's expression of the credo
+
+> *"LSA doesn't automate your thinking — it makes you own it."*
+
+Every LSA gate is a decision asked of the human with explicit consequences; every artifact traces back to a human-owned requirement; every reconcile keeps the human in the loop. See [`../core/CLAUDE.md`](../core/CLAUDE.md) for the operating credo and [`../core/skills/ground-rules/SKILL.md`](../core/skills/ground-rules/SKILL.md) Rule 0 (Ownership over automation).
+
 ## What's here
 
 | Skill | Purpose |
@@ -70,4 +76,4 @@ LSA writes spec files to disk and reads `/CLAUDE.md` — it depends on a filesys
 
 ## Naming note
 
-LSA's `/specs/standards/` directory holds technical standards (`code.md`, `testing.md`) extracted from the project's `/CLAUDE.md`. It is **not** the same as the [`core/ground-rules`](../core/skills/ground-rules/) skill — Core's `ground-rules` enforces four discipline rules (fact-grounding, no fake-confidence hedging, read-the-source, only-required-output) on every prompt. The two coexist in the marketplace and are independently installable.
+LSA's `/specs/standards/` directory holds technical standards (`code.md`, `testing.md`) extracted from the project's `/CLAUDE.md`. It is **not** the same as the [`core/ground-rules`](../core/skills/ground-rules/) skill — Core's `ground-rules` enforces six content discipline rules (ownership, fact-grounding, no fake-confidence hedging, read-the-source, only-required-output, no-filler); Core's `output` skill enforces four format golden rules (structured, minimal, formatted, sourced). The two coexist in the marketplace and are independently installable.

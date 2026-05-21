@@ -105,7 +105,7 @@ Decompose an approved feature spec into ≤5 parallel-safe epics with self-verif
 
    Observable result: `${specs_root}/features/<feature-name>/tasks.md` exists.
 
-5. **Human review gate.** Present `tasks.md`. Ask: **"Does this plan look correct? Approve to start implementation, or tell me what to adjust."** Do not start implementation until human gives explicit approval. Observable result: human approval logged.
+5. **Human review gate.** Present rendered `tasks.md` + the 5-row self-verification table (Traceability / Accuracy / Consistency / Test coverage / Completeness — PASS / FAIL per row with reason on FAIL) + decision `[a] approve → implementation begins (TDD per epic, parallel where safe)` / `[b] adjust → re-decompose, re-present` / `[c] reject → return to lsa-specify for scope reduction`. Format per [`../../../core/skills/output/SKILL.md`](../../../core/skills/output/SKILL.md); `AskUserQuestion` for the decision. Do not start implementation until human gives explicit approval. Observable result: human approval logged.
 
 ## Output
 
@@ -116,6 +116,7 @@ Decompose an approved feature spec into ≤5 parallel-safe epics with self-verif
 - **Maximum five epics.** If the work cannot be decomposed in five parallel-safe slices, escalate back to `lsa-specify` for scope reduction before planning.
 - **Each epic is independent (or its dependency is explicit).** Implicit ordering is not permitted.
 - **Do not start implementation** until human approves `tasks.md`.
+- Outputs follow [`core/output`](../../../core/skills/output/SKILL.md) golden rules (structured, minimal, formatted, sourced).
 
 ---
 
