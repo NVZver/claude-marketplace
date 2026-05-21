@@ -1,7 +1,7 @@
 # The Vision
 
 **Working name:** Vision (placeholder — to be named later)
-**Version:** 0.4 — draft for review
+**Version:** 0.5 — draft for review
 **Scope:** Tech is the first pack; the **core is domain-neutral**. Substrate: **Claude Code only.** (The Claude App is something you manage yourself; the system does not target it.)
 **Status:** Vision only. Build comes next, together.
 **Target rigor:** Level 2.5 — spec-anchored, human may edit code under gates; the system reconciles drift gracefully rather than forbidding the edit.
@@ -10,7 +10,7 @@
 
 ## 0. The one sentence
 
-> Build a personal, model-agnostic agentic engineering system whose single job is **trustworthy output** — every fact traces to a source, every line of code traces to a spec — and whose **ceremony scales to the weight of the task**.
+> Build a personal, model-agnostic agentic engineering system whose single job is **trustworthy output** — every fact traces to a source, every line of code traces to a spec — and whose **ceremony scales to the weight of the task**. And whose operating philosophy is **ownership over automation** — the system does not think for the human; it makes the human think.
 
 Everything below serves that sentence.
 
@@ -52,6 +52,7 @@ Under all five sits a stable DNA. The vision keeps the DNA and discards the cere
 These are the rules the whole system answers to. Short on purpose.
 
 1. **Trust is the product.** A fast wrong answer is a defect. A grounded "I cannot verify this" is a feature.
+   - **1a. Ownership over automation.** The system surfaces facts, lays out options, and demands choice. It never silently decides on the human's behalf. (See `core/ground-rules` Rule 0.)
 2. **Two groundings, always.** Facts trace to sources. Code traces to specs. No exceptions; only explicit, marked assumptions.
 3. **Ceremony scales to weight.** A typo fix does not get a discovery phase. A new module does not skip one. The system *escalates* rigor; it never front-loads it.
 4. **Knowledge is not Actor.** Keep what-is-true separate from how-to-act. Boundary violations are the highest-severity defect.
@@ -59,6 +60,7 @@ These are the rules the whole system answers to. Short on purpose.
 6. **Read before you write.** In-repo config → in-repo docs → the code itself → external sources → ask the human. In that order.
 7. **The human owns intent; the system absorbs reality.** Specs and gates are human-owned. Code and execution are agent-owned. But a developer may edit code directly — the system's job is then to *reconcile*: detect the divergence and offer to update the spec to match, never to block the edit or silently let the spec rot. The goal is to improve devs' lives, not retrain how they work.
 8. **The system improves itself.** Every iteration leaves a trace: a retro, a metric, a changelog entry. Drift is a measured failure mode, not a surprise.
+9. **Substrate-native first.** When the platform provides a primitive — picker, file API, task tracker, verifier — use it. Don't ship a text-shadow of a feature the substrate already gives you. In Claude Code: `AskUserQuestion` for decisions, `Read`/`Edit`/`Write` for files, `TaskCreate`/`TaskUpdate` for task tracking, `Skill` for skill invocation. Informs `core/ground-rules` (read protocol — rule 3) and `core/output` (picker-and-format selection).
 
 ---
 
@@ -252,6 +254,7 @@ Pass/fail hides variance — a skill that passes once may fail 4-in-10. **Verdic
 
 ## Changelog
 
+- **v0.5** — Codified the operating-philosophy credo: §0 sentence + §2 sub-principle 1a (*Ownership over automation*) + §2 principle 9 (*Substrate-native first*). The `core/ground-rules` skill extended 4 → 6 content rules (added Rule 0 Ownership + Rule 5 No filler + Rule 1 amendment Scope + Illustrative). NEW skill `core/output` ships the four format golden rules (structured, minimal, formatted, sourced) every component cites — single source of truth for output discipline. NEW Knowledge surface `core/knowledge/output-vocabulary.md` lifts the verdict vocabulary out of any Actor body. Corresponds to `core` plugin v0.4.0. The LSA-skill refit (per-component formats adopt their pre-approved S-samples; Constraints cite `core/output`) lands as Vision v0.6 alongside `lsa` plugin v0.4.0.
 - **v0.4** — Simplified to **Claude Code only.** Removed the Claude App as a target (managed separately by the user), and dropped the dual-track packaging (no zips, no per-surface build). Distribution is the native `claude-marketplace` repo. Resolved the long-running activation tension: `ground-rules` ships as an always-on `CLAUDE.md` fragment; `tier-selector` and `actor-template` ship as on-demand skills.
 - **v0.3** — Introduced the **core + packs** architecture (BMAD-style, inverted: the domain-neutral discipline is the core, tech is the first pack — not the privileged center). Defined the core/pack test ("does it depend on code existing?"). Decided the four discipline rules are **always-on** across all tiers; tiers govern workflow ceremony only. Refined "zero hedging" to target unsupported claims, not honest opinion. Drafted the three core skills.
 - **v0.2** — Resolved five of six open decisions. Set target rigor to **Level 2.5** and added the **reconcile loop** as its defining capability (system absorbs direct code edits into the spec rather than forbidding them). Made the system **Claude-Code-first and unified** (App is secondary/optional). Gave the orchestrator **chain-of-thought tier selection** with four worked examples. Replaced the three "Adjust" items with concrete before/after examples (EARS, library-spec cache, statistical eval) and verdicts. Set the three tracked metrics (accuracy to task, proven facts with sources, only-required-changes). Dropped the GAE name; "Vision" placeholder.

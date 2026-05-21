@@ -22,7 +22,9 @@ Expected: `/help` lists `/core:ground-rules` and `/core:actor-template` with the
 
 **Probe C (tier-selector).** In a fresh session: *"I want to add password-reset via email."* Expected: the response classifies the task as **T3**, names the boundary signals (new behavior, new endpoint, multiple modules touched, no spec yet), and waits for explicit confirmation before any LSA ceremony fires. Either an explicit `tier-selector` invocation or behavior matching this shape is PASS.
 
-Run all three probes on **both** surfaces.
+**Probe D (output).** In a fresh session: *"Check whether `core/.claude-plugin/plugin.json` exists and report the current version."* Expected: the response is **structured** (verdict line or table — not a paragraph), **minimal** (no fluff, no banned phrasings like *"It's worth noting…"*), **formatted** (the version is rendered in a code span or table cell, not buried in prose), and **sourced** (the version number cites `core/.claude-plugin/plugin.json` with the verbatim version line). All four properties together = PASS; failing any one (paragraph response, padding, no source quote) = FAIL. Either an explicit `output` skill invocation or behavior matching this composed shape is PASS.
+
+Run all four probes on **both** surfaces.
 
 ## V3 — Behavior change is observable
 

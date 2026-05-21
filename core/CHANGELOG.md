@@ -4,6 +4,34 @@ All notable changes to the `core` plugin are documented here. Format follows [Ke
 
 ## [Unreleased]
 
+## [0.4.0] — 2026-05-21
+
+Codifies the user-authored credo *"LSA doesn't automate your thinking — it makes you own it."* with a DRY/KISS/SRP-clean structure. Extends `ground-rules` 4 → 6 content rules; extracts output discipline to a new dedicated skill; lifts the verdict vocabulary to a new Knowledge surface. Per [`vision/plans/2026-05-20-credo-rollout-plan.md`](../vision/plans/2026-05-20-credo-rollout-plan.md) PR 1 (audit-C restructure). Corresponds to Vision v0.5 (`vision/VISION.md` changelog).
+
+### Added
+- **NEW skill `core/skills/output/SKILL.md`** — single source of truth for output discipline. Four golden rules: (1) Structured, (2) Minimal, (3) Formatted, (4) Sourced (cites `core/ground-rules` Rule 1). Every other skill / agent / artifact cites this; nothing restates it. Body ≤30 lines.
+- **NEW Knowledge surface `core/knowledge/output-vocabulary.md`** — 10-row verdict label table (`PROPOSED` / `READY` / `PASS` / `PASS WITH WARNINGS` / `FAIL` / `BLOCKED` / `DRIFT` / `CLEAN` / `APPLIED` / `REJECTED`) lifted out of any Actor body (SRP). Components whose chosen format uses a verdict line cite this surface by section name.
+- `core/skills/ground-rules/SKILL.md` Rule 0 — *Ownership over automation* (the human owns the thinking; surfaces facts, lays out options, demands a choice). Per `vision/VISION.md:60`.
+- `core/skills/ground-rules/SKILL.md` Rule 5 — *No filler* (every sentence carries a fact, an owned opinion, or an action).
+- `core/skills/ground-rules/SKILL.md` Rule 1 amendments — *Scope* (every artifact, no draft exception) + *Illustrative content* (placeholder references tagged `[illustrative]`).
+- `core/skills/ground-rules/SKILL.md` footer — back-reference to `core/output` (makes the cross-link bidirectional alongside output's existing cite to ground-rules Rule 1).
+- `core/VERIFICATION.md` — **Probe D (output)** — single composed probe testing all four golden rules together (NOT per-rule).
+- `core/tests/repo-anchored.md` — A5 (Rule 0 Ownership) + A6 (Rule 5 No filler) + new Set D = D1 (output composed test against `core/.claude-plugin/plugin.json`).
+- `.lsa.yaml` `modules.core.artifact_paths` — added `core/knowledge/**/*.md` to track the new Knowledge surface (matches the lsa-side pattern).
+
+### Changed
+- `core/skills/ground-rules/SKILL.md` frontmatter `description:` — *"four rules"* → *"six content rules"* (enumerated).
+- `core/CLAUDE.md` — collapsed from a per-rule restatement to ~3 pointer lines (one per always-on skill: ground-rules + output + tier-selector). No rule enumeration. Audit-C C5 — eliminates the DRY violation introduced by an earlier draft.
+- `core/README.md` — `ground-rules` row: *"6 content rules — see `core/CLAUDE.md`."* Added new `output` row: *"4 format golden rules — see `core/CLAUDE.md`."* `/core:output` added to the invocation list.
+- `core/tests/repo-anchored.md` A3 — expected count updated 4 → 6 with the six headings listed.
+- `core/.claude-plugin/plugin.json` `description` — rewritten to enumerate the four skills (ground-rules + output + actor-template + tier-selector), not individual rules. Audit-C C7.
+- `CLAUDE.md` (repo root) — appends pointers to `core/output` + the credo, alongside the existing ground-rules + tier-selector citation.
+
+### Notes
+- The *"What this skill never does"* section is deliberately NOT re-added to `ground-rules` — the 0.3.0 refactor removed it as a Knowledge-vs-Actor violation; re-adding would reverse that refactor.
+- This is an audit-C restructure of an earlier PR-1 attempt (commits `3dc1828` + `53d7c58`) that violated `CONTRIBUTING.md` DRY/KISS/SRP by adding format rules (Rules 6/7) into `ground-rules` and restating the 8 rules in `core/CLAUDE.md`. Those commits were discarded by `git reset --hard 01126d1` on `feature/credo-core` before this rebuild. Full rationale: `vision/plans/2026-05-20-credo-rollout-plan.md` §"Audit-C resolutions" (C1–C7).
+- The LSA-skill refit (per-component formats from the plan's Layer 1.5 applied to all LSA skills + `tier-selector` confirm; each skill's Constraints adds one citation to `core/output`) lands in `lsa` v0.4.0 (PR 2 of the credo rollout, `feature/credo-lsa`). PR 1 is the core constitutional change; PR 2 is the propagation across LSA skills.
+
 ## [0.3.0] — 2026-05-20
 
 Knowledge-vs-Actor boundary tightening across all three core skills. Per [`vision/plans/2026-05-20-simplification-refactor-plan.md`](../vision/plans/2026-05-20-simplification-refactor-plan.md) PR 2.

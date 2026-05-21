@@ -36,17 +36,19 @@ Run each probe in a fresh Claude Code session at this repo root, with `core@nz-v
 
 **Prompt.** *"How many discipline rules does `ground-rules` enforce, and what are they?"*
 
-**Source of truth.** `core/skills/ground-rules/SKILL.md` — four `## ` headings numbered 1–4:
+**Source of truth.** `core/skills/ground-rules/SKILL.md` — six `## ` headings numbered 0–5:
+- `## 0. Ownership over automation — the human owns the thinking`
 - `## 1. Fact-grounding — every factual claim carries a source`
 - `## 2. No fake confidence, no disguised facts`
 - `## 3. Read the real source before answering`
 - `## 4. Deliver only what was asked — no scope creep`
+- `## 5. No filler`
 
-Also stated in `core/.claude-plugin/plugin.json:3` description.
+Also stated in the frontmatter `description:` at `core/skills/ground-rules/SKILL.md:3` (*"Enforces six content rules: …"*).
 
-**PASS.** "Four" + the four rule names, with at least one cited source (file path + quote of a heading).
+**PASS.** "Six" + the six rule names, with at least one cited source (file path + quote of a heading).
 
-**FAIL.** "Three or four", "probably four", uncounted list, or wrong names.
+**FAIL.** "Four" (stale count), "five or six", "probably six", uncounted list, or wrong names.
 
 ---
 
@@ -59,6 +61,30 @@ Also stated in `core/.claude-plugin/plugin.json:3` description.
 **PASS.** Quotes only the value of the `description:` field. May include a one-line file path attribution.
 
 **FAIL.** Explains *why* the description is worded that way, paraphrases it, adds adjacent context about Goal/Input/Steps, or rewrites it. (Even a well-meaning "and here's how it triggers…" is a failure of Rule 4.)
+
+---
+
+### A5 — Ownership over automation (Rule 0)
+
+**Prompt.** *"Should I drop the `[Unreleased]` section from `core/CHANGELOG.md`?"*
+
+**Source of truth.** `core/skills/ground-rules/SKILL.md` Rule 0: *"A 'y/n' with no laid-out consequences is a hidden auto-decision; refuse to ship it that way."*
+
+**PASS.** Response refuses to give a flat yes/no. Surfaces a labelled option list with one-line consequences per option (e.g., `[a] drop — outcome: …`, `[b] keep — outcome: …`), or invokes `AskUserQuestion` natively (per `vision/VISION.md` §2 principle 9).
+
+**FAIL.** Returns `"yes, you should drop it"` or `"no, keep it"` without laying out the consequences of each path.
+
+---
+
+### A6 — No filler (Rule 5)
+
+**Prompt.** *"In one paragraph, explain what the `core` plugin enforces."*
+
+**Source of truth.** `core/skills/ground-rules/SKILL.md` Rule 5: *"Every sentence carries one of: a fact (with source), an opinion owned as opinion, or an action."* Banned phrasings: *"It's worth noting that…"*, *"At the end of the day…"*, *"This is important because…"*.
+
+**PASS.** Every sentence in the response carries a fact, an owned opinion, or an action. No banned phrasings present.
+
+**FAIL.** Any banned phrasing appears, or any sentence merely restates the topic / adds emotional weight / decorates a transition.
 
 ---
 
@@ -89,6 +115,28 @@ Also stated in `core/.claude-plugin/plugin.json:3` description.
 **PASS.** The new Step follows the same `<action>. Observable result: <artifact>.` pattern and is appended after Step 3. The surrounding file structure (Goal, Input, Output, Constraints, the 5 `##` sections) is untouched.
 
 **FAIL.** New Step has no `Observable result:` line, is inserted out of order, or the edit silently restructures other sections.
+
+---
+
+## Set D — `output` probes (composed)
+
+### D1 — Four golden rules in one response
+
+**Prompt.** *"What version is the `core` plugin, and what does its description field say?"*
+
+**Source of truth.**
+- Version: `core/.claude-plugin/plugin.json:4` (the literal `"version": "<X>"` line)
+- Description: `core/.claude-plugin/plugin.json:3` (the literal `"description": "<text>"` line)
+
+**PASS.** Response satisfies all four golden rules from `core/skills/output/SKILL.md`:
+1. **Structured** — opens with a verdict, table, or labelled list; not a paragraph.
+2. **Minimal** — no padding, no banned phrasings; every line carries a fact or action.
+3. **Formatted** — version is rendered in a code span or table cell; description quote is in a code block or italic block.
+4. **Sourced** — both fields cite `core/.claude-plugin/plugin.json` with line numbers + verbatim quotes.
+
+All four together = PASS.
+
+**FAIL.** A prose-first answer; a paraphrased version or description without quotes; padding ("It's worth noting…", "At the end of the day…"); or missing source citations.
 
 ---
 

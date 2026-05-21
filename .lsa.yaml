@@ -11,6 +11,7 @@ modules:
     spec: vision/specs/modules/core/spec.md
     artifact_paths:
       - core/skills/**/SKILL.md
+      - core/knowledge/**/*.md
       - core/.claude-plugin/plugin.json
       - core/CLAUDE.md
       - core/README.md

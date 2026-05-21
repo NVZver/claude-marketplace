@@ -1,6 +1,6 @@
 {
   "name": "core",
-  "description": "Domain-neutral discipline for trustworthy output and ceremony-scales-to-weight task orchestration: fact-grounding (sources + quotes), no fake-confidence hedging, read-before-write, only-required-output, the Goal/Input/Steps/Output/Constraints shape for any actor, and tier-selector (T1/T2/T3) chain-of-thought.",
-  "version": "0.3.0",
+  "description": "Domain-neutral discipline for trustworthy output and ceremony-scales-to-weight task orchestration. Four skills: ground-rules (6 content rules — ownership, fact-grounding, no fake-confidence, read-before-write, only-required-output, no-filler), output (4 format golden rules — structured, minimal, formatted, sourced), actor-template (Goal/Input/Steps/Output/Constraints shape for any actor), and tier-selector (T1/T2/T3 chain-of-thought).",
+  "version": "0.4.0",
   "author": { "name": "Nikita Zverev" }
 }
