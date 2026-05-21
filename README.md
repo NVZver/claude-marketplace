@@ -33,11 +33,12 @@ Canonical list in [`core/CLAUDE.md`](./core/CLAUDE.md). Three always-on skills (
   - **Deliver only what was asked** — no padding, no unrequested extras.
   - **No filler** — every sentence carries a fact, an owned opinion, or an action.
 
-- **`output`** — four format golden rules applied to every human-facing output:
+- **`output`** — five format golden rules applied to every human-facing output:
   - **Structured** — verdict line first; result/decision block second; detail below the fold.
   - **Minimal** — no banned phrasings, no filler.
   - **Formatted** — code spans, tables, quotes used where they earn their place.
   - **Sourced** — every claim cites `path + verbatim quote`.
+  - **Concrete** — decision prompts name the real-world subject (not spec IDs, not project jargon); surface only outcome-changing choices.
 
 - **`tier-selector`** — before any non-trivial task, classifies the work and waits for your confirmation:
   - **T1 — Quick.** One-pass. Typos, renames, one-line fixes.

@@ -5,7 +5,7 @@ Two domain-neutral discipline skills that make output trustworthy and any actor 
 ## What's here
 
 - **`ground-rules`** — Apply on every substantive task. Enforces 6 content rules — see [`core/CLAUDE.md`](./CLAUDE.md) for the canonical list.
-- **`output`** — Apply to every human-facing output. Enforces 4 format golden rules (structured, minimal, formatted, sourced) — see [`core/CLAUDE.md`](./CLAUDE.md). Each component picks its own format within these rules.
+- **`output`** — Apply to every human-facing output. Enforces 5 format golden rules (structured, minimal, formatted, sourced, concrete) — see [`core/CLAUDE.md`](./CLAUDE.md). Each component picks its own format within these rules.
 - **`actor-template`** — Apply when authoring or editing a Skill, slash command, or workflow. Enforces the Goal / Input / Steps / Output / Constraints shape and demands every Step produce an observable result.
 - **`tier-selector`** — Apply before any non-trivial task. Classifies the work as T1 / T2 / T3 by chain-of-thought reasoning over Vision §4 boundary signals, then waits for human confirmation before any LSA ceremony fires.
 

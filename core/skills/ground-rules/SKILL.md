@@ -94,4 +94,4 @@ Applies to all outputs: agent responses, skill bodies, vision docs, READMEs, com
 
 Writing or editing an actor (Skill, slash command, workflow)? See [`actor-template`](../actor-template/SKILL.md).
 
-Producing a human-facing output (response, prompt, report, comment)? See [`core/output`](../output/SKILL.md) for the four format golden rules.
+Producing a human-facing output (response, prompt, report, comment)? See [`core/output`](../output/SKILL.md) for the five format golden rules.
