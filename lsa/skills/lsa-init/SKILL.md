@@ -45,10 +45,10 @@ Scaffold the LSA spec tree on a project so the rest of the LSA skills (`lsa-disc
    1. Scan the artifact paths configured for each module in `.lsa.yaml: modules.*.artifact_paths` (fall back to scanning `/src/` if `.lsa.yaml` is absent — the v0.1.1 behavior).
    2. For each logical module found, create `${specs_root}/modules/<module-name>/spec.md`.
    3. Infer functional requirements from the artifacts. Mark every inferred item `[assumption: inferred from <source>; verify]`.
-   4. **Stop.** Tell the human: **"Skeleton specs generated. Review and confirm before I continue."**
-   5. Wait for explicit human confirmation.
+   4. **Stop.** Present: PROPOSED verdict (`<N>` modules inferred) + per-module table (Module / Source path-glob with file count / Confidence with reason) + reminder that each generated spec is tagged `[assumption: inferred from <source>; verify]` + decision `[a] accept all → <N> module specs written under ${specs_root}/modules/; proceed to /lsa:discover` / `[b] accept subset → write only those, defer the rest` / `[c] reject → no specs written, reconsider boundaries`. Format per [`../../../core/skills/output/SKILL.md`](../../../core/skills/output/SKILL.md); `AskUserQuestion` for the decision.
+   5. Wait for explicit human confirmation before writing any spec files.
 
-   Observable result: the spec tree exists on disk; the human confirms the skeleton.
+   Observable result: the spec tree exists on disk after approval; the human confirms the skeleton.
 
 3. **Write spec files.** Write `${specs_root}/main.spec.md`:
 
@@ -100,7 +100,8 @@ A populated spec tree at `${specs_root}` (greenfield) or skeleton module specs (
 ## Constraints
 
 - **Never overwrite existing specs.** If `${specs_root}/` already exists with non-empty content, abort with a message naming the conflicting paths and ask the human to relocate or rename before re-running.
-- **Never invent module structure** in brownfield mode that is not derivable from `artifact_paths` (or `/src/` as the documented fallback). Every inferred requirement is tagged `[assumption: inferred from <source>; verify]` per [`../../core/skills/ground-rules/SKILL.md`](../../core/skills/ground-rules/SKILL.md) Rule 1.
+- **Never invent module structure** in brownfield mode that is not derivable from `artifact_paths` (or `/src/` as the documented fallback). Every inferred requirement is tagged `[assumption: inferred from <source>; verify]` per [`../../../core/skills/ground-rules/SKILL.md`](../../../core/skills/ground-rules/SKILL.md) Rule 1.
+- Outputs follow [`core/output`](../../../core/skills/output/SKILL.md) golden rules (structured, minimal, formatted, sourced).
 
 ---
 

@@ -2,7 +2,7 @@
 
 Dogfood probes — run the `core` plugin against the repo it ships from, where the source of truth for every expected answer is a file in this repo. Complement to `../VERIFICATION.md` (which keeps the generic probes for portability). These probes will drift as the repo changes; that is the point — they pin behavior to *current* repo state, not to a frozen prompt.
 
-Run each probe in a fresh Claude Code session at this repo root, with `core@nz-vision` installed. Record PASS/FAIL inline or in a session log.
+Run each probe in a fresh Claude Code session at this repo root, with `core@NVZver` installed. Record PASS/FAIL inline or in a session log.
 
 ---
 
@@ -158,9 +158,9 @@ A delta of ≥ 2 between the two runs is the observable behavior change v1 is me
 
 ## Running the set
 
-1. `/plugin install core@nz-vision` (or `/plugin enable core@nz-vision` if already installed).
+1. `/plugin install core@NVZver` (or `/plugin enable core@NVZver` if already installed).
 2. `/reload-plugins` after any file edit.
 3. Open a fresh session for each probe (state from a prior probe contaminates the next).
-4. For V3, disable with `/plugin disable core@nz-vision`, run the same prompt, then `/plugin enable core@nz-vision`.
+4. For V3, disable with `/plugin disable core@NVZver`, run the same prompt, then `/plugin enable core@NVZver`.
 
 Record outcomes against `core/VERIFICATION.md`'s falsifiable threshold: across two weeks of real use, `ground-rules` should trigger on ≥ 90% of intended tasks. Sub-90% is a v1 failure mode, not a wording tweak — revisit the `CLAUDE.md`-fragment option from `vision/VISION.md:106`.

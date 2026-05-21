@@ -28,13 +28,13 @@ Produce a tier label (`T1`, `T2`, or `T3`) plus a 2–4-sentence rationale keyed
 
 3. **State the chain-of-thought as a one-paragraph summary** keyed to the signals from Step 1 and the matched row from Step 2. Observable result: a 2–4-sentence rationale printed back to the human.
 
-4. **Propose tier + rationale to the human and stop.** Output format:
-   ```
-   Proposed tier: T<N>
-   Rationale: <2–4 sentences>
-   Confirm? (y / n / override to T<other>)
-   ```
-   Observable result: the proposal is on screen; control returns to the human; no downstream skill has fired.
+4. **Propose tier + rationale to the human and stop.** Present:
+   - the proposed tier label (T1 / T2 / T3)
+   - the 5-signal checklist from Step 1 (yes/no per signal)
+   - the rationale paragraph from Step 3
+   - decision: `[a] confirm T<N>` → hand off to lsa-discover (T2/T3) or direct response (T1); `[b] override T<other>` → rationale logged, hand off per chosen tier; `[c] reconsider` → re-run signal checklist
+
+   Format per [`core/output`](../output/SKILL.md); `AskUserQuestion` for the decision in Claude Code. Observable result: the proposal is on screen; control returns to the human; no downstream skill has fired.
 
 5. **On confirm, hand off** per tier:
    - **T1** — return control to the agent for a direct single-pass response. `ground-rules` still applies.
@@ -52,7 +52,8 @@ A tier label (`T1` / `T2` / `T3`) and a 2–4-sentence rationale. Human-readable
 - Do not start LSA ceremony before tier confirmation. No `lsa-discover`, `lsa-specify`, or any other skill fires until the human responds.
 - Do not invent boundary signals that are not actually present in the task description. If the task does not mention an API change, do not assume one.
 - Do not silently choose a higher tier than the human picks. If the human overrides downward, log the override in the rationale and proceed at the human's tier.
+- Outputs follow [`core/output`](../output/SKILL.md) golden rules (structured, minimal, formatted, sourced).
 
 ---
 
-On confirm, downstream LSA skills absorb the tier into their own gates. Every output still obeys `ground-rules`.
+On confirm, downstream LSA skills absorb the tier into their own gates. Every output still obeys `core/ground-rules` (content) and `core/output` (format).

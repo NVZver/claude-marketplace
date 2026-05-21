@@ -53,7 +53,7 @@ Extract the feature delta into permanent module specs, archive the feature spec,
    [Module index changes, new global NFRs. If none, write "none"]
    ```
 
-   Present to human: **"These are the decisions I will merge into the module specs. Correct?"** Wait for explicit approval before writing any files. Observable result: delta written to scratch; human approval logged.
+   Present: Module Deltas table (Module / Type / Decision) + specs-touched list (module → spec path) + main.spec.md updates list + decision `[a] apply → module specs edited (tagged); feature archived next` / `[b] modify → revise delta, re-present` / `[c] reject → stop, sync aborted`. Format per [`core/output`](../../../core/skills/output/SKILL.md); `AskUserQuestion` for the decision. Wait for explicit approval before writing any files. Observable result: delta written to scratch; human approval logged.
 
 3. **Merge into module specs.** For each affected module:
    1. Open `${specs_root}/modules/<module-name>/spec.md`.
@@ -127,7 +127,7 @@ Extract the feature delta into permanent module specs, archive the feature spec,
    - [ ] Branch ready for PR to main
    ```
 
-   Present report. Ask: **"Sync complete. Ready to create PR to main?"** Observable result: report on screen; human decision logged.
+   Present: APPLIED verdict + updated-modules list (module → spec path) + main.spec.md updated note + archive path + count of module SHAs bumped in `.lsa-sync-state.json` + decision `[a] create PR → gh pr create` / `[b] hold → branch ready; PR later`. Format per [`core/output`](../../../core/skills/output/SKILL.md); `AskUserQuestion` for the decision. Observable result: report on screen; human decision logged.
 
 ## Output
 
@@ -139,6 +139,7 @@ Updated module specs (tagged), updated `${specs_root}/main.spec.md`, archived fe
 - **Never delete content** during sync. Additions are tagged; conflicts halt the skill.
 - **Tag every addition** with `<!-- added: <feature-name> YYYY-MM-DD -->` (per [`../knowledge/conventions.md`](../knowledge/conventions.md) §"Trace-tag format").
 - **Preserve other modules' state** when writing `.lsa-sync-state.json`. Only touch the keys for modules involved in this feature.
+- Outputs follow [`core/output`](../../../core/skills/output/SKILL.md) golden rules (structured, minimal, formatted, sourced).
 
 ---
 

@@ -4,7 +4,7 @@
 
 Each plugin defines manual V1 / V2 / V3 probes in its `VERIFICATION.md` (or equivalent). The `core` plugin has [`core/VERIFICATION.md`](../../../core/VERIFICATION.md); `lsa` documents its probes inside `vision/specs/2026-05-20-lsa-v0.2.0-design.md` §13 until an `lsa/VERIFICATION.md` is added. The probes are:
 
-- **V1 — installs cleanly.** `/plugin marketplace add NVZver/claude-marketplace`, `/plugin install <plugin>@nz-vision`, `/help` lists every skill in the plugin.
+- **V1 — installs cleanly.** `/plugin marketplace add NVZver/claude-marketplace`, `/plugin install <plugin>@NVZver`, `/help` lists every skill in the plugin.
 - **V2 — description-match triggers reliably.** One short probe per skill in a fresh session. Either an explicit invocation or behavior consistent with the skill's body counts as PASS.
 - **V3 — behavior change is observable.** Run the same small task with and without the plugin; compare on the three Vision §5 metrics: accuracy / facts-with-sources / only-required-changes.
 

@@ -7,15 +7,15 @@ description: Creates a feature spec from a human's description (T3 path). Use wh
 
 ## Goal
 
-Write the formal feature spec — `requirements.md`, `test-suites.md`, `contract.yaml` (when triggered), `design.md` — under the configured `${specs_root}/features/<feature-name>/`, with explicit per-artifact human confirmation gates between each step.
+Write the formal feature spec — `requirements.md`, `test-suites.md`, `contract.yaml` (when triggered), `design.md` — under the configured `${specs_root}/features/<feature-name>/`, with **three bundled human confirmation gates** (Gate 1 requirements + contract-trigger; Gate 2 test-suites + contract + design; Gate 3 final integration).
 
 ## Input
 
 - The human's feature description.
-- Optional `discovery.md` scratch file produced by `lsa-discover` for T3 flows. When present, the answers in `discovery.md` seed Step 4 (`requirements.md`) so the clarification block becomes a deeper round, not the first round.
+- Optional `discovery.md` scratch file produced by `lsa-discover` for T3 flows. When present, the answers in `discovery.md` seed Step 2 so the clarification block becomes a deeper round, not the first round.
 - `.lsa.yaml` for `constitution` path and `specs_root` (defaults per [`../knowledge/conventions.md`](../knowledge/conventions.md) §"`.lsa.yaml` defaults").
 
-Confirm gate types (Hard / Soft) are defined in [`../knowledge/conventions.md`](../knowledge/conventions.md) §"Confirm gate types".
+All three gates in this skill are **Hard Confirm** — present artifact(s), wait for explicit approval, no implicit pass. (`conventions.md` §"Confirm gate types" still defines both Hard and Soft for other skills' use; lsa-specify no longer uses Soft after the audit-C gate collapse.)
 
 ## Steps
 
@@ -26,26 +26,9 @@ Confirm gate types (Hard / Soft) are defined in [`../knowledge/conventions.md`](
 
    Observable result: per-source one-liner printed per the protocol.
 
-2. **Clarify with human.** Do not write any files until all answers are received. If `discovery.md` is present, treat its answers as the first round and ask deeper follow-ups rather than re-asking from scratch.
+2. **Clarify with human via assume-then-override.** Do not write any files until all answers are received. Draft a `clarification.md` scratch with assumed answers for all 9 prompts (Functional×5, Non-functional×2, Boundaries×2, Acceptance×N); human responds with overrides or `ok`. **Silence on a line = approval.** If `discovery.md` is present, seed its answers so this becomes a deeper round.
 
-   **Functional**
-   - What does this feature do?
-   - Who uses it and in what context?
-   - What are the inputs and outputs?
-   - What are the edge cases?
-
-   **Non-Functional**
-   - Performance requirements?
-   - Security requirements?
-
-   **Boundaries**
-   - Which existing modules does this touch?
-   - What must NOT change?
-
-   **Acceptance**
-   - What are the exact conditions for this feature to be considered done?
-
-   Observable result: all answers captured in the working scratch.
+   Present: the assumed-answer scratch + decision `[a] approve all → Gate 1` / `[b] approve with overrides → re-draft, re-present` / `[c] reject → stop, re-run lsa-discover`. Format per [`core/output`](../../../core/skills/output/SKILL.md); `AskUserQuestion` for the decision in Claude Code. Observable result: answers captured; human approval logged.
 
 3. **Create spec directory.**
 
@@ -53,15 +36,16 @@ Confirm gate types (Hard / Soft) are defined in [`../knowledge/conventions.md`](
    ${specs_root}/features/<feature-name>/
      requirements.md
      test-suites.md
-     contract.yaml      ← only if contract trigger = yes (determined at Step 5)
+     contract.yaml      ← only if contract trigger = yes (determined at Gate 1)
      design.md
      tasks.md           ← empty, filled by lsa-plan
    ```
 
    Feature name: kebab-case. Create git branch: `feature/<feature-name>`. Observable result: directory and branch both exist.
 
-4. **Write `requirements.md` → Hard Confirm.**
+4. **Gate 1 — `requirements.md` + contract-trigger check → Hard Confirm (bundled).**
 
+   Write `requirements.md`:
    ```markdown
    # Feature: [Name]
 
@@ -94,18 +78,15 @@ Confirm gate types (Hard / Soft) are defined in [`../knowledge/conventions.md`](
    - [ ] AC2: ...
    ```
 
-   Present to human. Ask: **"Does requirements.md capture the full scope? Confirm to continue."** Do not proceed until explicit confirmation. Observable result: `requirements.md` exists.
+   Determine contract trigger by inspecting requirements (no separate human prompt). Triggered if any of: an API endpoint, a request/response schema, a DB schema/table change, a shared data type used across modules.
 
-5. **Determine contract requirement.** Ask the human explicitly: does this feature introduce or modify any of the following?
-   - An API endpoint (path, method, request, response)
-   - A request or response schema
-   - A database schema or table structure
-   - A shared data type used across modules
+   Present: rendered `requirements.md` + trigger-check result per signal (yes/no with names where yes) + decision `[a] approve → Gate 2` / `[b] approve with corrections → re-present Gate 1` / `[c] reject → return to Step 2`. Format per [`core/output`](../../../core/skills/output/SKILL.md); `AskUserQuestion` for the decision. Observable result: `requirements.md` exists; contract-trigger logged; human approval logged.
 
-   Answer determines whether Step 7 (`contract.yaml`) is required (yes) or skipped (no). Observable result: contract trigger logged.
+5. **Gate 2 — `test-suites.md` + `contract.yaml` (if triggered) + `design.md` → Hard Confirm (bundled).**
 
-6. **Write `test-suites.md` → Hard Confirm.** Before writing: verify that every AC from `requirements.md` is assigned to at least one journey. Do not present until all ACs are covered.
+   Before writing `test-suites.md`: verify every AC from `requirements.md` is assigned to at least one journey. Do not present until all ACs are covered.
 
+   **`test-suites.md`** shape:
    ```markdown
    # Test Suites: [Feature Name]
 
@@ -124,10 +105,9 @@ Confirm gate types (Hard / Soft) are defined in [`../knowledge/conventions.md`](
    **Expected outcome:** [What success looks like for happy paths. What feedback the user sees for error paths.]
    ```
 
-   One journey per distinct user goal. One path per distinct way to achieve that goal. Every AC must appear in at least one journey's **Covers** field. Present to human. Ask: **"Do these journeys cover all user interactions correctly? Confirm to continue."** Do not proceed until explicit confirmation. Observable result: test-suites.md file exists; AC coverage verified.
+   One journey per distinct user goal. One path per distinct way to achieve that goal. Every AC must appear in at least one journey's **Covers** field.
 
-7. **Write `contract.yaml` → Soft Confirm (skip if contract trigger = no).** Write a valid OpenAPI 3.x YAML file covering all endpoints, schemas, and data types introduced or modified by this feature.
-
+   **`contract.yaml`** (skip if Gate 1 trigger = NO): valid OpenAPI 3.x.
    ```yaml
    openapi: 3.1.0
    info:
@@ -146,10 +126,7 @@ Confirm gate types (Hard / Soft) are defined in [`../knowledge/conventions.md`](
          properties: ...
    ```
 
-   Present to human. Ask: **"Does this contract look correct? Confirm or describe corrections — I can apply them."** Human may delegate all corrections to agent. Observable result: contract.yaml exists (or skip note logged).
-
-8. **Write `design.md` → Soft Confirm.** Derive from `contract.yaml` if it exists. Otherwise derive from `requirements.md`.
-
+   **`design.md`** — derive from `contract.yaml` if it exists; otherwise from `requirements.md`:
    ```markdown
    # Design: [Feature Name]
 
@@ -174,9 +151,11 @@ Confirm gate types (Hard / Soft) are defined in [`../knowledge/conventions.md`](
    [Unresolved items requiring human input. If none, write "none"]
    ```
 
-   Present to human. Ask: **"Does this design look correct? Any concerns before finalizing?"** Observable result: design.md exists.
+   Present: AC coverage check (every AC → at least one journey) + rendered `test-suites.md` + `contract.yaml` (or skip-note) + `design.md` + any Open Questions from design.md + decision `[a] approve → Gate 3` / `[b] approve with corrections → re-present Gate 2` / `[c] reject → return to Gate 1`. Format per [`core/output`](../../../core/skills/output/SKILL.md); `AskUserQuestion` for the decision. Observable result: three files exist (or contract skip-note logged); AC coverage verified; human approval logged.
 
-9. **Final review gate.** This is an integration check, not a re-read of individual files. If `design.md` contains Open Questions, list each one explicitly. Require the human to resolve or explicitly defer each before proceeding. Ask: **"Full spec ready. Verify consistency before approving: Does every AC have a journey covering it? Does the design match the contract? Are all Open Questions resolved or deferred? Approve to proceed to planning, or tell me what to change."** Do not run `lsa-plan` until human gives explicit final approval. Observable result: integration check signed off.
+6. **Gate 3 — final integration check → Hard Confirm.** Cross-artifact integrity, not a re-read of files.
+
+   Present: integrity checks (every AC has a journey covering it? design matches contract? Open Questions resolved or deferred?) + decision `[a] approve → lsa-plan invoked` / `[b] reject → stop; name what to change and which Gate to return to`. Format per [`core/output`](../../../core/skills/output/SKILL.md); `AskUserQuestion` for the decision. Do not run `lsa-plan` until human gives explicit final approval. Observable result: integration check signed off.
 
 ## Output
 
@@ -184,13 +163,14 @@ Four (or three, when contract is skipped) approved files under `${specs_root}/fe
 
 ## Constraints
 
-- **Hard-confirm on every artifact**: `requirements.md`, `test-suites.md`. Soft-confirm on `contract.yaml` (if applicable) and `design.md`. Never skip a gate.
+- **Three bundled gates**: Gate 1 (requirements + contract-trigger), Gate 2 (test-suites + contract + design), Gate 3 (final integration). Never skip a gate.
 - **Only proceed on explicit human approval.** Implicit approvals are not accepted.
 - **Never write outside `${specs_root}/features/<feature-name>/`.** Module specs are written by `lsa-sync`; the constitution is edited only by `lsa-revise-constitution`.
+- Outputs follow [`core/output`](../../../core/skills/output/SKILL.md) golden rules (structured, minimal, formatted, sourced).
 
 ## Amending an approved spec
 
-To change a spec after approval: edit the affected files, re-run the Hard or Soft Confirm gate for each changed file, then re-run Step 9.
+To change a spec after approval: edit the affected files, re-run the corresponding Gate (1, 2, or 3) for the changed scope, then re-run Gate 3.
 
 ---
 

@@ -74,37 +74,18 @@ Confirm that the implementation on the current feature branch matches the approv
 
    Observable result: checklist printed with PASS/FAIL/WARN per row.
 
-4. **Verification report.**
+4. **Verification report — verdict-first.** Three variants by checklist outcome:
 
-   ```markdown
-   # Verification Report: [Feature/Epic Name]
-   Date: [date]
-   Branch: [branch name]
-   Mode: [code / docs / mixed]
+   - **PASS:** verdict + 1-sentence headline + per-check-group results table (Scope / Accuracy / Tests / Code quality, m/n per row) + decision `[a] proceed → lsa-sync invoked` / `[b] hold → verify later`. Metadata (branch / mode / date) + full checklist below the fold.
+   - **FAIL:** verdict + 1-sentence headline naming the failed groups + Issues table (BLOCKER rows: Item / Required action) + decision `[a] fix and re-verify` / `[b] reduce scope → re-run lsa-specify` / `[c] escalate → human review`. Metadata + full checklist below the fold.
+   - **PASS WITH WARNINGS:** verdict + 1-sentence headline + Issues table (WARNING rows: Item / Reason) + decision `[a] accept and sync → warning logged in archive` / `[b] fix first → re-verify` / `[c] hold → stop`. Metadata + full checklist below the fold.
 
-   ## Result: PASS / FAIL / PASS WITH WARNINGS
+   Format per [`core/output`](../../../core/skills/output/SKILL.md); verdict labels (`PASS` / `FAIL` / `PASS WITH WARNINGS`) cite [`core/knowledge/output-vocabulary.md`](../../../core/knowledge/output-vocabulary.md). `AskUserQuestion` for the decision in Claude Code. Observable result: report printed in the variant matching the verdict.
 
-   ## Checklist
-   [Each item with ✅ / ❌ / ⚠️ and reason for non-PASS items]
-
-   ## Issues
-   | Severity | Item | Description | Required Action |
-   |----------|------|-------------|-----------------|
-   | BLOCKER  | ...  | ...         | ... |
-   | WARNING  | ...  | ...         | ... |
-
-   ## Scope Diff
-   - Spec changes: [list]
-   - Artifact / code changes: [list]
-   - Untraced changes: [none / list]
-   ```
-
-   Observable result: report printed.
-
-5. **Gate.**
-   - **FAIL / BLOCKER:** Stop. Report to human. Do not proceed to sync.
-   - **PASS WITH WARNINGS:** Present report. Wait for human decision.
-   - **PASS:** Present report. Proceed to sync on human approval.
+5. **Gate.** Decision is part of the report (Step 4) — the report's decision block IS the gate. In Claude Code, prefer `AskUserQuestion` for the decision. Branch on the verdict:
+   - **FAIL:** no `metrics.md` write; no sync handoff regardless of the decision (only re-verify / scope-reduce / escalate are valid).
+   - **PASS WITH WARNINGS:** sync handoff only on `[a] accept and sync`; warning logged in archive.
+   - **PASS:** sync handoff on `[a] proceed`; proceed to Step 6.
 
 6. **On clean PASS — write `metrics.md`.** Only on clean PASS (not FAIL, not PASS WITH WARNINGS), and only when this is a T3 feature flow (an active feature spec exists). Write `${specs_root}/archive/<feature-name>/metrics.md` with:
 
@@ -142,6 +123,7 @@ A verification report (PASS / FAIL / PASS WITH WARNINGS) with a per-item checkli
 - **PASS WITH WARNINGS** is allowed only with explicit warning categories in the report — never as a hand-wave.
 - **No `metrics.md` write on FAIL or PASS WITH WARNINGS.** Metrics fire only on clean PASS.
 - **No `metrics.md` for T2 or non-feature flows.** T2 has no feature spec and no sync step; T1 has no LSA ceremony.
+- Outputs follow [`core/output`](../../../core/skills/output/SKILL.md) golden rules (structured, minimal, formatted, sourced).
 
 ---
 

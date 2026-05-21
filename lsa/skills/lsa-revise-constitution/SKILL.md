@@ -55,7 +55,7 @@ After a feature is merged, propose and apply constitution / standards changes th
 
    Observable result: one proposal block per change written to scratch.
 
-3. **Human review gate.** Present all proposed changes individually. For each one ask: **"Apply this change? Yes / No / Modify"** Do not write any file until human approves that specific change. If human says "Modify" — apply their correction and re-present before writing. Observable result: per-change decision logged.
+3. **Human review gate.** Present each proposed change individually (one per turn): PROPOSED verdict + change-N-of-M + file path + section name + type (add / modify / remove) + verbatim current content (or "none") + proposed content + one-line reason + source (feature name or "manual") + decision `[a] apply → file edited, tagged, committed to constitution branch` / `[b] modify → apply your correction, re-present` / `[c] reject → change not applied`. Format per [`core/output`](../../../core/skills/output/SKILL.md); `AskUserQuestion` for the decision. Do not write until approval. Observable result: per-change decision logged.
 
 4. **Apply approved changes.** For each approved change:
    1. Edit the target file (the configured `${constitution}` or a file under `${specs_root}/standards/`).
@@ -85,6 +85,7 @@ Updated `${constitution}` and/or files under `${specs_root}/standards/`, each ta
 - **Hard confirm per change.** No bulk approval; each proposal stands or falls on its own.
 - **Never touch specs, src, or skills** — only the configured constitution and `${specs_root}/standards/`.
 - **Never rewrite surrounding content.** Limit edits to the proposed section.
+- Outputs follow [`core/output`](../../../core/skills/output/SKILL.md) golden rules (structured, minimal, formatted, sourced).
 
 ---
 

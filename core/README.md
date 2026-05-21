@@ -13,7 +13,7 @@ Two domain-neutral discipline skills that make output trustworthy and any actor 
 
 ```
 /plugin marketplace add NVZver/claude-marketplace
-/plugin install core@nz-vision
+/plugin install core@NVZver
 /reload-plugins
 ```
 

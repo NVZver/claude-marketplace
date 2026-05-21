@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-This repository is the **nz-vision claude-marketplace** — a personal, model-agnostic agentic engineering system distributed via Claude Code's plugin marketplace.
+This repository is the **NVZver claude-marketplace** — a personal, model-agnostic agentic engineering system distributed via Claude Code's plugin marketplace.
 
 Operating rules live in [`vision/VISION.md`](./vision/VISION.md) — that file is the constitution. LSA configuration is at [`./.lsa.yaml`](./.lsa.yaml). This file is the slim Claude Code entry point.
 
@@ -10,8 +10,8 @@ Two plugins ship from this marketplace and together form the development discipl
 
 ```
 /plugin marketplace add NVZver/claude-marketplace
-/plugin install core@nz-vision
-/plugin install lsa@nz-vision
+/plugin install core@NVZver
+/plugin install lsa@NVZver
 /reload-plugins
 ```
 

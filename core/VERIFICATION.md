@@ -7,7 +7,7 @@ Three manual probes. Run them on a fresh session of each surface. No automated h
 **Claude Code.** Run:
 ```
 /plugin marketplace add NVZver/claude-marketplace
-/plugin install core@nz-vision
+/plugin install core@NVZver
 /help
 ```
 Expected: `/help` lists `/core:ground-rules` and `/core:actor-template` with their full descriptions.
