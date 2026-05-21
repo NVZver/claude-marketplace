@@ -49,6 +49,7 @@ Extend `lsa-specify` Gate 2 from the single AC→Journey coverage check (current
 - [ ] **AC3:** Every failing row surfaces as a Rule 6 decision block with `[a] revise X / [b] revise Y / [c] custom`; approval is blocked until the human chooses.
 - [ ] **AC4:** When `contract.yaml` is skipped (Gate 1 contract-trigger = no), the two contract-touching rows render as `N/A — contract skipped`, not `✗`.
 - [ ] **AC5:** Both `lsa/skills/lsa-specify/SKILL.md` (Gate 2 step) and `vision/specs/modules/lsa/spec.md` (Invariants section) document the new 4-row coverage shape.
+- [ ] **AC6:** A `vision/specs/features/diagonal-cross-artifact-analysis/findings.md` log is written capturing every dogfood finding surfaced during the loop, with each finding classified as either closed-in-feature or deferred. Added retroactively per the lsa-verify W1 warning (this feature is also a dogfood test of LSA itself; findings.md is the natural artifact of that test).
 
 ## Contract trigger check (per `lsa/skills/lsa-specify/SKILL.md:75`)
 
