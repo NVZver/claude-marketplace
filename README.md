@@ -6,7 +6,7 @@
 
 A Claude Code marketplace shipping two composable plugins:
 
-- **`core`** — three always-on discipline skills that keep the agent honest, plus a *tier selector* that scales process ceremony to the size of the task (one-pass for a typo, full spec lifecycle for a new module).
+- **`core`** — three always-on skills that keep the agent honest: `ground-rules` (content discipline), `output` (format discipline), and `tier-selector` (process ceremony — one-pass for a typo, full spec lifecycle for a new module).
 - **`lsa`** — **L**iving **S**pec **A**rchitecture: spec-first development where every change traces to a requirement, and hand-edits to code are *absorbed* into the spec instead of forbidden.
 
 ---
