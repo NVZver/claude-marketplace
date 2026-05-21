@@ -74,7 +74,8 @@ All three gates in this skill are **Hard Confirm** — present artifact(s), wait
    [What this feature explicitly does NOT cover]
 
    ## Acceptance Criteria
-   - [ ] AC1: [binary pass/fail condition]
+   <!-- Each AC: (a) journey-shaped per vision/VISION.md §2 sub-principle 2a — user-observable behavior at the user/system boundary, not unit-test scope; (b) EARS-form per vision/VISION.md:201 — one of Ubiquitous / Event / State / Optional / Unwanted. -->
+   - [ ] AC1: While <state> / when <event>, the system shall <observable behavior>.
    - [ ] AC2: ...
    ```
 
@@ -156,6 +157,8 @@ All three gates in this skill are **Hard Confirm** — present artifact(s), wait
    | # | Pair | Compares | When contract skipped |
    |---|------|----------|----------------------|
    | 1 | AC→Journey | Each AC in `requirements.md` § Acceptance Criteria has at least one Journey in `test-suites.md` with that AC in its `**Covers:**` line. | Always evaluated. |
+   | 1a | EARS-pattern | Each AC matches one of the five EARS patterns per `vision/VISION.md:201`. | Always evaluated. |
+   | 1b | Journey-shape | Each AC describes a user-observable behavior at the user/system boundary per `vision/VISION.md` §2 sub-principle 2a — not a unit-test of an internal helper. Agent-judged; the human owns the call via Rule 6. | Always evaluated. |
    | 2 | Journey→Design | Every Journey in `test-suites.md` is grounded in a section of `design.md` (module, contract, or technical-approach reference). | Always evaluated. |
    | 3 | Design→Contract | Every endpoint or schema named in `design.md` § API / Interface Changes appears in `contract.yaml`. | Renders `N/A — contract skipped`. |
    | 4 | Contract→test-suites | Every endpoint/schema in `contract.yaml` is exercised by at least one Journey path in `test-suites.md`. | Renders `N/A — contract skipped`. |

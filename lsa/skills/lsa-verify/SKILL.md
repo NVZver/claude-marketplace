@@ -49,9 +49,10 @@ Confirm that the implementation on the current feature branch matches the approv
 3. **Verification checklist.** For each item: ✅ PASS / ❌ FAIL / ⚠️ WARNING + reason.
 
    **Scope**
-   - [ ] Every AC in `tasks.md` is addressed by at least one change.
-   - [ ] Every change traces to a requirement in `requirements.md`. **In doc-mode**, "tracing" is satisfied if either (a) the feature spec's `requirements.md` names the file or its containing directory in an AC, or (b) the artifact's diff is wholly mechanical (rename, whitespace, formatting) — judged by the agent and reported as such in the report.
-   - [ ] No files outside the epic's declared scope were modified.
+   - [ ] Every epic-level AC in `tasks.md`'s `### Acceptance Criteria` blocks is satisfied by the implementation.
+   - [ ] **Orphan-diff predicate.** Every non-trivial diff hunk has an epic in `tasks.md` whose `### Scope` covers the hunk and whose `**Covers:**` line cites ≥1 requirement ID (`F<n>`, `NF<n>`, or `AC<n>`). FAIL: `<artifact-file>:<line> has no requirement trace`. Mechanical hunks (whitespace, rename, formatting) are filtered before this check, judged by the agent and reported.
+   - [ ] **Orphan-AC predicate.** Every AC ID in feature `requirements.md` § Acceptance Criteria is cited by ≥1 epic's `**Covers:**` line in `tasks.md`. FAIL: `requirements.md:<AC-line> has no covering implementation`.
+   - [ ] No files outside the union of all epics' `### Scope` are modified.
 
    **Accuracy**
    - [ ] Implementation matches the technical approach in `design.md`.
@@ -119,7 +120,7 @@ A verification report (PASS / FAIL / PASS WITH WARNINGS) with a per-item checkli
 
 ## Constraints
 
-- **FAIL on any untraced change.** In doc-mode, the two-clause trace rule (a) or (b) above is what "traced" means; anything outside it fails.
+- **FAIL on any untraced change.** The orphan-diff predicate above defines "traced"; the mechanical-hunk filter is the only exception.
 - **PASS WITH WARNINGS** is allowed only with explicit warning categories in the report — never as a hand-wave.
 - **No `metrics.md` write on FAIL or PASS WITH WARNINGS.** Metrics fire only on clean PASS.
 - **No `metrics.md` for T2 or non-feature flows.** T2 has no feature spec and no sync step; T1 has no LSA ceremony.

@@ -45,6 +45,8 @@ Decompose an approved feature spec into ≤5 parallel-safe epics with self-verif
    - Creates / modifies / deletes: ...
    - Does NOT touch: ...
 
+   **Covers:** <ID>, <ID>     <!-- requirement IDs from requirements.md the epic implements: F<n>, NF<n>, or AC<n>. Parallel to test-suites.md Journey **Covers:** line. Sourced by lsa-verify trace predicates. -->
+
    ### Technical Details
    [Implementation patterns per the constitution]
 
@@ -76,6 +78,7 @@ Decompose an approved feature spec into ≤5 parallel-safe epics with self-verif
    | Accuracy | Does the technical approach match `design.md`? |
    | Consistency | Do any epics overlap in scope or contradict each other? |
    | Test coverage | Is every AC covered by at least one test in the testing plan? |
+   | AC coverage | Does every AC in `requirements.md` appear in at least one epic's `**Covers:**` line? |
    | Completeness | Are there requirements with no corresponding epic? |
 
    Observable result: each row marked PASS / FAIL with a one-line reason.
