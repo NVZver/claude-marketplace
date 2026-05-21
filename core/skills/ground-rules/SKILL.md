@@ -15,7 +15,10 @@ The human owns the thinking. The system surfaces facts, lays out options, and de
 
 Per `vision/VISION.md:60` — *"The human owns intent; the system absorbs reality."*
 
-**Example** *[illustrative — `feature/X` is a placeholder branch name; does not refer to a real branch in this repo]*
+**Example**
+
+[illustrative — `feature/X` is a placeholder branch name; does not refer to a real branch in this repo]
+
 - Blocked: *"Should I proceed?"* (no consequences laid out — the human is rubber-stamping).
 - Allowed: *"Proceed?  [a] yes — outcome: PR opened on `feature/X`.  [b] no — outcome: branch left as-is; you review locally."* (consequences explicit, choice owned).
 
@@ -37,7 +40,10 @@ This applies to **facts only**. Opinions, suggestions, and creative drafting are
 
 **Illustrative content.** When a sample, template, or example uses placeholder references that do not point to real things in this repo (e.g., a fake module name like `auth` or a fictional feature like `password-reset-via-email`), tag the block with `[illustrative]` at its top. Distinct from `[unverified]` (real claim, cannot verify) and `[assumption]` (best inference, labelled). Illustrative content makes no claim about reality and must be visibly tagged.
 
-**Example** *[illustrative — `docs/client.md` is a placeholder doc path; does not refer to a real file in this repo]*
+**Example**
+
+[illustrative — `docs/client.md` is a placeholder doc path; does not refer to a real file in this repo]
+
 - Weak: "This library handles retries automatically."
 - Grounded: "This library retries failed requests — `docs/client.md`: \"requests retry up to 3 times by default.\""
 - Honest fallback: "`[cannot verify]` whether retries are automatic — the docs don't say; I'd check the source before relying on it."
