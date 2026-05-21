@@ -1,6 +1,6 @@
 # claude-marketplace
 
-> **Ownership over automation.** A personal, model-agnostic agentic engineering system whose single job is **trustworthy output** — every fact traces to a source, every line of code traces to a spec — and whose **ceremony scales to the weight of the task**.
+> **Ownership over automation.** A personal, agentic engineering system whose single job is **trustworthy output** — every fact traces to a source, every line of code traces to a spec — and whose **ceremony scales to the weight of the task**.
 
 **Proven · Owned · No Fluff · Spec First.**
 
@@ -23,7 +23,7 @@ Two plugins working together. They don't add features; they constrain the agent 
 
 ### `core` — always-on discipline
 
-Canonical list in [`core/CLAUDE.md`](./core/CLAUDE.md):
+Canonical list in [`core/CLAUDE.md`](./core/CLAUDE.md). Three always-on skills (`ground-rules`, `output`, `tier-selector`) plus `actor-template`, which fires when you author or edit a skill or command.
 
 - **`ground-rules`** — six content rules applied to every substantive task:
   - **Ownership over automation** — the human owns the thinking; the system surfaces facts, lays out options, and demands a choice. No silent auto-decisions.
@@ -91,7 +91,7 @@ The single test the whole system answers: **what is the minimum ceremony that st
 
 ## Status + substrate
 
-Personal-use first; open-sourced for visibility. Substrate is Claude Code today — that's a v1 expedient, not a permanent stance. Ports to other agentic IDEs are on the table if traction warrants.
+Personal-use first; open-sourced for visibility. Claude Code is the v1 substrate; the discipline (specs, sourcing, tier gating) isn't Claude-specific and the skills are plain Markdown — porting to another agentic IDE is a routing exercise, not a rewrite.
 
 ## Further reading
 
