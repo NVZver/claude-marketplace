@@ -53,7 +53,7 @@ Prioritized list of upcoming work, populated from `vision/VISION.md` §6 *"Adjus
 - **Name.** Pinned library specs under `vision/specs/libs/<lib>.spec.md`. Bounded to the 3–5 most-used external dependencies; everything else stays reactive (fetched on demand by `lsa-discover`).
 - **Source.**
   - In-repo verdict: `vision/VISION.md:217` — *"Verdict: do NOT build a 10,000-spec registry — that's their product. But write a pinned spec once for your 3–5 most-used libraries. It's a module spec pointed at an external dep. Everything else stays reactive."*
-  - Comparable (the product nz-vision deliberately does not replicate): [Tessl Skills Registry](https://tessl.io/blog/my-coding-agent-needed-a-package-manager-for-its-own-brain-and-i-gave-it-one-using-a-skills-registry/) — 10k+ community-curated library specs distributed as MCP tiles.
+  - Comparable (the product NVZver deliberately does not replicate): [Tessl Skills Registry](https://tessl.io/blog/my-coding-agent-needed-a-package-manager-for-its-own-brain-and-i-gave-it-one-using-a-skills-registry/) — 10k+ community-curated library specs distributed as MCP tiles.
 - **Description.** Each pinned spec is structured as a module spec whose target is an external library at a specific version. `artifact_paths` covers no in-repo files; the spec is the contract the agent reads before any call into that library. Updates are human-authored on a version bump — never auto-fetched, never imported from a community registry.
 - **How it supports the credo.**
   - **Simple.** Bounded scope (3–5 files). No registry build, no fetcher, no cache invalidation logic.

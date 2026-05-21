@@ -16,8 +16,8 @@ How to build and contribute. Operating rules live in [`vision/VISION.md`](./visi
 
 ```
 /plugin marketplace add NVZver/claude-marketplace
-/plugin install core@nz-vision
-/plugin install lsa@nz-vision
+/plugin install core@NVZver
+/plugin install lsa@NVZver
 /reload-plugins
 ```
 
@@ -96,7 +96,7 @@ Repo-level files (root `CLAUDE.md`, `CONTRIBUTING.md`, plan files under `vision/
 
 Per [`vision/specs/standards/testing.md`](./vision/specs/standards/testing.md):
 
-- **V1 — installs cleanly.** `/plugin install <plugin>@nz-vision`; `/help` lists every skill in the plugin.
+- **V1 — installs cleanly.** `/plugin install <plugin>@NVZver`; `/help` lists every skill in the plugin.
 - **V2 — description-match triggers reliably.** One probe per affected skill in a fresh session. Target ~90% trigger rate.
 - **V3 — behavior changes observably.** Run the same small task with and without the plugin; compare on the three Vision §5 metrics: accuracy / facts-with-sources / only-required-changes.
 

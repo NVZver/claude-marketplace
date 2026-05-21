@@ -53,8 +53,8 @@ LSA's fact-grounding discipline is provided by the [`core`](../core/) plugin —
 Install `core` first, then `lsa`:
 
 ```
-/plugin install core@nz-vision
-/plugin install lsa@nz-vision
+/plugin install core@NVZver
+/plugin install lsa@NVZver
 ```
 
 The dependency is documented in prose; the Claude Code plugin manifest does not enforce a `dependencies` field as of v0.1.1. Order matters for the discipline contract — `core/ground-rules` should be loaded when LSA skills cite it.
@@ -63,8 +63,8 @@ The dependency is documented in prose; the Claude Code plugin manifest does not 
 
 ```
 /plugin marketplace add NVZver/claude-marketplace
-/plugin install core@nz-vision
-/plugin install lsa@nz-vision
+/plugin install core@NVZver
+/plugin install lsa@NVZver
 /reload-plugins
 ```
 
