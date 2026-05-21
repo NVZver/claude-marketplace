@@ -14,7 +14,7 @@ Every LSA gate is a decision asked of the human with explicit consequences; ever
 |---|---|
 | **`lsa-init`** | Initialize the spec tree on a project. Greenfield or brownfield. |
 | **`lsa-discover`** | Light three-question probe at the start of every T2 / T3 task. T2 oral; T3 scratch `discovery.md`. |
-| **`lsa-specify`** | Create a feature spec from a description, with hard/soft confirm gates per file. |
+| **`lsa-specify`** | Create a feature spec from a description, with three bundled hard-confirm gates; Gate 2 renders a 4-row diagonal cross-artifact coverage check. |
 | **`lsa-plan`** | Decompose an approved spec into ≤5 parallel-safe epics. |
 | **`lsa-verify`** | Verify every change traces to a spec requirement. Code-mode, doc-mode, or mixed (per `.lsa.yaml`). Block untraced changes. Emit per-feature `metrics.md` on clean T3 PASS. |
 | **`lsa-sync`** | Extract delta into permanent module specs; archive feature spec; record per-module HEAD SHA in `.lsa-sync-state.json`; append aggregate metrics row. |

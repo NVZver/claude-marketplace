@@ -4,6 +4,19 @@ All notable changes to the `lsa` plugin are documented here. Format follows [Kee
 
 ## [Unreleased]
 
+## [0.5.0] — 2026-05-21
+
+Diagonal cross-artifact analysis at `lsa-specify` Gate 2 — extends the existing AC→Journey coverage check to a 4-row diagonal coverage table (AC→Journey, Journey→Design, Design→Contract, Contract→test-suites). Failing rows surface as Rule 6 decision blocks. Per the 2026-05-20 Tech Picture adoption (`vision/specs/roadmap.md:64-75`).
+
+### Added
+- **`lsa-specify` Gate 2 — diagonal coverage.** Step 5 of `lsa/skills/lsa-specify/SKILL.md` now renders a 4-row coverage table after the AC-coverage check, citing every compared artifact pair in `<file>:<line> ↔ <file>:<line>` format. Failing rows surface as Rule 6 decision blocks; when multiple rows fail, all surface together in a single multi-question `AskUserQuestion` (batched). Approval blocks until every `✗` row resolves. When Gate 1 contract-trigger = NO, the two contract-touching rows render as `N/A — contract skipped`. Source: `vision/specs/archive/2026-05-21-diagonal-cross-artifact-analysis/`.
+- **`vision/specs/modules/lsa/spec.md` § Invariants** — new bullet documenting the Gate 2 diagonal coverage discipline. Cites SKILL.md:154 + the archived feature spec.
+
+### Changed
+- **`lsa/README.md` skill table** — `lsa-specify` row description corrected from stale "hard/soft confirm gates per file" to "three bundled hard-confirm gates; Gate 2 renders a 4-row diagonal cross-artifact coverage check". Aligns with the audit-C gate collapse landed in v0.4.0.
+- **`vision/specs/modules/lsa/spec.md`** — version references refreshed: plugin manifest tag v0.2.1 → v0.5.0; "Currently v0.2.1" → "Currently v0.5.0"; core dependency floor v0.2.0 → v0.4.0 (when `core/output` was added and cited from every LSA skill).
+- **`vision/specs/main.spec.md`** — module index `lsa` row v0.2.0 → v0.5.0. Closes the version-drift gap that opened during the credo rollout (PRs that bumped lsa to v0.4.0 did not update main.spec.md).
+
 ## [0.4.0] — 2026-05-21
 
 Credo rollout PR 2 — every LSA skill (+ `core/tier-selector`) adopts a component-specific output format that satisfies the four golden rules in `core/output` (structured, minimal, formatted, sourced). Builds on `core` v0.4.0 (PR 1). Per [`vision/plans/2026-05-20-credo-rollout-plan.md`](../vision/plans/2026-05-20-credo-rollout-plan.md).
