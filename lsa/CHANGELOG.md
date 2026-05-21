@@ -4,6 +4,34 @@ All notable changes to the `lsa` plugin are documented here. Format follows [Kee
 
 ## [Unreleased]
 
+## [0.6.0] — 2026-05-21
+
+EARS + journey-shape AC discipline. Tightens `lsa-specify` Gate 2 along two axes (EARS pattern conformance + journey-shape) and extends `lsa-verify` with dual trace predicates sourced from a new `**Covers:**` line in `lsa-plan`'s epic template. Per `vision/specs/archive/2026-05-21-ears-journey-shape-ac/`.
+
+### Added
+- **`lsa-specify` Gate 2 — two new diagonal rows.** Row **1a** (EARS-pattern) checks each AC matches one of the five EARS patterns per `vision/VISION.md:201`. Row **1b** (Journey-shape) checks each AC describes a user-observable behavior at the user/system boundary per `vision/VISION.md` §2 sub-principle 2a. `✗` rows surface as Rule 6 decision blocks via the existing failing-row render at `lsa/skills/lsa-specify/SKILL.md:165-180`.
+- **`lsa-specify` Gate 1 template — AC sub-block in EARS form.** Template at `lsa/skills/lsa-specify/SKILL.md:48-80` cites `vision/VISION.md` §2 sub-principle 2a (journey-shape) and `:201` (EARS patterns) inline so the agent reads the rule before authoring.
+- **`lsa-plan` epic template — `**Covers:**` line.** New line under each epic's `### Scope` citing requirement IDs (`F<n>`, `NF<n>`, `AC<n>`) the epic implements. Parallel to the existing `**Covers:**` on `test-suites.md` Journeys. Sourced by `lsa-verify` trace predicates.
+- **`lsa-plan` self-verification — AC-coverage row.** New row checking every AC in `requirements.md` appears in at least one epic's `**Covers:**`.
+- **`lsa-verify` — orphan-diff predicate (broad).** Every non-trivial diff hunk must have an epic in `tasks.md` whose `### Scope` covers the hunk and whose `**Covers:**` cites ≥1 requirement ID. FAIL: `<artifact-file>:<line> has no requirement trace`. Mechanical hunks (whitespace, rename, formatting) are filtered before this check. Replaces the prior loose trace rule.
+- **`lsa-verify` — orphan-AC predicate (narrow).** Every AC ID in feature `requirements.md` § Acceptance Criteria must be cited by ≥1 epic's `**Covers:**`. FAIL: `requirements.md:<AC-line> has no covering implementation`. Enforces behavior-coverage strictness.
+- **`vision/VISION.md` §2 sub-principle 2a.** *"Acceptance criteria are journey-shaped"* — the standing principle that operationalizes principle 2's *"code traces to specs"* clause at the AC level. Authored via `lsa-revise-constitution`.
+- **`vision/VISION.md` §6 Adjust #1 RESOLVED marker.** Records the EARS adjust as adopted, parallel to the §6 Adjust #4 RESOLVED marker at `vision/VISION.md:237`. Authored via `lsa-revise-constitution`.
+- **`vision/specs/modules/lsa/spec.md` § Invariants** — new bullet documenting the Gate 2 EARS + journey-shape rows, the epic `**Covers:**` line, and the `lsa-verify` dual trace predicates. Parallel to the diagonal-coverage invariant at line 34.
+
+### Changed
+- **`lsa-verify` Scope checklist** — replaced the prior loose "Every change traces to a requirement in `requirements.md`" rule (which checked file-name presence in an AC) with the dual orphan-diff + orphan-AC predicates above. Mechanical-hunk exemption preserved. The Constraint *"FAIL on any untraced change"* updated to cite the orphan-diff predicate.
+- **`vision/specs/main.spec.md`** — module index `lsa` row v0.5.0 → v0.6.0.
+- **`vision/specs/modules/lsa/spec.md`** — plugin manifest tag v0.5.0 → v0.6.0; *"Currently v0.5.0"* → *"Currently v0.6.0"*.
+- **`vision/specs/roadmap.md`** — row "EARS notation in AC block" status → `shipped — lsa v0.6.0`. Row "Diagonal cross-artifact analysis at `lsa-specify` Gate 2" status → `shipped — lsa v0.5.0` (reconciles stale row from prior merge). Recently merged gains rows for v0.6.0 and v0.5.0.
+- **`lsa/README.md` skill table** — `lsa-specify` row updated from "4-row" → "6-row" diagonal table (5 with contract skipped); `lsa-plan` row mentions the epic `**Covers:**` field; `lsa-verify` row mentions the dual orphan-diff + orphan-AC predicates.
+
+### Notes
+- **Forward-only.** No `requirements.md` under `vision/specs/archive/**/` is modified. Existing archived specs keep their GWT-style ACs; the rule applies only to new specs authored after merge.
+- **Broadened `**Covers:**` from AC-only to any requirement ID.** F4 + F8 of the feature `requirements.md` were originally AC-only; broadened during planning to align with `vision/specs/main.spec.md` NFR2 *"every artifact change traces to a spec requirement"* (constitution / CHANGELOG / version edits trace to F/NF requirements, not behavioral ACs). The dual predicate split (broad orphan-diff per AC3, narrow orphan-AC per AC4) keeps behavior coverage strict.
+- **Vision-edit routing.** Per the feature's Gate 3 decision, the `vision/VISION.md` edits (§2 sub-principle 2a + §6 Adjust #1 RESOLVED marker) were authored via `lsa-revise-constitution`, then bundled into this feature commit per the precedent set by `feature/diagonal-cross-artifact-analysis` (commit `7235e17`).
+- Corresponds to Vision v0.7.
+
 ## [0.5.0] — 2026-05-21
 
 Diagonal cross-artifact analysis at `lsa-specify` Gate 2 — extends the existing AC→Journey coverage check to a 4-row diagonal coverage table (AC→Journey, Journey→Design, Design→Contract, Contract→test-suites). Failing rows surface as Rule 6 decision blocks. Per the 2026-05-20 Tech Picture adoption (`vision/specs/roadmap.md:64-75`).

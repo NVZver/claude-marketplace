@@ -6,9 +6,9 @@ Prioritized list of upcoming work, populated from `vision/VISION.md` §6 *"Adjus
 
 | Feature | Priority | Status | Notes |
 |---|---|---|---|
-| EARS notation in AC block | Should | backlog | Adopted via Tech Picture 2026-05-20 — see §"Tech Picture adoption — 2026-05-20" #1. |
+| EARS notation in AC block | Should | shipped — lsa v0.6.0 | Adopted via Tech Picture 2026-05-20 — see §"Tech Picture adoption — 2026-05-20" #1. Shipped with the journey-shape AC sub-principle (`vision/VISION.md` §2 sub-principle 2a) and `lsa-verify` dual trace predicates. Feature: `vision/specs/archive/2026-05-21-ears-journey-shape-ac/`. |
 | Library-spec cache for top 3–5 libraries | Could | backlog | Adopted via Tech Picture 2026-05-20 — see §"Tech Picture adoption — 2026-05-20" #2. |
-| Diagonal cross-artifact analysis at `lsa-specify` Gate 2 | Should | backlog | Adopted via Tech Picture 2026-05-20 — see §"Tech Picture adoption — 2026-05-20" #3. |
+| Diagonal cross-artifact analysis at `lsa-specify` Gate 2 | Should | shipped — lsa v0.5.0 | Adopted via Tech Picture 2026-05-20 — see §"Tech Picture adoption — 2026-05-20" #3. Feature: `vision/specs/archive/2026-05-21-diagonal-cross-artifact-analysis/`. |
 | Help agent | Should | backlog | Per user request 2026-05-21 — friendly, reliable assistant for anyone working with the marketplace; walks users through install/usage with worked examples and offers in-flow support at any step. Constraints: fact-driven per `core/ground-rules`, concise per `core/output` four golden rules (structured / minimal / formatted / sourced). Open: agent vs. skill shape, scope of "support" (read-only Q&A vs. invoke-other-skills), packaging home (`core` vs. new plugin). |
 | Tier-selector threshold finalization | Should | backlog | Per `vision/VISION.md:242` — pin the exact file-count threshold + add more worked examples to `core/tier-selector`'s few-shot block. Needs the two-week dogfood log first. |
 | Project naming | Could | deferred | Per `vision/VISION.md:249` — currently "Vision" placeholder. |
@@ -27,6 +27,9 @@ Prioritized list of upcoming work, populated from `vision/VISION.md` §6 *"Adjus
 
 | Release | Date | Highlights |
 |---|---|---|
+| `lsa` v0.6.0 | 2026-05-21 | EARS + journey-shape AC discipline at `lsa-specify` Gate 2 (+2 diagonal rows); `lsa-plan` epic `**Covers:**` line; `lsa-verify` dual orphan-diff + orphan-AC predicates; Vision §2 sub-principle 2a + §6 Adjust #1 RESOLVED. |
+| `lsa` v0.5.0 | 2026-05-21 | Diagonal cross-artifact coverage at `lsa-specify` Gate 2 (4-row coverage table; failing rows surface as Rule 6 decision blocks). |
+| `core` v0.4.0 / `lsa` v0.4.0 | 2026-05-21 | Credo rollout — `core/output` four golden rules; `lsa-specify` gates 7→3; `lsa-verify` verdict-first reports; `core/ground-rules` 4→6 content rules. |
 | `core` v0.2.0 | 2026-05-20 | Adds `tier-selector` skill + `core/CLAUDE.md` always-on fragment. |
 | `lsa` v0.2.0 | 2026-05-20 | Adds `lsa-discover` + `lsa-reconcile`; `.lsa.yaml` loader; doc-mode in verify; `.lsa-sync-state.json`; per-feature `metrics.md`; SessionStart drift hook; skill-shape refactor across all 6 existing skills; marker convention swept to lowercase. |
 | `core` v0.1.0 / `lsa` v0.1.0 / v0.1.1 | 2026-05-20 | Initial releases. See per-plugin CHANGELOG.md for detail. |
