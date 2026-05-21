@@ -56,6 +56,38 @@ The first end-to-end loop of LSA driving its own development (2026-05-21, single
 - **Recommended fix:** Either (a) drop AC5 from this kind of feature in the future (skill-internal changes don't need module spec entries), or (b) rewrite the module spec preamble to permit skill-behavior summaries when they encode a module-level discipline.
 - **Suggested follow-up:** A `lsa-revise-constitution` session that clarifies what belongs in module spec vs SKILL.md.
 
+### Finding #9 — `.lsa.yaml` `artifact_paths` missing `CHANGELOG.md` files
+
+- **Symptom:** Neither `lsa/CHANGELOG.md` nor `core/CHANGELOG.md` is listed in any module's `artifact_paths` in `.lsa.yaml:9-26`. Per `vision/specs/main.spec.md:30` NFR3, the CHANGELOG must be bumped per feature — but docs-mode `lsa-verify` cannot see CHANGELOG edits because they fall outside `artifact_paths`.
+- **Surfaced:** During `lsa-verify` (Step 3 trace check).
+- **Status:** Real config gap. CHANGELOG edits could regress silently.
+- **Recommended fix:** Add `lsa/CHANGELOG.md` and `core/CHANGELOG.md` to their respective module `artifact_paths` in `.lsa.yaml`.
+- **Suggested follow-up:** Trivial T1 / T2 fix.
+
+### Finding #10 — `lsa-verify` blind spot for non-artifact-path files
+
+- **Symptom:** Files outside every module's `artifact_paths` AND outside the feature spec dir are invisible to docs-mode `lsa-verify`. User's direct commit `ea820a1` (root `README.md` polish) is in this session's feature-branch diff but `lsa-verify` cannot trace it.
+- **Surfaced:** During `lsa-verify` (the verify report's file-tally step).
+- **Status:** A real gap if you assume verify catches all branch changes. Mitigation: PR review catches what verify misses.
+- **Recommended fix:** Either (a) make `.lsa.yaml` allow a top-level `artifact_paths` list for files outside any module, or (b) document explicitly that verify only inspects in-`artifact_paths` files and the rest is PR-review's job.
+- **Suggested follow-up:** Design decision; not trivial.
+
+### Finding #11 — Archive path convention inconsistency in `lsa-verify`
+
+- **Symptom:** `lsa/skills/lsa-verify/SKILL.md` Step 6 says metrics.md goes to `${specs_root}/archive/<feature-name>/metrics.md` (no date prefix), but `lsa/ARCHITECTURE.md` §"directory layout" prescribes `archive/YYYY-MM-DD-<feature-name>/`. Two SKILL bodies disagree on the same path.
+- **Surfaced:** During `lsa-verify` Step 6 execution — when deciding where to write metrics.md.
+- **Pragmatic resolution this session:** wrote metrics.md to the **dated** form (`vision/specs/archive/2026-05-21-diagonal-cross-artifact-analysis/metrics.md`) per ARCHITECTURE convention.
+- **Recommended fix:** Update `lsa-verify` SKILL.md Step 6 path to `archive/YYYY-MM-DD-<feature-name>/`.
+- **Suggested follow-up:** Trivial T1 fix.
+
+### Finding #12 — `lsa-verify` only-required-changes metric hides scope creep
+
+- **Symptom:** The "Only-required-changes" metric in `lsa-verify` Step 6 counts only files in `artifact_paths`. Files outside `artifact_paths` (root `README.md`, root configs, etc.) can be modified without affecting the metric. In this feature, strict score = 3/3 = 1.00 but wider score (all 13 files in diff) = 12/13 = 0.923.
+- **Surfaced:** During metrics.md write — the strict definition gave a perfect score despite a known out-of-scope file (`ea820a1`).
+- **Status:** Metric is honest within its declared scope, but the scope itself is narrower than expected.
+- **Recommended fix:** Either (a) widen the metric to count all branch-diff files vs files-covered-by-an-AC, or (b) add an explicit "off-metric scope-creep observation" sub-section to the metric template (this feature did the latter as a one-time precedent).
+- **Suggested follow-up:** Bundle with Finding #10's design decision.
+
 ### Finding #8 — `vision/specs/main.spec.md` core row also stale
 
 - **Symptom:** Module index row `| \`core\` | … | active — v0.2.0 |` while actual `core/.claude-plugin/plugin.json` is v0.4.1.
