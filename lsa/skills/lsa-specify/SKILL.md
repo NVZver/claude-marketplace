@@ -151,7 +151,33 @@ All three gates in this skill are **Hard Confirm** — present artifact(s), wait
    [Unresolved items requiring human input. If none, write "none"]
    ```
 
-   Present: AC coverage check (every AC → at least one journey) + rendered `test-suites.md` + `contract.yaml` (or skip-note) + `design.md` + any Open Questions from design.md + decision `[a] approve → Gate 3` / `[b] approve with corrections → re-present Gate 2` / `[c] reject → return to Gate 1`. Format per [`core/output`](../../../core/skills/output/SKILL.md); `AskUserQuestion` for the decision. Observable result: three files exist (or contract skip-note logged); AC coverage verified; human approval logged.
+   **Diagonal cross-artifact coverage check.** Before presenting Gate 2, render a 4-row coverage table by reading the four (or three, if contract skipped) artifacts and checking each pair:
+
+   | # | Pair | Compares | When contract skipped |
+   |---|------|----------|----------------------|
+   | 1 | AC→Journey | Each AC in `requirements.md` § Acceptance Criteria has at least one Journey in `test-suites.md` with that AC in its `**Covers:**` line. | Always evaluated. |
+   | 2 | Journey→Design | Every Journey in `test-suites.md` is grounded in a section of `design.md` (module, contract, or technical-approach reference). | Always evaluated. |
+   | 3 | Design→Contract | Every endpoint or schema named in `design.md` § API / Interface Changes appears in `contract.yaml`. | Renders `N/A — contract skipped`. |
+   | 4 | Contract→test-suites | Every endpoint/schema in `contract.yaml` is exercised by at least one Journey path in `test-suites.md`. | Renders `N/A — contract skipped`. |
+
+   Each row in the rendered table has three columns: pair name, status (`✓` / `✗` / `N/A`), and citation in `<file>:<line> ↔ <file>:<line>` format. Per `core/ground-rules` Rule 1, citations are searchable `file:line` pointers — never paraphrases. Row 1 (AC→Journey) is the same check named in this step's opening paragraph, now rendered as the first row of the diagonal table rather than as a separate verbal check.
+
+   **Failing-row render.** When a row's status is `✗`, render a Rule 6 decision block per failing row:
+
+   ````
+   ✗ Row N (<pair>):  <fileA>:<lineA> ↔ <fileB>:<lineB>
+      <lineA-content>
+      <lineB-content>
+
+      Resolution:
+      [a] revise <fileA> — <suggested-edit-A>
+      [b] revise <fileB> — <suggested-edit-B>
+      [c] custom — free-form text
+   ````
+
+   When multiple rows fail, all decision blocks render together in a single multi-question `AskUserQuestion` call (batched — not one at a time). Approval is blocked until every `✗` row has a resolution: `[a]` or `[b]` edits the cited file in place, `[c]` returns to Gate 1 for deeper revision.
+
+   Present: 4-row diagonal coverage table (rendered above) + `test-suites.md` + `contract.yaml` (or skip-note) + `design.md` + any Open Questions from design.md + decision `[a] approve → Gate 3` / `[b] approve with corrections → re-present Gate 2` / `[c] reject → return to Gate 1`. Failing rows surface as Rule 6 decision blocks (batched); approval is blocked until every `✗` row is resolved. Format per [`core/output`](../../../core/skills/output/SKILL.md); `AskUserQuestion` for the decision. Observable result: three files exist (or contract skip-note logged); diagonal coverage table rendered (every row `✓` or `N/A`); human approval logged.
 
 6. **Gate 3 — final integration check → Hard Confirm.** Cross-artifact integrity, not a re-read of files.
 
