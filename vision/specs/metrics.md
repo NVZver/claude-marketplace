@@ -6,4 +6,4 @@ Schema: `feature` · `archived` · `accuracy (M/N)` · `facts (M/N)` · `only-re
 
 | Feature | Archived | Accuracy | Facts | Only-required-changes | Notes |
 |---|---|---|---|---|---|
-| `diagonal-cross-artifact-analysis` | 2026-05-21 | 6/6 (1.00) | 57/60 (~0.95) | 3/3 (1.00) | First end-to-end LSA dogfood loop on this repo; 13 findings logged in archive; 5 closed in-feature (#3, #4, #7, W1, W2); 8 deferred (#1, #2, #5, #6, #8–#12). |
+| `diagonal-cross-artifact-analysis` | 2026-05-21 | 6/6 (1.00) | 57/60 (~0.95) | 3/3 (1.00) | First end-to-end LSA dogfood loop on this repo; 13 findings + 2 verify warnings logged in archive; 5 items closed in-feature (Findings #3, #4, #7 + warnings W1, W2); 10 findings deferred (#1, #2, #5, #6, #8–#13). |

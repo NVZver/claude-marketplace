@@ -50,4 +50,4 @@ Across the full diff: 12/13 covered = 0.923. This wider measure surfaces what th
 | `lsa-verify` round 3 (post-Probes A/B/C) | 1 question (+ ea820a1 handling) | clean PASS |
 | **Total questions** | **11** | All gates confirmed by `AskUserQuestion`; zero auto-approvals |
 
-12 findings logged in `findings.md`; 4 closed in-feature (Findings #3, #4, #7, plus the two warnings W1 + W2). 8 deferred to follow-up PRs (#1, #2, #5, #6, #8, #9, #10, #11, #12).
+13 findings + 2 verify warnings logged in `findings.md`. Closed in-feature: 3 findings (#3, #4, #7) + 2 warnings (W1, W2) = 5 items. Deferred to follow-up PRs: 10 findings (#1, #2, #5, #6, #8, #9, #10, #11, #12, #13).
