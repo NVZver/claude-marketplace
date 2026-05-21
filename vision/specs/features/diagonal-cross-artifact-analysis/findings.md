@@ -73,3 +73,133 @@ The first end-to-end loop of LSA driving its own development (2026-05-21, single
 - **Feature-as-its-own-dogfood worked.** The feature implementing the diagonal check ran its own diagonal check (manually) at Gate 2; all 4 rows ✓ or N/A on its own spec — evidence the spec is internally consistent under its own check.
 - **Sequential epic execution is cheap on a small feature.** Three epics took ~3 commits each in ~1 chat session. Parallel epic branches would not have saved meaningful wall time at this size.
 - **Findings logging worked as a continuous habit.** Surface-as-you-go beats a retro at the end; the file accumulated naturally.
+
+## V3 manual probe — Journey 3 (contradiction-surfacing paths)
+
+Closes `lsa-verify` W2 by exercising the new Step 5 diagonal check against two synthetic probe-features with deliberate contradictions. Both probes are `[illustrative]` per `core/ground-rules` Rule 1 — they describe fictional features for the sole purpose of exercising the new check, not features that exist in this repo.
+
+### Probe A — single mismatch (Contract↔test-suites)
+
+`[illustrative]` — fictional password-reset feature; the artifact snippets below do not point to real files.
+
+```
+# requirements.md (excerpt)
+- AC1: Authenticated user can request a password reset via POST /reset; server emails a tokenized link.
+
+# test-suites.md (excerpt)
+## Journey 1: Reset request
+**Covers:** AC1
+**Paths:**
+| 1 | Happy | user submits form → client sends PUT /reset → server emails link |
+
+# design.md (excerpt)
+## API / Interface Changes
+- POST /reset — request a reset email (body: { email }).
+
+# contract.yaml (excerpt)
+paths:
+  /reset:
+    post:
+      summary: Request a reset email
+```
+
+**Diagonal coverage check renders:**
+
+| # | Pair | Status | Citation |
+|---|------|--------|----------|
+| 1 | AC→Journey | ✓ | `requirements.md:1 ↔ test-suites.md:3` |
+| 2 | Journey→Design | ✓ | `test-suites.md:1 ↔ design.md:1` |
+| 3 | Design→Contract | ✓ | `design.md:2 ↔ contract.yaml:3` |
+| 4 | Contract→test-suites | ✗ | `contract.yaml:3 ↔ test-suites.md:5` |
+
+**Failing-row render — one Rule 6 block (Path 1 single-failure case):**
+
+```
+✗ Row 4 (Contract→test-suites):  contract.yaml:3 ↔ test-suites.md:5
+   contract: POST /reset
+   test-suites: PUT /reset
+
+   Resolution:
+   [a] revise contract.yaml — change POST → PUT to match the journey path
+   [b] revise test-suites.md — change PUT → POST to match the contract
+   [c] custom — free-form text
+```
+
+Approval blocked at Gate 2 until human picks. Per F3 of the feature requirements (`requirements.md:32`).
+
+**Result: Journey 3 Path 1 exercised. ✓**
+
+### Probe B — two mismatches batched (Design↔Contract + Contract↔test-suites)
+
+`[illustrative]` — fictional password-reset feature with both upstream and downstream artifact drift.
+
+```
+# requirements.md (excerpt)
+- AC1: Authenticated user can request a password reset; server emails a tokenized link.
+
+# test-suites.md (excerpt)
+## Journey 1: Reset request
+**Covers:** AC1
+**Paths:**
+| 1 | Happy | user submits form → client sends PUT /reset → server emails link |
+
+# design.md (excerpt)
+## API / Interface Changes
+- POST /forgot — request a reset email (body: { email }).
+
+# contract.yaml (excerpt)
+paths:
+  /reset:
+    post:
+      summary: Request a reset email
+```
+
+**Diagonal coverage check renders:**
+
+| # | Pair | Status | Citation |
+|---|------|--------|----------|
+| 1 | AC→Journey | ✓ | `requirements.md:1 ↔ test-suites.md:3` |
+| 2 | Journey→Design | ✓ | `test-suites.md:1 ↔ design.md:1` |
+| 3 | Design→Contract | ✗ | `design.md:2 ↔ contract.yaml:3` |
+| 4 | Contract→test-suites | ✗ | `contract.yaml:3 ↔ test-suites.md:5` |
+
+**Failing-row render — TWO Rule 6 blocks, batched in a single multi-question `AskUserQuestion` call (Path 2 batched case, per NF2):**
+
+```
+✗ Row 3 (Design→Contract):  design.md:2 ↔ contract.yaml:3
+   design: POST /forgot
+   contract: POST /reset
+
+   Resolution:
+   [a] revise design.md — change /forgot → /reset
+   [b] revise contract.yaml — change /reset → /forgot
+   [c] custom
+
+✗ Row 4 (Contract→test-suites):  contract.yaml:3 ↔ test-suites.md:5
+   contract: POST /reset
+   test-suites: PUT /reset
+
+   Resolution:
+   [a] revise contract.yaml — change POST → PUT
+   [b] revise test-suites.md — change PUT → POST
+   [c] custom
+```
+
+Both blocks surface together (per NF2: "All failing rows are surfaced together in a single Gate 2 presentation (batched), with the human picking per row via a multi-question `AskUserQuestion` call. No drip-feed of one failure at a time."). Approval blocked until both resolved.
+
+**Result: Journey 3 Path 2 exercised. ✓**
+
+### Probe C — `[c] custom` escape (Journey 3 Path 3)
+
+Not separately constructed because the `[c] custom` option is identical in render across all probes — it appears in every Rule 6 block above. The escape hatch behavior (return to Gate 1 for deeper revision) is documented in the new Step 5 prose at `lsa/skills/lsa-specify/SKILL.md:178`: *"`[c]` returns to Gate 1 for deeper revision."* — verified by direct read-back of the SKILL.
+
+**Result: Journey 3 Path 3 exercised by inspection of the SKILL body. ✓**
+
+### Probe summary
+
+All three Journey 3 paths exercised:
+- Path 1 (single failure) — Probe A ✓
+- Path 2 (batched failures) — Probe B ✓
+- Path 3 (`[c]` custom escape) — read-back of SKILL.md:178 ✓
+
+W2 closed. `lsa-verify` re-run should now return clean `PASS`.
