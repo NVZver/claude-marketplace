@@ -88,6 +88,14 @@ The first end-to-end loop of LSA driving its own development (2026-05-21, single
 - **Recommended fix:** Either (a) widen the metric to count all branch-diff files vs files-covered-by-an-AC, or (b) add an explicit "off-metric scope-creep observation" sub-section to the metric template (this feature did the latter as a one-time precedent).
 - **Suggested follow-up:** Bundle with Finding #10's design decision.
 
+### Finding #13 — Implementation epics writing to module specs (LSA flow inconsistency)
+
+- **Symptom:** `tasks.md` decomposed the diagonal-coverage feature into 3 implementation epics, of which E2 (module spec invariant) and E3 (main.spec.md version row) write directly to module specs during the **implementation** phase. LSA's standard flow places module-spec edits in `lsa-sync` Step 3 ("Merge into module specs"), not in implementation epics.
+- **Surfaced:** During `lsa-sync` Step 3 execution — sync's job was reduced to adding trace tags to already-written content because E2/E3 had pre-emptively done the writes.
+- **Status:** Result state is identical (the module spec has the new Invariant either way). Flow inconsistency: which phase owns the write?
+- **Recommended fix:** Either (a) future `tasks.md` decompositions never include module-spec edits as implementation epics (let sync do them), or (b) document explicitly that "early sync via implementation epic" is an acceptable pattern and adjust `lsa-sync`'s expectations.
+- **Suggested follow-up:** A `lsa-revise-constitution` session to clarify which phase owns module-spec writes.
+
 ### Finding #8 — `vision/specs/main.spec.md` core row also stale
 
 - **Symptom:** Module index row `| \`core\` | … | active — v0.2.0 |` while actual `core/.claude-plugin/plugin.json` is v0.4.1.
