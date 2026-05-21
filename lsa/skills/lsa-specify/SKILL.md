@@ -15,7 +15,7 @@ Write the formal feature spec — `requirements.md`, `test-suites.md`, `contract
 - Optional `discovery.md` scratch file produced by `lsa-discover` for T3 flows. When present, the answers in `discovery.md` seed Step 2 so the clarification block becomes a deeper round, not the first round.
 - `.lsa.yaml` for `constitution` path and `specs_root` (defaults per [`../knowledge/conventions.md`](../knowledge/conventions.md) §"`.lsa.yaml` defaults").
 
-Confirm gate types (Hard / Soft) are defined in [`../knowledge/conventions.md`](../knowledge/conventions.md) §"Confirm gate types".
+All three gates in this skill are **Hard Confirm** — present artifact(s), wait for explicit approval, no implicit pass. (`conventions.md` §"Confirm gate types" still defines both Hard and Soft for other skills' use; lsa-specify no longer uses Soft after the audit-C gate collapse.)
 
 ## Steps
 

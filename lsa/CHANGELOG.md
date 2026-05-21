@@ -24,6 +24,8 @@ Credo rollout PR 2 — every LSA skill (+ `core/tier-selector`) adopts a compone
 ### Notes
 - `lsa/knowledge/conventions.md` is **unchanged.** The audit-B D2 proposal to add a *"Prompt shape"* section was superseded by audit-C (output discipline lives in `core/output`; LSA skills cite it directly, not via a conventions.md alias).
 - The S1–S17 component-specific output formats in the credo plan's Layer 1.5 stay as illustrative reference, not as embedded templates inside skill bodies (audit-C tight-pattern revision — each skill describes data + decisions, defers format to `core/output`).
+- **Behavior change — `contract.yaml` + `design.md` Soft → Hard Confirm in `lsa-specify`.** Pre-PR-2, Steps 7 (`contract.yaml`) and 8 (`design.md`) were Soft Confirm (human may delegate corrections inline). After the 7→3 gate collapse, both live inside Gate 2 which is Hard Confirm. The Soft type still exists in `conventions.md` for other skills' use; `lsa-specify` no longer uses Soft. (Surfaced by Round-3 self-review finding L2.)
+- **Pre-existing path-fix in `lsa-init` Constraints.** The cite to `core/skills/ground-rules/SKILL.md` was at the wrong relative depth (`../../core/skills/ground-rules/` — pointed at `lsa/core/skills/...` which doesn't exist). Repaired to `../../../core/skills/ground-rules/` during the Constraints edit. Pre-existing bug, not a credo-rollout regression. (Surfaced by Round-3 self-review finding L1.)
 - Corresponds to Vision v0.6.
 
 ## [0.3.1] — 2026-05-20
