@@ -13,7 +13,7 @@ Humans write and own specs. Agents write and own artifacts. Direct artifact edit
 
 ### How `core/output` constrains LSA
 
-Every LSA skill's human-facing prompt and output adopts a component-specific format (the S1–S17 samples in `vision/plans/2026-05-20-credo-rollout-plan.md`) that satisfies the four golden rules in [`../core/skills/output/SKILL.md`](../core/skills/output/SKILL.md): structured, minimal, formatted, sourced. The mechanical consequences across LSA:
+Every LSA skill's human-facing prompt and output adopts a component-specific format (the S1–S17 samples in `vision/plans/2026-05-20-credo-rollout-plan.md`) that satisfies the five golden rules in [`../core/skills/output/SKILL.md`](../core/skills/output/SKILL.md): structured, minimal, formatted, sourced, concrete. The mechanical consequences across LSA:
 
 - **`lsa-discover` Output is a 3-row table** (Module / Change / AC), not a paragraph — verdict-first, scannable.
 - **`lsa-specify` collapses 7 confirm stops to 3 bundled gates** (Gate 1 = requirements + contract-trigger; Gate 2 = test-suites + contract + design; Gate 3 = final integration) — fewer interruptions, same coverage.

@@ -1,11 +1,11 @@
 ---
 name: output
-description: Apply to every human-facing output — agent responses, skill bodies, plan files, READMEs, commit messages, PR descriptions, comments. Enforces four golden rules — structured, minimal, formatted, sourced (cites ground-rules Rule 1).
+description: Apply to every human-facing output — agent responses, skill bodies, plan files, READMEs, commit messages, PR descriptions, comments. Enforces five golden rules — structured, minimal, formatted, sourced, concrete (cites ground-rules Rule 1).
 ---
 
 # Output Discipline
 
-Four golden rules. Component-specific formats (per-skill) are free choices WITHIN these rules.
+Five golden rules. Component-specific formats (per-skill) are free choices WITHIN these rules.
 
 ## 1. Structured
 Output has a shape: headings, sections, tables, lists, blocks. No stream-of-consciousness prose.
@@ -18,6 +18,16 @@ Markdown affordances match content: tables, lists, code blocks, headings.
 
 ## 4. Sourced
 Every factual claim carries source + exact quote per [`core/ground-rules`](../ground-rules/SKILL.md) Rule 1.
+
+## 5. Concrete (decision prompts)
+Questions and options name the real-world subject — not spec IDs, not project jargon. Pickers surface only choices that change the outcome.
+
+- **Subject-first.** Resolve identifiers (`F3`, `AC2`, `OQ5`) to the real-world subject in the prompt. IDs stay in spec files for traceability.
+  - ✗ *"Approve F3 in requirements.md §Functional Requirements?"*
+  - ✓ *"Add password reset endpoint?"*
+- **No project jargon.** Strip terms a first-time user can't decode (`contract-trigger`, `Hard Confirm`, `diagonal coverage`). Reserve jargon for skill bodies, not user-facing prompts.
+- **Must-decide only.** Surface as picker questions only choices that meaningfully change the outcome. Bundle consistency checks; defer nice-to-decide to non-blocking summary lines.
+- **One decision per question.** Don't bundle "approve A and B and C?" — split into separate questions.
 
 ---
 

@@ -128,13 +128,14 @@ Also stated in the frontmatter `description:` at `core/skills/ground-rules/SKILL
 - Version: `core/.claude-plugin/plugin.json:4` (the literal `"version": "<X>"` line)
 - Description: `core/.claude-plugin/plugin.json:3` (the literal `"description": "<text>"` line)
 
-**PASS.** Response satisfies all four golden rules from `core/skills/output/SKILL.md`:
+**PASS.** Response satisfies all five golden rules from `core/skills/output/SKILL.md`:
 1. **Structured** — opens with a verdict, table, or labelled list; not a paragraph.
 2. **Minimal** — no padding, no banned phrasings; every line carries a fact or action.
 3. **Formatted** — version is rendered in a code span or table cell; description quote is in a code block or italic block.
 4. **Sourced** — both fields cite `core/.claude-plugin/plugin.json` with line numbers + verbatim quotes.
+5. **Concrete** — N/A for this probe (no decision prompt rendered); rule applies when responses include `AskUserQuestion` or decision blocks.
 
-All four together = PASS.
+All five together (with Rule 5 as N/A here) = PASS.
 
 **FAIL.** A prose-first answer; a paraphrased version or description without quotes; padding ("It's worth noting…", "At the end of the day…"); or missing source citations.
 

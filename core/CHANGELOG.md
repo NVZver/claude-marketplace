@@ -4,6 +4,21 @@ All notable changes to the `core` plugin are documented here. Format follows [Ke
 
 ## [Unreleased]
 
+## [0.5.0] — 2026-05-21
+
+Adds **Rule 5 (Concrete)** to `core/output` — decision-prompt voice discipline. Surfaced during Help-agent-persona refinement (2026-05-21) when the user flagged LSA gates as unusable: *"I have no IDEA what it means…wording is too…i don't know, it just means nothing to me…I want concrete questions to make decisions with clear problem to solve. I do not give a fuck about minor things."* Per `vision/specs/roadmap.md` row *"LSA gate prompts must be concrete"* (Must priority).
+
+### Added
+- `core/skills/output/SKILL.md` **Rule 5 — Concrete (decision prompts)** with four sub-bullets: subject-first (resolve `F3`/`AC2`/`OQ5` to the real-world subject in prompts; IDs stay in files), no project jargon (`contract-trigger`, `Hard Confirm`, `diagonal coverage` stay in skill bodies, not prompts), must-decide only (bundle consistency checks; surface only outcome-changing choices), one decision per question.
+
+### Changed
+- `core/.claude-plugin/plugin.json` `description` — `output (4 format golden rules — structured, minimal, formatted, sourced)` → `output (5 format golden rules — structured, minimal, formatted, sourced, concrete)`.
+- Live citations of "four golden rules" updated to "five golden rules" across `core/CLAUDE.md`, `core/skills/ground-rules/SKILL.md`, `core/tests/repo-anchored.md`, repo `README.md`, `vision/VISION.md`, `lsa/README.md`, `lsa/ARCHITECTURE.md`. Historical references (older CHANGELOG entries, archived plans) left as-is — they describe past state.
+
+### Notes
+- **Behavior change, not a refactor.** Existing `AskUserQuestion` calls across `lsa/skills/*/SKILL.md` do not yet conform to Rule 5 (they reference `F1` / `Hard Confirm` / etc.). The new rule will surface their non-conformance immediately. Follow-up sweep tracked in `vision/specs/roadmap.md` row *"LSA gate prompts must be concrete"*.
+- Sibling LSA work is queued, not blocking: the "Gate N → User Verification" rename (`vision/specs/roadmap.md`) and "T1/T2/T3 → Flow: Quick/Standard/Extended" rename land together with the prompt-voice sweep.
+
 ## [0.4.1] — 2026-05-21
 
 Credo rollout PR 2 — `core/tier-selector` adopts its component-specific output format that satisfies `core/output` golden rules. Patch bump: skill contract unchanged (still proposes tier + waits for human confirm); only the render format updates. Per [`vision/plans/2026-05-20-credo-rollout-plan.md`](../vision/plans/2026-05-20-credo-rollout-plan.md) Layer 2.

@@ -12,7 +12,7 @@ Apply [`core/ground-rules`](./skills/ground-rules/SKILL.md) to every substantive
 
 ## Output discipline (always-on)
 
-Apply [`core/output`](./skills/output/SKILL.md) to every human-facing output — four format golden rules (structured, minimal, formatted, sourced). Each component picks its own format within these rules.
+Apply [`core/output`](./skills/output/SKILL.md) to every human-facing output — five format golden rules (structured, minimal, formatted, sourced, concrete). Each component picks its own format within these rules.
 
 ## Tier selection (always-on)
 
