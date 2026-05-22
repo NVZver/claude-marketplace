@@ -12,6 +12,11 @@
       "name": "lsa",
       "source": "./lsa",
       "description": "Living Spec Architecture: spec-first methodology with eight skills (init, discover, specify, plan, verify, sync, reconcile, revise-constitution) and human User Verifications at every phase."
+    },
+    {
+      "name": "helper",
+      "source": "./helper",
+      "description": "Friendly fact-grounded assistant: `/help` slash command + auto-engaging subagent on user-friction signals (consecutive lsa-specify User Verification rejections, free-form `what is X?` mid-flow), with per-signal-type cooldown to prevent nag. Depends on `core` (output discipline) and `lsa` (User Verification reject signal)."
     }
   ]
 }
