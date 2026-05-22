@@ -4,12 +4,12 @@
 
 | Epic | Branch | Status | Dependency |
 |------|--------|--------|------------|
-| E1: Plugin shell + marketplace registration | `feature/2026-05-21-helper-agent-e1` | pending | none |
-| E2: Helper subagent body + knowledge | `feature/2026-05-21-helper-agent-e2` | pending | E1 |
-| E3: `/help` slash command body | `feature/2026-05-21-helper-agent-e3` | pending | E1 |
-| E4: Friction-signal detection + cooldown | `feature/2026-05-21-helper-agent-e4` | pending | E2 |
+| E1: Plugin shell + marketplace registration | `feature/2026-05-21-helper-agent-e3` (commit `cd02d15`) | done 2026-05-22 | none |
+| E2: Helper subagent body + knowledge | `feature/2026-05-21-helper-agent-e3` (commit `47b296c`) | done 2026-05-22 | E1 |
+| E3: `/help` slash command body | `feature/2026-05-21-helper-agent-e3` (commit `7aeafb5`) | done 2026-05-22 | E1 |
+| E4: Friction-signal detection + cooldown | `feature/2026-05-21-helper-agent-e3` (this commit) | done 2026-05-22 | E2 |
 
-E2 and E3 run in parallel after E1. E4 ships last (extends E2's agent body).
+E2 and E3 originally planned to run in parallel after E1; in execution all four epics landed as sequential commits on a single branch (`feature/2026-05-21-helper-agent-e3`) rather than separate per-epic branches. E4 ships last (extends E2's agent body).
 
 ---
 

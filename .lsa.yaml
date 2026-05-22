@@ -27,3 +27,12 @@ modules:
       - lsa/.claude-plugin/plugin.json
       - lsa/ARCHITECTURE.md
       - lsa/README.md
+  helper:
+    spec: vision/specs/modules/helper/spec.md
+    artifact_paths:
+      - helper/agents/**/*.md
+      - helper/commands/**/*.md
+      - helper/knowledge/**/*.md
+      - helper/.claude-plugin/plugin.json
+      - helper/README.md
+      - helper/VERIFICATION.md

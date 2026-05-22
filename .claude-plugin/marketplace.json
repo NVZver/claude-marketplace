@@ -16,7 +16,7 @@
     {
       "name": "helper",
       "source": "./helper",
-      "description": "Friendly fact-grounded assistant: `/help` slash command + auto-engaging subagent on user-friction signals (consecutive lsa-specify gate rejections, free-form `what is X?` mid-flow). Depends on `core` (output discipline) and `lsa` (gate-reject signal). Under construction — scaffold ships ahead of agent + command bodies; see vision/specs/features/2026-05-21-helper-agent/."
+      "description": "Friendly fact-grounded assistant: `/help` slash command + auto-engaging subagent on user-friction signals (consecutive lsa-specify gate rejections, free-form `what is X?` mid-flow), with per-signal-type cooldown to prevent nag. Depends on `core` (output discipline) and `lsa` (gate-reject signal)."
     }
   ]
 }

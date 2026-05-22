@@ -9,16 +9,16 @@ Inherits [`core/output`](../core/skills/output/SKILL.md) discipline: ≤1.5 scre
 
 Spec: [`vision/specs/features/2026-05-21-helper-agent/`](../vision/specs/features/2026-05-21-helper-agent/). Rationale: [`vision/VISION.md`](../vision/VISION.md).
 
-## Status — under construction
+## Status — v0.2.0 feature-complete
 
-Being built in 4 steps per [`tasks.md`](../vision/specs/features/2026-05-21-helper-agent/tasks.md). **Current commit: step 3 (`/help` command)** — the explicit invocation path is now wired end-to-end: type `/help <question>` and the Helper agent responds; type `/help` alone and a 3-option starter picker opens. Auto-engage detection still pending in step 4.
+Built in 4 steps per [`tasks.md`](../vision/specs/features/2026-05-21-helper-agent/tasks.md). Steps 1–3 landed as v0.1.0 (the description-matched assistant + `/help` command); step 4 ships as v0.2.0 — the auto-engage path. All three invocation paths are now wired: (c) explicit `/help`, (a) two consecutive `[c] reject` selections at an `lsa-specify` gate, (b) free-form `?` / `what is X?` mid-flow. Per-signal-type cooldown prevents nag.
 
 | Step | Adds | In this commit? |
 |---|---|---|
 | 1 | Plugin manifest, CHANGELOG, README, command + agent stubs, marketplace entry | ✓ |
 | 2 | Helper agent body + two knowledge files ([`output-discipline.md`](./knowledge/output-discipline.md), [`knowledge-scope.md`](./knowledge/knowledge-scope.md)). Answers with citations, handoff to skills under explicit `AskUserQuestion`, cannot-ground fallback. | ✓ |
 | 3 | `/help` command body ([`./commands/help.md`](./commands/help.md)) — free-form dispatch with `<question>` arg + empty-arg starter-topic picker (install / pick a skill / explain a concept). Thin shell that delegates to `Skill(helper)`. | ✓ |
-| 4 | Friction-signal detection + per-signal-type cooldown | pending |
+| 4 | Friction-signal detection + per-signal-type cooldown. New knowledge file ([`friction-signals.md`](./knowledge/friction-signals.md)) defines signals (a) gate-reject, (b) free-form question, (c) `/help`; agent body's Step 1 checks cooldown before responding; declined auto-engages stay declined until a different signal-type fires or the user pulls with `/help`. | ✓ |
 
 ## Install on Claude Code
 
@@ -40,14 +40,18 @@ Install `core` and `lsa` first — `helper` cites `core/output` for response dis
 
 Claude Code's plugin manifest does not yet expose a `dependencies` field; dependencies are prose-only here and in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) `description`. Adopt the field when Claude Code adds it (per `vision/specs/main.spec.md:23`).
 
-## V1 probe — after this commit
+## Probes — after this commit
 
 In a fresh Claude Code session:
 
-1. `/plugin marketplace add NVZver/claude-marketplace`
-2. `/plugin install helper@NVZver`
-3. `/plugin list` → `helper` appears alongside `core` and `lsa`.
-4. `/help` (no argument) → stub response pointing to this README and the spec.
-5. Description-match the `helper` agent → stub response pointing to step 2.
+**V1 (install).** `/plugin marketplace add NVZver/claude-marketplace` → `/plugin install helper@NVZver` → `/plugin list` shows `helper` alongside `core` and `lsa`.
 
-V2 (description-match triggers reliably) and V3 (behavior change vs `core` + `lsa` alone) land after steps 2–4 per [`vision/specs/standards/testing.md`](../vision/specs/standards/testing.md).
+**V2 (description-match — signal c).** `/help what is T2?` → Helper responds with a definition cited to `vision/VISION.md` + `core/skills/tier-selector/SKILL.md`, ≤1.5 screens, closing `AskUserQuestion`. `/help` alone opens the 3-option starter picker.
+
+**V3 (auto-engage — signal b).** Mid-session (no skill active), type `what is lsa-verify?` → Helper auto-engages without `/help`, cites `lsa/skills/lsa-verify/SKILL.md`, closing picker.
+
+**V3 (auto-engage — signal a).** Run `lsa-specify` for a new feature; at any gate, pick `[c] reject`; on the re-presentation pick `[c] reject` again → Helper auto-engages with `AskUserQuestion`: *"Want me to explain what this gate is checking? — Yes / No"*. Yes → re-grounded gate purpose. No → Helper steps back; the same gate sequence does not re-trigger Helper (cooldown).
+
+**Cooldown probe.** After declining a signal-(a) or signal-(b) auto-engage with No, re-trigger the same signal-type immediately → Helper does NOT re-engage. Trigger a different signal-type (or `/help`) → Helper engages again. Per [`./knowledge/friction-signals.md`](./knowledge/friction-signals.md).
+
+Probes follow `vision/specs/standards/testing.md` V1 → V2 → V3 progression.

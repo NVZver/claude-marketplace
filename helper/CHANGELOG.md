@@ -2,7 +2,19 @@
 
 All notable changes to the `helper` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
-## [Unreleased]
+## [0.2.0] – 2026-05-22
+
+Friction-signal detection + cooldown. Helper now auto-engages on the three signals defined in step 4 of [`vision/specs/features/2026-05-21-helper-agent/tasks.md`](../vision/specs/features/2026-05-21-helper-agent/tasks.md) (Epic 4), with per-signal-type cooldown to prevent nag.
+
+### Added
+
+- **Step 4 — Friction-signal detection + cooldown.** New knowledge file [`./knowledge/friction-signals.md`](./knowledge/friction-signals.md) defines the three signals — (a) two consecutive `[c] reject` at any `lsa-specify` gate within the same gate sequence, (b) free-form `?` / `(what|why|how)\s+(is|are|does|do)` mid-flow with no skill active, (c) explicit `/help` — and the cooldown rule: per-signal-type, per-session, reset by a different signal-type or by explicit `/help`. Helper agent body ([`./agents/helper.md`](./agents/helper.md)) extended with a Step 1 that recognises the invoking signal and checks cooldown (silent exit if in cooldown — no `AskUserQuestion`, no preamble), and two new Constraints (cooldown rule + signal-(a) requires `lsa-specify` active per OQ4). Resolves OQ2 in [`vision/specs/features/2026-05-21-helper-agent/design.md`](../vision/specs/features/2026-05-21-helper-agent/design.md). Acknowledges OQ4 — signal (a) cannot fire outside `lsa-specify`, signals (b) and (c) always work.
+- **`helper/VERIFICATION.md`** — V1/V2/V3 probe definitions for the v0.2.0 release, covering install, description-match across all three signals, and the cooldown probe per Journey 2 of [`vision/specs/features/2026-05-21-helper-agent/test-suites.md`](../vision/specs/features/2026-05-21-helper-agent/test-suites.md).
+- **`.lsa.yaml`** — added `modules.helper` block with artifact paths (`agents/`, `commands/`, `knowledge/`, manifest, README, VERIFICATION) so `lsa-verify` tracks the plugin per [`CONTRIBUTING.md`](../CONTRIBUTING.md) §*"Adding a Knowledge surface"*.
+
+## [0.1.0] – 2026-05-22
+
+First cut. Friendly fact-grounded assistant for the NVZver marketplace — a `/help` slash command, a description-matched subagent body, and two knowledge files codifying scope + output discipline. Built in three sequential commits on `feature/2026-05-21-helper-agent-e3` per steps 1–3 of [`vision/specs/features/2026-05-21-helper-agent/tasks.md`](../vision/specs/features/2026-05-21-helper-agent/tasks.md). Auto-engage on friction signals lands in v0.2.0.
 
 ### Added
 
