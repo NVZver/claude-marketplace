@@ -27,3 +27,9 @@ modules:
       - lsa/.claude-plugin/plugin.json
       - lsa/ARCHITECTURE.md
       - lsa/README.md
+  maintenance:
+    spec: vision/specs/modules/maintenance/spec.md
+    artifact_paths:
+      - maintenance/skills/**/SKILL.md
+      - maintenance/.claude-plugin/plugin.json
+      - maintenance/README.md
