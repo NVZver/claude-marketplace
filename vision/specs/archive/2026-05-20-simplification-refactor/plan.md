@@ -1,9 +1,11 @@
+<!-- ARCHIVED 2026-05-22: moved from vision/plans/2026-05-20-simplification-refactor-plan.md → vision/specs/archive/2026-05-20-simplification-refactor/plan.md as part of feature/2026-05-21-maintenance-cleanup. The active Constitution link on line 8 was rewritten to resolve from the new location. Internal historical path references below preserved as written at time of authorship. -->
+
 # Simplification Refactor Plan — 2026-05-20
 
 **Status:** approved, awaiting execution
 **Driver:** prompt-quality review across `core` + `lsa` plugins (rounds 1 + 2)
 **Scope:** pure DRY / SRP / KISS refactor — no functionality change
-**Constitution:** [`vision/VISION.md`](../VISION.md)
+**Constitution:** [`vision/VISION.md`](../../../VISION.md)
 
 ---
 

@@ -42,7 +42,7 @@ Prioritized list of upcoming work, populated from `vision/VISION.md` §6 *"Adjus
 
 ## Tech Picture adoption — 2026-05-20
 
-`READY` — three recommendations adopted from the 2026-05-20 Tech Picture analysis. Each passes the four credo tests: **Simple · Direct · Factual · Make-you-own-it**. Items rejected or deferred in that analysis are not promoted here. Status of each entry remains `backlog` in the table above until a plan file under `vision/plans/` is opened.
+`READY` — three recommendations adopted from the 2026-05-20 Tech Picture analysis. Each passes the four credo tests: **Simple · Direct · Factual · Make-you-own-it**. Items rejected or deferred in that analysis are not promoted here. Status of each entry remains `backlog` in the table above until a feature spec under `vision/specs/features/<feature>/` is opened via `/lsa:specify`.
 
 ### 1. EARS notation in the `requirements.md` AC block
 
@@ -75,7 +75,7 @@ Prioritized list of upcoming work, populated from `vision/VISION.md` §6 *"Adjus
 
 - **Name.** A diagonal cross-artifact coverage check inside `lsa-specify` User Verification 2 (renamed from Gate 2 in `lsa` v0.6.2), extending the existing AC→Journey check to the full set of artifact pairs.
 - **Source.**
-  - Existing in-repo precedent (the seed): `vision/plans/2026-05-20-credo-rollout-plan.md:243-246` — sample S6 already does AC→Journey coverage: *"AC coverage check: / - AC1 → Journey 1 (happy path)  ✓ / - AC2 → Journey 2 (expired-link path)  ✓ / - AC3 → Journey 1, step 4 (session reset)  ✓"*.
+  - Existing in-repo precedent (the seed): `vision/specs/archive/2026-05-20-credo-rollout/plan.md` §"S6 — lsa-specify Gate 2" — sample S6 already does AC→Journey coverage: *"AC coverage check: / - AC1 → Journey 1 (happy path)  ✓ / - AC2 → Journey 2 (expired-link path)  ✓ / - AC3 → Journey 1, step 4 (session reset)  ✓"*.
   - Inspiration: [GitHub Blog — Spec-driven development with AI](https://github.blog/ai-and-ml/generative-ai/spec-driven-development-with-ai-get-started-with-a-new-open-source-toolkit/) — the Spec-Kit toolkit ships *"quality checklists, and cross-artifact analysis"* between phases [unverified — claim sourced from 2026-05-20 search summary, not verified against the source page].
 - **Description.** Inside User Verification 2, the coverage check is extended from AC→Journey only to four diagonal pairs: AC→Journey, Journey→Design, Design→Contract, Contract→test-suites. Each row is a one-line citation between two artifact lines (e.g., `Design §"Token storage" ↔ Contract §"reset_tokens"`). When a row fails, the Verification surfaces the conflict as a Rule 6 decision block (`[a] revise AC / [b] revise Design / [c] custom`) — the system never auto-resolves.
 - **How it supports the credo.**

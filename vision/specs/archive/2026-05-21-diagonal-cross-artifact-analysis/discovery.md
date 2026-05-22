@@ -7,7 +7,7 @@
 ## Source
 - `vision/specs/roadmap.md:64-75` — feature definition (Tech Picture adoption 2026-05-20, item #3).
 - `lsa/skills/lsa-specify/SKILL.md:154` — current Gate 2 behavior (AC→Journey coverage only).
-- `vision/plans/2026-05-20-credo-rollout-plan.md:243-246` — seed sample of AC→Journey check pattern.
+- `vision/specs/archive/2026-05-20-credo-rollout/plan.md` §"S6 — lsa-specify Gate 2" — seed sample of AC→Journey check pattern.
 
 ## Tier
 - **T3** — confirmed via `core/tier-selector` ([this session]).

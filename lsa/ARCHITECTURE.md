@@ -1,7 +1,7 @@
 # Living Spec Architecture (LSA)
 **Version:** 0.4.0 (plugin)
 **Author:** Nikita Zverev
-**Status:** 0.4.0 — Vision-aligned; dogfooded on `claude-marketplace`; each skill cites `core/output` for output discipline. See [`../vision/specs/archive/2026-05-20-lsa-v0.2.0/design.md`](../vision/specs/archive/2026-05-20-lsa-v0.2.0/design.md) for the earlier baseline and [`../vision/plans/2026-05-20-credo-rollout-plan.md`](../vision/plans/2026-05-20-credo-rollout-plan.md) for the credo-rollout restructure.
+**Status:** 0.4.0 — Vision-aligned; dogfooded on `claude-marketplace`; each skill cites `core/output` for output discipline. See [`../vision/specs/archive/2026-05-20-lsa-v0.2.0/design.md`](../vision/specs/archive/2026-05-20-lsa-v0.2.0/design.md) for the earlier baseline and [`../vision/specs/archive/2026-05-20-credo-rollout/plan.md`](../vision/specs/archive/2026-05-20-credo-rollout/plan.md) for the credo-rollout restructure.
 
 ---
 
@@ -13,7 +13,7 @@ Humans write and own specs. Agents write and own artifacts. Direct artifact edit
 
 ### How `core/output` constrains LSA
 
-Every LSA skill's human-facing prompt and output adopts a component-specific format (the S1–S17 samples in `vision/plans/2026-05-20-credo-rollout-plan.md`) that satisfies the five golden rules in [`../core/skills/output/SKILL.md`](../core/skills/output/SKILL.md): structured, minimal, formatted, sourced, concrete. The mechanical consequences across LSA:
+Every LSA skill's human-facing prompt and output adopts a component-specific format (the S1–S17 samples in `vision/specs/archive/2026-05-20-credo-rollout/plan.md`) that satisfies the five golden rules in [`../core/skills/output/SKILL.md`](../core/skills/output/SKILL.md): structured, minimal, formatted, sourced, concrete. The mechanical consequences across LSA:
 
 - **`lsa-discover` Output is a 3-row table** (Module / Change / AC), not a paragraph — verdict-first, scannable.
 - **`lsa-specify` collapses 7 confirm stops to 3 bundled User Verifications** (1: Requirements + Contract Trigger; 2: Test Suites + Contract + Design; 3: Final Integration) — fewer interruptions, same coverage. Renamed from `Gate N` in `lsa` v0.6.2; prior CHANGELOG entries use the old name.

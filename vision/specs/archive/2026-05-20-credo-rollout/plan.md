@@ -1,3 +1,5 @@
+<!-- ARCHIVED 2026-05-22: moved from vision/plans/2026-05-20-credo-rollout-plan.md → vision/specs/archive/2026-05-20-credo-rollout/plan.md as part of feature/2026-05-21-maintenance-cleanup. Internal historical path references preserved as written at time of authorship. -->
+
 # Credo Rollout — Change Plan
 
 **Status:** `[applied 2026-05-21 at commit 38067cc]` — audit-C (proposal drafted 2026-05-20, applied 2026-05-21) flagged DRY/KISS/SRP defects in PR 1's structure: output discipline conflated with content rules inside `ground-rules`; `core/CLAUDE.md` restated the 8 rules instead of citing them; probes restated rule behaviors per-rule. Restructure shipped: output discipline extracted to `core/skills/output` (4 golden rules); ground-rules stays content-only (6 rules); every component picks its own output format within the golden rules; substrate-native principle landed at Vision §2 principle 9. PR 1 commits 3dc1828 + 53d7c58 discarded by `git reset --hard 01126d1`; rebuilt as 5bb5181 (plan) + 38067cc (apply). Force-pushed.

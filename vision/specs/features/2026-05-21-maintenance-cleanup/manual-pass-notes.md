@@ -74,3 +74,52 @@ Live capture during the manual cleanup pass. Per `feedback_manual_before_automat
 - **`Edit replace_all` on absolute path strings is safe** when the path itself is unique (date-stamped slugs). For generic refactors (e.g., renaming a skill), this would NOT be safe.
 
 ---
+
+### Wave 2 — credo-rollout + simplification plans → archive (2026-05-22)
+
+**Files moved:**
+- `vision/plans/2026-05-20-credo-rollout-plan.md` (11,429 tokens) → `vision/specs/archive/2026-05-20-credo-rollout/plan.md`
+- `vision/plans/2026-05-20-simplification-refactor-plan.md` (2,473 tokens) → `vision/specs/archive/2026-05-20-simplification-refactor/plan.md`
+
+**Citations touched:** ~17 lines across 6 files:
+- `core/CHANGELOG.md` (5 — 3 credo + 2 simplification)
+- `lsa/CHANGELOG.md` (4 — 1 credo + 3 simplification)
+- `lsa/ARCHITECTURE.md` (2 — credo only)
+- `vision/specs/roadmap.md` (2 — 1 credo line-number→section, 1 vision/plans/ deprecation reference)
+- `vision/specs/archive/2026-05-21-diagonal-cross-artifact-analysis/discovery.md` (1 — credo line-number→section)
+- `CONTRIBUTING.md` (4 — deprecation rewrites: line 38, 91, 103, 107-115)
+
+**Empty `vision/plans/` directory removed.**
+
+**Inventory delta:** -34,208 cumulative tokens (-52.1% from 65,659 baseline). Wave 2 added ~-13.9k on top of wave 1's -20.3k.
+
+**New procedure findings (refinements to the `/cleanup` skill design):**
+
+- **Line-number citations break on archival header insertion.** Adding a 2-line archival HTML comment + blank line shifts every internal line +2. Two citations that used `:243-246` line-range format were affected. **Fix policy** (CONTRIBUTING.md:62 already requires): cite by section name (`§"S6 — lsa-specify Gate 2"`), not by line number. The cleanup procedure must rewrite line-number citations to section-name citations as part of archival relocation — not just update the path prefix. **Bonus discovery:** the original `:243-246` was already wrong (real content was at lines 295-323 in the original file); the cleanup pass caught a pre-existing bug via the forced re-examination.
+
+- **Empty source directory cleanup.** After both wave-1 + wave-2 moves, `vision/plans/` was empty (1 file moved per wave + 1 in wave 1 in wave 2). `git mv` does NOT remove the source directory. Manual `rmdir vision/plans/` needed. The `/cleanup` skill should detect emptied source directories after a relocation pass and offer to remove them.
+
+- **Policy-document edits cascade.** Removing `vision/plans/` as an active directory triggered cascading edits to CONTRIBUTING.md (5 spots): the `Multi-step refactors` section, the plan-files-as-spec fallback, the version-bump exclusion list, etc. Removing a structural convention is NOT a single-file edit — it's a policy change requiring documentation updates. The `/cleanup` skill should flag this kind of cascade explicitly: "deprecating `<path>` requires the following documentation rewrites: …".
+
+- **Archival comment as line-shift documentation.** The archival comments now explicitly state how many lines were inserted (e.g., wave 1 lsa-v0.2.0 plan: *"only the active 'Source spec' link (line 13) was rewritten"* — tells readers that the 2-line shift moved line 11 → 13). Useful breadcrumb for future readers who may grep for an original line number and not find it.
+
+- **Active links inside moved files need relative-path recalculation.** `vision/plans/.../plan.md`'s `[Constitution](../VISION.md)` resolved to `vision/VISION.md` from the old location. After move to `vision/specs/archive/2026-05-20-simplification-refactor/plan.md`, the same `../VISION.md` would resolve to `vision/specs/archive/2026-05-20-simplification-refactor/VISION.md` (which doesn't exist). Had to rewrite to `../../../VISION.md`. The cleanup procedure must scan moved files for relative links and recalculate them based on the depth change.
+
+- **Archive-to-archive citation is a special case.** `vision/specs/archive/2026-05-21-diagonal-cross-artifact-analysis/discovery.md` cited a wave-2 plan. Updating its single line was within the established policy (link-target fix in archive = OK). Did not modify any other archive content.
+
+**Cumulative procedure (proto-spec, updated):**
+
+1. **Pre-move inventory** — grep every external citation; classify (link / bare-backtick / prose-only; with line-number vs section-name suffix).
+2. **Internal cross-cite scan** — grep moved files for sibling/parent references; classify (active link / historical narrative).
+3. **Relative-link depth-shift recalculation** — for each active link inside moved files, recompute the relative path based on the new file location's depth.
+4. **Archive dir creation + `git mv`** — preserve rename detection.
+5. **Archival HTML comment at head** — explicit about what was rewritten (active-link line numbers, etc.).
+6. **Active-link rewrite inside moved files** — only live cross-references.
+7. **External path-citation rewrite** — `Edit replace_all` per file with unique substring.
+8. **Line-number → section-name citation upgrade** — for any external citation using `:N-M` line-range, convert to `§"<section>"` form (CONTRIBUTING.md:62 policy).
+9. **Cascading-policy edits** — if the relocation drops a structural convention (e.g., `vision/plans/` as a directory), update all documentation that referenced the convention.
+10. **Empty source directory cleanup** — `rmdir` any source dirs left empty by `git mv`.
+11. **Invariant + structural verify** — 6 invariants + plugin.json parses + CHANGELOG head matches version.
+12. **Post-verify grep sweep** — confirm all old paths only appear inside (a) the moved files' historical narrative, (b) the archival comment itself, (c) the manual-pass-notes scratch. Anything else is a missed citation.
+
+---

@@ -98,7 +98,7 @@ Diagonal cross-artifact analysis at `lsa-specify` Gate 2 — extends the existin
 
 ## [0.4.0] — 2026-05-21
 
-Credo rollout PR 2 — every LSA skill (+ `core/tier-selector`) adopts a component-specific output format that satisfies the four golden rules in `core/output` (structured, minimal, formatted, sourced). Builds on `core` v0.4.0 (PR 1). Per [`vision/plans/2026-05-20-credo-rollout-plan.md`](../vision/plans/2026-05-20-credo-rollout-plan.md).
+Credo rollout PR 2 — every LSA skill (+ `core/tier-selector`) adopts a component-specific output format that satisfies the four golden rules in `core/output` (structured, minimal, formatted, sourced). Builds on `core` v0.4.0 (PR 1). Per [`vision/specs/archive/2026-05-20-credo-rollout/plan.md`](../vision/specs/archive/2026-05-20-credo-rollout/plan.md).
 
 ### Added
 - `lsa/README.md` — *"LSA's expression of the credo"* section right after the H1 with the user's verbatim line *"LSA doesn't automate your thinking — it makes you own it."* and links to `core/CLAUDE.md` + Rule 0.
@@ -122,7 +122,7 @@ Credo rollout PR 2 — every LSA skill (+ `core/tier-selector`) adopts a compone
 
 ## [0.3.1] — 2026-05-20
 
-KISS surgical edits. Per [`vision/plans/2026-05-20-simplification-refactor-plan.md`](../vision/plans/2026-05-20-simplification-refactor-plan.md) PR 3.
+KISS surgical edits. Per [`vision/specs/archive/2026-05-20-simplification-refactor/plan.md`](../vision/specs/archive/2026-05-20-simplification-refactor/plan.md) PR 3.
 
 ### Changed
 - `lsa-init/SKILL.md` Step 2 — replaced the redundant human question *"Greenfield or brownfield?"* with mechanical detection: *"If `${specs_root}/modules/` is empty AND `.lsa.yaml: modules.*` contains no `artifact_paths`, the mode is greenfield; otherwise brownfield. Print the determination and ask the human to confirm."* The gate is preserved; the question is no longer wasted on something derivable from repo state.
@@ -138,7 +138,7 @@ KISS surgical edits. Per [`vision/plans/2026-05-20-simplification-refactor-plan.
 
 ## [0.3.0] — 2026-05-20
 
-Knowledge-vs-Actor boundary tightening across all eight LSA skills. New `lsa/knowledge/conventions.md` Knowledge surface owns cross-skill conventions formerly duplicated in skill bodies. Per [`vision/plans/2026-05-20-simplification-refactor-plan.md`](../vision/plans/2026-05-20-simplification-refactor-plan.md) PR 2.
+Knowledge-vs-Actor boundary tightening across all eight LSA skills. New `lsa/knowledge/conventions.md` Knowledge surface owns cross-skill conventions formerly duplicated in skill bodies. Per [`vision/specs/archive/2026-05-20-simplification-refactor/plan.md`](../vision/specs/archive/2026-05-20-simplification-refactor/plan.md) PR 2.
 
 ### Added
 - `lsa/knowledge/conventions.md` — single Knowledge file holding (1) `.lsa.yaml` defaults, (2) the Read Protocol, (3) Hard / Soft Confirm gate type definitions, (4) the unified trace-tag format `<!-- <action>: <source> YYYY-MM-DD -->`. Each section was formerly restated in 6–7 skill bodies.
@@ -160,7 +160,7 @@ Knowledge-vs-Actor boundary tightening across all eight LSA skills. New `lsa/kno
 
 ## [0.2.1] — 2026-05-20
 
-Pure DRY / SRP / KISS docs prune. No skill behavior change. Per [`vision/plans/2026-05-20-simplification-refactor-plan.md`](../vision/plans/2026-05-20-simplification-refactor-plan.md) PR 1.
+Pure DRY / SRP / KISS docs prune. No skill behavior change. Per [`vision/specs/archive/2026-05-20-simplification-refactor/plan.md`](../vision/specs/archive/2026-05-20-simplification-refactor/plan.md) PR 1.
 
 ### Changed
 - `ARCHITECTURE.md` — shrunk ~540 → ~145 lines. Kept §1 Purpose, §2 Directory Structure, §3 `.lsa.yaml` configuration, §4 Branch Management, §5 Resolved Decisions. Deleted §2 (8 first principles — duplicated `vision/VISION.md` §2), §4.1–§4.9 component definitions (duplicated each `SKILL.md`), §5 Workflow Phases (duplicated each `SKILL.md`), §6 Testing Policy (duplicated `vision/specs/standards/testing.md`), §7 Fact-Check Policy (duplicated `core/skills/ground-rules/SKILL.md`), §8 Constitution Revision (duplicated `lsa-revise-constitution/SKILL.md`), §10 Skills Index (duplicated `README.md`). Each deleted section's content survives at its canonical source.

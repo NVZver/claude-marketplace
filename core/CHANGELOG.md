@@ -53,7 +53,7 @@ Adds **Rule 5 (Concrete)** to `core/output` — decision-prompt voice discipline
 
 ## [0.4.1] — 2026-05-21
 
-Credo rollout PR 2 — `core/tier-selector` adopts its component-specific output format that satisfies `core/output` golden rules. Patch bump: skill contract unchanged (still proposes tier + waits for human confirm); only the render format updates. Per [`vision/plans/2026-05-20-credo-rollout-plan.md`](../vision/plans/2026-05-20-credo-rollout-plan.md) Layer 2.
+Credo rollout PR 2 — `core/tier-selector` adopts its component-specific output format that satisfies `core/output` golden rules. Patch bump: skill contract unchanged (still proposes tier + waits for human confirm); only the render format updates. Per [`vision/specs/archive/2026-05-20-credo-rollout/plan.md`](../vision/specs/archive/2026-05-20-credo-rollout/plan.md) Layer 2.
 
 ### Changed
 - `core/skills/tier-selector/SKILL.md` Step 4 — confirm prompt describes data + decision options + outcomes inline; defers format to `core/output` (no embedded template). `AskUserQuestion` is the canonical decision primitive in Claude Code.
@@ -66,7 +66,7 @@ Credo rollout PR 2 — `core/tier-selector` adopts its component-specific output
 
 ## [0.4.0] — 2026-05-21
 
-Codifies the user-authored credo *"LSA doesn't automate your thinking — it makes you own it."* with a DRY/KISS/SRP-clean structure. Extends `ground-rules` 4 → 6 content rules; extracts output discipline to a new dedicated skill; lifts the verdict vocabulary to a new Knowledge surface. Per [`vision/plans/2026-05-20-credo-rollout-plan.md`](../vision/plans/2026-05-20-credo-rollout-plan.md) PR 1 (audit-C restructure). Corresponds to Vision v0.5 (`vision/VISION.md` changelog).
+Codifies the user-authored credo *"LSA doesn't automate your thinking — it makes you own it."* with a DRY/KISS/SRP-clean structure. Extends `ground-rules` 4 → 6 content rules; extracts output discipline to a new dedicated skill; lifts the verdict vocabulary to a new Knowledge surface. Per [`vision/specs/archive/2026-05-20-credo-rollout/plan.md`](../vision/specs/archive/2026-05-20-credo-rollout/plan.md) PR 1 (audit-C restructure). Corresponds to Vision v0.5 (`vision/VISION.md` changelog).
 
 ### Added
 - **NEW skill `core/skills/output/SKILL.md`** — single source of truth for output discipline. Four golden rules: (1) Structured, (2) Minimal, (3) Formatted, (4) Sourced (cites `core/ground-rules` Rule 1). Every other skill / agent / artifact cites this; nothing restates it. Body ≤30 lines.
@@ -89,12 +89,12 @@ Codifies the user-authored credo *"LSA doesn't automate your thinking — it mak
 
 ### Notes
 - The *"What this skill never does"* section is deliberately NOT re-added to `ground-rules` — the 0.3.0 refactor removed it as a Knowledge-vs-Actor violation; re-adding would reverse that refactor.
-- This is an audit-C restructure of an earlier PR-1 attempt (commits `3dc1828` + `53d7c58`) that violated `CONTRIBUTING.md` DRY/KISS/SRP by adding format rules (Rules 6/7) into `ground-rules` and restating the 8 rules in `core/CLAUDE.md`. Those commits were discarded by `git reset --hard 01126d1` on `feature/credo-core` before this rebuild. Full rationale: `vision/plans/2026-05-20-credo-rollout-plan.md` §"Audit-C resolutions" (C1–C7).
+- This is an audit-C restructure of an earlier PR-1 attempt (commits `3dc1828` + `53d7c58`) that violated `CONTRIBUTING.md` DRY/KISS/SRP by adding format rules (Rules 6/7) into `ground-rules` and restating the 8 rules in `core/CLAUDE.md`. Those commits were discarded by `git reset --hard 01126d1` on `feature/credo-core` before this rebuild. Full rationale: `vision/specs/archive/2026-05-20-credo-rollout/plan.md` §"Audit-C resolutions" (C1–C7).
 - The LSA-skill refit (per-component formats from the plan's Layer 1.5 applied to all LSA skills + `tier-selector` confirm; each skill's Constraints adds one citation to `core/output`) lands in `lsa` v0.4.0 (PR 2 of the credo rollout, `feature/credo-lsa`). PR 1 is the core constitutional change; PR 2 is the propagation across LSA skills.
 
 ## [0.3.0] — 2026-05-20
 
-Knowledge-vs-Actor boundary tightening across all three core skills. Per [`vision/plans/2026-05-20-simplification-refactor-plan.md`](../vision/plans/2026-05-20-simplification-refactor-plan.md) PR 2.
+Knowledge-vs-Actor boundary tightening across all three core skills. Per [`vision/specs/archive/2026-05-20-simplification-refactor/plan.md`](../vision/specs/archive/2026-05-20-simplification-refactor/plan.md) PR 2.
 
 ### Changed
 - `core/skills/tier-selector/SKILL.md` — Step 1 and Step 2 no longer inline the boundary-signal checklist or the four-row classification table. Both now cite `vision/VISION.md` §4 as the single source of truth. Resolves the self-flagged debt at the prior `lsa/ARCHITECTURE.md:459` ("revisit if a second skill restates them"). Body shrunk by ~16 lines.
@@ -108,7 +108,7 @@ Knowledge-vs-Actor boundary tightening across all three core skills. Per [`visio
 
 ## [0.2.1] — 2026-05-20
 
-Docs-only patch — marks `core/CLAUDE.md` as the canonical source for the always-on rules block. Part of the repo-wide DRY / SRP prune in [`vision/plans/2026-05-20-simplification-refactor-plan.md`](../vision/plans/2026-05-20-simplification-refactor-plan.md) PR 1.
+Docs-only patch — marks `core/CLAUDE.md` as the canonical source for the always-on rules block. Part of the repo-wide DRY / SRP prune in [`vision/specs/archive/2026-05-20-simplification-refactor/plan.md`](../vision/specs/archive/2026-05-20-simplification-refactor/plan.md) PR 1.
 
 ### Changed
 - `core/CLAUDE.md` — added a header blockquote declaring the file as *"the single source-of-truth for the always-on rules block. Other locations (repo `CLAUDE.md`, READMEs, module specs) point here rather than restating the rules."* No change to the Ground rules or Tier selection sections.

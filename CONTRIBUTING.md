@@ -35,7 +35,7 @@ Every non-trivial change invokes [`core/flow-selector`](./core/skills/flow-selec
 | **Standard** (was `T2`) | Bug in a spec'd module, refactor | `lsa-discover` (light) → TDD → `lsa-verify` |
 | **Extended** (was `T3`) | New feature, new contract, new module | `lsa-discover` → `lsa-specify` → `lsa-plan` → implement → `lsa-verify` → `lsa-sync` |
 
-For doc-only refactors that span many files, a plan file at `vision/plans/YYYY-MM-DD-<name>.md` may serve as the feature spec — **declare that judgment upfront** and reflect every change against the plan in your verification report.
+For doc-only refactors that span many files, use the formal `/lsa:specify` flow — the resulting feature spec at `vision/specs/features/YYYY-MM-DD-<name>/` carries the same role the plan-file pattern did in the pre-formal-LSA era. (Historic plan-file pattern preserved under `vision/specs/archive/2026-05-20-*` for reference.)
 
 ---
 
@@ -88,7 +88,7 @@ SemVer mapping for this repo:
 | Minor (`0.X.0`) | New skill, new Knowledge surface, or material change to a skill body. |
 | Major (`X.0.0`) | Breaking change to a skill's contract or to `.lsa.yaml` schema. |
 
-Repo-level files (root `CLAUDE.md`, `CONTRIBUTING.md`, plan files under `vision/plans/`) live outside per-plugin `artifact_paths` and do not trigger plugin version bumps.
+Repo-level files (root `CLAUDE.md`, `CONTRIBUTING.md`) live outside per-plugin `artifact_paths` and do not trigger plugin version bumps.
 
 ---
 
@@ -100,19 +100,21 @@ Per [`vision/specs/standards/testing.md`](./vision/specs/standards/testing.md):
 - **V2 — description-match triggers reliably.** One probe per affected skill in a fresh session. Target ~90% trigger rate.
 - **V3 — behavior changes observably.** Run the same small task with and without the plugin; compare on the three Vision §5 metrics: accuracy / facts-with-sources / only-required-changes.
 
-For LSA-tracked changes (anything under `artifact_paths`): run `lsa-verify` against the feature spec. If the change wasn't preceded by `lsa-specify`/`lsa-plan`, **declare what's serving as the spec** (e.g., a plan file at `vision/plans/`) and walk every change against it in your verification report.
+For LSA-tracked changes (anything under `artifact_paths`): run `lsa-verify` against the feature spec. If the change wasn't preceded by `lsa-specify`/`lsa-plan`, **declare what's serving as the spec** (e.g., a running-notes file under `vision/specs/features/<feature>/`) and walk every change against it in your verification report.
 
 ---
 
 ## Multi-step refactors
 
-Pattern established by the 2026-05-20 simplification refactor at [`vision/plans/2026-05-20-simplification-refactor-plan.md`](./vision/plans/2026-05-20-simplification-refactor-plan.md):
+Use the formal `/lsa:specify` flow. The resulting feature spec at `vision/specs/features/<feature>/` plays the role the plan-file pattern used to:
 
-1. **Write a plan** at `vision/plans/YYYY-MM-DD-<name>.md` listing every file change per PR with explicit deltas.
-2. **Get explicit human sign-off** on the plan (and any open decisions) before executing.
-3. **Execute one PR at a time.** After each PR, write a verification report that walks every plan item against file state (`grep`/`wc`/`ls`) — not memory.
-4. **Mark `[todo] → [in_progress] → [done]`** in the plan file as PRs land.
+1. **Walk through `lsa-specify`** — `discovery.md` + `clarification.md` + `requirements.md` capture scope; `tasks.md` lists each PR with explicit deltas.
+2. **Get explicit human sign-off** on each Gate before executing (`lsa-specify` enforces this).
+3. **Execute one PR at a time.** After each PR, walk every spec item against file state (`grep`/`wc`/`ls`) — not memory.
+4. **Update `tasks.md`** as PRs land.
 5. **Declare honesty flags** for any judgment calls (deferred items, scope expansions, decisions taken inline).
+
+Historical pattern (pre-LSA-formalization, preserved for reference): the 2026-05-20 simplification refactor at [`vision/specs/archive/2026-05-20-simplification-refactor/plan.md`](./vision/specs/archive/2026-05-20-simplification-refactor/plan.md) used a single plan file under `vision/plans/` instead of the feature-dir structure.
 
 ---
 
