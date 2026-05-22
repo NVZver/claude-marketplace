@@ -4,6 +4,21 @@ All notable changes to the `lsa` plugin are documented here. Format follows [Kee
 
 ## [Unreleased]
 
+## [0.6.3] — 2026-05-22
+
+Adopt the now-supported `dependencies` field in the Claude Code plugin manifest. Clears the "Marketplace dependency field" row from `vision/specs/roadmap.md` (status was `blocked` per `vision/specs/2026-05-20-lsa-v0.2.0-design.md` §14). Verified field availability against [code.claude.com/docs/en/plugin-dependencies](https://code.claude.com/docs/en/plugin-dependencies) and [code.claude.com/docs/en/plugins-reference](https://code.claude.com/docs/en/plugins-reference) on 2026-05-22 — `dependencies` is a top-level array (entries are bare strings or `{ name, version?, marketplace? }` objects) and ships in current Claude Code.
+
+### Added
+- **`lsa/.claude-plugin/plugin.json` `dependencies`** — bare-string declaration `"dependencies": ["core"]`. Claude Code now auto-resolves and installs `core` when a user installs `lsa`, and refuses to disable `core` while `lsa` is enabled (per the same-marketplace cascade rules in the docs above). No version constraint this cycle — `core` and `lsa` ship from the same repo on the same release cadence, so versions move in lockstep. A future row in the roadmap can add a `>=` floor + tagged-release flow if a downstream consumer outside this repo materializes.
+
+### Changed
+- **`lsa/.claude-plugin/plugin.json` `description`** — dropped trailing prose `Depends on \`core\` (cites \`core/ground-rules\` for fact-grounding and \`core/flow-selector\` for flow selection).` The structured `dependencies` field now carries the same intent; the cite-specific skills detail moves nowhere (it was illustrative, not load-bearing for the manifest).
+- **`lsa/README.md`** — "Depends on" section: the line claiming the manifest does not enforce a `dependencies` field is now stale; replaced with a note that the structured field exists and Claude Code auto-resolves on install.
+
+### Notes
+- **Patch bump rationale** — manifest declaration moves from prose to structured, expressing the same intent. The user-visible install-behavior change (auto-resolve + enable/disable cascade) is additive and aligns with the prior `/plugin install core` → `/plugin install lsa` documented sequence. Treating as patch per the same pre-1.0 maintainer-discretion clause used for the v0.6.2 sibling-rename patch.
+- **Sibling release** — `core` is unchanged. The dependency edge is declared from the dependent side only, per the documented schema.
+
 ## [0.6.2] — 2026-05-22
 
 Naming clarity patch — two sibling renames:
