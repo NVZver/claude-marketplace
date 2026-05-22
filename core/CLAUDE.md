@@ -14,10 +14,11 @@ Apply [`core/ground-rules`](./skills/ground-rules/SKILL.md) to every substantive
 
 Apply [`core/output`](./skills/output/SKILL.md) to every human-facing output — five format golden rules (structured, minimal, formatted, sourced, concrete). Each component picks its own format within these rules.
 
-**Two operational checkpoints (commonly skipped — surface them every turn):**
+**Three operational checkpoints (commonly skipped — surface them every turn):**
 
 1. **Substrate-native pickers.** In Claude Code, every decision-bearing prompt uses `AskUserQuestion`. Never render `[a] / [b] / [c]` text blocks when the native picker is available — per `vision/VISION.md` §2 principle 9 (*"Substrate-native first"*) and [`core/output`](./skills/output/SKILL.md) Rule 5. Text decision blocks are the fallback when no picker exists (e.g., non-Claude-Code substrates, embedded `.md` body templates).
 2. **1–1.5 screen budget per turn.** Default response budget is ~30–50 lines of rendered markdown. Split decisions into separate turns; pull facts on demand rather than pushing tables + worked examples + decision blocks in one turn. Per [`core/output`](./skills/output/SKILL.md) Rule 2.
+3. **Output marker (`[plugin:skill]`).** Every substantive response opens with one `[plugin:skill]` marker naming the most-specific active marketplace skill — e.g., `[core:output]` (default), `[lsa:lsa-specify]`, `[lsa:lsa-verify]`. The marker is the response's "From:" line so the human sees at-a-glance which marketplace context produced the output. Per [`core/output`](./skills/output/SKILL.md) Rule 4.
 
 ## Flow selection (always-on)
 
