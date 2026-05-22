@@ -4,6 +4,13 @@ All notable changes to the `core` plugin are documented here. Format follows [Ke
 
 ## [Unreleased]
 
+## [0.5.3] — 2026-05-22
+
+Maintenance-cleanup wave 1+2 wrap-up — citation-path updates following the manual cleanup pass that archived four historical 2026-05-20 plan/design files (no skill behavior change, no `artifact_paths` content modified). Per `vision/specs/features/2026-05-21-maintenance-cleanup/manual-pass-notes.md`.
+
+### Changed
+- `core/CHANGELOG.md` — historical entries now cite the archived locations of the four 2026-05-20 plan/design files at `vision/specs/archive/2026-05-20-{lsa-v0.2.0,credo-rollout,simplification-refactor}/`. Underlying released content unchanged.
+
 ## [0.5.2] — 2026-05-22
 
 Naming clarity patch — renames the `core/tier-selector` skill to `core/flow-selector` and replaces the `T1` / `T2` / `T3` tier labels with `Quick` / `Standard` / `Extended` across `core/CLAUDE.md`, `core/README.md`, `core/VERIFICATION.md`, the skill body, and the plugin description. Per `vision/specs/roadmap.md` row *"Rename `T1` / `T2` / `T3` → `Flow: Quick` / `Flow: Standard` / `Flow: Extended`"*. Bundle B (Naming clarity) of the 2026-05-22 fixing session.

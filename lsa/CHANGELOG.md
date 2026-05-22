@@ -4,6 +4,14 @@ All notable changes to the `lsa` plugin are documented here. Format follows [Kee
 
 ## [Unreleased]
 
+## [0.6.3] — 2026-05-22
+
+Maintenance-cleanup wave 1+2 wrap-up — citation-path updates following the manual cleanup pass. `lsa/ARCHITECTURE.md` (inside `artifact_paths`) and `lsa/CHANGELOG.md` (narrative metadata) now reference the new home of the four historical 2026-05-20 plan/design files. Per `vision/specs/features/2026-05-21-maintenance-cleanup/manual-pass-notes.md`.
+
+### Changed
+- `lsa/ARCHITECTURE.md` — header status block + `core/output` constraints section cite the archived locations of `lsa-v0.2.0-design` and `credo-rollout-plan`. Skill behavior unchanged.
+- `lsa/CHANGELOG.md` — historical entries now cite the archived locations of the four 2026-05-20 plan/design files. Underlying released content unchanged.
+
 ## [0.6.2] — 2026-05-22
 
 Naming clarity patch — two sibling renames:
