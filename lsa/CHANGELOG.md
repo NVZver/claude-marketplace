@@ -4,6 +4,24 @@ All notable changes to the `lsa` plugin are documented here. Format follows [Kee
 
 ## [Unreleased]
 
+## [0.7.0] — 2026-05-22
+
+Remove the trace-tag convention and stop emitting `<!-- added/reconciled/revised: ... -->` HTML comments. The format was opaque to non-LSA collaborators and not required by EARS (`vision/VISION.md:187-206`) or any other adopted 3rd-party standard. Minor bump — three skills' observable output changes.
+
+### Removed
+- **`lsa/knowledge/conventions.md` §"Trace-tag format"** — section deleted (was lines 53-75).
+- **`lsa/skills/lsa-sync/SKILL.md`** — 5 trace-tag references removed: the "(tagged)" mention in Step 2's decision block, the `Tag each addition` substep in Step 3, the `Tag each change` bullet in Step 4, the "(tagged)" qualifier in Output, and the **Tag every addition** constraint.
+- **`lsa/skills/lsa-reconcile/SKILL.md`** — 3 trace-tag references removed: the `Tag the edited line(s)` sentence in Class (a), the `Tag with` sentence in Class (b), and the "both tagged" qualifier in Output.
+- **`lsa/skills/lsa-revise-constitution/SKILL.md`** — 3 trace-tag references removed: the "tagged" mention in Step 3's decision block, the `Tag the change` substep in Step 4, and the "each tagged" qualifier in Output.
+
+### Changed
+- **`vision/VISION.md`** (2 sites — `:59`, `:206`), **`vision/specs/main.spec.md:18`**, **`vision/specs/modules/lsa/spec.md`** (2 sites — `:36`, `:37`) — stripped the 5 HTML comment tags from living specs. Archive files (`vision/plans/2026-05-20-*`, `vision/specs/2026-05-20-lsa-v0.2.0-design.md`) intentionally untouched per user choice — they remain as frozen historical records.
+
+### Notes
+- **Minor bump rationale.** Three skills change observable output (no more tagged HTML comments in their edits) — that's user-visible behavior change, not a patch-class fix. Per `vision/VISION.md` "Distribution + versioning".
+- **No migration step needed.** Existing tags in archive files are valid Markdown comments; nothing parses them and nothing breaks.
+- **User trigger.** Working with a collaborator on a downstream project (TripAnchor), the user flagged that `<!-- revised: manual 2026-05-22 -->` is unintelligible to anyone without LSA context. "If it's not a requirement from EARS or other 3rdparty we adopted - get rid of it." Confirmed not required by EARS (which is purely AC-phrasing per `vision/VISION.md:187-206`); no other adopted standard mandated provenance HTML comments.
+
 ## [0.6.5] — 2026-05-22
 
 Replace 9 snapshot restatements with citation-by-link to satisfy `core` v0.5.5's new canonical-source contract for output discipline. No behavior change. Patch flow.

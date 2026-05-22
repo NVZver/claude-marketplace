@@ -56,14 +56,13 @@ Extract the feature delta into permanent module specs, archive the feature spec,
    [Module index changes, new global NFRs. If none, write "none"]
    ```
 
-   Present: Module Deltas table (Module / Type / Decision) + specs-touched list (module → spec path) + main.spec.md updates list + decision `[a] apply → module specs edited (tagged); feature archived next` / `[b] modify → revise delta, re-present` / `[c] reject → stop, sync aborted`. Format per [`core/output`](../../../core/skills/output/SKILL.md); `AskUserQuestion` for the decision. Wait for explicit approval before writing any files. Observable result: delta written to scratch; human approval logged.
+   Present: Module Deltas table (Module / Type / Decision) + specs-touched list (module → spec path) + main.spec.md updates list + decision `[a] apply → module specs edited; feature archived next` / `[b] modify → revise delta, re-present` / `[c] reject → stop, sync aborted`. Format per [`core/output`](../../../core/skills/output/SKILL.md); `AskUserQuestion` for the decision. Wait for explicit approval before writing any files. Observable result: delta written to scratch; human approval logged.
 
 3. **Merge into module specs.** For each affected module:
    1. Open `${specs_root}/modules/<module-name>/spec.md`.
    2. Append or extend the relevant sections with delta content.
-   3. Tag each addition: `<!-- added: <feature-name> YYYY-MM-DD -->` (per [`../knowledge/conventions.md`](../knowledge/conventions.md) §"Trace-tag format").
-   4. Do not rewrite or delete existing content.
-   5. If a conflict exists between new and existing content, stop and ask human.
+   3. Do not rewrite or delete existing content.
+   4. If a conflict exists between new and existing content, stop and ask human.
 
    Observable result: per-module diff shown.
 
@@ -71,7 +70,6 @@ Extract the feature delta into permanent module specs, archive the feature spec,
    - Add new modules to the module index if created.
    - Add new global NFRs or contracts if any.
    - If `contract.yaml` exists, update the Cross-Module Contracts section with new or modified endpoints and data types.
-   - Tag each change: `<!-- added: <feature-name> YYYY-MM-DD -->` (per [`../knowledge/conventions.md`](../knowledge/conventions.md) §"Trace-tag format").
 
    Observable result: `${specs_root}/main.spec.md` updated; diff shown.
 
@@ -134,13 +132,12 @@ Extract the feature delta into permanent module specs, archive the feature spec,
 
 ## Output
 
-Updated module specs (tagged), updated `${specs_root}/main.spec.md`, archived feature directory at `${specs_root}/archive/YYYY-MM-DD-<feature-name>/`, updated `.lsa-sync-state.json` at repo root, optional appended row in `${specs_root}/metrics.md`, and a sync report.
+Updated module specs, updated `${specs_root}/main.spec.md`, archived feature directory at `${specs_root}/archive/YYYY-MM-DD-<feature-name>/`, updated `.lsa-sync-state.json` at repo root, optional appended row in `${specs_root}/metrics.md`, and a sync report.
 
 ## Constraints
 
 - **Human reviews the delta before any spec write.** No silent merges into module specs.
-- **Never delete content** during sync. Additions are tagged; conflicts halt the skill.
-- **Tag every addition** with `<!-- added: <feature-name> YYYY-MM-DD -->` (per [`../knowledge/conventions.md`](../knowledge/conventions.md) §"Trace-tag format").
+- **Never delete content** during sync. Conflicts halt the skill.
 - **Preserve other modules' state** when writing `.lsa-sync-state.json`. Only touch the keys for modules involved in this feature.
 - Outputs follow [`core/output`](../../../core/skills/output/SKILL.md) — citation by link, never restated.
 

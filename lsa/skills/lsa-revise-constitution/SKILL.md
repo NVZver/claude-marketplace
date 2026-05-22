@@ -58,12 +58,11 @@ After a feature is merged, propose and apply constitution / standards changes th
 
    Observable result: one proposal block per change written to scratch.
 
-3. **Human review gate.** Present each proposed change individually (one per turn): PROPOSED verdict + change-N-of-M + file path + section name + type (add / modify / remove) + verbatim current content (or "none") + proposed content + one-line reason + source (feature name or "manual") + decision `[a] apply → file edited, tagged, committed to constitution branch` / `[b] modify → apply your correction, re-present` / `[c] reject → change not applied`. Format per [`core/output`](../../../core/skills/output/SKILL.md); `AskUserQuestion` for the decision. Do not write until approval. Observable result: per-change decision logged.
+3. **Human review gate.** Present each proposed change individually (one per turn): PROPOSED verdict + change-N-of-M + file path + section name + type (add / modify / remove) + verbatim current content (or "none") + proposed content + one-line reason + source (feature name or "manual") + decision `[a] apply → file edited, committed to constitution branch` / `[b] modify → apply your correction, re-present` / `[c] reject → change not applied`. Format per [`core/output`](../../../core/skills/output/SKILL.md); `AskUserQuestion` for the decision. Do not write until approval. Observable result: per-change decision logged.
 
 4. **Apply approved changes.** For each approved change:
    1. Edit the target file (the configured `${constitution}` or a file under `${specs_root}/standards/`).
-   2. Tag the change: `<!-- revised: <feature-name> YYYY-MM-DD -->` (per [`../knowledge/conventions.md`](../knowledge/conventions.md) §"Trace-tag format").
-   3. Do not rewrite surrounding content.
+   2. Do not rewrite surrounding content.
 
    Observable result: diff shown per file.
 
@@ -81,7 +80,7 @@ After a feature is merged, propose and apply constitution / standards changes th
 
 ## Output
 
-Updated `${constitution}` and/or files under `${specs_root}/standards/`, each tagged `<!-- revised: <feature-name> YYYY-MM-DD -->` (per [`../knowledge/conventions.md`](../knowledge/conventions.md) §"Trace-tag format"). A `constitution/<change-description>` branch ready for PR to `main`.
+Updated `${constitution}` and/or files under `${specs_root}/standards/`. A `constitution/<change-description>` branch ready for PR to `main`.
 
 ## Constraints
 

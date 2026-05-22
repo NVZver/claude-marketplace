@@ -35,8 +35,8 @@ Close the drift between artifact reality and module specs by absorbing each delt
 4. **Per-module hard confirm.** Present each delta individually: DRIFT verdict + module name + file/line counts + classification (a or b) + verbatim spec quote with path:line + verbatim artifact quote with path:line + proposed one-line spec update + decision `[a] apply → spec edited in place (class a) or appended (class b); SHA bumped` / `[b] reject → spec untouched; row added to research-backlog.md`. Format per [`core/output`](../../../core/skills/output/SKILL.md); `AskUserQuestion` for the decision. Observable result: the human picks per module. No implicit approvals.
 
 5. **On confirm — reverse-sync** per `vision/VISION.md:143` (*"reverse-sync — the spec absorbs reality"*):
-   - **Class (a) — update in place.** Edit the contradicted requirement line(s) so the spec now states the new behavior. **Replace, don't append next to.** Tag the edited line(s) with `<!-- reconciled: drift YYYY-MM-DD -->` (per [`../knowledge/conventions.md`](../knowledge/conventions.md) §"Trace-tag format"). Worked example from `vision/VISION.md:141`: the spec said *"sessions expire at 30 days"*; on confirm the spec is edited in-place to *"sessions expire at 7 days"*.
-   - **Class (b) — append new requirement.** Add a new requirement line in the appropriate section of the module spec. Tag with `<!-- reconciled: drift YYYY-MM-DD -->` (per [`../knowledge/conventions.md`](../knowledge/conventions.md) §"Trace-tag format"). (True append, not a "Drift absorbed" heading — that approach was rejected because it leaves the spec self-contradictory.)
+   - **Class (a) — update in place.** Edit the contradicted requirement line(s) so the spec now states the new behavior. **Replace, don't append next to.** Worked example from `vision/VISION.md:141`: the spec said *"sessions expire at 30 days"*; on confirm the spec is edited in-place to *"sessions expire at 7 days"*.
+   - **Class (b) — append new requirement.** Add a new requirement line in the appropriate section of the module spec. (True append, not a "Drift absorbed" heading — that approach was rejected because it leaves the spec self-contradictory.)
    - **Update `.lsa-sync-state.json`** with the new HEAD SHA for that module (and a fresh ISO timestamp). Preserve other modules' entries.
 
    Observable result: the spec file is edited (specific line(s) shown in the diff); the state file is updated with the new SHA.
@@ -45,7 +45,7 @@ Close the drift between artifact reality and module specs by absorbing each delt
 
 ## Output
 
-- Updated module specs (those confirmed; in-place edit for class (a), append for class (b); both tagged `<!-- reconciled: drift YYYY-MM-DD -->` (per [`../knowledge/conventions.md`](../knowledge/conventions.md) §"Trace-tag format")).
+- Updated module specs (those confirmed; in-place edit for class (a), append for class (b)).
 - Updated `.lsa-sync-state.json` with new HEAD SHA per module-confirmed.
 - A one-paragraph summary of what was absorbed and what was rejected.
 

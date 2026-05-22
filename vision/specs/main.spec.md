@@ -15,7 +15,7 @@ The marketplace ships two domain-neutral plugins (`core` and `lsa`) installable 
 | Module | Spec | Status |
 |---|---|---|
 | `core` | [`vision/specs/modules/core/spec.md`](./modules/core/spec.md) | active — v0.5.2 |
-| `lsa` | [`vision/specs/modules/lsa/spec.md`](./modules/lsa/spec.md) | active — v0.6.2 | <!-- added: 2026-05-21-ears-journey-shape-ac 2026-05-21; bumped: fix/discipline-ground + fix/naming-clarity 2026-05-22 -->
+| `lsa` | [`vision/specs/modules/lsa/spec.md`](./modules/lsa/spec.md) | active — v0.6.2 |
 
 ## Cross-Module Contracts
 
