@@ -11,12 +11,12 @@ Spec: [`vision/specs/features/2026-05-21-helper-agent/`](../vision/specs/feature
 
 ## Status — under construction
 
-Being built in 4 steps per [`tasks.md`](../vision/specs/features/2026-05-21-helper-agent/tasks.md). **Current commit: step 1 (scaffold)** — installable, but the agent and command bodies are stubs that point back to this spec.
+Being built in 4 steps per [`tasks.md`](../vision/specs/features/2026-05-21-helper-agent/tasks.md). **Current commit: step 2 (agent body)** — the assistant answers questions with citations and can hand off to other skills under confirmation. The `/help` command and auto-engage detection still pending.
 
 | Step | Adds | In this commit? |
 |---|---|---|
 | 1 | Plugin manifest, CHANGELOG, README, command + agent stubs, marketplace entry | ✓ |
-| 2 | Helper agent body — answers with citations, handoff to skills, cannot-ground fallback | pending |
+| 2 | Helper agent body + two knowledge files ([`output-discipline.md`](./knowledge/output-discipline.md), [`knowledge-scope.md`](./knowledge/knowledge-scope.md)). Answers with citations, handoff to skills under explicit `AskUserQuestion`, cannot-ground fallback. | ✓ |
 | 3 | `/help` command body — free-form dispatch + starter-topic picker | pending |
 | 4 | Friction-signal detection + per-signal-type cooldown | pending |
 
