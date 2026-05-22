@@ -4,6 +4,27 @@ All notable changes to the `core` plugin are documented here. Format follows [Ke
 
 ## [Unreleased]
 
+## [0.5.5] — 2026-05-22
+
+Declare `core/output` as the marketplace-wide canonical source-of-truth for output discipline. Adds a canonical-source clause + a regression probe (`core/tests/repo-anchored.md` D2) that catches future drift. Sweeps known Core-internal drift; LSA sweep ships in sibling `lsa` v0.6.5. Per user request 2026-05-22 (*"Core/output is the source of truth. All goes to it adheres it or extend but never breaks"*). Standard flow.
+
+### Added
+- **`core/skills/output/SKILL.md` Canonical-source clause** — blockquote above the H1 declaring this file the marketplace-wide source-of-truth; other plugins MAY cite + MAY add component-specific formats; MUST NOT restate the rule count or rule names outside this file (citation by markdown link only); MUST NOT override or relax any rule. Re-grounded summaries are permitted when they cite this file by link at the top (per `helper/knowledge/output-discipline.md:5` precedent).
+- **`core/tests/repo-anchored.md` D2 — Output discipline canonical invariant** — regression probe with a grep recipe that fails on `(N golden rules)` count-restatements outside Core and on the 4-name list `structured, minimal, formatted, sourced` not followed by `, concrete` and not within 5 lines of a `core/skills/output/SKILL.md` link. Recipe excludes `archive/`, `plans/`, `CHANGELOG.md`.
+
+### Fixed
+- **`core/skills/flow-selector/SKILL.md:68`** — Stale 4-name list (was missing *concrete*) → citation-only.
+
+### Changed
+- **`vision/specs/modules/core/spec.md`** — Skill list reflects four skills (was three; `core/output` was missing); fixed stale version pin v0.5.2 → v0.5.5; added **Output discipline canonical** Invariant bullet citing D2.
+- **`vision/VISION.md:267`** — v0.5 changelog entry rewritten to be drift-resistant (count + rule names → version-anchored note pointing at canonical).
+
+### Notes
+- **Rationale.** Discipline alone produced 11 drift sites (8 LSA-skill footers missing *concrete*; `lsa/ARCHITECTURE.md:30` saying "(4 golden rules)"; `core/skills/flow-selector/SKILL.md:68` missing *concrete*; `vision/VISION.md:267` historical changelog 4-name list). The canonical declaration + D2 probe convert a verbal convention into a checkable invariant.
+- **Minor bump rationale.** Adds a new marketplace-wide contract (canonical-source declaration). No existing behavior breaks: every prior caller satisfies the new contract once the citation footers are updated (sibling `lsa` v0.6.5).
+- **Adherent example preserved.** `helper/knowledge/output-discipline.md` is untouched — it already cites canonical at line 5 and adds plugin-specific extensions, which is precisely the legitimate pattern the new probe D2 condition (c) permits.
+- **Sibling LSA patch.** `lsa` v0.6.5 sweeps the 9 known LSA drift sites in the same PR.
+
 ## [0.5.4] — 2026-05-22
 
 File-load trace patch. Replaces the v0.5.3 single-line `[plugin:skill]` marker — which did not give the human enough signal about which marketplace files actually shaped a turn — with a per-file trace directive hardcoded at the top of every marketplace instructional file. On load, the agent prints `=============== [<file>] [<plugin>] ===============` verbatim, one line per loaded file, in load order, before the response body. Per user request 2026-05-22 ("markers do not work … print the file name and current plugin using it"). Quick flow.

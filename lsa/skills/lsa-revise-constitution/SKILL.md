@@ -88,7 +88,7 @@ Updated `${constitution}` and/or files under `${specs_root}/standards/`, each ta
 - **Hard confirm per change.** No bulk approval; each proposal stands or falls on its own.
 - **Never touch specs, src, or skills** — only the configured constitution and `${specs_root}/standards/`.
 - **Never rewrite surrounding content.** Limit edits to the proposed section.
-- Outputs follow [`core/output`](../../../core/skills/output/SKILL.md) golden rules (structured, minimal, formatted, sourced).
+- Outputs follow [`core/output`](../../../core/skills/output/SKILL.md) — citation by link, never restated.
 
 ---
 

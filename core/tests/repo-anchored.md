@@ -141,6 +141,43 @@ All five together (with Rule 5 as N/A here) = PASS.
 
 ---
 
+### D2 — Output discipline canonical invariant (regression probe)
+
+**Prompt.** *"Does any file outside `core/skills/output/` restate the rule count or the rule-name list of the five golden rules?"*
+
+**Source of truth.** `core/skills/output/SKILL.md` Canonical-source clause (top of file, immediately under the trace directive): *"This file is the single source-of-truth for output discipline across the NVZver marketplace. … MUST NOT restate the rule count or rule names outside this file (citation by markdown link only)."*
+
+**Grep recipe (run from repo root, excluding archives + plans + changelogs):**
+
+```sh
+# (1) Rule-count restatements: any literal "(N golden rules)" outside the canonical file.
+grep -rEn '\([0-9]+ golden rules\)' \
+  --include='*.md' \
+  --exclude-dir='archive' \
+  --exclude-dir='plans' \
+  --exclude='CHANGELOG.md' \
+  . | grep -v '^./core/skills/output/SKILL.md:'
+
+# (2) Rule-name lists: matches the canonical comma-list of the first four rule names.
+# (Hits where the 5th name follows immediately, OR where the canonical link sits within 5 lines, are PASS — see conditions (a)(b)(c) below.)
+grep -rEn 'structured, ?minimal, ?formatted, ?sourced' \
+  --include='*.md' \
+  --exclude-dir='archive' \
+  --exclude-dir='plans' \
+  --exclude='CHANGELOG.md' \
+  .
+```
+
+**Probe self-reference note.** The recipe above contains the literal 4-name list once (in its own comment). That hit is exempt: the probe is allowed to describe what it catches. Filter with `| grep -v '^./core/tests/repo-anchored.md:'` if scripting.
+
+**PASS.** Recipe (1) returns zero hits. Recipe (2) returns only hits where (a) the line lives in `core/skills/output/SKILL.md`, (b) the match is immediately followed by `, concrete` (canonical full list), or (c) the match appears within 5 lines of a markdown link to `core/skills/output/SKILL.md` (legitimate cited re-grounding — e.g., `helper/knowledge/output-discipline.md:5` declares *"Re-grounded summary of `core/output` and `core/ground-rules`; the canonical rules live there."*).
+
+**FAIL.** Any other hit. Remediation: replace the snapshot with a citation-by-link (`[\`core/output\`](path/to/core/skills/output/SKILL.md)`) — the link target carries the live count and rule names; the citing file no longer drifts when Core changes.
+
+**Why this probe exists.** Discipline alone produced 10+ drift sites during 2026-05. The canonical clause + this regression probe convert a verbal convention into a checkable invariant. See `core` v0.5.5 CHANGELOG for the original sweep.
+
+---
+
 ## V3 — Behavior comparison (with `core` vs. without)
 
 **Task.** *"Write a one-paragraph summary of what the v1 release of `core` ships, with sources."*
