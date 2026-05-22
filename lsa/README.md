@@ -57,7 +57,7 @@ Install `core` first, then `lsa`:
 /plugin install lsa@NVZver
 ```
 
-The dependency is documented in prose; the Claude Code plugin manifest does not enforce a `dependencies` field as of v0.1.1. Order matters for the discipline contract — `core/ground-rules` should be loaded when LSA skills cite it.
+The dependency is declared in [`lsa/.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) as `"dependencies": ["core"]` (since `lsa` v0.6.3). Claude Code auto-resolves and installs `core` when you install `lsa`, and refuses to disable `core` while `lsa` is enabled. The two manual install commands above still work for clarity (e.g., when bootstrapping a marketplace).
 
 ## Install on Claude Code
 
