@@ -13,10 +13,10 @@ Humans write and own specs. Agents write and own artifacts. Direct artifact edit
 
 ### How `core/output` constrains LSA
 
-Every LSA skill's human-facing prompt and output adopts a component-specific format (the S1–S17 samples in `vision/plans/2026-05-20-credo-rollout-plan.md`) that satisfies the five golden rules in [`../core/skills/output/SKILL.md`](../core/skills/output/SKILL.md): structured, minimal, formatted, sourced, concrete. The mechanical consequences across LSA:
+Every LSA skill's human-facing prompt and output adopts a component-specific format (the S1–S17 samples in `vision/plans/2026-05-20-credo-rollout-plan.md`) that satisfies the five golden rules in [`../core/skills/output/SKILL.md`](../core/skills/output/SKILL.md). The mechanical consequences across LSA:
 
 - **`lsa-discover` Output is a 3-row table** (Module / Change / AC), not a paragraph — verdict-first, scannable.
-- **`lsa-specify` collapses 7 confirm stops to 3 bundled User Verifications** (1: Requirements + Contract Trigger; 2: Test Suites + Contract + Design; 3: Final Integration) — fewer interruptions, same coverage. Renamed from `Gate N` in `lsa` v0.6.2; prior CHANGELOG entries use the old name.
+- **`lsa-specify` collapses 7 confirm stops to 3 bundled User Verifications** (defined at [`skills/lsa-specify/SKILL.md`](./skills/lsa-specify/SKILL.md) Goal) — fewer interruptions, same coverage. Renamed from `Gate N` in `lsa` v0.6.2; prior CHANGELOG entries use the old name.
 - **`lsa-verify` reports lead with the verdict** (`✅ PASS` / `❌ FAIL` / `⚠️ PASS WITH WARNINGS`); metadata moves below the fold.
 - **Every decision-bearing prompt uses `AskUserQuestion`** in Claude Code (per `vision/VISION.md` §2 principle 9 — *"Substrate-native first"*); text decision-blocks are the fallback for plain-text rendering.
 
@@ -27,7 +27,7 @@ This document is the design-rationale narrative for `lsa`. For other concerns, s
 - **User-facing skill list + install** — [`README.md`](./README.md)
 - **Module-level invariants** — [`../vision/specs/modules/lsa/spec.md`](../vision/specs/modules/lsa/spec.md)
 - **Content discipline** — [`../core/skills/ground-rules/SKILL.md`](../core/skills/ground-rules/SKILL.md) (6 rules)
-- **Output discipline** — [`../core/skills/output/SKILL.md`](../core/skills/output/SKILL.md) (4 golden rules)
+- **Output discipline** — [`../core/skills/output/SKILL.md`](../core/skills/output/SKILL.md) (5 golden rules)
 - **Flow types (Quick / Standard / Extended — was T1/T2/T3) + boundary signals** — [`../vision/VISION.md`](../vision/VISION.md) §4
 - **Testing policy** — [`../vision/specs/standards/testing.md`](../vision/specs/standards/testing.md)
 

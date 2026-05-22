@@ -2,7 +2,7 @@
 
 # Output Vocabulary — Knowledge
 
-Verdict labels for human-facing outputs. Pure constants — Knowledge, not Actor. Components whose chosen format uses a verdict line (e.g., `lsa-verify` reports, `tier-selector` confirms) pick from this table; components without a verdict moment don't render one.
+Verdict labels for human-facing outputs. Components whose chosen format uses a verdict line (e.g., `lsa-verify` reports, `flow-selector` confirms) pick from this table; components without a verdict moment don't render one.
 
 Cited by [`core/output`](../skills/output/SKILL.md). For when to render a verdict, see the output skill body.
 

@@ -26,26 +26,9 @@ Two plugins working together. They don't add features; they constrain the agent 
 
 Canonical list in [`core/CLAUDE.md`](./core/CLAUDE.md). Three always-on skills (`ground-rules`, `output`, `flow-selector`) plus `actor-template`, which fires when you author or edit a skill or command.
 
-- **`ground-rules`** — six content rules applied to every substantive task:
-  - **Ownership over automation** — the human owns the thinking; the system surfaces facts, lays out options, and demands a choice. No silent auto-decisions.
-  - **Fact-grounding** — every claim carries a source + searchable quote.
-  - **No fake confidence** — no *"probably / typically / based on convention"* to dodge sourcing. Assumptions are marked explicitly.
-  - **Read the real source** — check before guessing; ask the human only after in-repo + external sources are exhausted.
-  - **Deliver only what was asked** — no padding, no unrequested extras.
-  - **No filler** — every sentence carries a fact, an owned opinion, or an action.
-
-- **`output`** — five format golden rules applied to every human-facing output:
-  - **Structured** — verdict line first; result/decision block second; detail below the fold.
-  - **Minimal** — no banned phrasings, no filler.
-  - **Formatted** — code spans, tables, quotes used where they earn their place.
-  - **Sourced** — every claim cites `path + verbatim quote`. Every marketplace instructional file (skills, commands, agents, knowledge, vision specs) carries a one-line trace directive at its top; on load the agent prints `=============== [<file>] [<plugin>] ===============` verbatim so you see the step-by-step path of files that shaped the turn. Replaces the single-line `[plugin:skill]` marker from `core` v0.5.3 — see `core` v0.5.4.
-  - **Concrete** — decision prompts name the real-world subject (not spec IDs, not project jargon); surface only outcome-changing choices.
-
-- **`flow-selector`** (renamed from `tier-selector` in `core` v0.5.2) — before any non-trivial task, classifies the work and waits for your confirmation:
-  - **Quick** (was `T1`). One-pass. Typos, renames, one-line fixes.
-  - **Standard** (was `T2`). Discover → implement (TDD) → verify. Bugs in modules with a spec.
-  - **Extended** (was `T3`, formerly "Full"). Full spec lifecycle. New features, new contracts, new modules.
-
+- **`ground-rules`** — six content rules applied to every substantive task: ownership over automation, fact-grounding, no fake confidence, read the real source, deliver only what was asked, no filler. Glosses at [`core/skills/ground-rules/SKILL.md`](./core/skills/ground-rules/SKILL.md).
+- **`output`** — five format golden rules applied to every human-facing output: structured, minimal, formatted, sourced, concrete. Glosses at [`core/skills/output/SKILL.md`](./core/skills/output/SKILL.md). Since `core` v0.5.4, *sourced* requires a one-line trace directive at the top of every marketplace instructional file; on load the agent prints `=============== [<file>] [<plugin>] ===============` verbatim.
+- **`flow-selector`** (renamed from `tier-selector` in `core` v0.5.2) — before any non-trivial task, classifies the work and waits for your confirmation: Quick (was `T1`), Standard (was `T2`), Extended (was `T3`). Boundary signals + worked examples at [`vision/VISION.md`](./vision/VISION.md) §4.
 - **`actor-template`** — the Goal / Input / Steps / Output / Constraints shape every skill or command must follow; every Step produces an observable result.
 
 ### `lsa` — Living Spec Architecture

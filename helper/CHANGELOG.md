@@ -2,6 +2,17 @@
 
 All notable changes to the `helper` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.2.2] – 2026-05-22
+
+KISS frontmatter trim. `helper/agents/helper.md` `description:` field cut from 7 sentences to 2 per `CONTRIBUTING.md:9` (*"≤2-sentence frontmatter descriptions with trigger phrases preserved"*). All trigger phrases retained (sentence 2 unchanged); behavior-description sentences 3–5 dropped — they were already authored in the body Constraints. Per repo lint audit 2026-05-22 finding H1. Quick flow.
+
+### Changed
+- **`helper/agents/helper.md:3` `description:`** — kept the 2-sentence header (identity + trigger list); dropped sentences 3–5 (`Reads this repo, installed plugins...`, `Answers with file:line citations...`, `Inherits core/output discipline...`). Body Constraints lines 48–54 already author the same content.
+
+### Notes
+- **Patch bump rationale.** Description-match surface preserved — every trigger phrase from sentence 2 (`/help <question>`, `what is X?`, `how do I Y?`, `I want to add / build / fix / spec X`, `rejects an lsa-specify User Verification twice in a row`) still drives triggering. No behavior change.
+- **Out-of-scope finding.** `helper/agents/helper.md:48-49` still inline-enumerates the 5 output rules and 6 ground-rules as Constraints — same DRY family as `core` v0.5.5's flow-selector trim. Left for a follow-up commit per the audit's "fix all 9 findings now" scope; surfaced explicitly to avoid silent scope expansion (`CONTRIBUTING.md:145`).
+
 ## [0.2.1] – 2026-05-22
 
 File-load trace adoption. The Helper agent body, the `/help` command, and all 3 `helper/knowledge/*.md` files carry the new one-line trace directive at their top, per `core` v0.5.4 Rule 4 (Sourced) → *File-load trace*. On load, each file prints `=============== [<file>] [helper] ===============` verbatim. Replaces the v0.5.3 `[plugin:skill]` marker scheme. Per user request 2026-05-22. Quick flow.

@@ -1,6 +1,6 @@
 ---
 name: helper
-description: "Friendly fact-grounded assistant for the NVZver marketplace. Use whenever the user asks a free-form question about the marketplace (`/help <question>`, `what is X?`, `how do I Y?`), gets stuck mid-skill, says \"I want to add / build / fix / spec X\", or rejects an `lsa-specify` User Verification twice in a row. Reads this repo, installed plugins, and (when relevant) external library docs via the `context7` MCP. Answers with `file:line` (or URL) citations; hands off to other skills under explicit `AskUserQuestion` confirmation; says \"I cannot verify this\" rather than fabricating. Inherits `core/output` discipline (≤1.5 screens/turn, `AskUserQuestion` for every decision, re-grounded jargon on first turn-use)."
+description: "Friendly fact-grounded assistant for the NVZver marketplace. Use whenever the user asks a free-form question about the marketplace (`/help <question>`, `what is X?`, `how do I Y?`), gets stuck mid-skill, says \"I want to add / build / fix / spec X\", or rejects an `lsa-specify` User Verification twice in a row."
 tools: Read, Grep, Glob, AskUserQuestion, Skill, mcp__plugin_context7_context7__query-docs, mcp__plugin_context7_context7__resolve-library-id
 ---
 

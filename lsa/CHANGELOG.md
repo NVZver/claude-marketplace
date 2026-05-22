@@ -4,6 +4,22 @@ All notable changes to the `lsa` plugin are documented here. Format follows [Kee
 
 ## [Unreleased]
 
+## [0.6.5] — 2026-05-22
+
+DRY pass on `core/output` golden-rules citation across LSA. 11 sites stop inline-restating the rule list and cite by section instead, per `CONTRIBUTING.md:146`. Two unrelated trims: `ARCHITECTURE.md` UV-bundle enumeration cited back to its canonical home in `lsa-specify` Goal; `lsa-specify` Goal loses the trailing `Gate N` rename rationale (CHANGELOG-shaped content, not Goal-shaped). Per repo lint audit 2026-05-22 findings H2 (lsa sites), L1, M3, L3. Quick flow.
+
+### Changed
+- **All 8 `lsa/skills/*/SKILL.md` Constraint lines** — `- Outputs follow [\`core/output\`](...) golden rules (structured, minimal, formatted, sourced).` → `- Outputs follow the five golden rules in [\`core/output\`](...).` Affected: `lsa-discover:59`, `lsa-init:113`, `lsa-plan:131`, `lsa-reconcile:59`, `lsa-revise-constitution:91`, `lsa-specify:224`, `lsa-sync:145`, `lsa-verify:130`. The dropped 4-item enumeration silently omitted Rule 5 *"concrete"* — both DRY restatement and a count drift.
+- **`lsa/ARCHITECTURE.md:16`** — dropped the trailing `: structured, minimal, formatted, sourced, concrete` colon-enumeration. Sentence still cites "five golden rules in `../core/skills/output/SKILL.md`" — reader clicks for the names.
+- **`lsa/ARCHITECTURE.md:19`** — UV-bundle enumeration `(1: Requirements + Contract Trigger; 2: Test Suites + Contract + Design; 3: Final Integration)` replaced with cite-by-section `(defined at \`skills/lsa-specify/SKILL.md\` Goal)`. Canonical home is `lsa-specify`'s Goal.
+- **`lsa/ARCHITECTURE.md:30`** — count drift `(4 golden rules)` → `(5 golden rules)` in the cross-reference list.
+- **`lsa/README.md:79`** (Naming note) — dropped the 6-name + 5-name enumeration after each rule count. Counts kept; names live in the linked canonical skills.
+- **`lsa/skills/lsa-specify/SKILL.md:13`** (Goal) — dropped the trailing sentence *"The proper-noun name reads to a first-time user as who (the human) and what (verifying); the prior \`Gate N\` name carried position but no meaning."* Rename rationale belongs in CHANGELOG (v0.6.2 entry already carries it), not in Goal.
+
+### Notes
+- **Patch bump rationale.** All changes are cite-form fixes or rename-rationale trims. No User Verification behavior change, no flow change, no spec-trace change.
+- **Sibling release** — `core` v0.5.5 fixes the same DRY pattern in `flow-selector`; `helper` v0.2.2 trims the helper agent's frontmatter.
+
 ## [0.6.4] — 2026-05-22
 
 File-load trace adoption. All 8 `lsa/skills/*/SKILL.md` and `lsa/knowledge/conventions.md` carry the new one-line trace directive at their top, per `core` v0.5.4 Rule 4 (Sourced) → *File-load trace*. On load, each file prints `=============== [<file>] [lsa] ===============` verbatim. Replaces the v0.5.3 `[plugin:skill]` marker scheme that did not survive in practice. Per user request 2026-05-22. Quick flow.

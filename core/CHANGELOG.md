@@ -4,6 +4,18 @@ All notable changes to the `core` plugin are documented here. Format follows [Ke
 
 ## [Unreleased]
 
+## [0.5.5] — 2026-05-22
+
+DRY pass on `core/output` golden-rules citation. Two sites stop restating the rule list inline and cite by section instead, per `CONTRIBUTING.md:146` (*"don't inline a table or rule that's already canonical elsewhere; cite by file + section instead"*). Also fixes a stale skill name in `output-vocabulary.md` left over from the v0.5.2 `tier-selector` → `flow-selector` rename. Per repo lint audit 2026-05-22 findings H2 (`core` site) + L2. Quick flow.
+
+### Changed
+- **`core/skills/flow-selector/SKILL.md:68`** — Constraint line `- Outputs follow [\`../output/SKILL.md\`](../output/SKILL.md) golden rules (structured, minimal, formatted, sourced).` → `- Outputs follow the five golden rules in [\`../output/SKILL.md\`](../output/SKILL.md).` The dropped 4-item enumeration silently omitted Rule 5 *"concrete"* — both DRY restatement and a count drift versus the canonical 5 at `core/skills/output/SKILL.md:3`.
+- **`core/knowledge/output-vocabulary.md:5`** — fixed stale skill name `tier-selector confirms` → `flow-selector confirms` (renamed in `core` v0.5.2 per `vision/VISION.md:119`). Dropped redundant `Pure constants — Knowledge, not Actor.` self-tag — the H1 already declares `— Knowledge`.
+
+### Notes
+- **Patch bump rationale.** No behavior change — cite-form fix and a stale-name correction. Canonical rule list at `core/skills/output/SKILL.md` is unchanged.
+- **Sibling release** — `lsa` v0.6.5 trims the same DRY pattern across 8 LSA skill bodies + `ARCHITECTURE.md`; `helper` v0.2.2 trims the helper agent's frontmatter.
+
 ## [0.5.4] — 2026-05-22
 
 File-load trace patch. Replaces the v0.5.3 single-line `[plugin:skill]` marker — which did not give the human enough signal about which marketplace files actually shaped a turn — with a per-file trace directive hardcoded at the top of every marketplace instructional file. On load, the agent prints `=============== [<file>] [<plugin>] ===============` verbatim, one line per loaded file, in load order, before the response body. Per user request 2026-05-22 ("markers do not work … print the file name and current plugin using it"). Quick flow.

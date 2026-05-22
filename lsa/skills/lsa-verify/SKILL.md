@@ -127,7 +127,7 @@ A verification report (PASS / FAIL / PASS WITH WARNINGS) with a per-item checkli
 - **PASS WITH WARNINGS** is allowed only with explicit warning categories in the report — never as a hand-wave.
 - **No `metrics.md` write on FAIL or PASS WITH WARNINGS.** Metrics fire only on clean PASS.
 - **No `metrics.md` for Standard or non-feature flows.** Standard (was `T2`) has no feature spec and no sync step; Quick (was `T1`) has no LSA ceremony.
-- Outputs follow [`core/output`](../../../core/skills/output/SKILL.md) golden rules (structured, minimal, formatted, sourced).
+- Outputs follow the five golden rules in [`core/output`](../../../core/skills/output/SKILL.md).
 
 ---
 

@@ -1,6 +1,6 @@
 {
   "name": "helper",
   "description": "Friendly fact-grounded assistant for the NVZver marketplace — a `/help` slash command plus an auto-engaging subagent that activates on user-friction signals (two consecutive `lsa-specify` User Verification rejections, free-form `what is X?` mid-flow, explicit `/help`). Answers with `file:line` (or URL) citations; hands off to other skills under explicit `AskUserQuestion` confirmation; responds \"I cannot verify this\" rather than fabricating. Knowledge scope: this repo + installed plugins + external docs via the `context7` MCP. Depends on `core` (cites `core/output` for response discipline and `core/ground-rules` for cannot-verify fallback) and `lsa` (observes `lsa-specify` User-Verification-reject answers in main-agent context).",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "author": { "name": "Nikita Zverev" }
 }

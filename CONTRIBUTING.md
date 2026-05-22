@@ -27,13 +27,7 @@ After editing any `SKILL.md`, hook, or plugin manifest: `/reload-plugins` picks 
 
 ## Classify the work first
 
-Every non-trivial change invokes [`core/flow-selector`](./core/skills/flow-selector/SKILL.md) (renamed from `core/tier-selector` in `core` v0.5.2) before touching code or specs. Boundary signals + worked examples at [`vision/VISION.md`](./vision/VISION.md) §4.
-
-| Flow | When | Loop |
-|---|---|---|
-| **Quick** (was `T1`) | One file / one string / no behavior change | Single pass; `ground-rules` still applies |
-| **Standard** (was `T2`) | Bug in a spec'd module, refactor | `lsa-discover` (light) → TDD → `lsa-verify` |
-| **Extended** (was `T3`) | New feature, new contract, new module | `lsa-discover` → `lsa-specify` → `lsa-plan` → implement → `lsa-verify` → `lsa-sync` |
+Every non-trivial change invokes [`core/flow-selector`](./core/skills/flow-selector/SKILL.md) (renamed from `core/tier-selector` in `core` v0.5.2) before touching code or specs. The canonical Flow table (Quick / Standard / Extended — was `T1` / `T2` / `T3`), boundary signals, and worked examples live at [`vision/VISION.md`](./vision/VISION.md) §4.
 
 For doc-only refactors that span many files, a plan file at `vision/plans/YYYY-MM-DD-<name>.md` may serve as the feature spec — **declare that judgment upfront** and reflect every change against the plan in your verification report.
 

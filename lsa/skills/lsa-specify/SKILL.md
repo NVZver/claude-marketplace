@@ -10,7 +10,7 @@ description: Creates a feature spec from a human's description (Extended flow �
 
 ## Goal
 
-Write the formal feature spec — `requirements.md`, `test-suites.md`, `contract.yaml` (when triggered), `design.md` — under the configured `${specs_root}/features/<feature-name>/`, with **three bundled User Verifications** (1: Requirements + Contract Trigger; 2: Test Suites + Contract + Design; 3: Final Integration). The proper-noun name reads to a first-time user as *who* (the human) and *what* (verifying); the prior `Gate N` name carried position but no meaning.
+Write the formal feature spec — `requirements.md`, `test-suites.md`, `contract.yaml` (when triggered), `design.md` — under the configured `${specs_root}/features/<feature-name>/`, with **three bundled User Verifications** (1: Requirements + Contract Trigger; 2: Test Suites + Contract + Design; 3: Final Integration).
 
 ## Input
 
@@ -221,7 +221,7 @@ Four (or three, when contract is skipped) approved files under `${specs_root}/fe
 - **Three bundled User Verifications**: 1 (Requirements + Contract Trigger), 2 (Test Suites + Contract + Design), 3 (Final Integration). Never skip a Verification.
 - **Only proceed on explicit human approval.** Implicit approvals are not accepted.
 - **Never write outside `${specs_root}/features/<feature-name>/`.** Module specs are written by `lsa-sync`; the constitution is edited only by `lsa-revise-constitution`.
-- Outputs follow [`core/output`](../../../core/skills/output/SKILL.md) golden rules (structured, minimal, formatted, sourced).
+- Outputs follow the five golden rules in [`core/output`](../../../core/skills/output/SKILL.md).
 
 ## Amending an approved spec
 

@@ -56,7 +56,7 @@ Establish minimum-viable context — which module the change touches, what the c
 - **Three questions, no more.** If deeper context is needed, escalate back to `flow-selector` for a flow-bump rather than asking question four.
 - **Do not write to the configured `specs_root`.** That is `lsa-specify`'s responsibility. The Extended `discovery.md` is a working scratch file, not a spec write.
 - **Do not invent module names** not present in `.lsa.yaml` (or under `${specs_root}/modules/` when `.lsa.yaml` is absent). If the chosen module does not exist, capture it explicitly as `new module: <name>` so downstream phases know to create it.
-- Outputs follow [`core/output`](../../../core/skills/output/SKILL.md) golden rules (structured, minimal, formatted, sourced).
+- Outputs follow the five golden rules in [`core/output`](../../../core/skills/output/SKILL.md).
 
 ---
 
