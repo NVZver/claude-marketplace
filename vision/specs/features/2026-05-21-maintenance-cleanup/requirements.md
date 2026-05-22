@@ -28,6 +28,7 @@ A new `maintenance` plugin (opt-in, not always-installed) shipping a single skil
 | NF3 | Smaller-context-model friendliness: target audience includes Ollama / Mistral users. The skill operates on artifacts of bounded size (per NF1) and itself respects NF1 for skill bodies (dogfood per `vision/VISION.md:47`). |
 | NF4 | Fact-grounding (per `vision/specs/main.spec.md` NFR1): every skip-decision in the report cites a `file:line` for the offending hunk; no opaque skip reasons. |
 | NF5 | Spec-grounding (per `vision/specs/main.spec.md` NFR2): every change in the staged diff traces to a requirement in this spec; verification check 11 enforces. |
+| NF6 | Manual-before-automate validation: the cleanup procedure encoded by this skill was validated end-to-end via 3 manual commits on `feature/2026-05-21-maintenance-cleanup` (`35b1068`, `9c1a9f2`, `cb2bad1`) **before** the SKILL.md was authored, achieving -52.1% shipped-non-archive tokens (65,659 → 31,450). The 12-step procedure surfaced by that pass is captured in `manual-pass-notes.md` and encoded verbatim in the skill body. Per the user's *manual-before-automate* discipline: when building a tool that automates a procedure, run the procedure manually e2e first; design from lived experience, not imagined steps. |
 
 ## Inputs & Outputs
 

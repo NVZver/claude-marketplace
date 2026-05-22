@@ -4,14 +4,69 @@
 
 | Epic | Branch | Status | Dependency |
 |------|--------|--------|------------|
-| E1: maintenance plugin scaffold + registration | `feature/2026-05-21-maintenance-cleanup-e1` | pending | none |
-| E2: cleanup skill body (6-phase actor) | `feature/2026-05-21-maintenance-cleanup-e2` | pending | none |
+| E0: manual-before-automate cleanup waves (validation input) | `feature/2026-05-21-maintenance-cleanup` (pre-spec commits) | done | none |
+| E1: maintenance plugin scaffold + registration | `feature/2026-05-21-maintenance-cleanup-e1` | done | E0 (empirical input) |
+| E2: cleanup skill body (6-phase actor) | `feature/2026-05-21-maintenance-cleanup-e2` | done | E0 (procedure capture) |
 
-The two epics are file-disjoint (E1 touches infra files, E2 touches the skill body) and can be developed on independent branches in parallel. Integration happens by merging both into the parent feature branch (`feature/2026-05-21-maintenance-cleanup`) before the final lsa-verify + lsa-sync.
+E0 captures the pre-spec manual validation that informed the SKILL.md (per NF6 *manual-before-automate*). E1 and E2 are file-disjoint (E1 touches infra files, E2 touches the skill body) and were developed on independent branches. Integration happened by merging both into the parent feature branch (`feature/2026-05-21-maintenance-cleanup`) before the final lsa-verify + lsa-sync.
 
 ---
 
 ## Epics
+
+### Epic 0: manual-before-automate cleanup waves (validation input)
+
+#### Description
+
+Three pre-spec commits on this feature branch executed the cleanup procedure manually end-to-end on real repo content before any SKILL.md was authored. The pass achieved -52.1% shipped-non-archive token reduction (65,659 → 31,450) and surfaced the 12-step procedure that E2 encodes. Documented retroactively to close the orphan-diff predicate against the feature spec; covers NF6.
+
+#### Scope
+
+- **Commits (pre-spec, on this branch):** `35b1068` (wave 1 — archive lsa-v0.2.0 design+plan), `9c1a9f2` (wave 2 — archive credo-rollout + simplification plans + plan-file-as-spec deprecation in CONTRIBUTING.md), `cb2bad1` (wrap-up — `core` v0.5.3 + `lsa` v0.6.3 version bumps + CHANGELOG entries).
+- **Creates (pre-spec discovery artifacts inside feature spec dir):**
+  - `vision/specs/features/2026-05-21-maintenance-cleanup/discovery.md`
+  - `vision/specs/features/2026-05-21-maintenance-cleanup/clarification.md`
+  - `vision/specs/features/2026-05-21-maintenance-cleanup/manual-pass-notes.md`
+- **Modifies (infra cleanup, outside feature SKILL scope but inside feature branch):**
+  - `CONTRIBUTING.md` (plan-file-as-spec fallback deprecation)
+  - `core/.claude-plugin/plugin.json` (v0.5.2 → v0.5.3)
+  - `core/CHANGELOG.md` (citation-path updates + v0.5.3 entry)
+  - `lsa/.claude-plugin/plugin.json` (v0.6.2 → v0.6.3)
+  - `lsa/ARCHITECTURE.md` (citation-path updates to archived locations)
+  - `lsa/CHANGELOG.md` (citation-path updates + v0.6.3 entry)
+  - `vision/specs/main.spec.md` (core + lsa version rows updated)
+  - `vision/specs/modules/core/spec.md` (citation-path updates)
+  - `vision/specs/modules/lsa/spec.md` (citation-path updates)
+  - `vision/specs/roadmap.md` (citation-path updates)
+  - `vision/specs/standards/testing.md` (citation-path updates)
+  - `vision/specs/archive/2026-05-21-diagonal-cross-artifact-analysis/discovery.md` (link-target fix per F8)
+- **Renames (archive relocations per F6.1):**
+  - `vision/specs/2026-05-20-lsa-v0.2.0-design.md` → `vision/specs/archive/2026-05-20-lsa-v0.2.0/design.md`
+  - `vision/plans/2026-05-20-lsa-v0.2.0-plan.md` → `vision/specs/archive/2026-05-20-lsa-v0.2.0/plan.md`
+  - `vision/plans/2026-05-20-credo-rollout-plan.md` → `vision/specs/archive/2026-05-20-credo-rollout/plan.md`
+  - `vision/plans/2026-05-20-simplification-refactor-plan.md` → `vision/specs/archive/2026-05-20-simplification-refactor/plan.md`
+- **Does NOT touch:** the `maintenance/` plugin directory (that's E1+E2's scope).
+
+**Covers:** NF6 <!-- the entire epic is the empirical validation captured by NF6 -->
+
+#### Technical Details
+
+Procedure was executed by-hand: human ran inventory (heuristic token count via `wc -w * 1.3`), classified candidates into the 5 edit classes that E2 later encoded, applied each patch, checked the 6 universal invariants by-hand, ran the 12-check verification protocol by-hand. Lessons captured in `manual-pass-notes.md`. The empirical observation that signal (d) — relocation-candidate detection — produces the highest-leverage class drove `requirements.md` F2's *"Signal (d) is the highest-leverage class (proven by wave 1+2 → -52.1%)"* claim.
+
+#### Acceptance Criteria
+
+- [x] AC-E0-1: 3 wave commits exist on this feature branch (`git log main..HEAD | grep -E '35b1068|9c1a9f2|cb2bad1'`).
+- [x] AC-E0-2: Shipped-non-archive token total reduced by ≥50% across waves 1+2 (`-52.1%` per `9c1a9f2` commit message).
+- [x] AC-E0-3: 12-step procedure captured in `manual-pass-notes.md` and encoded verbatim into `maintenance/skills/cleanup/SKILL.md` Steps 1–6.
+
+#### Definition of Done
+
+- [x] All 3 wave commits ship on the parent feature branch (`feature/2026-05-21-maintenance-cleanup`)
+- [x] `manual-pass-notes.md` exists in the feature spec dir
+- [x] `core` v0.5.3 + `lsa` v0.6.3 documented in their CHANGELOGs
+- [x] NF6 cites this epic as the empirical validation
+
+---
 
 ### Epic 1: maintenance plugin scaffold + registration
 
@@ -119,12 +174,12 @@ The skill body itself respects the NF1 SKILL.md budget (≤ 2,000 tokens) — th
 
 | Check | Result | Reason |
 |-------|--------|--------|
-| Traceability | PASS | Every epic traces to ≥1 requirement (E1: F4, NF1, NF3, AC1; E2: F1–F10, NF1–NF5, AC1–AC10) |
+| Traceability | PASS | Every epic traces to ≥1 requirement (E0: NF6; E1: F4, NF1, NF3, AC1; E2: F1–F10, NF1–NF5, AC1–AC10) |
 | Accuracy | PASS | E2 § Technical Details mirrors `design.md` § Technical Approach 6-phase flow verbatim |
-| Consistency | PASS | E1 and E2 touch disjoint file sets (E1: infra/plumbing; E2: skill body). No overlap, no contradiction |
+| Consistency | PASS | E0, E1, E2 touch disjoint file sets (E0: pre-spec validation + repo-level infra; E1: maintenance/* plumbing; E2: skill body). No overlap, no contradiction |
 | Test coverage | PASS | Every requirements.md AC covered by ≥1 journey in test-suites.md per User Verification 2 diagonal Row 1; each epic's testing plan exercises those journeys |
-| AC coverage | PASS | AC1 covered by both E1 (the skill exists) and E2 (the skill produces the artifacts); AC2–AC10 all covered by E2 |
-| Completeness | PASS | No requirement in requirements.md F1–F10 / NF1–NF5 / AC1–AC10 lacks an epic |
+| AC coverage | PASS | AC1 covered by both E1 (the skill exists) and E2 (the skill produces the artifacts); AC2–AC10 all covered by E2; NF6 covered by E0 |
+| Completeness | PASS | No requirement in requirements.md F1–F10 / NF1–NF6 / AC1–AC10 lacks an epic |
 
 ---
 
