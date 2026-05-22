@@ -13,7 +13,7 @@ Three journeys, each anchored to a distinct user goal. Cross-cutting ACs (AC6 su
 
 | # | Path | Actions |
 |---|------|---------|
-| 1 | Happy — in-repo lookup | User types `/help what is T2?` → Helper reads `vision/VISION.md` + `core/skills/tier-selector/SKILL.md` → composes ≤1.5-screen response with definition + `file:line` citation + first-turn-use gloss ("T2 — Standard ceremony tier") → closes with `AskUserQuestion` offering next steps (`Show worked example`, `Move on`, `Compare to T1/T3`). |
+| 1 | Happy — in-repo lookup | User types `/help what is the Standard flow?` → Helper reads `vision/VISION.md` + `core/skills/flow-selector/SKILL.md` → composes ≤1.5-screen response with definition + `file:line` citation + first-turn-use gloss ("Standard — moderate-effort flow") → closes with `AskUserQuestion` offering next steps (`Show worked example`, `Move on`, `Compare to Quick / Extended`). |
 | 2 | Alternate — external library | User types `/help what's the context7 MCP?` → Helper recognises subject is not in repo or installed plugins → fetches via `context7` MCP tool → composes ≤1.5-screen response with URL citation + acronym re-gloss (`MCP — Model Context Protocol`) → closes with `AskUserQuestion`. |
 | 3 | Error — cannot ground | User types `/help what's foobaz?` → Helper reads repo + installed plugins + queries `context7` → no source found → responds `"I cannot verify this. Checked: vision/, core/, lsa/, installed plugins, context7."` + `AskUserQuestion` offering `Rephrase the question` / `Drop this` / `Continue without answer`. No fabricated content. |
 
@@ -23,18 +23,18 @@ Three journeys, each anchored to a distinct user goal. Cross-cutting ACs (AC6 su
 
 ---
 
-## Journey 2: Friction auto-engage at an `lsa-specify` gate
+## Journey 2: Friction auto-engage at an `lsa-specify` User Verification
 
-**Goal:** User is stuck at an `lsa-specify` gate (rejected it once, about to reject again); Helper unsticks them without forcing them through the gate.
+**Goal:** User is stuck at an `lsa-specify` User Verification (rejected it once, about to reject again); Helper unsticks them without forcing them through the Verification.
 **Covers:** AC2, AC6, AC7, AC8.
 
 **Paths:**
 
 | # | Path | Actions |
 |---|------|---------|
-| 1 | Happy — re-explain accepted | User selects `[c] reject` at, say, User Verification 1 in `lsa-specify`; the skill re-presents; user selects `[c] reject` again → friction signal (a) fires → Helper auto-engages with `AskUserQuestion`: "Want me to explain what this gate is asking? — Yes / No" → user picks Yes → Helper re-grounds the gate purpose with `file:line` citation from `lsa/skills/lsa-specify/SKILL.md` (re-gloss "Gate" as "User Verification — the checkpoint where you approve the artifact") → user understands, returns to gate and approves or makes a substantive override. |
-| 2 | Alternate — re-explain declined | Same trigger → user picks No on `AskUserQuestion` → Helper steps back silently; the original gate picker re-presents; Helper does not re-auto-engage for this same gate sequence (cooldown). |
-| 3 | Error — user persists rejecting after re-explanation | User picks Yes, gets explanation, returns to gate, rejects again → Helper does NOT re-auto-engage (one auto-engage per friction window). User can always pull help explicitly via `/help`. |
+| 1 | Happy — re-explain accepted | User selects `[c] reject` at, say, User Verification 1 in `lsa-specify`; the skill re-presents; user selects `[c] reject` again → friction signal (a) fires → Helper auto-engages with `AskUserQuestion`: "Want me to explain what this User Verification is asking? — Yes / No" → user picks Yes → Helper re-grounds the Verification purpose with `file:line` citation from `lsa/skills/lsa-specify/SKILL.md` (re-gloss "User Verification" as "the checkpoint where you approve the artifact") → user understands, returns to the Verification and approves or makes a substantive override. |
+| 2 | Alternate — re-explain declined | Same trigger → user picks No on `AskUserQuestion` → Helper steps back silently; the original Verification picker re-presents; Helper does not re-auto-engage for this same Verification sequence (cooldown). |
+| 3 | Error — user persists rejecting after re-explanation | User picks Yes, gets explanation, returns to the Verification, rejects again → Helper does NOT re-auto-engage (one auto-engage per friction window). User can always pull help explicitly via `/help`. |
 
 **Expected outcome:**
 - *Happy path (1):* User exits the rejection loop with a grounded understanding.

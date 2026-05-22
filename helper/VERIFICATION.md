@@ -21,9 +21,9 @@ Four probes covering each invocation path.
 
 **Probe A (signal c — explicit slash command, in-repo subject).** Run:
 ```
-/help what is T2?
+/help what is the Standard flow?
 ```
-Expected: Helper response in ≤1.5 screens with `T2 — Standard ceremony tier` re-gloss on first use, a `file:line` (or section) citation to `vision/VISION.md` and/or `core/skills/tier-selector/SKILL.md`, and a closing `AskUserQuestion` offering 2–3 next steps. **Covers:** AC1, AC7, AC8 (Journey 1 / Happy path).
+Expected: Helper response in ≤1.5 screens with `Standard — moderate-effort flow` re-gloss on first use, a `file:line` (or section) citation to `vision/VISION.md` and/or `core/skills/flow-selector/SKILL.md`, and a closing `AskUserQuestion` offering 2–3 next steps. **Covers:** AC1, AC7, AC8 (Journey 1 / Happy path).
 
 **Probe B (signal c — slash command, external library subject).** Run:
 ```
@@ -37,7 +37,7 @@ what is lsa-verify?
 ```
 Expected: Helper auto-engages (no `/help` needed) via description-match on signal (b), responds with `LSA — Living Spec Architecture` + `lsa-verify — feature-spec verifier` re-gloss and a `file:line` citation to `lsa/skills/lsa-verify/SKILL.md`. **Covers:** AC1 + signal (b) trigger from [`./knowledge/friction-signals.md`](./knowledge/friction-signals.md) § *The three signals*.
 
-**Probe D (signal a — consecutive gate rejects).** Start `lsa-specify` for a small fictional feature. At any gate, pick `[c] reject`. On the re-presentation, pick `[c] reject` again. Expected: Helper auto-engages with `AskUserQuestion`: *"Want me to explain what this gate is checking? — Yes / No"*. On Yes → Helper re-grounds the gate purpose with a `file:line` citation from `lsa/skills/lsa-specify/SKILL.md`. **Covers:** AC2, AC6, AC7, AC8 (Journey 2 / Happy path).
+**Probe D (signal a — consecutive User-Verification rejects).** Start `lsa-specify` for a small fictional feature. At any User Verification, pick `[c] reject`. On the re-presentation, pick `[c] reject` again. Expected: Helper auto-engages with `AskUserQuestion`: *"Want me to explain what this User Verification is checking? — Yes / No"*. On Yes → Helper re-grounds the Verification purpose with a `file:line` citation from `lsa/skills/lsa-specify/SKILL.md`. **Covers:** AC2, AC6, AC7, AC8 (Journey 2 / Happy path).
 
 ## V3 — Behavior change is observable
 
@@ -53,7 +53,7 @@ Sample task: *"How do I install the marketplace plugins?"* Without `helper`: an 
 
 Probe the OQ2 resolution rule from [`./knowledge/friction-signals.md`](./knowledge/friction-signals.md) § *Cooldown rule*.
 
-**Path 1 — Same-signal cooldown.** Trigger signal (a) per V2 Probe D. On the `AskUserQuestion` *"Want me to explain…?"*, pick **No**. Reject the gate a third time (still `[c]`). Expected: Helper does **NOT** re-engage. The original `lsa-specify` gate picker re-presents normally. **Covers:** Journey 2 / Alternate path.
+**Path 1 — Same-signal cooldown.** Trigger signal (a) per V2 Probe D. On the `AskUserQuestion` *"Want me to explain…?"*, pick **No**. Reject the User Verification a third time (still `[c]`). Expected: Helper does **NOT** re-engage. The original `lsa-specify` User Verification picker re-presents normally. **Covers:** Journey 2 / Alternate path.
 
 **Path 2 — Different-signal-type resets.** After Path 1 (signal a in cooldown), type:
 ```

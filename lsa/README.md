@@ -6,17 +6,17 @@ Spec-first development methodology installable as a Claude Code plugin. Specs ar
 
 > *"LSA doesn't automate your thinking — it makes you own it."*
 
-Every LSA gate is a decision asked of the human with explicit consequences; every artifact traces back to a human-owned requirement; every reconcile keeps the human in the loop. See [`../core/CLAUDE.md`](../core/CLAUDE.md) for the operating credo and [`../core/skills/ground-rules/SKILL.md`](../core/skills/ground-rules/SKILL.md) Rule 0 (Ownership over automation).
+Every LSA User Verification is a decision asked of the human with explicit consequences; every artifact traces back to a human-owned requirement; every reconcile keeps the human in the loop. See [`../core/CLAUDE.md`](../core/CLAUDE.md) for the operating credo and [`../core/skills/ground-rules/SKILL.md`](../core/skills/ground-rules/SKILL.md) Rule 0 (Ownership over automation).
 
 ## What's here
 
 | Skill | Purpose |
 |---|---|
 | **`lsa-init`** | Initialize the spec tree on a project. Greenfield or brownfield. |
-| **`lsa-discover`** | Light three-question probe at the start of every T2 / T3 task. T2 oral; T3 scratch `discovery.md`. |
-| **`lsa-specify`** | Create a feature spec from a description, with three bundled hard-confirm gates; Gate 2 renders a 6-row diagonal cross-artifact coverage check (5 with contract skipped) — including EARS-pattern + journey-shape rows per `vision/VISION.md` §2 sub-principle 2a. |
+| **`lsa-discover`** | Light three-question probe at the start of every Standard / Extended task (was `T2 / T3`). Standard oral; Extended scratch `discovery.md`. |
+| **`lsa-specify`** | Create a feature spec from a description, with three bundled hard-confirm **User Verifications** (1: Requirements + Contract Trigger; 2: Test Suites + Contract + Design; 3: Final Integration). User Verification 2 renders a 6-row diagonal cross-artifact coverage check (5 with contract skipped) — including EARS-pattern + journey-shape rows per `vision/VISION.md` §2 sub-principle 2a. Renamed from `Gate N` in `lsa` v0.6.2. |
 | **`lsa-plan`** | Decompose an approved spec into ≤5 parallel-safe epics. Each epic carries a `**Covers:**` line citing requirement IDs (`F<n>`, `NF<n>`, `AC<n>`) — sourced by `lsa-verify`. |
-| **`lsa-verify`** | Verify every change traces to a spec requirement via dual predicates: orphan-diff (broad — every non-trivial hunk covered) + orphan-AC (narrow — every AC implemented). Code-mode, doc-mode, or mixed (per `.lsa.yaml`). Emit per-feature `metrics.md` on clean T3 PASS. |
+| **`lsa-verify`** | Verify every change traces to a spec requirement via dual predicates: orphan-diff (broad — every non-trivial hunk covered) + orphan-AC (narrow — every AC implemented). Code-mode, doc-mode, or mixed (per `.lsa.yaml`). Emit per-feature `metrics.md` on clean Extended-flow PASS (was `T3`). |
 | **`lsa-sync`** | Extract delta into permanent module specs; archive feature spec; record per-module HEAD SHA in `.lsa-sync-state.json`; append aggregate metrics row. |
 | **`lsa-reconcile`** | Absorb direct artifact edits into module specs — Level 2.5 (`vision/VISION.md:138`). Per-module hard confirm. |
 | **`lsa-revise-constitution`** | Propose and apply changes to the configured constitution and `${specs_root}/standards/` only. |

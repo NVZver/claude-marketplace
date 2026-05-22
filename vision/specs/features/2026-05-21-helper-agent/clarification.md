@@ -13,13 +13,13 @@ Five must-decide questions surfaced via `AskUserQuestion` and answered by the hu
   - **Answered:** Can start workflows. If user expresses intent ("I want to add X"), Helper invokes the matching skill via the `Skill` tool — under explicit `AskUserQuestion` confirmation per A2.
 
 - **F3 — When does the Helper auto-engage (interrupt the current flow)?**
-  - **Answered:** Only on user-friction signals — (a) two consecutive `[c] reject` at any `lsa-specify` gate; (b) user types a free-form `?` / `what is X?` mid-session; (c) explicit `/help`. Not the "aggressive" hesitation-pattern detector.
+  - **Answered:** Only on user-friction signals — (a) two consecutive `[c] reject` at any `lsa-specify` User Verification; (b) user types a free-form `?` / `what is X?` mid-session; (c) explicit `/help`. Not the "aggressive" hesitation-pattern detector.
 
 - **F4 — What is the Helper allowed to read?**
   - **Answered:** Repo + installed plugins + web via `context7` MCP. Helper reads `vision/`, `core/`, `lsa/`, READMEs of this repo; READMEs and `SKILL.md` of other installed plugins; external library docs via `context7` when relevant.
 
 - **F5 — Output discipline.**
-  - **Assumed (A1).** Inherits `core/output` 5 golden rules (structured · minimal · formatted · sourced · concrete) + `core/ground-rules` 6 content rules. ≤1.5 screens/turn; re-ground project jargon (T2, `Gate 2`, `LSA`, `SKILL.md`) on first turn-use per `finding_helper_must_reground`.
+  - **Assumed (A1).** Inherits `core/output` 5 golden rules (structured · minimal · formatted · sourced · concrete) + `core/ground-rules` 6 content rules. ≤1.5 screens/turn; re-ground project jargon (`Standard`, `User Verification 2`, `LSA`, `SKILL.md`) on first turn-use per `finding_helper_must_reground`.
 
 ## Non-functional (2)
 
@@ -37,7 +37,7 @@ Five must-decide questions surfaced via `AskUserQuestion` and answered by the hu
     - New plugin tree: `helper/.claude-plugin/plugin.json`, `helper/CHANGELOG.md`, `helper/README.md`.
     - `helper/agents/helper.md` — subagent definition.
     - `helper/commands/help.md` — slash command.
-    - `helper/skills/` — supporting skill bodies if needed (e.g. `explain-workflow/SKILL.md`); decision deferred to Gate 2 design.
+    - `helper/skills/` — supporting skill bodies if needed (e.g. `explain-workflow/SKILL.md`); decision deferred to User Verification 2 design.
     - `helper/knowledge/` — any standalone Knowledge files Helper reads (per NFR5 Knowledge vs Actor).
     - `.claude-plugin/marketplace.json` — list new plugin in catalog.
     - `README.md` (repo root) — name `helper` in the install lede alongside `core` + `lsa`.

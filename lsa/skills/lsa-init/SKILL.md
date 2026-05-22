@@ -45,7 +45,13 @@ Scaffold the LSA spec tree on a project so the rest of the LSA skills (`lsa-disc
    1. Scan the artifact paths configured for each module in `.lsa.yaml: modules.*.artifact_paths` (fall back to scanning `/src/` if `.lsa.yaml` is absent — the v0.1.1 behavior).
    2. For each logical module found, create `${specs_root}/modules/<module-name>/spec.md`.
    3. Infer functional requirements from the artifacts. Mark every inferred item `[assumption: inferred from <source>; verify]`.
-   4. **Stop.** Present: PROPOSED verdict (`<N>` modules inferred) + per-module table (Module / Source path-glob with file count / Confidence with reason) + reminder that each generated spec is tagged `[assumption: inferred from <source>; verify]` + decision `[a] accept all → <N> module specs written under ${specs_root}/modules/; proceed to /lsa:discover` / `[b] accept subset → write only those, defer the rest` / `[c] reject → no specs written, reconsider boundaries`. Format per [`../../../core/skills/output/SKILL.md`](../../../core/skills/output/SKILL.md); `AskUserQuestion` for the decision.
+   4. **Stop.** Present: PROPOSED verdict (`<N>` modules inferred) + per-module table (Module / Source path-glob with file count / Confidence with reason) + reminder that each generated spec is tagged `[assumption: inferred from <source>; verify]` + decision. **Prompt voice (per [`../../../core/skills/output/SKILL.md`](../../../core/skills/output/SKILL.md) Rule 5).** Picker **question** names the project subject — *"Write `<N>` inferred module specs for this project?"* — not *"Approve brownfield init?"* (`brownfield` is project jargon). Option **labels**:
+
+   - `[a]` write all `<N>` specs → I create them under `${specs_root}/modules/` and you proceed to `/lsa:discover`
+   - `[b]` write only some — I'll ask which → I re-prompt per module
+   - `[c]` reject all → no files written; reconsider module boundaries
+
+   Format per [`../../../core/skills/output/SKILL.md`](../../../core/skills/output/SKILL.md); `AskUserQuestion` in Claude Code (per `core/CLAUDE.md` operational checkpoint #1).
    5. Wait for explicit human confirmation before writing any spec files.
 
    Observable result: the spec tree exists on disk after approval; the human confirms the skeleton.
@@ -91,7 +97,7 @@ Scaffold the LSA spec tree on a project so the rest of the LSA skills (`lsa-disc
 
    Observable result: the three files exist with the templates above.
 
-4. **Report to human.** List all files created. State: "Run `/lsa:discover` (T2/T3 entry) or `/lsa:specify` (T3 direct) to start the first feature."
+4. **Report to human.** List all files created. State: "Run `/lsa:discover` (Standard / Extended entry) or `/lsa:specify` (Extended direct) to start the first feature."
 
 ## Output
 

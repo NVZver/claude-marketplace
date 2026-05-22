@@ -4,6 +4,57 @@ All notable changes to the `lsa` plugin are documented here. Format follows [Kee
 
 ## [Unreleased]
 
+## [0.6.2] — 2026-05-22
+
+Naming clarity patch — two sibling renames:
+
+1. **`lsa-specify` "Gate N" → "User Verification N: <name>"** — the prior `Gate 1` / `Gate 2` / `Gate 3` carried position but no meaning to a first-time user. New names: `User Verification 1: Requirements + Contract Trigger`, `User Verification 2: Test Suites + Contract + Design`, `User Verification 3: Final Integration`.
+2. **Tier flow `T1` / `T2` / `T3` → `Quick` / `Standard` / `Extended`** — sibling to `core` v0.5.2's `tier-selector` → `flow-selector` rename. The new names describe the *process shape*, not a hierarchy.
+
+Per `vision/specs/roadmap.md` rows *"Rename `lsa-specify` 'Gate N' → 'User Verification: <name>'"* and *"Rename `T1` / `T2` / `T3` → `Flow: Quick` / `Flow: Standard` / `Flow: Extended`"*. Bundle B (Naming clarity) of the 2026-05-22 fixing session.
+
+### Changed
+- **`lsa/skills/lsa-specify/SKILL.md`** — Goal sentence + Steps 4/5/6 section headers + cross-references updated to `User Verification N: <name>`; Constraints "Three bundled gates" → "Three bundled User Verifications"; "(determined at Gate 1)" comment + "re-run Gate 3" amend rule updated; "tier" / "T3" annotations in description + Input + Step 1.
+- **`lsa/skills/lsa-discover/SKILL.md`** — `T2 / T3` → `Standard / Extended`; `tier-selector` → `flow-selector`; "tier" → "flow" throughout.
+- **`lsa/skills/lsa-init/SKILL.md`** — Step 4 report message updated to name `Standard / Extended` entry path.
+- **`lsa/skills/lsa-verify/SKILL.md`** — Step 6 + Output + Constraints updated: `T3` → `Extended`, `T2` → `Standard`, `T1` → `Quick`.
+- **`lsa/skills/lsa-sync/SKILL.md`** — Step 7 aggregate-metrics description updated: `T3 feature` → `Extended-flow feature (was T3)`.
+- **`lsa/README.md`** — `lsa-specify` row notes the User Verification rename; `lsa-discover` + `lsa-verify` rows replace `T2 / T3` with `Standard / Extended`; LSA's "expression of the credo" reads *"Every LSA User Verification is a decision..."*.
+- **`lsa/ARCHITECTURE.md`** — "Tier flow (T1/T2/T3)" → "Flow types (Quick/Standard/Extended — was T1/T2/T3)"; "tier-selector" → "flow-selector"; OQ6 row in resolved-decisions table; metrics archive path comment.
+- **`lsa/.claude-plugin/plugin.json` `description`** — "human gates" → "human User Verifications"; "Tier-aware (T1/T2/T3) via core/tier-selector" → "Flow-aware (Quick/Standard/Extended — renamed from T1/T2/T3 in lsa v0.6.2) via core/flow-selector".
+
+### Cross-spec updates (active files only)
+- **`vision/VISION.md`** — §3 directory diagram (`tier-selector` → `flow-selector` slot); §3 prose ("Core rules are always-on; flows govern workflow"); §3 always-on-vs-on-demand resolution; §4 tier-table + worked-examples table renamed; §7 open-decisions "Tier boundaries" → "Flow boundaries"; §2 sub-principle 2a + §6 Adjust #1 RESOLVED cross-cite Gate 2 → User Verification 2; Changelog gains v0.7 + v0.8 entries.
+- **`vision/specs/main.spec.md`** — module index version bumps + cross-module-contract `tier-selector` → `flow-selector`.
+- **`vision/specs/modules/core/spec.md`** — `core/tier-selector` row + `core/CLAUDE.md` invariants citation updated.
+- **`vision/specs/modules/lsa/spec.md`** — `core/tier-selector` dependency + `lsa-specify Gate 2` invariants → `lsa-specify User Verification 2`; metrics-table T3 annotations + lsa v0.6.2 version bump.
+- **`vision/specs/standards/testing.md`** — `core/tier-selector` reference + T3 annotation.
+- **`vision/specs/metrics.md`** — header line: `archived T3 feature` → `archived Extended-flow feature (was T3)`.
+- **`vision/specs/roadmap.md`** — both rename rows marked `shipped — lsa v0.6.2`; Recently merged gains the Bundle B entry; row 11 (Diagonal cross-artifact analysis row) + Tech Picture §3 updated to use `User Verification 2` with back-link to the old `Gate 2` name.
+- **Repo root** — `CLAUDE.md` + `README.md` + `CONTRIBUTING.md` reference `core/flow-selector` and `Quick / Standard / Extended`.
+
+### Notes
+- **Breaking surface change, treated as patch** — same rationale as `core` v0.5.2 (sibling patch): pre-1.0 SemVer leaves this to maintainer discretion, and there are no external consumers of `/lsa:specify`'s `Gate N` literals.
+- **Historical files left as-is.** Past entries in `core/CHANGELOG.md` / `lsa/CHANGELOG.md` (entries before 0.5.2 / 0.6.2) and every file under `vision/specs/archive/**/` keep their original `Gate N` / `T1/T2/T3` / `tier-selector` wording. The new entries (and the renamed surface) note the rename so historical lookup still resolves. `vision/plans/2026-05-20-*.md` files are pre-merge plans — also untouched.
+- **Sibling core patch** — `core` v0.5.2 in the same Bundle B PR renames the `tier-selector` skill directory + slug.
+
+## [0.6.1] — 2026-05-22
+
+Gate-prompt voice patch. Applies `core/output` Rule 5 (Concrete — *prompt voice*) inside the user-facing pickers of `lsa-specify` / `lsa-plan` / `lsa-init` so the picker question names the feature subject (e.g., *"Approve the requirements for `<feature-name>`?"*) instead of meta-jargon (*"Approve Gate 1?"*, *"Approve F3?"*, *"Approve epic decomposition?"*). Per `vision/specs/roadmap.md` row *"LSA gate prompts must be concrete (no IDs, no jargon, must-decide only)"* (Must priority).
+
+### Changed
+- `lsa/skills/lsa-specify/SKILL.md` Step 2 (clarification) — Present block adds an explicit **Prompt voice** scaffold citing `core/output` Rule 5: picker question names the feature; option labels name the next outcome; never render `[a]/[b]/[c]` text blocks when the picker is available (per `core/CLAUDE.md` operational checkpoint #1).
+- `lsa/skills/lsa-specify/SKILL.md` Step 4 (Gate 1) — Present block adds the same scaffold; explicit rule that `F<n>` / `NF<n>` / `AC<n>` IDs stay in `requirements.md`, not in the picker question.
+- `lsa/skills/lsa-specify/SKILL.md` Step 5 (Gate 2) — Present block adds the same scaffold; failing-row pickers (Rule 6 decision blocks for `✗` diagonal rows) cite the two artifact lines in conflict, not the row number.
+- `lsa/skills/lsa-specify/SKILL.md` Step 6 (Gate 3) — Present block adds the same scaffold; picker question is *"Final approval — start implementation planning for `<feature-name>`?"*.
+- `lsa/skills/lsa-plan/SKILL.md` Step 5 (human review) — Present block adds the scaffold; picker question names the epic count and feature; `epic decomposition` reserved for skill body.
+- `lsa/skills/lsa-init/SKILL.md` Step 2 (brownfield) — Present block adds the scaffold; picker question names the project subject; `brownfield` reserved for skill body.
+
+### Notes
+- **Cosmetic on the SKILL.md side, behavioral on the user-facing side.** The Gate names, the Hard Confirm gates, and the trace predicates are unchanged. Only the user-facing picker text is normalized.
+- **Depends on `core` v0.5.1** (sibling patch in same Bundle A PR) — that patch elevates the substrate-native picker rule and screen-budget to always-on, which this patch's `core/CLAUDE.md` operational checkpoint #1 citation relies on.
+- Sibling rename PRs (Gate N → User Verification; T1/T2/T3 → Flow) land in Bundle B.
+
 ## [0.6.0] — 2026-05-21
 
 EARS + journey-shape AC discipline. Tightens `lsa-specify` Gate 2 along two axes (EARS pattern conformance + journey-shape) and extends `lsa-verify` with dual trace predicates sourced from a new `**Covers:**` line in `lsa-plan`'s epic template. Per `vision/specs/archive/2026-05-21-ears-journey-shape-ac/`.

@@ -108,7 +108,13 @@ Decompose an approved feature spec into ≤5 parallel-safe epics with self-verif
 
    Observable result: `${specs_root}/features/<feature-name>/tasks.md` exists.
 
-5. **Human review gate.** Present rendered `tasks.md` + the 5-row self-verification table (Traceability / Accuracy / Consistency / Test coverage / Completeness — PASS / FAIL per row with reason on FAIL) + decision `[a] approve → implementation begins (TDD per epic, parallel where safe)` / `[b] adjust → re-decompose, re-present` / `[c] reject → return to lsa-specify for scope reduction`. Format per [`../../../core/skills/output/SKILL.md`](../../../core/skills/output/SKILL.md); `AskUserQuestion` for the decision. Do not start implementation until human gives explicit approval. Observable result: human approval logged.
+5. **Human review gate.** Present rendered `tasks.md` + the 5-row self-verification table (Traceability / Accuracy / Consistency / Test coverage / Completeness — PASS / FAIL per row with reason on FAIL) + decision. **Prompt voice (per [`../../../core/skills/output/SKILL.md`](../../../core/skills/output/SKILL.md) Rule 5).** Picker **question**: *"Approve the `<N>` epics for `<feature-name>` and start implementation?"* — not *"Approve tasks.md?"* or *"Approve epic decomposition?"* (`epic decomposition` is project jargon — name the count and the feature). Option **labels**:
+
+   - `[a]` approve → I start TDD per epic (parallel where safe)
+   - `[b]` adjust → I re-decompose with your feedback and re-present
+   - `[c]` reject → return to `lsa-specify` to reduce scope
+
+   Format per [`../../../core/skills/output/SKILL.md`](../../../core/skills/output/SKILL.md); `AskUserQuestion` in Claude Code (per `core/CLAUDE.md` operational checkpoint #1). Do not start implementation until human gives explicit approval. Observable result: human approval logged.
 
 ## Output
 

@@ -105,7 +105,7 @@ Flesh out `helper/agents/helper.md` from the E1 stub into a full Actor per `core
 - [ ] E2-AC4: Manual probe — invoke Helper with an unanswerable question → Helper responds `"I cannot verify this. Checked: …"` + `AskUserQuestion` next steps (per AC5, F6).
 - [ ] E2-AC5: Manual probe — Helper response length ≤1.5 screens; longer answers split across turns ending with `AskUserQuestion` (per AC8).
 - [ ] E2-AC6: Manual probe — Helper uses `AskUserQuestion` for every decision; no text `[a]/[b]/[c]` blocks (per AC6, NF3).
-- [ ] E2-AC7: Manual probe — Helper re-grosses project jargon on first turn-use (e.g. "T2 — Standard ceremony tier") (per AC7).
+- [ ] E2-AC7: Manual probe — Helper re-grosses project jargon on first turn-use (e.g. "Standard — moderate-effort flow") (per AC7).
 - [ ] E2-AC8: Manual probe — Helper recognises new-feature intent ("I want to add X") → asks `AskUserQuestion` "Start `lsa-specify`? — Yes/No"; on Yes invokes `Skill(lsa-specify)` (per AC3, F3).
 
 ### Testing Plan
@@ -161,7 +161,7 @@ Flesh out `helper/commands/help.md` from the E1 stub into a working slash comman
 |-----------|--------------|----------|
 | Unit | `helper/commands/help.md` frontmatter valid; positional arg pattern set | Must |
 | Integration | V1 probe — `/help` appears in command list after install | Must |
-| E2E | Run test-suites.md Journey 1 Happy path (`/help what is T2?`) | Must |
+| E2E | Run test-suites.md Journey 1 Happy path (`/help what is the Standard flow?`) | Must |
 
 ### Definition of Done
 
@@ -190,7 +190,7 @@ Wire the auto-engage path. Extend `helper/agents/helper.md` (from E2) with the i
 
 ### Technical Details
 
-- **Signal (a) — gate-reject:** Helper agent body's Steps add a precondition check: "before responding to any user message, check if the most recent `AskUserQuestion` answer was `[c] reject` at an `lsa-specify` gate AND the prior answer was also `[c] reject` at the same gate". If true, fire auto-engage.
+- **Signal (a) — User-Verification-reject:** Helper agent body's Steps add a precondition check: "before responding to any user message, check if the most recent `AskUserQuestion` answer was `[c] reject` at an `lsa-specify` User Verification AND the prior answer was also `[c] reject` at the same Verification". If true, fire auto-engage.
 - **Signal (b) — free-form question:** check if user message matches `^\s*\?` OR contains `(what|why|how)\s+(is|are|does|do)` AND user is not inside an active skill flow. If true, fire auto-engage.
 - **Signal (c) — explicit `/help`:** handled by E3's command, not detection.
 - **Cooldown (OQ2 resolution):** after Helper auto-engages once for a signal-type and the user declines re-explanation (`AskUserQuestion` → No), do not re-auto-engage on the same signal-type until a different signal-type fires OR the user explicitly invokes `/help`. Track cooldown in agent's working memory for the session.
@@ -198,8 +198,8 @@ Wire the auto-engage path. Extend `helper/agents/helper.md` (from E2) with the i
 
 ### Acceptance Criteria
 
-- [ ] E4-AC1: Manual probe — invoke `lsa-specify`, reject a gate with `[c]` twice → Helper auto-engages with `AskUserQuestion` "Want me to explain what this gate is checking?" (per AC2).
-- [ ] E4-AC2: Manual probe — user types `what is T2?` mid-session (no active skill) → Helper auto-engages and answers (per F2 signal b).
+- [ ] E4-AC1: Manual probe — invoke `lsa-specify`, reject a User Verification with `[c]` twice → Helper auto-engages with `AskUserQuestion` "Want me to explain what this User Verification is checking?" (per AC2).
+- [ ] E4-AC2: Manual probe — user types `what is the Standard flow?` mid-session (no active skill) → Helper auto-engages and answers (per F2 signal b).
 - [ ] E4-AC3: Manual probe — same trigger as E4-AC1, user picks No → Helper steps back; same trigger fires again immediately, Helper does NOT re-engage (cooldown).
 - [ ] E4-AC4: Manual probe — user persists rejecting after Helper explained → Helper does NOT re-engage (no nag).
 

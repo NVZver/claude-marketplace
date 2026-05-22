@@ -15,11 +15,11 @@ Two plugins ship from this marketplace and together form the development discipl
 /reload-plugins
 ```
 
-Install `core` first — `lsa` cites it for fact-grounding and tier-selection (see [`lsa/README.md`](./lsa/README.md) → "Depends on").
+Install `core` first — `lsa` cites it for fact-grounding and flow-selection (see [`lsa/README.md`](./lsa/README.md) → "Depends on").
 
 ## Always-on rules
 
-The canonical always-on fragment lives at [`core/CLAUDE.md`](./core/CLAUDE.md): apply `core/ground-rules` to every substantive task (6 content rules); apply `core/output` to every human-facing output (4 format golden rules — structured / minimal / formatted / sourced); invoke `core/tier-selector` before any non-trivial task. The tier flow (T1 / T2 / T3) and boundary signals are at [`vision/VISION.md`](./vision/VISION.md) §4. The operating credo is **ownership over automation** — see [`core/CLAUDE.md`](./core/CLAUDE.md) Rule 0.
+The canonical always-on fragment lives at [`core/CLAUDE.md`](./core/CLAUDE.md): apply `core/ground-rules` to every substantive task (6 content rules); apply `core/output` to every human-facing output (5 format golden rules — structured / minimal / formatted / sourced / concrete); invoke `core/flow-selector` (renamed from `core/tier-selector` in `core` v0.5.2) before any non-trivial task. The flow types (Quick / Standard / Extended — was T1/T2/T3) and boundary signals are at [`vision/VISION.md`](./vision/VISION.md) §4. The operating credo is **ownership over automation** — see [`core/CLAUDE.md`](./core/CLAUDE.md) Rule 0.
 
 ## Discipline (sourced)
 

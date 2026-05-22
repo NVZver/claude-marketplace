@@ -8,7 +8,7 @@ Detection runs in the main Claude Code agent's own context — not as a separate
 
 | Signal | Definition | Trigger condition |
 |---|---|---|
-| (a) Gate-reject pattern | Two consecutive `[c] reject` selections at any `lsa-specify` gate within the same gate sequence (no other gate or skill in between). | After the second `[c] reject`, **before** re-presenting the gate, invoke Helper with the gate name and the rejection history as context. |
+| (a) User-Verification-reject pattern | Two consecutive `[c] reject` selections at any `lsa-specify` User Verification within the same Verification sequence (no other Verification or skill in between). | After the second `[c] reject`, **before** re-presenting the Verification, invoke Helper with the Verification name and the rejection history as context. |
 | (b) Free-form question | User message contains `?` OR matches `(what\|why\|how)\s+(is\|are\|does\|do)\b` AND user is not already inside an active skill flow (no in-progress `Skill()` invocation, no open `AskUserQuestion` from another skill). | On user-message receipt, before normal routing. If match, invoke Helper with the question as input. |
 | (c) Explicit `/help` | User invokes the `/help` slash command (with or without argument). | Always invoke Helper. Handled by [`../commands/help.md`](../commands/help.md), not by this detection logic — listed here for completeness. |
 
@@ -30,12 +30,12 @@ This prevents nag-spam: if the user wants Helper out of the way for one kind of 
 
 ### What does NOT count as declined
 
-- The user accepts (`Yes`) but then rejects the gate again afterwards. The first auto-engage was successful; Helper does not re-engage on the *next* `[c]` cycle within the same gate sequence regardless (see "One per friction window" below).
-- The user picks a non-Helper option from a non-Helper picker (e.g. answers an `lsa-specify` gate picker normally).
+- The user accepts (`Yes`) but then rejects the Verification again afterwards. The first auto-engage was successful; Helper does not re-engage on the *next* `[c]` cycle within the same Verification sequence regardless (see "One per friction window" below).
+- The user picks a non-Helper option from a non-Helper picker (e.g. answers an `lsa-specify` User Verification picker normally).
 
 ### One per friction window
 
-Even on the same signal-type with no explicit "No": Helper auto-engages **at most once** per continuous friction window. A friction window for signal (a) ends when the user either approves the gate (`[a]`), accepts an `[b] approve with overrides`, or abandons the skill. After the window closes, signal (a) is eligible again on a fresh gate-reject pair.
+Even on the same signal-type with no explicit "No": Helper auto-engages **at most once** per continuous friction window. A friction window for signal (a) ends when the user either approves the Verification (`[a]`), accepts an `[b] approve with overrides`, or abandons the skill. After the window closes, signal (a) is eligible again on a fresh User-Verification-reject pair.
 
 ## OQ4 — Auto-engage in plain Claude Code (no `lsa-specify` active)
 
@@ -53,7 +53,7 @@ The cooldown lives in the **main Claude Code agent's own working memory** for th
 
 | Pattern | Signal | Example |
 |---|---|---|
-| Second `[c] reject` at same `lsa-specify` gate | (a) | Gate 1 → `[c]` → re-present → `[c]` → Helper engages |
+| Second `[c] reject` at same `lsa-specify` User Verification | (a) | User Verification 1 → `[c]` → re-present → `[c]` → Helper engages |
 | Free-form `?` mid-flow, no skill active | (b) | User: `what's a SKILL.md?` → Helper engages |
 | `(what\|why\|how)` + `(is\|are\|does\|do)` mid-flow | (b) | User: `how does lsa-verify work?` → Helper engages |
 | `/help` invocation | (c) | User: `/help` or `/help <question>` → Helper always engages |

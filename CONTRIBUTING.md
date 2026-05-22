@@ -27,13 +27,13 @@ After editing any `SKILL.md`, hook, or plugin manifest: `/reload-plugins` picks 
 
 ## Classify the work first
 
-Every non-trivial change invokes [`core/tier-selector`](./core/skills/tier-selector/SKILL.md) before touching code or specs. Boundary signals + worked examples at [`vision/VISION.md`](./vision/VISION.md) §4.
+Every non-trivial change invokes [`core/flow-selector`](./core/skills/flow-selector/SKILL.md) (renamed from `core/tier-selector` in `core` v0.5.2) before touching code or specs. Boundary signals + worked examples at [`vision/VISION.md`](./vision/VISION.md) §4.
 
-| Tier | When | Flow |
+| Flow | When | Loop |
 |---|---|---|
-| **T1** | One file / one string / no behavior change | Single pass; `ground-rules` still applies |
-| **T2** | Bug in a spec'd module, refactor | `lsa-discover` (light) → TDD → `lsa-verify` |
-| **T3** | New feature, new contract, new module | `lsa-discover` → `lsa-specify` → `lsa-plan` → implement → `lsa-verify` → `lsa-sync` |
+| **Quick** (was `T1`) | One file / one string / no behavior change | Single pass; `ground-rules` still applies |
+| **Standard** (was `T2`) | Bug in a spec'd module, refactor | `lsa-discover` (light) → TDD → `lsa-verify` |
+| **Extended** (was `T3`) | New feature, new contract, new module | `lsa-discover` → `lsa-specify` → `lsa-plan` → implement → `lsa-verify` → `lsa-sync` |
 
 For doc-only refactors that span many files, a plan file at `vision/plans/YYYY-MM-DD-<name>.md` may serve as the feature spec — **declare that judgment upfront** and reflect every change against the plan in your verification report.
 
@@ -65,7 +65,7 @@ Knowledge files capture cross-cutting reference content (defaults, protocols, de
 
 ## Editing an existing skill
 
-1. Classify (T1 / T2 / T3).
+1. Classify (Quick / Standard / Extended — was `T1` / `T2` / `T3`).
 2. Preserve the five-section Actor shape — Goal / Input / Steps / Output / Constraints.
 3. If you find Knowledge content in an Actor body, **move it** to a Knowledge surface and cite from the skill (per [`vision/VISION.md:40`](./vision/VISION.md) — *"Knowledge is not Actor; boundary violations are the highest-severity defect."*).
 4. Bump version + add CHANGELOG entry.

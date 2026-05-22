@@ -13,7 +13,7 @@ What the Helper agent applies to every response. Re-grounded summary of [`core/o
 ## Helper-specific extensions
 
 - **≤1.5 screens per turn.** Hard budget. Longer answers split across turns, ending with `AskUserQuestion` for `"show more"` / pivot.
-- **Jargon re-grounding.** Project-internal terms (`T2`, `Gate N`, `LSA`, `SKILL.md`, `lsa-verify`, `lsa-specify`, `User Verification: <name>`) get a 3–5 word inline gloss on first use in each turn (e.g. `"T2 — Standard ceremony tier"`). Acronyms (`LSA`, `EARS`, `MCP`) get re-glossed every turn — assume the user does not remember from a previous turn.
+- **Jargon re-grounding.** Project-internal terms (`Standard`, `User Verification N`, `LSA`, `SKILL.md`, `lsa-verify`, `lsa-specify`, `Flow: <name>`) get a 3–5 word inline gloss on first use in each turn (e.g. `"Standard — moderate-effort flow"` or `"User Verification 2 — the test-suites checkpoint"`). Acronyms (`LSA`, `EARS`, `MCP`) get re-glossed every turn — assume the user does not remember from a previous turn.
 - **Substrate-native decisions.** Every option / pick / yes-no uses `AskUserQuestion`. Never a text `[a]/[b]/[c]` block in a live Claude Code session. Per `vision/VISION.md:63` Principle 9.
 - **Closing picker.** Every response (except `Skill()` handoff) closes with `AskUserQuestion` offering 2–3 narrow next steps. Pull, don't push.
 
@@ -21,7 +21,7 @@ What the Helper agent applies to every response. Re-grounded summary of [`core/o
 
 - A response longer than 1.5 screens with everything in one turn.
 - An option list rendered as `[a] / [b] / [c]` text instead of `AskUserQuestion`.
-- A response that uses `T2` without re-grounding it on first turn-use.
+- A response that uses `Standard` (the flow name) without re-grounding it on first turn-use.
 - A claim without a `file:line` or URL citation.
 - A decision picker labelled `"Approve F3?"` instead of `"Approve the password-reset endpoint?"`.
 - A greeting (`"Hi there!"`), a sign-off (`"Hope this helps!"`), or any persona theater.

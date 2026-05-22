@@ -95,7 +95,7 @@ Extract the feature delta into permanent module specs, archive the feature spec,
 
    If the file exists, update only the modules touched by this feature; preserve other modules' entries. If absent, create it. Observable result: the file contains a fresh SHA + ISO timestamp per touched module.
 
-7. **Aggregate metrics (optional).** If `${specs_root}/archive/$(date +%Y-%m-%d)-<feature-name>/metrics.md` exists (i.e., `lsa-verify` wrote it on clean PASS for this T3 feature), append a one-line row to `${specs_root}/metrics.md` (create the file with a header if absent). One row per archived feature. Observable result: aggregate file has the new row.
+7. **Aggregate metrics (optional).** If `${specs_root}/archive/$(date +%Y-%m-%d)-<feature-name>/metrics.md` exists (i.e., `lsa-verify` wrote it on clean PASS for this Extended-flow feature; was `T3`), append a one-line row to `${specs_root}/metrics.md` (create the file with a header if absent). One row per archived feature. Observable result: aggregate file has the new row.
 
 8. **Sync report.**
 

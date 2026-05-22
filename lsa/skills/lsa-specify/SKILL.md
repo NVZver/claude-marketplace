@@ -1,34 +1,40 @@
 ---
 name: lsa-specify
-description: Creates a feature spec from a human's description (T3 path). Use whenever the user describes a new feature, says "I need to build X", "add a feature", "new requirement", "let's spec this out", or provides any functional requirement that needs capturing before implementation.
+description: Creates a feature spec from a human's description (Extended flow — was `T3`). Use whenever the user describes a new feature, says "I need to build X", "add a feature", "new requirement", "let's spec this out", or provides any functional requirement that needs capturing before implementation.
 ---
 
 # LSA Specify
 
 ## Goal
 
-Write the formal feature spec — `requirements.md`, `test-suites.md`, `contract.yaml` (when triggered), `design.md` — under the configured `${specs_root}/features/<feature-name>/`, with **three bundled human confirmation gates** (Gate 1 requirements + contract-trigger; Gate 2 test-suites + contract + design; Gate 3 final integration).
+Write the formal feature spec — `requirements.md`, `test-suites.md`, `contract.yaml` (when triggered), `design.md` — under the configured `${specs_root}/features/<feature-name>/`, with **three bundled User Verifications** (1: Requirements + Contract Trigger; 2: Test Suites + Contract + Design; 3: Final Integration). The proper-noun name reads to a first-time user as *who* (the human) and *what* (verifying); the prior `Gate N` name carried position but no meaning.
 
 ## Input
 
 - The human's feature description.
-- Optional `discovery.md` scratch file produced by `lsa-discover` for T3 flows. When present, the answers in `discovery.md` seed Step 2 so the clarification block becomes a deeper round, not the first round.
+- Optional `discovery.md` scratch file produced by `lsa-discover` for Extended flows (was `T3`). When present, the answers in `discovery.md` seed Step 2 so the clarification block becomes a deeper round, not the first round.
 - `.lsa.yaml` for `constitution` path and `specs_root` (defaults per [`../knowledge/conventions.md`](../knowledge/conventions.md) §"`.lsa.yaml` defaults").
 
-All three gates in this skill are **Hard Confirm** — present artifact(s), wait for explicit approval, no implicit pass. (`conventions.md` §"Confirm gate types" still defines both Hard and Soft for other skills' use; lsa-specify no longer uses Soft after the audit-C gate collapse.)
+All three Verifications in this skill are **Hard Confirm** — present artifact(s), wait for explicit approval, no implicit pass. (`conventions.md` §"Confirm gate types" still defines both Hard and Soft for other skills' use; lsa-specify no longer uses Soft after the audit-C gate collapse.)
 
 ## Steps
 
 1. **Read sources.** Apply the Read Protocol per [`../knowledge/conventions.md`](../knowledge/conventions.md) §"Read protocol". Skill-specific sources beyond the protocol's standard prefix:
    - `${specs_root}/main.spec.md`
    - `${specs_root}/modules/<name>/spec.md` for each module this feature touches
-   - `discovery.md` from the working feature directory, if present (T3 from `lsa-discover`)
+   - `discovery.md` from the working feature directory, if present (Extended flow from `lsa-discover`)
 
    Observable result: per-source one-liner printed per the protocol.
 
 2. **Clarify with human via assume-then-override.** Do not write any files until all answers are received. Draft a `clarification.md` scratch with assumed answers for all 9 prompts (Functional×5, Non-functional×2, Boundaries×2, Acceptance×N); human responds with overrides or `ok`. **Silence on a line = approval.** If `discovery.md` is present, seed its answers so this becomes a deeper round.
 
-   Present: the assumed-answer scratch + decision `[a] approve all → Gate 1` / `[b] approve with overrides → re-draft, re-present` / `[c] reject → stop, re-run lsa-discover`. Format per [`core/output`](../../../core/skills/output/SKILL.md); `AskUserQuestion` for the decision in Claude Code. Observable result: answers captured; human approval logged.
+   Present: the assumed-answer scratch + decision. **Prompt voice (per [`core/output`](../../../core/skills/output/SKILL.md) Rule 5).** The picker **question** names the feature in real-world terms — e.g., *"Confirm assumed answers for `<feature-name>`?"* — not "Approve clarification scratch?". Option **labels** name the outcome:
+
+   - `[a]` accept all assumed answers → draft requirements
+   - `[b]` override some answers → I re-draft with your overrides
+   - `[c]` start over with deeper discovery → I re-run `lsa-discover`
+
+   Format per [`core/output`](../../../core/skills/output/SKILL.md); `AskUserQuestion` in Claude Code (per `core/CLAUDE.md` operational checkpoint #1 — never render `[a]/[b]/[c]` text blocks when the picker is available). Observable result: answers captured; human approval logged.
 
 3. **Create spec directory.**
 
@@ -36,14 +42,14 @@ All three gates in this skill are **Hard Confirm** — present artifact(s), wait
    ${specs_root}/features/<feature-name>/
      requirements.md
      test-suites.md
-     contract.yaml      ← only if contract trigger = yes (determined at Gate 1)
+     contract.yaml      ← only if contract trigger = yes (determined at User Verification 1)
      design.md
      tasks.md           ← empty, filled by lsa-plan
    ```
 
    Feature name: kebab-case. Create git branch: `feature/<feature-name>`. Observable result: directory and branch both exist.
 
-4. **Gate 1 — `requirements.md` + contract-trigger check → Hard Confirm (bundled).**
+4. **User Verification 1: Requirements + Contract Trigger → Hard Confirm (bundled).**
 
    Write `requirements.md`:
    ```markdown
@@ -81,9 +87,15 @@ All three gates in this skill are **Hard Confirm** — present artifact(s), wait
 
    Determine contract trigger by inspecting requirements (no separate human prompt). Triggered if any of: an API endpoint, a request/response schema, a DB schema/table change, a shared data type used across modules.
 
-   Present: rendered `requirements.md` + trigger-check result per signal (yes/no with names where yes) + decision `[a] approve → Gate 2` / `[b] approve with corrections → re-present Gate 1` / `[c] reject → return to Step 2`. Format per [`core/output`](../../../core/skills/output/SKILL.md); `AskUserQuestion` for the decision. Observable result: `requirements.md` exists; contract-trigger logged; human approval logged.
+   Present: rendered `requirements.md` + trigger-check result per signal (yes/no with names where yes) + decision. **Prompt voice (per [`core/output`](../../../core/skills/output/SKILL.md) Rule 5).** Picker **question**: *"Approve the requirements for `<feature-name>`?"* — not *"Approve F1/F2/F3?"* (IDs stay in the rendered file, not in the picker). Option **labels** name the outcome (no `Gate N` jargon):
 
-5. **Gate 2 — `test-suites.md` + `contract.yaml` (if triggered) + `design.md` → Hard Confirm (bundled).**
+   - `[a]` approve → I draft test suites + design
+   - `[b]` approve with corrections → I edit requirements and re-present
+   - `[c]` reject → return to clarification round
+
+   When asking about individual requirements that need clarification, ask one decision per question; resolve each `F<n>` / `NF<n>` / `AC<n>` to its subject phrase ("Add password reset endpoint?"), not the ID. Format per [`core/output`](../../../core/skills/output/SKILL.md); `AskUserQuestion` in Claude Code. Observable result: `requirements.md` exists; contract-trigger logged; human approval logged.
+
+5. **User Verification 2: Test Suites + Contract + Design → Hard Confirm (bundled).**
 
    Before writing `test-suites.md`: verify every AC from `requirements.md` is assigned to at least one journey. Do not present until all ACs are covered.
 
@@ -108,7 +120,7 @@ All three gates in this skill are **Hard Confirm** — present artifact(s), wait
 
    One journey per distinct user goal. One path per distinct way to achieve that goal. Every AC must appear in at least one journey's **Covers** field.
 
-   **`contract.yaml`** (skip if Gate 1 trigger = NO): valid OpenAPI 3.x.
+   **`contract.yaml`** (skip if User Verification 1 trigger = NO): valid OpenAPI 3.x.
    ```yaml
    openapi: 3.1.0
    info:
@@ -152,7 +164,7 @@ All three gates in this skill are **Hard Confirm** — present artifact(s), wait
    [Unresolved items requiring human input. If none, write "none"]
    ```
 
-   **Diagonal cross-artifact coverage check.** Before presenting Gate 2, render a 4-row coverage table by reading the four (or three, if contract skipped) artifacts and checking each pair:
+   **Diagonal cross-artifact coverage check.** Before presenting User Verification 2, render a 4-row coverage table by reading the four (or three, if contract skipped) artifacts and checking each pair:
 
    | # | Pair | Compares | When contract skipped |
    |---|------|----------|----------------------|
@@ -178,13 +190,24 @@ All three gates in this skill are **Hard Confirm** — present artifact(s), wait
       [c] custom — free-form text
    ````
 
-   When multiple rows fail, all decision blocks render together in a single multi-question `AskUserQuestion` call (batched — not one at a time). Approval is blocked until every `✗` row has a resolution: `[a]` or `[b]` edits the cited file in place, `[c]` returns to Gate 1 for deeper revision.
+   When multiple rows fail, all decision blocks render together in a single multi-question `AskUserQuestion` call (batched — not one at a time). Approval is blocked until every `✗` row has a resolution: `[a]` or `[b]` edits the cited file in place, `[c]` returns to User Verification 1 for deeper revision.
 
-   Present: 4-row diagonal coverage table (rendered above) + `test-suites.md` + `contract.yaml` (or skip-note) + `design.md` + any Open Questions from design.md + decision `[a] approve → Gate 3` / `[b] approve with corrections → re-present Gate 2` / `[c] reject → return to Gate 1`. Failing rows surface as Rule 6 decision blocks (batched); approval is blocked until every `✗` row is resolved. Format per [`core/output`](../../../core/skills/output/SKILL.md); `AskUserQuestion` for the decision. Observable result: three files exist (or contract skip-note logged); diagonal coverage table rendered (every row `✓` or `N/A`); human approval logged.
+   Present: 4-row diagonal coverage table (rendered above) + `test-suites.md` + `contract.yaml` (or skip-note) + `design.md` + any Open Questions from design.md + decision. **Prompt voice (per [`core/output`](../../../core/skills/output/SKILL.md) Rule 5).** Picker **question**: *"Approve the test suites + contract + design for `<feature-name>`?"* — not *"Approve User Verification 2?"*. Option **labels** name the outcome:
 
-6. **Gate 3 — final integration check → Hard Confirm.** Cross-artifact integrity, not a re-read of files.
+   - `[a]` approve → final integration check
+   - `[b]` approve with corrections → I edit and re-present
+   - `[c]` reject → return to requirements
 
-   Present: integrity checks (every AC has a journey covering it? design matches contract? Open Questions resolved or deferred?) + decision `[a] approve → lsa-plan invoked` / `[b] reject → stop; name what to change and which Gate to return to`. Format per [`core/output`](../../../core/skills/output/SKILL.md); `AskUserQuestion` for the decision. Do not run `lsa-plan` until human gives explicit final approval. Observable result: integration check signed off.
+   Failing rows surface as Rule 6 decision blocks (batched in one multi-question `AskUserQuestion`); approval is blocked until every `✗` row is resolved. Each failing-row picker uses subject voice — name the two artifact lines in conflict, not the row number. Format per [`core/output`](../../../core/skills/output/SKILL.md); `AskUserQuestion` in Claude Code. Observable result: three files exist (or contract skip-note logged); diagonal coverage table rendered (every row `✓` or `N/A`); human approval logged.
+
+6. **User Verification 3: Final Integration → Hard Confirm.** Cross-artifact integrity, not a re-read of files.
+
+   Present: integrity checks (every AC has a journey covering it? design matches contract? Open Questions resolved or deferred?) + decision. **Prompt voice (per [`core/output`](../../../core/skills/output/SKILL.md) Rule 5).** Picker **question**: *"Final approval — start implementation planning for `<feature-name>`?"* — not *"Approve User Verification 3?"*. Option **labels**:
+
+   - `[a]` approve → I invoke `lsa-plan`
+   - `[b]` reject → stop; name what to change and which prior step to return to (requirements / test suites / design)
+
+   Format per [`core/output`](../../../core/skills/output/SKILL.md); `AskUserQuestion` in Claude Code. Do not run `lsa-plan` until human gives explicit final approval. Observable result: integration check signed off.
 
 ## Output
 
@@ -192,14 +215,14 @@ Four (or three, when contract is skipped) approved files under `${specs_root}/fe
 
 ## Constraints
 
-- **Three bundled gates**: Gate 1 (requirements + contract-trigger), Gate 2 (test-suites + contract + design), Gate 3 (final integration). Never skip a gate.
+- **Three bundled User Verifications**: 1 (Requirements + Contract Trigger), 2 (Test Suites + Contract + Design), 3 (Final Integration). Never skip a Verification.
 - **Only proceed on explicit human approval.** Implicit approvals are not accepted.
 - **Never write outside `${specs_root}/features/<feature-name>/`.** Module specs are written by `lsa-sync`; the constitution is edited only by `lsa-revise-constitution`.
 - Outputs follow [`core/output`](../../../core/skills/output/SKILL.md) golden rules (structured, minimal, formatted, sourced).
 
 ## Amending an approved spec
 
-To change a spec after approval: edit the affected files, re-run the corresponding Gate (1, 2, or 3) for the changed scope, then re-run Gate 3.
+To change a spec after approval: edit the affected files, re-run the corresponding User Verification (1, 2, or 3) for the changed scope, then re-run User Verification 3.
 
 ---
 

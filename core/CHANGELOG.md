@@ -4,6 +4,50 @@ All notable changes to the `core` plugin are documented here. Format follows [Ke
 
 ## [Unreleased]
 
+## [0.5.3] — 2026-05-22
+
+Output-marker patch. Adds a source-attribution marker (`[plugin:skill]`) to every substantive agent response so the human can see at-a-glance which marketplace skill is shaping the current turn vs. background model output. Per `vision/specs/roadmap.md` row *"Output marker — source-attribution prefix"* (user request 2026-05-22). Quick flow.
+
+### Added
+- `core/skills/output/SKILL.md` Rule 4 (Sourced) — new sub-section **Output marker**. Form: `[plugin:skill]`, never bare `[skill]` (e.g., `[core:output]`, `[lsa:lsa-specify]`). Placement: first line of the response, treated as a label. Pick: the most-specific *currently-active* skill — defaults to `[core:output]` when no explicit skill is invoked. Skip only for trivial one-line replies (Rule 2 wins).
+- `core/CLAUDE.md` § Output discipline — third operational checkpoint **Output marker (`[plugin:skill]`)** under the existing pointer to `core/output`. Header bumped from *Two operational checkpoints* → *Three*. Cites Rule 4.
+
+### Notes
+- **No count bump.** Stays 5 golden rules — the marker rides inside Rule 4 (Sourced) as a sub-section because both concerns are forms of provenance (factual claims cite their factual source; agent responses disclose their skill source). Re-evaluate promotion to a separate Rule 6 if marker scope grows beyond a single `[plugin:skill]` label per turn.
+- **Format decision.** `[plugin:skill]` always, never bare `[skill]` — selected by user via `AskUserQuestion` 2026-05-22. The alternative (`[skill]` for core, `[plugin:skill]` for plugins) was rejected for uniformity / lint-ability.
+
+## [0.5.2] — 2026-05-22
+
+Naming clarity patch — renames the `core/tier-selector` skill to `core/flow-selector` and replaces the `T1` / `T2` / `T3` tier labels with `Quick` / `Standard` / `Extended` across `core/CLAUDE.md`, `core/README.md`, `core/VERIFICATION.md`, the skill body, and the plugin description. Per `vision/specs/roadmap.md` row *"Rename `T1` / `T2` / `T3` → `Flow: Quick` / `Flow: Standard` / `Flow: Extended`"*. Bundle B (Naming clarity) of the 2026-05-22 fixing session.
+
+### Changed
+- **Skill rename: `core/skills/tier-selector/` → `core/skills/flow-selector/`.** Directory + frontmatter `name:` + slash-command slug (`/core:tier-selector` → `/core:flow-selector`). The skill body adopts the new vocabulary (Quick / Standard / Extended) and notes the rename at the top so existing-user lookups still resolve.
+- **`core/CLAUDE.md` § Tier selection → § Flow selection.** Section heading + body language switch from `T1 / T2 / T3` → `Quick / Standard / Extended`. Each tier bullet annotates the prior name (e.g., *"Quick (was `T1`)"*) so historical references in plans, CHANGELOGs, and archive files remain interpretable.
+- **`core/README.md`.** `tier-selector` row + invocation example + CLAUDE-merge note updated.
+- **`core/VERIFICATION.md` Probe C** — heading + label switch; `T3` → `Extended` in the expected behavior.
+- **`core/.claude-plugin/plugin.json` `description`** — `tier-selector (T1/T2/T3 chain-of-thought)` → `flow-selector (Quick/Standard/Extended chain-of-thought — renamed from tier-selector in v0.5.2)`.
+
+### Notes
+- **Breaking surface change, treated as patch.** Strictly per [SemVer §4](https://semver.org/#spec-item-4), renaming a slug is breaking. Pre-1.0 SemVer lets the maintainer's discretion shape the bump; for this personal marketplace with no external consumers, a patch is defensible. Future external consumers should pin to v0.5.1 if they rely on `/core:tier-selector` literally.
+- **Historical entries left untouched.** `core/CHANGELOG.md` [0.4.1] / [0.3.0] / [0.2.0] still reference `tier-selector` and `T1 / T2 / T3` — they describe past state and the rename note in the new entries (and `core/CLAUDE.md` body) makes them traceable.
+- **Sibling lsa patch** — `lsa` v0.6.2 in the same Bundle B PR sweeps the `T1/T2/T3` and `tier-selector` references throughout `lsa/` and also renames the lsa-specify "Gate N" → "User Verification N".
+
+## [0.5.1] — 2026-05-22
+
+Output-discipline enforcement patch. Elevates the two `core/output` rules that the user observed as routinely skipped in practice (substrate-native pickers and the response screen-budget) to always-on operational checkpoints in `core/CLAUDE.md`, and tightens `core/output` Rule 2 (Minimal) with concrete budget shape. Per `vision/specs/roadmap.md` row *"core/output discipline enforcement (AskUserQuestion + output length)"*.
+
+### Added
+- `core/CLAUDE.md` § Output discipline — two new always-on operational checkpoints under the existing pointer to `core/output`: (1) **Substrate-native pickers** — every decision-bearing prompt uses `AskUserQuestion` in Claude Code; never render `[a]/[b]/[c]` text blocks when the picker is available; (2) **1–1.5 screen budget per turn** — default ~30–50 rendered markdown lines, split decisions into separate turns, pull don't push.
+- `core/skills/output/SKILL.md` Rule 2 (Minimal) — three concrete sub-bullets: 1–1.5 screen budget (verdict + single next decision above the fold), split into turns (separate decision from supporting detail), pull-don't-push (no pre-emptive option/artifact/consideration dump).
+
+### Changed
+- `core/skills/output/SKILL.md` Rule 5 heading — now reads *"Concrete (decision prompts) — prompt voice"* for memorability. The sub-bullets (subject-first, no project jargon, must-decide only, one decision per question) are unchanged.
+
+### Notes
+- **No new rules.** Both checkpoints derive from existing material — Substrate-native first is `vision/VISION.md` §2 principle 9 (already cited in `core/ground-rules` Rule 0); the screen budget is implicit in Rule 2's *"every line earns its place"*. This patch lifts both from "implicit" to "always-on" because the user observed them routinely skipped.
+- **Sibling LSA patch.** `lsa` v0.6.1 ships in the same Bundle A PR — applies the prompt-voice scaffolding inside `lsa-specify` / `lsa-plan` / `lsa-init` gate prompts so the user-facing pickers stop using `Gate N` / `F<n>` / `epic decomposition` jargon.
+- Sibling rename PRs (Gate N → User Verification; T1/T2/T3 → Flow) land in Bundle B.
+
 ## [0.5.0] — 2026-05-21
 
 Adds **Rule 5 (Concrete)** to `core/output` — decision-prompt voice discipline. Surfaced during Help-agent-persona refinement (2026-05-21) when the user flagged LSA gates as unusable: *"I have no IDEA what it means…wording is too…i don't know, it just means nothing to me…I want concrete questions to make decisions with clear problem to solve. I do not give a fuck about minor things."* Per `vision/specs/roadmap.md` row *"LSA gate prompts must be concrete"* (Must priority).
