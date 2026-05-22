@@ -11,13 +11,13 @@ Spec: [`vision/specs/features/2026-05-21-helper-agent/`](../vision/specs/feature
 
 ## Status — under construction
 
-Being built in 4 steps per [`tasks.md`](../vision/specs/features/2026-05-21-helper-agent/tasks.md). **Current commit: step 2 (agent body)** — the assistant answers questions with citations and can hand off to other skills under confirmation. The `/help` command and auto-engage detection still pending.
+Being built in 4 steps per [`tasks.md`](../vision/specs/features/2026-05-21-helper-agent/tasks.md). **Current commit: step 3 (`/help` command)** — the explicit invocation path is now wired end-to-end: type `/help <question>` and the Helper agent responds; type `/help` alone and a 3-option starter picker opens. Auto-engage detection still pending in step 4.
 
 | Step | Adds | In this commit? |
 |---|---|---|
 | 1 | Plugin manifest, CHANGELOG, README, command + agent stubs, marketplace entry | ✓ |
 | 2 | Helper agent body + two knowledge files ([`output-discipline.md`](./knowledge/output-discipline.md), [`knowledge-scope.md`](./knowledge/knowledge-scope.md)). Answers with citations, handoff to skills under explicit `AskUserQuestion`, cannot-ground fallback. | ✓ |
-| 3 | `/help` command body — free-form dispatch + starter-topic picker | pending |
+| 3 | `/help` command body ([`./commands/help.md`](./commands/help.md)) — free-form dispatch with `<question>` arg + empty-arg starter-topic picker (install / pick a skill / explain a concept). Thin shell that delegates to `Skill(helper)`. | ✓ |
 | 4 | Friction-signal detection + per-signal-type cooldown | pending |
 
 ## Install on Claude Code
