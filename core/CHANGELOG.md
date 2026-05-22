@@ -4,6 +4,18 @@ All notable changes to the `core` plugin are documented here. Format follows [Ke
 
 ## [Unreleased]
 
+## [0.5.3] — 2026-05-22
+
+Output-marker patch. Adds a source-attribution marker (`[plugin:skill]`) to every substantive agent response so the human can see at-a-glance which marketplace skill is shaping the current turn vs. background model output. Per `vision/specs/roadmap.md` row *"Output marker — source-attribution prefix"* (user request 2026-05-22). Quick flow.
+
+### Added
+- `core/skills/output/SKILL.md` Rule 4 (Sourced) — new sub-section **Output marker**. Form: `[plugin:skill]`, never bare `[skill]` (e.g., `[core:output]`, `[lsa:lsa-specify]`). Placement: first line of the response, treated as a label. Pick: the most-specific *currently-active* skill — defaults to `[core:output]` when no explicit skill is invoked. Skip only for trivial one-line replies (Rule 2 wins).
+- `core/CLAUDE.md` § Output discipline — third operational checkpoint **Output marker (`[plugin:skill]`)** under the existing pointer to `core/output`. Header bumped from *Two operational checkpoints* → *Three*. Cites Rule 4.
+
+### Notes
+- **No count bump.** Stays 5 golden rules — the marker rides inside Rule 4 (Sourced) as a sub-section because both concerns are forms of provenance (factual claims cite their factual source; agent responses disclose their skill source). Re-evaluate promotion to a separate Rule 6 if marker scope grows beyond a single `[plugin:skill]` label per turn.
+- **Format decision.** `[plugin:skill]` always, never bare `[skill]` — selected by user via `AskUserQuestion` 2026-05-22. The alternative (`[skill]` for core, `[plugin:skill]` for plugins) was rejected for uniformity / lint-ability.
+
 ## [0.5.2] — 2026-05-22
 
 Naming clarity patch — renames the `core/tier-selector` skill to `core/flow-selector` and replaces the `T1` / `T2` / `T3` tier labels with `Quick` / `Standard` / `Extended` across `core/CLAUDE.md`, `core/README.md`, `core/VERIFICATION.md`, the skill body, and the plugin description. Per `vision/specs/roadmap.md` row *"Rename `T1` / `T2` / `T3` → `Flow: Quick` / `Flow: Standard` / `Flow: Extended`"*. Bundle B (Naming clarity) of the 2026-05-22 fixing session.

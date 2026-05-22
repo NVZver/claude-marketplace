@@ -37,7 +37,7 @@ Canonical list in [`core/CLAUDE.md`](./core/CLAUDE.md). Three always-on skills (
   - **Structured** — verdict line first; result/decision block second; detail below the fold.
   - **Minimal** — no banned phrasings, no filler.
   - **Formatted** — code spans, tables, quotes used where they earn their place.
-  - **Sourced** — every claim cites `path + verbatim quote`.
+  - **Sourced** — every claim cites `path + verbatim quote`; every substantive response opens with one `[plugin:skill]` marker (e.g., `[core:output]`, `[lsa:lsa-specify]`) so you see at-a-glance which marketplace skill produced it. Added in `core` v0.5.3.
   - **Concrete** — decision prompts name the real-world subject (not spec IDs, not project jargon); surface only outcome-changing choices.
 
 - **`flow-selector`** (renamed from `tier-selector` in `core` v0.5.2) — before any non-trivial task, classifies the work and waits for your confirmation:
