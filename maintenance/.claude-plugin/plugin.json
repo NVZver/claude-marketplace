@@ -1,0 +1,6 @@
+{
+  "name": "maintenance",
+  "description": "Repo-content discipline: the /maintenance:cleanup skill produces a staged uncommitted diff + a report (vision/reports/cleanup-<date>.md) that trims and relocates content to reduce ship-cost while preserving 6 invariants (frontmatter description, public names, cited file:line links, rule IDs, SemVer+CHANGELOG, actor frontmatter). Refuses to run on main or with uncommitted changes. Stages but never commits. Sized for smaller-context-model contributors (Ollama / Mistral). Depends on `core` (cites `core/actor-template` for skill shape and `core/output` Rule 5 for prompt voice).",
+  "version": "0.1.0",
+  "author": { "name": "Nikita Zverev" }
+}

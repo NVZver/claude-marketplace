@@ -12,6 +12,11 @@
       "name": "lsa",
       "source": "./lsa",
       "description": "Living Spec Architecture: spec-first methodology with eight skills (init, discover, specify, plan, verify, sync, reconcile, revise-constitution) and human User Verifications at every phase."
+    },
+    {
+      "name": "maintenance",
+      "source": "./maintenance",
+      "description": "Repo-content discipline: /maintenance:cleanup audits + trims behavior-bearing Markdown to reduce ship-cost, preserves 6 invariants, stages but never commits. Opt-in. Depends on core."
     }
   ]
 }
