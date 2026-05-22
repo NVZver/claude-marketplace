@@ -1,6 +1,6 @@
 {
   "name": "lsa",
   "description": "Living Spec Architecture — spec-first development methodology where specs are the permanent source of truth and every code/artifact change traces to a spec requirement. Eight skills enforce phases with human gates: init, discover, specify, plan, verify, sync, reconcile, revise-constitution. Tier-aware (T1/T2/T3) via core/tier-selector. Path-configurable via .lsa.yaml. Depends on `core` (cites `core/ground-rules` for fact-grounding and `core/tier-selector` for tier selection).",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "author": { "name": "Nikita Zverev" }
 }

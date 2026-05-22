@@ -13,13 +13,17 @@ Output has a shape: headings, sections, tables, lists, blocks. No stream-of-cons
 ## 2. Minimal
 No fluff, no overexplanation, no padding. Every line earns its place.
 
+- **1–1.5 screen budget.** Default response budget is ~30–50 lines of rendered markdown per turn. Above the fold: verdict + the single decision the human owns next. Below the fold: supporting tables, worked examples, alternatives.
+- **Split into turns.** If a response needs both (a) a decision and (b) supporting detail that takes the response over budget, split: deliver the decision in this turn, deliver the detail in the next turn only if the human asks.
+- **Pull, don't push.** Surface what the human needs to act on next. Do not pre-emptively render every option, every artifact, every consideration in one shot — that forces scroll-and-skim and buries the decision.
+
 ## 3. Formatted
 Markdown affordances match content: tables, lists, code blocks, headings.
 
 ## 4. Sourced
 Every factual claim carries source + exact quote per [`core/ground-rules`](../ground-rules/SKILL.md) Rule 1.
 
-## 5. Concrete (decision prompts)
+## 5. Concrete (decision prompts) — *prompt voice*
 Questions and options name the real-world subject — not spec IDs, not project jargon. Pickers surface only choices that change the outcome.
 
 - **Subject-first.** Resolve identifiers (`F3`, `AC2`, `OQ5`) to the real-world subject in the prompt. IDs stay in spec files for traceability.
