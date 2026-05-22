@@ -3,6 +3,9 @@ name: lsa-sync
 description: Syncs a completed feature spec into permanent module specs and archives the feature. Use whenever a feature has passed `lsa-verify`, when the user says "sync the spec", "archive this feature", "merge and sync", or "feature is done". Mandatory before merging any feature branch to `main`.
 ---
 
+> **Trace.** On load, print first: `=============== [lsa/skills/lsa-sync/SKILL.md] [lsa] ===============`
+
+
 # LSA Sync
 
 ## Goal

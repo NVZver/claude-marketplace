@@ -3,6 +3,9 @@ name: output
 description: Apply to every human-facing output — agent responses, skill bodies, plan files, READMEs, commit messages, PR descriptions, comments. Enforces five golden rules — structured, minimal, formatted, sourced, concrete (cites ground-rules Rule 1).
 ---
 
+> **Trace.** On load, print first: `=============== [core/skills/output/SKILL.md] [core] ===============`
+
+
 # Output Discipline
 
 Five golden rules. Component-specific formats (per-skill) are free choices WITHIN these rules.
@@ -23,12 +26,7 @@ Markdown affordances match content: tables, lists, code blocks, headings.
 ## 4. Sourced
 Every factual claim carries source + exact quote per [`core/ground-rules`](../ground-rules/SKILL.md) Rule 1.
 
-**Output marker.** Every substantive agent response opens with one `[plugin:skill]` marker on its own line — the most-specific active marketplace skill shaping that turn. The marker is the response's "From:" line; it tells the human which marketplace context produced the output.
-
-- **Form.** Always `[plugin:skill]`, never bare `[skill]`. Examples: `[core:output]`, `[core:ground-rules]`, `[core:flow-selector]`, `[lsa:lsa-specify]`, `[lsa:lsa-verify]`, `[lsa:lsa-reconcile]`.
-- **Placement.** First line of the response, before any heading or text. Treat it as a label, not as content.
-- **Pick.** The most-specific *currently-active* skill — the one whose body is shaping this turn. When an explicit skill is invoked (e.g., `lsa-specify` running), use that. When no specific skill is invoked, use `[core:output]` (since output discipline shapes every response by default).
-- **Skip.** Trivial one-line replies that don't apply a rule — pure acknowledgements ("done", "ok"), single-character answers — drop the marker. Rule 2 (Minimal) wins.
+**File-load trace.** Every NVZver-marketplace instructional file carries a one-line trace directive at its top. On load, the agent prints that line verbatim — `=============== [<file>] [<plugin>] ===============` — before the response body. One line per loaded file, in load order. Gives the human a step-by-step path of which marketplace files shaped the turn.
 
 ## 5. Concrete (decision prompts) — *prompt voice*
 Questions and options name the real-world subject — not spec IDs, not project jargon. Pickers surface only choices that change the outcome.

@@ -3,6 +3,9 @@ name: ground-rules
 description: Apply on every substantive task — answering questions, drafting, research, analysis, planning, coding, reviewing — whenever the response contains any factual claim or could pad/overreach. Enforces six content rules: ownership-over-automation, fact-grounding (sources + quotes), no fake-confidence hedging, read the real source before answering, deliver only what was asked, and no filler.
 ---
 
+> **Trace.** On load, print first: `=============== [core/skills/ground-rules/SKILL.md] [core] ===============`
+
+
 # Ground Rules
 
 These six rules make output trustworthy at the content layer. They apply together, on every substantive task, regardless of domain. They are the reason to trust the result.

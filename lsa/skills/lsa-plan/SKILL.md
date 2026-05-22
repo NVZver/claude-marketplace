@@ -3,6 +3,9 @@ name: lsa-plan
 description: Breaks an approved feature spec into independent implementation epics. Use whenever a feature spec has been approved and needs decomposing into tasks — when the user says "plan this feature", "break this into tasks", "ready to implement", or when `requirements.md` + `design.md` exist but `tasks.md` is empty.
 ---
 
+> **Trace.** On load, print first: `=============== [lsa/skills/lsa-plan/SKILL.md] [lsa] ===============`
+
+
 # LSA Plan
 
 ## Goal

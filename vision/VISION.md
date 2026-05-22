@@ -1,3 +1,5 @@
+> **Trace.** On load, print first: `=============== [vision/VISION.md] [vision] ===============`
+
 # The Vision
 
 **Working name:** Vision (placeholder — to be named later)

@@ -3,6 +3,9 @@ name: actor-template
 description: Use when authoring or editing an actor — a Skill, slash command, or workflow that prescribes how to act (not just what is true). Enforces the Goal/Input/Steps/Output/Constraints shape, separates Knowledge from Actor, and demands every step produce an observable result.
 ---
 
+> **Trace.** On load, print first: `=============== [core/skills/actor-template/SKILL.md] [core] ===============`
+
+
 # Actor Template
 
 An Actor prescribes *how to act* (the Goal/Input/Steps/Output/Constraints shape below). It is distinct from Knowledge, which encodes *what is true* (rules, patterns, references). The two never mix in one file — see `ground-rules` for the truth half.

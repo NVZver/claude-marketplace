@@ -1,3 +1,5 @@
+> **Trace.** On load, print first: `=============== [lsa/knowledge/conventions.md] [lsa] ===============`
+
 # LSA Conventions — Knowledge
 
 Cross-cutting conventions every LSA skill applies. This file is **Knowledge**, not an Actor — it has no Goal / Input / Steps / Output / Constraints. LSA skills reference these conventions by section name rather than restating them.

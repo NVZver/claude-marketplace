@@ -1,3 +1,5 @@
+> **Trace.** On load, print first: `=============== [vision/specs/modules/core/spec.md] [vision] ===============`
+
 # Module Spec — `core`
 
 The domain-neutral discipline plugin. Ships three skills + one always-on `CLAUDE.md` fragment.

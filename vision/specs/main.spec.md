@@ -1,3 +1,5 @@
+> **Trace.** On load, print first: `=============== [vision/specs/main.spec.md] [vision] ===============`
+
 # Main Spec — claude-marketplace
 
 The top-level spec for this repo. Sources the constitution at [`vision/VISION.md`](../VISION.md) and maps to the module specs under [`vision/specs/modules/`](./modules/).

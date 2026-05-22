@@ -2,6 +2,16 @@
 
 All notable changes to the `helper` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.2.1] – 2026-05-22
+
+File-load trace adoption. The Helper agent body, the `/help` command, and all 3 `helper/knowledge/*.md` files carry the new one-line trace directive at their top, per `core` v0.5.4 Rule 4 (Sourced) → *File-load trace*. On load, each file prints `=============== [<file>] [helper] ===============` verbatim. Replaces the v0.5.3 `[plugin:skill]` marker scheme. Per user request 2026-05-22. Quick flow.
+
+### Added
+- **Trace directive in 5 files** — `helper/agents/helper.md`, `helper/commands/help.md`, `helper/knowledge/friction-signals.md`, `helper/knowledge/knowledge-scope.md`, `helper/knowledge/output-discipline.md`. Hardcoded path + plugin name in each.
+
+### Notes
+- **Patch bump rationale.** No Helper behavior change — same friction-signal detection, same cooldown rule, same response discipline. Only the on-load trace output is new.
+
 ## [0.2.0] – 2026-05-22
 
 Friction-signal detection + cooldown. Helper now auto-engages on the three signals defined in step 4 of [`vision/specs/features/2026-05-21-helper-agent/tasks.md`](../vision/specs/features/2026-05-21-helper-agent/tasks.md) (Epic 4), with per-signal-type cooldown to prevent nag.

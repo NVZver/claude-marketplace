@@ -3,6 +3,9 @@ name: lsa-specify
 description: Creates a feature spec from a human's description (Extended flow — was `T3`). Use whenever the user describes a new feature, says "I need to build X", "add a feature", "new requirement", "let's spec this out", or provides any functional requirement that needs capturing before implementation.
 ---
 
+> **Trace.** On load, print first: `=============== [lsa/skills/lsa-specify/SKILL.md] [lsa] ===============`
+
+
 # LSA Specify
 
 ## Goal

@@ -1,3 +1,5 @@
+> **Trace.** On load, print first: `=============== [core/knowledge/output-vocabulary.md] [core] ===============`
+
 # Output Vocabulary — Knowledge
 
 Verdict labels for human-facing outputs. Pure constants — Knowledge, not Actor. Components whose chosen format uses a verdict line (e.g., `lsa-verify` reports, `tier-selector` confirms) pick from this table; components without a verdict moment don't render one.

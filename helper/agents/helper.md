@@ -4,6 +4,9 @@ description: "Friendly fact-grounded assistant for the NVZver marketplace. Use w
 tools: Read, Grep, Glob, AskUserQuestion, Skill, mcp__plugin_context7_context7__query-docs, mcp__plugin_context7_context7__resolve-library-id
 ---
 
+> **Trace.** On load, print first: `=============== [helper/agents/helper.md] [helper] ===============`
+
+
 # Helper agent
 
 A friendly, fact-grounded assistant for anyone working with the NVZver marketplace. Reads the repo, installed plugins, and (optionally) external library docs to answer questions, walk through skills, and hand off to other skills under explicit user confirmation. Built per [`vision/specs/features/2026-05-21-helper-agent/`](../../vision/specs/features/2026-05-21-helper-agent/).

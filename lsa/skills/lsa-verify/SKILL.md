@@ -3,6 +3,9 @@ name: lsa-verify
 description: Verifies that the implementation on a feature branch matches the approved feature spec, with every change traced to a requirement. Use whenever an epic or feature is marked implemented, before any merge — when the user says "verify this", "check the implementation", or "ready to merge". Mandatory before `lsa-sync`.
 ---
 
+> **Trace.** On load, print first: `=============== [lsa/skills/lsa-verify/SKILL.md] [lsa] ===============`
+
+
 # LSA Verify
 
 Core contract: every change must trace to a spec requirement. No code or artifact change is acceptable if it has no corresponding item in the feature spec.

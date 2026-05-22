@@ -3,6 +3,9 @@ name: lsa-revise-constitution
 description: Proposes and applies changes to the project constitution and `${specs_root}/standards/`. Use after a feature is merged during replan, when the user says "update the constitution", "revise standards", "update CLAUDE.md", or when feature decisions should become permanent standards.
 ---
 
+> **Trace.** On load, print first: `=============== [lsa/skills/lsa-revise-constitution/SKILL.md] [lsa] ===============`
+
+
 # LSA Revise Constitution
 
 Single responsibility: propose and apply changes to the path configured by `.lsa.yaml: constitution` (default `/CLAUDE.md`) and to `${specs_root}/standards/` only. This skill does nothing else.

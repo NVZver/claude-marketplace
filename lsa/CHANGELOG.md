@@ -4,6 +4,16 @@ All notable changes to the `lsa` plugin are documented here. Format follows [Kee
 
 ## [Unreleased]
 
+## [0.6.4] — 2026-05-22
+
+File-load trace adoption. All 8 `lsa/skills/*/SKILL.md` and `lsa/knowledge/conventions.md` carry the new one-line trace directive at their top, per `core` v0.5.4 Rule 4 (Sourced) → *File-load trace*. On load, each file prints `=============== [<file>] [lsa] ===============` verbatim. Replaces the v0.5.3 `[plugin:skill]` marker scheme that did not survive in practice. Per user request 2026-05-22. Quick flow.
+
+### Added
+- **Trace directive in 9 files** — `lsa/knowledge/conventions.md` plus all 8 LSA skill bodies (`lsa-discover`, `lsa-init`, `lsa-plan`, `lsa-reconcile`, `lsa-revise-constitution`, `lsa-specify`, `lsa-sync`, `lsa-verify`). Hardcoded path + plugin name in each; on load the agent prints the line verbatim before the response body.
+
+### Notes
+- **Patch bump rationale.** No skill behavior change beyond the trace line. Same User Verification flow, same artifacts. The trace replaces the v0.5.3 single-line marker as a provenance mechanism — see `core` v0.5.4.
+
 ## [0.6.3] — 2026-05-22
 
 Adopt the now-supported `dependencies` field in the Claude Code plugin manifest. Clears the "Marketplace dependency field" row from `vision/specs/roadmap.md` (status was `blocked` per `vision/specs/2026-05-20-lsa-v0.2.0-design.md` §14). Verified field availability against [code.claude.com/docs/en/plugin-dependencies](https://code.claude.com/docs/en/plugin-dependencies) and [code.claude.com/docs/en/plugins-reference](https://code.claude.com/docs/en/plugins-reference) on 2026-05-22 — `dependencies` is a top-level array (entries are bare strings or `{ name, version?, marketplace? }` objects) and ships in current Claude Code.
