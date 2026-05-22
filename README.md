@@ -4,10 +4,11 @@
 
 **Proven · Owned · No Fluff · Spec First.**
 
-A Claude Code marketplace shipping two composable plugins:
+A Claude Code marketplace shipping three composable plugins (one under construction):
 
 - **`core`** — three always-on skills that keep the agent honest: `ground-rules` (content discipline), `output` (format discipline), and `tier-selector` (process ceremony — one-pass for a typo, full spec lifecycle for a new module).
 - **`lsa`** — **L**iving **S**pec **A**rchitecture: spec-first development where every change traces to a requirement, and hand-edits to code are *absorbed* into the spec instead of forbidden.
+- **`helper`** *(under construction — scaffold only)* — friendly fact-grounded assistant: a `/help` slash command + an auto-engaging subagent that activates on user-friction signals (consecutive `lsa-specify` gate rejections, free-form `what is X?` mid-flow). Agent + command bodies land across steps 2–4 of [`vision/specs/features/2026-05-21-helper-agent/`](./vision/specs/features/2026-05-21-helper-agent/).
 
 ---
 
@@ -74,6 +75,7 @@ Specs are the permanent source of truth; every change traces to a spec requireme
 /plugin marketplace add NVZver/claude-marketplace
 /plugin install core@NVZver
 /plugin install lsa@NVZver
+/plugin install helper@NVZver   # optional — scaffold only at the moment; see helper/README.md
 /reload-plugins
 ```
 
