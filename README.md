@@ -6,7 +6,7 @@
 
 A Claude Code marketplace shipping two composable plugins:
 
-- **`core`** — three always-on skills that keep the agent honest: `ground-rules` (content discipline), `output` (format discipline), and `tier-selector` (process ceremony — one-pass for a typo, full spec lifecycle for a new module).
+- **`core`** — three always-on skills that keep the agent honest: `ground-rules` (content discipline), `output` (format discipline), and `flow-selector` (process ceremony — one-pass for a typo, full spec lifecycle for a new module; renamed from `tier-selector` in `core` v0.5.2).
 - **`lsa`** — **L**iving **S**pec **A**rchitecture: spec-first development where every change traces to a requirement, and hand-edits to code are *absorbed* into the spec instead of forbidden.
 
 ---
@@ -23,7 +23,7 @@ Two plugins working together. They don't add features; they constrain the agent 
 
 ### `core` — always-on discipline
 
-Canonical list in [`core/CLAUDE.md`](./core/CLAUDE.md). Three always-on skills (`ground-rules`, `output`, `tier-selector`) plus `actor-template`, which fires when you author or edit a skill or command.
+Canonical list in [`core/CLAUDE.md`](./core/CLAUDE.md). Three always-on skills (`ground-rules`, `output`, `flow-selector`) plus `actor-template`, which fires when you author or edit a skill or command.
 
 - **`ground-rules`** — six content rules applied to every substantive task:
   - **Ownership over automation** — the human owns the thinking; the system surfaces facts, lays out options, and demands a choice. No silent auto-decisions.
@@ -40,10 +40,10 @@ Canonical list in [`core/CLAUDE.md`](./core/CLAUDE.md). Three always-on skills (
   - **Sourced** — every claim cites `path + verbatim quote`.
   - **Concrete** — decision prompts name the real-world subject (not spec IDs, not project jargon); surface only outcome-changing choices.
 
-- **`tier-selector`** — before any non-trivial task, classifies the work and waits for your confirmation:
-  - **T1 — Quick.** One-pass. Typos, renames, one-line fixes.
-  - **T2 — Standard.** Discover → implement (TDD) → verify. Bugs in modules with a spec.
-  - **T3 — Full.** Full spec lifecycle. New features, new contracts, new modules.
+- **`flow-selector`** (renamed from `tier-selector` in `core` v0.5.2) — before any non-trivial task, classifies the work and waits for your confirmation:
+  - **Quick** (was `T1`). One-pass. Typos, renames, one-line fixes.
+  - **Standard** (was `T2`). Discover → implement (TDD) → verify. Bugs in modules with a spec.
+  - **Extended** (was `T3`, formerly "Full"). Full spec lifecycle. New features, new contracts, new modules.
 
 - **`actor-template`** — the Goal / Input / Steps / Output / Constraints shape every skill or command must follow; every Step produces an observable result.
 
@@ -77,13 +77,13 @@ Specs are the permanent source of truth; every change traces to a spec requireme
 /reload-plugins
 ```
 
-Install `core` first — `lsa` cites it for fact-grounding and tier selection. Then merge the [`core/CLAUDE.md`](./core/CLAUDE.md) fragment into your project's `CLAUDE.md` to wire up the always-on rules.
+Install `core` first — `lsa` cites it for fact-grounding and flow selection. Then merge the [`core/CLAUDE.md`](./core/CLAUDE.md) fragment into your project's `CLAUDE.md` to wire up the always-on rules.
 
 ## How it works in 30 seconds
 
 1. Every task fires `ground-rules` + `output` automatically. Sources, no hedging, no padding, verdict-first.
-2. Non-trivial tasks fire the tier selector first. The agent proposes Quick / Standard / Full with reasoning; you confirm.
-3. Standard and Full tasks run through LSA: discover → (specify → plan →) implement → verify → sync. Every line of code traces back to a requirement.
+2. Non-trivial tasks fire the flow selector first. The agent proposes Quick / Standard / Extended with reasoning; you confirm.
+3. Standard and Extended tasks run through LSA: discover → (specify → plan →) implement → verify → sync. Every line of code traces back to a requirement.
 4. If you hand-edit code, `lsa-reconcile` offers to update the spec — it never blocks the edit.
 
 The single test the whole system answers: **what is the minimum ceremony that still guarantees grounded, spec-anchored output for *this* task?**
@@ -92,7 +92,7 @@ The single test the whole system answers: **what is the minimum ceremony that st
 
 ## Status + substrate
 
-Personal-use first; open-sourced for visibility. Claude Code is the v1 substrate; the discipline (specs, sourcing, tier gating) isn't Claude-specific and the skills are plain Markdown — porting to another agentic IDE is a routing exercise, not a rewrite.
+Personal-use first; open-sourced for visibility. Claude Code is the v1 substrate; the discipline (specs, sourcing, flow gating) isn't Claude-specific and the skills are plain Markdown — porting to another agentic IDE is a routing exercise, not a rewrite.
 
 ## Further reading
 

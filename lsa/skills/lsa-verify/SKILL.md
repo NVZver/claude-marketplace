@@ -88,7 +88,7 @@ Confirm that the implementation on the current feature branch matches the approv
    - **PASS WITH WARNINGS:** sync handoff only on `[a] accept and sync`; warning logged in archive.
    - **PASS:** sync handoff on `[a] proceed`; proceed to Step 6.
 
-6. **On clean PASS — write `metrics.md`.** Only on clean PASS (not FAIL, not PASS WITH WARNINGS), and only when this is a T3 feature flow (an active feature spec exists). Write `${specs_root}/archive/<feature-name>/metrics.md` with:
+6. **On clean PASS — write `metrics.md`.** Only on clean PASS (not FAIL, not PASS WITH WARNINGS), and only when this is an Extended feature flow (was `T3`; an active feature spec exists). Write `${specs_root}/archive/<feature-name>/metrics.md` with:
 
    ```markdown
    # Metrics — <feature-name>
@@ -116,14 +116,14 @@ Confirm that the implementation on the current feature branch matches the approv
 
 ## Output
 
-A verification report (PASS / FAIL / PASS WITH WARNINGS) with a per-item checklist and a scope diff. On clean PASS in a T3 flow, a `metrics.md` file at `${specs_root}/archive/<feature-name>/metrics.md`.
+A verification report (PASS / FAIL / PASS WITH WARNINGS) with a per-item checklist and a scope diff. On clean PASS in an Extended flow (was `T3`), a `metrics.md` file at `${specs_root}/archive/<feature-name>/metrics.md`.
 
 ## Constraints
 
 - **FAIL on any untraced change.** The orphan-diff predicate above defines "traced"; the mechanical-hunk filter is the only exception.
 - **PASS WITH WARNINGS** is allowed only with explicit warning categories in the report — never as a hand-wave.
 - **No `metrics.md` write on FAIL or PASS WITH WARNINGS.** Metrics fire only on clean PASS.
-- **No `metrics.md` for T2 or non-feature flows.** T2 has no feature spec and no sync step; T1 has no LSA ceremony.
+- **No `metrics.md` for Standard or non-feature flows.** Standard (was `T2`) has no feature spec and no sync step; Quick (was `T1`) has no LSA ceremony.
 - Outputs follow [`core/output`](../../../core/skills/output/SKILL.md) golden rules (structured, minimal, formatted, sourced).
 
 ---

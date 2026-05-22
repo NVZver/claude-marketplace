@@ -2,7 +2,7 @@
 
 > **Canonical source.** This file is the single source-of-truth for the always-on rules block. Other locations (repo `CLAUDE.md`, READMEs, module specs) point here rather than restating the rules.
 
-This is an **opt-in fragment** to merge into your project's `CLAUDE.md` when you install the `core` plugin. It declares three always-on rules: ground-rules application, output discipline, and tier-selector invocation. Copy the content below into your project's `CLAUDE.md`.
+This is an **opt-in fragment** to merge into your project's `CLAUDE.md` when you install the `core` plugin. It declares three always-on rules: ground-rules application, output discipline, and flow-selector invocation. Copy the content below into your project's `CLAUDE.md`.
 
 ---
 
@@ -19,13 +19,13 @@ Apply [`core/output`](./skills/output/SKILL.md) to every human-facing output —
 1. **Substrate-native pickers.** In Claude Code, every decision-bearing prompt uses `AskUserQuestion`. Never render `[a] / [b] / [c]` text blocks when the native picker is available — per `vision/VISION.md` §2 principle 9 (*"Substrate-native first"*) and [`core/output`](./skills/output/SKILL.md) Rule 5. Text decision blocks are the fallback when no picker exists (e.g., non-Claude-Code substrates, embedded `.md` body templates).
 2. **1–1.5 screen budget per turn.** Default response budget is ~30–50 lines of rendered markdown. Split decisions into separate turns; pull facts on demand rather than pushing tables + worked examples + decision blocks in one turn. Per [`core/output`](./skills/output/SKILL.md) Rule 2.
 
-## Tier selection (always-on)
+## Flow selection (always-on)
 
-Before any non-trivial task, invoke [`core/tier-selector`](./skills/tier-selector/SKILL.md) to classify the work as T1, T2, or T3 — and present the reasoning to the human for confirmation. Skip only for tasks that obviously stay inside T1 boundaries (single-string edits, single-question answers).
+Before any non-trivial task, invoke [`core/flow-selector`](./skills/flow-selector/SKILL.md) to classify the work as Quick, Standard, or Extended — and present the reasoning to the human for confirmation. Skip only for tasks that obviously stay inside Quick boundaries (single-string edits, single-question answers). Renamed from `tier-selector` (T1 / T2 / T3) in `core` v0.5.2 — the new names describe the *process shape*, not a hierarchy.
 
 **The boundary signals** (Vision §4 `vision/VISION.md:124`): new module · API/contract change · data-model change · ~5 files · no existing spec.
 
-**Tier outcomes:**
-- **T1** — single pass, no LSA ceremony. `ground-rules` + `output` still apply.
-- **T2** — `lsa-discover` (light) → agent TDD → `lsa-verify`.
-- **T3** — `lsa-discover` → `lsa-specify` → `lsa-plan` → implement → `lsa-verify` → `lsa-sync`.
+**Flow outcomes:**
+- **Quick** (was `T1`) — single pass, no LSA ceremony. `ground-rules` + `output` still apply.
+- **Standard** (was `T2`) — `lsa-discover` (light) → agent TDD → `lsa-verify`.
+- **Extended** (was `T3`) — `lsa-discover` → `lsa-specify` → `lsa-plan` → implement → `lsa-verify` → `lsa-sync`.

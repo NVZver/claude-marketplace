@@ -4,6 +4,22 @@ All notable changes to the `core` plugin are documented here. Format follows [Ke
 
 ## [Unreleased]
 
+## [0.5.2] — 2026-05-22
+
+Naming clarity patch — renames the `core/tier-selector` skill to `core/flow-selector` and replaces the `T1` / `T2` / `T3` tier labels with `Quick` / `Standard` / `Extended` across `core/CLAUDE.md`, `core/README.md`, `core/VERIFICATION.md`, the skill body, and the plugin description. Per `vision/specs/roadmap.md` row *"Rename `T1` / `T2` / `T3` → `Flow: Quick` / `Flow: Standard` / `Flow: Extended`"*. Bundle B (Naming clarity) of the 2026-05-22 fixing session.
+
+### Changed
+- **Skill rename: `core/skills/tier-selector/` → `core/skills/flow-selector/`.** Directory + frontmatter `name:` + slash-command slug (`/core:tier-selector` → `/core:flow-selector`). The skill body adopts the new vocabulary (Quick / Standard / Extended) and notes the rename at the top so existing-user lookups still resolve.
+- **`core/CLAUDE.md` § Tier selection → § Flow selection.** Section heading + body language switch from `T1 / T2 / T3` → `Quick / Standard / Extended`. Each tier bullet annotates the prior name (e.g., *"Quick (was `T1`)"*) so historical references in plans, CHANGELOGs, and archive files remain interpretable.
+- **`core/README.md`.** `tier-selector` row + invocation example + CLAUDE-merge note updated.
+- **`core/VERIFICATION.md` Probe C** — heading + label switch; `T3` → `Extended` in the expected behavior.
+- **`core/.claude-plugin/plugin.json` `description`** — `tier-selector (T1/T2/T3 chain-of-thought)` → `flow-selector (Quick/Standard/Extended chain-of-thought — renamed from tier-selector in v0.5.2)`.
+
+### Notes
+- **Breaking surface change, treated as patch.** Strictly per [SemVer §4](https://semver.org/#spec-item-4), renaming a slug is breaking. Pre-1.0 SemVer lets the maintainer's discretion shape the bump; for this personal marketplace with no external consumers, a patch is defensible. Future external consumers should pin to v0.5.1 if they rely on `/core:tier-selector` literally.
+- **Historical entries left untouched.** `core/CHANGELOG.md` [0.4.1] / [0.3.0] / [0.2.0] still reference `tier-selector` and `T1 / T2 / T3` — they describe past state and the rename note in the new entries (and `core/CLAUDE.md` body) makes them traceable.
+- **Sibling lsa patch** — `lsa` v0.6.2 in the same Bundle B PR sweeps the `T1/T2/T3` and `tier-selector` references throughout `lsa/` and also renames the lsa-specify "Gate N" → "User Verification N".
+
 ## [0.5.1] — 2026-05-22
 
 Output-discipline enforcement patch. Elevates the two `core/output` rules that the user observed as routinely skipped in practice (substrate-native pickers and the response screen-budget) to always-on operational checkpoints in `core/CLAUDE.md`, and tightens `core/output` Rule 2 (Minimal) with concrete budget shape. Per `vision/specs/roadmap.md` row *"core/output discipline enforcement (AskUserQuestion + output length)"*.
