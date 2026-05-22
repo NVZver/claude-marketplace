@@ -33,7 +33,7 @@ Make `helper` installable as a third plugin alongside `core` and `lsa`. Ship the
 - Modifies: `.claude-plugin/marketplace.json`, `README.md`
 - Does NOT touch: `vision/`, `core/`, `lsa/`
 
-**Covers:** F1 (command file exists), NF1 (SemVer + CHANGELOG present from v0.1.0)
+**Covers:** F1 (command file as stub), F2 (subagent file as stub), NF1 (SemVer + CHANGELOG present from v0.1.0)
 
 ### Technical Details
 
