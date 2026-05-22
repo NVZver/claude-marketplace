@@ -142,7 +142,7 @@ Updated module specs (tagged), updated `${specs_root}/main.spec.md`, archived fe
 - **Never delete content** during sync. Additions are tagged; conflicts halt the skill.
 - **Tag every addition** with `<!-- added: <feature-name> YYYY-MM-DD -->` (per [`../knowledge/conventions.md`](../knowledge/conventions.md) §"Trace-tag format").
 - **Preserve other modules' state** when writing `.lsa-sync-state.json`. Only touch the keys for modules involved in this feature.
-- Outputs follow [`core/output`](../../../core/skills/output/SKILL.md) golden rules (structured, minimal, formatted, sourced).
+- Outputs follow [`core/output`](../../../core/skills/output/SKILL.md) — citation by link, never restated.
 
 ---
 

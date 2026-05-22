@@ -4,7 +4,7 @@
 
 The domain-neutral discipline plugin. Ships three skills + one always-on `CLAUDE.md` fragment.
 
-**Plugin manifest:** [`core/.claude-plugin/plugin.json`](../../../../core/.claude-plugin/plugin.json) (v0.5.2)
+**Plugin manifest:** [`core/.claude-plugin/plugin.json`](../../../../core/.claude-plugin/plugin.json) (v0.5.5)
 **Plugin README** (skill list, install): [`core/README.md`](../../../../core/README.md)
 **Always-on fragment** (canonical source): [`core/CLAUDE.md`](../../../../core/CLAUDE.md)
 **Per-skill behavior** (source of truth per skill): [`core/skills/*/SKILL.md`](../../../../core/skills/)
@@ -14,9 +14,10 @@ The domain-neutral discipline plugin. Ships three skills + one always-on `CLAUDE
 
 `core` is the spine for any pack — domain-neutral discipline that applies regardless of whether `/src/` exists. Per `vision/VISION.md:73`: *"core/ (domain-neutral — always loaded; the spine for any pack)"*.
 
-Three skills:
+Four skills:
 
 - `core/ground-rules` — four discipline rules every output follows.
+- `core/output` — five format golden rules every human-facing output follows. **Single marketplace-wide source-of-truth** — see Invariants below. Canonical clause + list at `core/skills/output/SKILL.md`.
 - `core/actor-template` — the Goal / Input / Steps / Output / Constraints shape any Actor must follow.
 - `core/flow-selector` (renamed from `core/tier-selector` in core v0.5.2) — pre-task chain-of-thought Quick / Standard / Extended classifier with visible reasoning.
 
@@ -28,3 +29,4 @@ The `core/CLAUDE.md` fragment is the **canonical source** for the always-on rule
 - **Markdown-only.** No `/src/`; skills are pure Markdown. Per `vision/specs/standards/code.md` *"Markdown-only"*.
 - **Always-loadable on Claude.ai.** Skills upload one-by-one as zips per `core/README.md` *"Install on Claude.ai"*.
 - **Spec source-of-truth.** Each skill's behavior is owned by its `SKILL.md`; this module spec carries module-level invariants only — not a per-skill catalog (that's `core/README.md`).
+- **Output discipline canonical.** `core/skills/output/SKILL.md` is the marketplace-wide source-of-truth for output discipline. Every plugin cites it by markdown link; no plugin outside `core/` restates the rule count or rule names. Re-grounded summaries are permitted only when they cite the canonical file at the top (per `helper/knowledge/output-discipline.md:5` precedent). Enforced by `core/tests/repo-anchored.md` D2.

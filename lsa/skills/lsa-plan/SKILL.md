@@ -128,7 +128,7 @@ Decompose an approved feature spec into ≤5 parallel-safe epics with self-verif
 - **Maximum five epics.** If the work cannot be decomposed in five parallel-safe slices, escalate back to `lsa-specify` for scope reduction before planning.
 - **Each epic is independent (or its dependency is explicit).** Implicit ordering is not permitted.
 - **Do not start implementation** until human approves `tasks.md`.
-- Outputs follow [`core/output`](../../../core/skills/output/SKILL.md) golden rules (structured, minimal, formatted, sourced).
+- Outputs follow [`core/output`](../../../core/skills/output/SKILL.md) — citation by link, never restated.
 
 ---
 

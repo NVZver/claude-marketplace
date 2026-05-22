@@ -5,6 +5,7 @@ description: Apply to every human-facing output — agent responses, skill bodie
 
 > **Trace.** On load, print first: `=============== [core/skills/output/SKILL.md] [core] ===============`
 
+> **Canonical source.** This file is the single source-of-truth for output discipline across the NVZver marketplace. Other plugins MAY cite it and MAY add component-specific formats that satisfy these five rules. They MUST NOT restate the rule count or rule names outside this file (citation by markdown link only). They MUST NOT override or relax any rule. Re-grounded summaries that restate the rules in prose are permitted only when they cite this file by link at the top — see `helper/knowledge/output-discipline.md` for the canonical adherent example. Enforced by `core/tests/repo-anchored.md` probe D2.
 
 # Output Discipline
 

@@ -221,7 +221,7 @@ Four (or three, when contract is skipped) approved files under `${specs_root}/fe
 - **Three bundled User Verifications**: 1 (Requirements + Contract Trigger), 2 (Test Suites + Contract + Design), 3 (Final Integration). Never skip a Verification.
 - **Only proceed on explicit human approval.** Implicit approvals are not accepted.
 - **Never write outside `${specs_root}/features/<feature-name>/`.** Module specs are written by `lsa-sync`; the constitution is edited only by `lsa-revise-constitution`.
-- Outputs follow [`core/output`](../../../core/skills/output/SKILL.md) golden rules (structured, minimal, formatted, sourced).
+- Outputs follow [`core/output`](../../../core/skills/output/SKILL.md) — citation by link, never restated.
 
 ## Amending an approved spec
 

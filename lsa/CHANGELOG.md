@@ -4,6 +4,18 @@ All notable changes to the `lsa` plugin are documented here. Format follows [Kee
 
 ## [Unreleased]
 
+## [0.6.5] — 2026-05-22
+
+Replace 9 snapshot restatements with citation-by-link to satisfy `core` v0.5.5's new canonical-source contract for output discipline. No behavior change. Patch flow.
+
+### Fixed
+- **`lsa/ARCHITECTURE.md:30`** — Stale *"(4 golden rules)"* count snapshot (Core has five) → citation-only descriptor.
+- **All 8 `lsa/skills/*/SKILL.md` Constraints footers** — *"golden rules (structured, minimal, formatted, sourced)"* (missing *concrete*) → *"citation by link, never restated."* Files: `lsa-discover`, `lsa-init`, `lsa-plan`, `lsa-reconcile`, `lsa-revise-constitution`, `lsa-specify`, `lsa-sync`, `lsa-verify`.
+
+### Notes
+- **Patch bump rationale.** Mechanical citation cleanup; no skill behavior change. The rules LSA outputs adhere to are exactly the rules `core/output` has always defined — only the prose changes. The next time `core/output` grows or shrinks a rule, LSA's citations will resolve to the new list automatically (no LSA edit needed).
+- **Sibling core patch.** `core` v0.5.5 in the same PR declares `core/output` canonical + adds the D2 regression probe that prevents this drift class from recurring.
+
 ## [0.6.4] — 2026-05-22
 
 File-load trace adoption. All 8 `lsa/skills/*/SKILL.md` and `lsa/knowledge/conventions.md` carry the new one-line trace directive at their top, per `core` v0.5.4 Rule 4 (Sourced) → *File-load trace*. On load, each file prints `=============== [<file>] [lsa] ===============` verbatim. Replaces the v0.5.3 `[plugin:skill]` marker scheme that did not survive in practice. Per user request 2026-05-22. Quick flow.

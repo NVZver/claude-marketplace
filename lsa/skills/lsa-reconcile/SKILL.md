@@ -56,7 +56,7 @@ Close the drift between artifact reality and module specs by absorbing each delt
 - **One module at a time** — never bundle multiple modules into a single confirm gate.
 - **If `.lsa-sync-state.json` is missing, initialize.** Treat as if the recorded SHA is the first commit on `main`, print a one-line note, and proceed; do not error.
 - **If the recorded SHA is unreachable** (force-push, history rewrite) treat the failure as "first sync" — proceed with HEAD as the new baseline, print a warning.
-- Outputs follow [`core/output`](../../../core/skills/output/SKILL.md) golden rules (structured, minimal, formatted, sourced).
+- Outputs follow [`core/output`](../../../core/skills/output/SKILL.md) — citation by link, never restated.
 
 ---
 

@@ -65,7 +65,7 @@ A flow label (`Quick` / `Standard` / `Extended`) and a 2–4-sentence rationale.
 - Do not start LSA ceremony before flow confirmation. No `lsa-discover`, `lsa-specify`, or any other skill fires until the human responds.
 - Do not invent boundary signals that are not actually present in the task description. If the task does not mention an API change, do not assume one.
 - Do not silently choose a heavier flow than the human picks. If the human overrides downward (e.g., Extended → Standard), log the override in the rationale and proceed at the human's flow.
-- Outputs follow [`../output/SKILL.md`](../output/SKILL.md) golden rules (structured, minimal, formatted, sourced).
+- Outputs follow [`../output/SKILL.md`](../output/SKILL.md) — citation by link, never restated.
 
 ---
 

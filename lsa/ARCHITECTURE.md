@@ -27,7 +27,7 @@ This document is the design-rationale narrative for `lsa`. For other concerns, s
 - **User-facing skill list + install** — [`README.md`](./README.md)
 - **Module-level invariants** — [`../vision/specs/modules/lsa/spec.md`](../vision/specs/modules/lsa/spec.md)
 - **Content discipline** — [`../core/skills/ground-rules/SKILL.md`](../core/skills/ground-rules/SKILL.md) (6 rules)
-- **Output discipline** — [`../core/skills/output/SKILL.md`](../core/skills/output/SKILL.md) (4 golden rules)
+- **Output discipline** — [`../core/skills/output/SKILL.md`](../core/skills/output/SKILL.md) (canonical source-of-truth; cite by link, never restate the count)
 - **Flow types (Quick / Standard / Extended — was T1/T2/T3) + boundary signals** — [`../vision/VISION.md`](../vision/VISION.md) §4
 - **Testing policy** — [`../vision/specs/standards/testing.md`](../vision/specs/standards/testing.md)
 
