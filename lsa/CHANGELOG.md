@@ -4,6 +4,23 @@ All notable changes to the `lsa` plugin are documented here. Format follows [Kee
 
 ## [Unreleased]
 
+## [0.6.1] — 2026-05-22
+
+Gate-prompt voice patch. Applies `core/output` Rule 5 (Concrete — *prompt voice*) inside the user-facing pickers of `lsa-specify` / `lsa-plan` / `lsa-init` so the picker question names the feature subject (e.g., *"Approve the requirements for `<feature-name>`?"*) instead of meta-jargon (*"Approve Gate 1?"*, *"Approve F3?"*, *"Approve epic decomposition?"*). Per `vision/specs/roadmap.md` row *"LSA gate prompts must be concrete (no IDs, no jargon, must-decide only)"* (Must priority).
+
+### Changed
+- `lsa/skills/lsa-specify/SKILL.md` Step 2 (clarification) — Present block adds an explicit **Prompt voice** scaffold citing `core/output` Rule 5: picker question names the feature; option labels name the next outcome; never render `[a]/[b]/[c]` text blocks when the picker is available (per `core/CLAUDE.md` operational checkpoint #1).
+- `lsa/skills/lsa-specify/SKILL.md` Step 4 (Gate 1) — Present block adds the same scaffold; explicit rule that `F<n>` / `NF<n>` / `AC<n>` IDs stay in `requirements.md`, not in the picker question.
+- `lsa/skills/lsa-specify/SKILL.md` Step 5 (Gate 2) — Present block adds the same scaffold; failing-row pickers (Rule 6 decision blocks for `✗` diagonal rows) cite the two artifact lines in conflict, not the row number.
+- `lsa/skills/lsa-specify/SKILL.md` Step 6 (Gate 3) — Present block adds the same scaffold; picker question is *"Final approval — start implementation planning for `<feature-name>`?"*.
+- `lsa/skills/lsa-plan/SKILL.md` Step 5 (human review) — Present block adds the scaffold; picker question names the epic count and feature; `epic decomposition` reserved for skill body.
+- `lsa/skills/lsa-init/SKILL.md` Step 2 (brownfield) — Present block adds the scaffold; picker question names the project subject; `brownfield` reserved for skill body.
+
+### Notes
+- **Cosmetic on the SKILL.md side, behavioral on the user-facing side.** The Gate names, the Hard Confirm gates, and the trace predicates are unchanged. Only the user-facing picker text is normalized.
+- **Depends on `core` v0.5.1** (sibling patch in same Bundle A PR) — that patch elevates the substrate-native picker rule and screen-budget to always-on, which this patch's `core/CLAUDE.md` operational checkpoint #1 citation relies on.
+- Sibling rename PRs (Gate N → User Verification; T1/T2/T3 → Flow) land in Bundle B.
+
 ## [0.6.0] — 2026-05-21
 
 EARS + journey-shape AC discipline. Tightens `lsa-specify` Gate 2 along two axes (EARS pattern conformance + journey-shape) and extends `lsa-verify` with dual trace predicates sourced from a new `**Covers:**` line in `lsa-plan`'s epic template. Per `vision/specs/archive/2026-05-21-ears-journey-shape-ac/`.
