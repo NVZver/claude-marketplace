@@ -54,7 +54,7 @@ These are the rules the whole system answers to. Short on purpose.
 1. **Trust is the product.** A fast wrong answer is a defect. A grounded "I cannot verify this" is a feature.
    - **1a. Ownership over automation.** The system surfaces facts, lays out options, and demands choice. It never silently decides on the human's behalf. (See `core/ground-rules` Rule 0.)
 2. **Two groundings, always.** Facts trace to sources. Code traces to specs. No exceptions; only explicit, marked assumptions.
-   - **2a. Acceptance criteria are journey-shaped.** Each AC in `requirements.md` describes a user-observable behavior at the user/system boundary — how a user achieves a goal or how the system handles a corner case. Unit-test-scope checks (correctness of an internal function, helper, or non-user-observable computation) live in `test-suites.md` paths or downstream tests, not in the AC sub-block. Spec-grounding at the AC level is only meaningful when traced behavior is user-observable. (See `lsa/skills/lsa-specify/SKILL.md` Gate 2 rows 1a + 1b.) <!-- revised: 2026-05-21-ears-journey-shape-ac 2026-05-21 -->
+   - **2a. Acceptance criteria are journey-shaped.** Each AC in `requirements.md` describes a user-observable behavior at the user/system boundary — how a user achieves a goal or how the system handles a corner case. Unit-test-scope checks (correctness of an internal function, helper, or non-user-observable computation) live in `test-suites.md` paths or downstream tests, not in the AC sub-block. Spec-grounding at the AC level is only meaningful when traced behavior is user-observable. (See `lsa/skills/lsa-specify/SKILL.md` User Verification 2 rows 1a + 1b.) <!-- revised: 2026-05-21-ears-journey-shape-ac 2026-05-21; renamed Gate 2 → User Verification 2 in lsa v0.6.2 -->
 3. **Ceremony scales to weight.** A typo fix does not get a discovery phase. A new module does not skip one. The system *escalates* rigor; it never front-loads it.
 4. **Knowledge is not Actor.** Keep what-is-true separate from how-to-act. Boundary violations are the highest-severity defect.
 5. **The map is not the territory.** Load registries always; load full definitions only on match. Context is a budget.
@@ -77,7 +77,7 @@ The test for every rule: **does it depend on code existing?** No → core. Yes �
 core/  (domain-neutral — always loaded; the spine for any pack)
 ├── ground-rules     fact-grounding · zero hedging · read-before-write · only-required-output
 ├── actor-template   Goal + Input + Steps + Output + Constraints
-├── tier-selector    orchestrator's chain-of-thought: T1 / T2 / T3
+├── flow-selector    orchestrator's chain-of-thought: Quick / Standard / Extended (renamed from tier-selector in core v0.5.2)
 └── registry         the map-not-territory loader
 
 packs/  (load on demand)
@@ -88,7 +88,7 @@ packs/  (load on demand)
 └── planning/        (later)
 ```
 
-**Core rules are always-on; tiers govern workflow, not rules.** A deliberate decision: the four discipline rules fire on every task regardless of tier — facts get sourced even on a throwaway draft. What scales with the tier is *process ceremony* (how many phases), not *whether grounding applies*. (One refinement: "zero hedging" bans unsupported claims hidden behind vague words, not natural-language opinion stated honestly as opinion — otherwise prose goes robotic.)
+**Core rules are always-on; flows govern workflow, not rules.** A deliberate decision: the four discipline rules fire on every task regardless of flow — facts get sourced even on a throwaway draft. What scales with the flow is *process ceremony* (how many phases), not *whether grounding applies*. (One refinement: "zero hedging" bans unsupported claims hidden behind vague words, not natural-language opinion stated honestly as opinion — otherwise prose goes robotic.)
 
 **Why core-first.** The core is pure markdown ground rules with no code dependency, so it can be installed and exercised on its own before the heavy tech pack exists — catching bugs in the vision against real usage. Tech, the heaviest pack, comes after the spine is proven.
 
@@ -106,7 +106,7 @@ Five primitives, mapped to Claude Code's native surfaces.
 
 **Distribution: one repo, native install.** Everything ships through the `claude-marketplace` GitHub repo. Claude Code consumes it natively: `/plugin marketplace add <you>/claude-marketplace` then `/plugin install <pack>`. No build step, no per-surface packaging.
 
-**The always-on-vs-on-demand resolution.** Claude Code makes a distinction the App couldn't: a rule that must fire on *every* task belongs in `CLAUDE.md` (genuinely always-on), while a procedure needed only *sometimes* belongs in a description-matched skill. So `ground-rules` (always-on) ships as a `CLAUDE.md` fragment; `tier-selector` and `actor-template` (on-demand) ship as skills. This ends the activation tension — the discipline that must always apply is loaded every session, not gambled on a description match.
+**The always-on-vs-on-demand resolution.** Claude Code makes a distinction the App couldn't: a rule that must fire on *every* task belongs in `CLAUDE.md` (genuinely always-on), while a procedure needed only *sometimes* belongs in a description-matched skill. So `ground-rules` (always-on) ships as a `CLAUDE.md` fragment; `flow-selector` and `actor-template` (on-demand) ship as skills. This ends the activation tension — the discipline that must always apply is loaded every session, not gambled on a description match.
 
 **The registry/lazy-load principle stays.** Partly native now (Claude Code reports per-component token cost), but the load-bearing idea holds: read the map, enter only the rooms you need. The context-budget discipline for the whole system.
 
@@ -114,26 +114,26 @@ Five primitives, mapped to Claude Code's native surfaces.
 
 ## 4. The operating model — ceremony that scales
 
-This is the one genuinely new design decision versus the six docs. The enterprise systems are high-ceremony by default (7 phases, 12–16 row checklists, eval harnesses). For a personal daily system that is friction. The fix: **three tiers, and the task picks the tier — not the calendar, not habit.**
+This is the one genuinely new design decision versus the six docs. The enterprise systems are high-ceremony by default (7 phases, 12–16 row checklists, eval harnesses). For a personal daily system that is friction. The fix: **three flows, and the task picks the flow — not the calendar, not habit.** The flow names describe the *process shape*, not a hierarchy. Renamed from `T1` / `T2` / `T3` in `core` v0.5.2; the slug `core/tier-selector` became `core/flow-selector`.
 
-| Tier | When | Loop | Groundings enforced |
+| Flow | When | Loop | Groundings enforced |
 | --- | --- | --- | --- |
-| **T1 — Quick** | Typo, rename, one-line fix, a question | Single pass. Cite sources if any claim is made. | Fact-grounding only |
-| **T2 — Standard** | A bug, a small task, a refactor | Discover (light) → implement TDD → verify | Both, lightweight |
-| **T3 — Full** | A new feature or module | Full LSA: specify → plan → implement → verify → sync | Both, full lifecycle + permanent spec |
+| **Quick** (was `T1`) | Typo, rename, one-line fix, a question | Single pass. Cite sources if any claim is made. | Fact-grounding only |
+| **Standard** (was `T2`) | A bug, a small task, a refactor | Discover (light) → implement TDD → verify | Both, lightweight |
+| **Extended** (was `T3`) | A new feature or module | Full LSA: specify → plan → implement → verify → sync | Both, full lifecycle + permanent spec |
 
-**The escalation rule** is the heart of it: start at the lowest plausible tier; escalate the moment the work crosses a boundary. The **orchestrator picks the tier by chain-of-thought**, then states its reasoning and the human confirms or overrides. The reasoning is visible, not hidden — that is itself the fact-grounding principle applied to the system's own decisions.
+**The escalation rule** is the heart of it: start at the lowest plausible flow; escalate the moment the work crosses a boundary. The **orchestrator picks the flow by chain-of-thought**, then states its reasoning and the human confirms or overrides. The reasoning is visible, not hidden — that is itself the fact-grounding principle applied to the system's own decisions.
 
 **How the orchestrator reasons (worked examples).** The trigger signals it weighs: does this touch a *new* module? introduce or change an *API/contract*? change a *data model*? exceed roughly a handful of files? lack an existing spec?
 
-| Request | Orchestrator's chain of thought | Tier |
+| Request | Orchestrator's chain of thought | Flow |
 | --- | --- | --- |
-| "Fix the typo in the login button label" | One file, one string, no behavior change, no new contract → no grounding to verify beyond the change itself. | **T1** |
-| "The date formatter returns the wrong month off-by-one" | One bug, one module that already has a spec, behavior change but no new API → needs a failing test that captures the bug, then a fix, then verify against the existing spec. No new spec needed. | **T2** |
-| "Add password-reset via email" | New behavior, new endpoint (API change), touches auth + mailer modules, no spec exists yet → crosses three boundaries. Must specify first, plan epics, implement TDD, verify every line traces to a requirement, then sync a permanent spec. | **T3** |
-| "Rename `getUser` to `fetchUser` everywhere" | Many files but zero behavior change, no contract change → mechanical. Verify nothing broke, but no spec work. | **T2** (wide, shallow) |
+| "Fix the typo in the login button label" | One file, one string, no behavior change, no new contract → no grounding to verify beyond the change itself. | **Quick** |
+| "The date formatter returns the wrong month off-by-one" | One bug, one module that already has a spec, behavior change but no new API → needs a failing test that captures the bug, then a fix, then verify against the existing spec. No new spec needed. | **Standard** |
+| "Add password-reset via email" | New behavior, new endpoint (API change), touches auth + mailer modules, no spec exists yet → crosses three boundaries. Must specify first, plan epics, implement TDD, verify every line traces to a requirement, then sync a permanent spec. | **Extended** |
+| "Rename `getUser` to `fetchUser` everywhere" | Many files but zero behavior change, no contract change → mechanical. Verify nothing broke, but no spec work. | **Standard** (wide, shallow) |
 
-The orchestrator can be wrong; that is why it *proposes* and the human confirms. Over time, corrections to its tier calls become training examples in the orchestrator's own few-shot block — the system learns your boundaries.
+The orchestrator can be wrong; that is why it *proposes* and the human confirms. Over time, corrections to its flow calls become training examples in the orchestrator's own few-shot block — the system learns your boundaries.
 
 **The reconcile loop (Level 2.5's defining capability).** Because a developer may edit `/src` directly, the system needs a step the original LSA did not have:
 
@@ -201,7 +201,7 @@ When a 401 is returned for an expired session,
 
 EARS has five fixed patterns: Ubiquitous ("shall always"), Event ("When X… shall"), State ("While X… shall"), Optional ("Where feature X… shall"), Unwanted ("If X happens, then… shall"). You cannot write "handles errors gracefully" in EARS — no pattern accepts a vague line. GWT reads better to humans; EARS is harder to fake and one-line-to-one-test for your verifier. **Verdict: keep GWT for the spec narrative; add EARS only in the acceptance-criteria block, since that's what the verifier traces to code. A tightening, not a replacement.**
 
-**Decision: RESOLVED → adopted.** See §2 sub-principle 2a (Acceptance criteria are journey-shaped) and `lsa/skills/lsa-specify/SKILL.md` Gate 2 rows 1a + 1b; `lsa/skills/lsa-verify/SKILL.md` AC-ID trace; `lsa/skills/lsa-plan/SKILL.md` epic `**Covers:**` line. Feature: `vision/specs/archive/2026-05-21-ears-journey-shape-ac/`. <!-- revised: 2026-05-21-ears-journey-shape-ac 2026-05-21 -->
+**Decision: RESOLVED → adopted.** See §2 sub-principle 2a (Acceptance criteria are journey-shaped) and `lsa/skills/lsa-specify/SKILL.md` User Verification 2 rows 1a + 1b; `lsa/skills/lsa-verify/SKILL.md` AC-ID trace; `lsa/skills/lsa-plan/SKILL.md` epic `**Covers:**` line. Feature: `vision/specs/archive/2026-05-21-ears-journey-shape-ac/`. <!-- revised: 2026-05-21-ears-journey-shape-ac 2026-05-21; renamed Gate 2 → User Verification 2 in lsa v0.6.2 -->
 
 
 **2. A small library-spec cache (the Tessl idea, shrunk).**
@@ -245,7 +245,7 @@ Pass/fail hides variance — a skill that passes once may fail 4-in-10. **Verdic
 ## 7. Open decisions — status
 
 1. **Target rigor level. → RESOLVED: Level 2.5.** Spec-anchored; developer may edit code under gates; system reconciles drift by absorbing the edit into the spec (§4). Goal is to improve devs' lives, not retrain them.
-2. **Tier boundaries. → DIRECTION SET, examples drafted (§4).** Orchestrator selects tier by visible chain-of-thought over boundary signals (new module? API/contract change? data-model change? file count? spec exists?), then proposes and the human confirms. Still to finalize together: the exact file-count threshold and whether to add more worked examples to the orchestrator's few-shot block.
+2. **Flow boundaries (was Tier boundaries). → DIRECTION SET, examples drafted (§4).** Orchestrator selects flow by visible chain-of-thought over boundary signals (new module? API/contract change? data-model change? file count? spec exists?), then proposes and the human confirms. Still to finalize together: the exact file-count threshold and whether to add more worked examples to the orchestrator's few-shot block.
 3. **Substrate. → RESOLVED: Claude Code only.** The whole system targets Claude Code natively (skills, `CLAUDE.md`, plugins, `marketplace.json`). The Claude App is managed separately by you and is not a target of the system.
 4. **First bundle. → AGREED.** Minimal `core` bundle: fact-grounding ground rule + actor template + registry + one T2 implement→verify loop. Add the reconcile step early since it defines Level 2.5. Prove the spine before porting LSA's full seven phases.
 5. **Metrics. → RESOLVED. Track three:**
@@ -258,7 +258,9 @@ Pass/fail hides variance — a skill that passes once may fail 4-in-10. **Verdic
 
 ## Changelog
 
-- **v0.6** — LSA-skill refit (credo rollout PR 2). Every LSA skill (+ `core/tier-selector`) adopts a component-specific output format that satisfies the four golden rules in `core/output`. **`lsa-specify` collapses 7 confirm stops to 3 bundled gates** (Gate 1 = requirements + contract-trigger; Gate 2 = test-suites + contract + design; Gate 3 = final integration). **`lsa-discover` Output becomes a 3-row table** (Module / Change / Acceptance) instead of a single-paragraph context summary; Step 2 questions (b) and (c) shift to assume-then-override. **`lsa-verify` reports lead with the verdict** (PASS / FAIL / PASS WITH WARNINGS); metadata moves below the fold. Every decision-bearing prompt uses `AskUserQuestion` in Claude Code (substrate-native) with text decision-blocks as the fallback. Corresponds to `lsa` plugin v0.4.0; `lsa/ARCHITECTURE.md` Version bumped 0.2.1 → 0.4.0.
+- **v0.8** — Naming clarity (Bundle B). Renamed `lsa-specify` "Gate N" → "User Verification N: <name>" (1: Requirements + Contract Trigger; 2: Test Suites + Contract + Design; 3: Final Integration). Renamed tier flow `T1` / `T2` / `T3` → `Quick` / `Standard` / `Extended` and the skill `core/tier-selector` → `core/flow-selector`. The new names describe *who* (the human) and *what* (verifying) and *process shape* respectively; the prior labels carried position but no meaning. Active behavior files updated; historical CHANGELOG / plan / archive references kept under original names with a one-line back-link note in the renamed surface. Corresponds to `core` v0.5.2 + `lsa` v0.6.2.
+- **v0.7** — Discipline ground (Bundle A). Elevated two `core/output` operational checkpoints to always-on bullets in `core/CLAUDE.md`: substrate-native pickers (`AskUserQuestion` in Claude Code; never text `[a]/[b]/[c]` blocks where picker exists) and the 1–1.5 screen budget per turn (split decisions, pull don't push). Tightened `core/output` Rule 2 (Minimal) with concrete screen-budget shape; renamed Rule 5 heading to *"Concrete (decision prompts) — prompt voice"*. `lsa-specify` / `lsa-plan` / `lsa-init` Present blocks gained explicit subject-voice scaffolds so pickers stop saying *"Approve Gate 1?"* / *"Approve F3?"*. Corresponds to `core` v0.5.1 + `lsa` v0.6.1.
+- **v0.6** — LSA-skill refit (credo rollout PR 2). Every LSA skill (+ `core/tier-selector` — later renamed `core/flow-selector` in v0.8) adopts a component-specific output format that satisfies the four golden rules in `core/output`. **`lsa-specify` collapses 7 confirm stops to 3 bundled gates** (Gate 1 = requirements + contract-trigger; Gate 2 = test-suites + contract + design; Gate 3 = final integration — Gates renamed "User Verification N" in v0.8). **`lsa-discover` Output becomes a 3-row table** (Module / Change / Acceptance) instead of a single-paragraph context summary; Step 2 questions (b) and (c) shift to assume-then-override. **`lsa-verify` reports lead with the verdict** (PASS / FAIL / PASS WITH WARNINGS); metadata moves below the fold. Every decision-bearing prompt uses `AskUserQuestion` in Claude Code (substrate-native) with text decision-blocks as the fallback. Corresponds to `lsa` plugin v0.4.0; `lsa/ARCHITECTURE.md` Version bumped 0.2.1 → 0.4.0.
 - **v0.5** — Codified the operating-philosophy credo: §0 sentence + §2 sub-principle 1a (*Ownership over automation*) + §2 principle 9 (*Substrate-native first*). The `core/ground-rules` skill extended 4 → 6 content rules (added Rule 0 Ownership + Rule 5 No filler + Rule 1 amendment Scope + Illustrative). NEW skill `core/output` ships the four format golden rules (structured, minimal, formatted, sourced) every component cites — single source of truth for output discipline. NEW Knowledge surface `core/knowledge/output-vocabulary.md` lifts the verdict vocabulary out of any Actor body. Corresponds to `core` plugin v0.4.0. The LSA-skill refit (per-component formats) lands as Vision v0.6 alongside `lsa` plugin v0.4.0.
 - **v0.4** — Simplified to **Claude Code only.** Removed the Claude App as a target (managed separately by the user), and dropped the dual-track packaging (no zips, no per-surface build). Distribution is the native `claude-marketplace` repo. Resolved the long-running activation tension: `ground-rules` ships as an always-on `CLAUDE.md` fragment; `tier-selector` and `actor-template` ship as on-demand skills.
 - **v0.3** — Introduced the **core + packs** architecture (BMAD-style, inverted: the domain-neutral discipline is the core, tech is the first pack — not the privileged center). Defined the core/pack test ("does it depend on code existing?"). Decided the four discipline rules are **always-on** across all tiers; tiers govern workflow ceremony only. Refined "zero hedging" to target unsupported claims, not honest opinion. Drafted the three core skills.

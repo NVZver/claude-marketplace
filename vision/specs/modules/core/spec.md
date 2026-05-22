@@ -2,7 +2,7 @@
 
 The domain-neutral discipline plugin. Ships three skills + one always-on `CLAUDE.md` fragment.
 
-**Plugin manifest:** [`core/.claude-plugin/plugin.json`](../../../../core/.claude-plugin/plugin.json) (v0.5.1)
+**Plugin manifest:** [`core/.claude-plugin/plugin.json`](../../../../core/.claude-plugin/plugin.json) (v0.5.2)
 **Plugin README** (skill list, install): [`core/README.md`](../../../../core/README.md)
 **Always-on fragment** (canonical source): [`core/CLAUDE.md`](../../../../core/CLAUDE.md)
 **Per-skill behavior** (source of truth per skill): [`core/skills/*/SKILL.md`](../../../../core/skills/)
@@ -16,9 +16,9 @@ Three skills:
 
 - `core/ground-rules` — four discipline rules every output follows.
 - `core/actor-template` — the Goal / Input / Steps / Output / Constraints shape any Actor must follow.
-- `core/tier-selector` — pre-task chain-of-thought T1 / T2 / T3 classifier with visible reasoning.
+- `core/flow-selector` (renamed from `core/tier-selector` in core v0.5.2) — pre-task chain-of-thought Quick / Standard / Extended classifier with visible reasoning.
 
-The `core/CLAUDE.md` fragment is the **canonical source** for the always-on rules block (`ground-rules` + `tier-selector` invocation). Other locations (repo `CLAUDE.md`, READMEs) point to it rather than restating.
+The `core/CLAUDE.md` fragment is the **canonical source** for the always-on rules block (`ground-rules` + `output` + `flow-selector` invocation). Other locations (repo `CLAUDE.md`, READMEs) point to it rather than restating.
 
 ## Invariants
 
