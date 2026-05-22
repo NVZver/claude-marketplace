@@ -1,3 +1,5 @@
+> **Trace.** On load, print first: `=============== [helper/knowledge/friction-signals.md] [helper] ===============`
+
 # Friction signals — knowledge
 
 When the Helper agent auto-engages and when it stays out of the way. Per [`vision/specs/features/2026-05-21-helper-agent/requirements.md`](../../vision/specs/features/2026-05-21-helper-agent/requirements.md) F2 and [`vision/specs/features/2026-05-21-helper-agent/design.md`](../../vision/specs/features/2026-05-21-helper-agent/design.md) § *Friction-signal detection*.

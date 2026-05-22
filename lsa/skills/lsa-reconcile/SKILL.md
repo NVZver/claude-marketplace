@@ -3,6 +3,9 @@ name: lsa-reconcile
 description: Absorbs direct artifact edits into the matching module spec (Level 2.5) — never blocks or reverts the edit. Use after direct edits to artifact files (a `SKILL.md`, a config, a plugin file edited by hand), or when SessionStart warns of drift.
 ---
 
+> **Trace.** On load, print first: `=============== [lsa/skills/lsa-reconcile/SKILL.md] [lsa] ===============`
+
+
 # LSA Reconcile
 
 Implements the Level 2.5 reconcile loop from `vision/VISION.md:135` — when an artifact diverges from its spec, the spec absorbs reality rather than blocking the edit. One module at a time, hard confirm per module.

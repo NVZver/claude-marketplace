@@ -1,3 +1,5 @@
+> **Trace.** On load, print first: `=============== [vision/specs/metrics.md] [vision] ===============`
+
 # Metrics — claude-marketplace
 
 Aggregate one-line row per archived Extended-flow feature (was `T3`). Written by `lsa-sync` after `lsa-verify` returns clean PASS. Pass/fail counts only — no statistical eval per `vision/VISION.md` §6 *"Adjust #3"*.

@@ -3,6 +3,9 @@ name: lsa-discover
 description: Light three-question discovery probe at the start of every Standard and Extended task — module, change, acceptance criterion. Use before any code or spec change when flow is Standard or Extended.
 ---
 
+> **Trace.** On load, print first: `=============== [lsa/skills/lsa-discover/SKILL.md] [lsa] ===============`
+
+
 # LSA Discover
 
 The light discovery phase between `core/flow-selector` and either implementation (Standard) or `lsa-specify` (Extended). Cheap by design: three questions, no spec writes for Standard, a small scratch handoff for Extended.

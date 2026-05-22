@@ -1,3 +1,5 @@
+> **Trace.** On load, print first: `=============== [vision/specs/features/2026-05-21-helper-agent/design.md] [vision] ===============`
+
 # Design: Helper Agent
 
 ## Modules Affected

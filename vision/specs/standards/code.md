@@ -1,3 +1,5 @@
+> **Trace.** On load, print first: `=============== [vision/specs/standards/code.md] [vision] ===============`
+
 # Code Standards — claude-marketplace
 
 What follows are the standards every artifact in this repo follows. Distilled from `/CLAUDE.md` "Discipline" and `vision/VISION.md` §1 *"Distribution + versioning"* and `vision/specs/archive/2026-05-20-core-v1/design.md` §3 *"Plugin layout"*.

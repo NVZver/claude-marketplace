@@ -3,6 +3,9 @@ name: lsa-init
 description: Initializes the Living Spec Architecture (LSA) for a project (greenfield or brownfield). Use whenever the user says "initialize LSA", "set up specs", "init the spec structure", starts a new project, or wants to retrofit specs onto an existing codebase.
 ---
 
+> **Trace.** On load, print first: `=============== [lsa/skills/lsa-init/SKILL.md] [lsa] ===============`
+
+
 # LSA Init
 
 ## Goal

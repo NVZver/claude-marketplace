@@ -1,3 +1,5 @@
+> **Trace.** On load, print first: `=============== [vision/specs/modules/lsa/spec.md] [vision] ===============`
+
 # Module Spec — `lsa`
 
 The Living Spec Architecture plugin. Eight skills + one SessionStart hook + a config schema.

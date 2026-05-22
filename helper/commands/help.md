@@ -2,6 +2,9 @@
 description: "Ask the Helper agent a question or pick a starter topic. With an argument: dispatches to Helper for a cited answer ≤1.5 screens + a closing AskUserQuestion next-step picker. Without an argument: opens a 3-option starter-topic picker (install / pick a skill / explain a concept), then dispatches."
 ---
 
+> **Trace.** On load, print first: `=============== [helper/commands/help.md] [helper] ===============`
+
+
 # `/help`
 
 Route this `/help` invocation to the Helper agent.

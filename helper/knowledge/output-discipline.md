@@ -1,3 +1,5 @@
+> **Trace.** On load, print first: `=============== [helper/knowledge/output-discipline.md] [helper] ===============`
+
 # Output discipline — knowledge
 
 What the Helper agent applies to every response. Re-grounded summary of [`core/output`](../../core/skills/output/SKILL.md) and [`core/ground-rules`](../../core/skills/ground-rules/SKILL.md); the canonical rules live there.

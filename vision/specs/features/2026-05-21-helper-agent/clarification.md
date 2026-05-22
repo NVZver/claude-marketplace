@@ -1,3 +1,5 @@
+> **Trace.** On load, print first: `=============== [vision/specs/features/2026-05-21-helper-agent/clarification.md] [vision] ===============`
+
 # Clarification — 2026-05-21-helper-agent
 
 Captures the human's answers to `lsa-specify` Step 2 assume-then-override. Silence on a line = approval; overrides logged inline.

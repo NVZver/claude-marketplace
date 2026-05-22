@@ -4,6 +4,22 @@ All notable changes to the `core` plugin are documented here. Format follows [Ke
 
 ## [Unreleased]
 
+## [0.5.4] — 2026-05-22
+
+File-load trace patch. Replaces the v0.5.3 single-line `[plugin:skill]` marker — which did not give the human enough signal about which marketplace files actually shaped a turn — with a per-file trace directive hardcoded at the top of every marketplace instructional file. On load, the agent prints `=============== [<file>] [<plugin>] ===============` verbatim, one line per loaded file, in load order, before the response body. Per user request 2026-05-22 ("markers do not work … print the file name and current plugin using it"). Quick flow.
+
+### Changed
+- **`core/skills/output/SKILL.md` Rule 4 (Sourced).** *Output marker* sub-section replaced by *File-load trace*. The agent no longer prepends one `[plugin:skill]` label per response; instead, each loaded marketplace file prints its own one-line trace.
+- **`core/CLAUDE.md` § Output discipline** — third operational checkpoint *Output marker (`[plugin:skill]`)* replaced by *File-load trace*. Same Rule 4 citation.
+- **`core/README.md`** — `output` row description updated to reference v0.5.4 trace directive instead of the v0.5.3 marker.
+
+### Added
+- **Trace directive at the top of every marketplace instructional file** — all 4 `core/skills/*/SKILL.md`, `core/knowledge/output-vocabulary.md`. Sibling plugins (`lsa`, `helper`) and `vision/**` files apply the same directive — those bumps land in their own CHANGELOGs.
+
+### Notes
+- **Patch bump rationale.** Rule 4 still exists with the same intent (provenance for the human). Only the output form changes — one line per loaded file instead of one label per response. No new rule, no count change (stays 5 golden rules). The v0.5.3 marker did not survive a full session in practice; the trace lines do because each file enforces its own.
+- **Directive placement.** For files with YAML frontmatter (`---` block), the directive lands right after the closing `---`. For files without frontmatter, it lands at the very top, before the H1.
+
 ## [0.5.3] — 2026-05-22
 
 Output-marker patch. Adds a source-attribution marker (`[plugin:skill]`) to every substantive agent response so the human can see at-a-glance which marketplace skill is shaping the current turn vs. background model output. Per `vision/specs/roadmap.md` row *"Output marker — source-attribution prefix"* (user request 2026-05-22). Quick flow.

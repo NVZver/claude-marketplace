@@ -1,3 +1,5 @@
+> **Trace.** On load, print first: `=============== [vision/specs/features/2026-05-21-helper-agent/test-suites.md] [vision] ===============`
+
 # Test Suites: Helper Agent
 
 Three journeys, each anchored to a distinct user goal. Cross-cutting ACs (AC6 substrate-native pickers, AC7 re-grounding gloss, AC8 length budget) appear in **every** journey's `**Covers:**` line because they constrain every Helper turn rather than describing a discrete journey of their own.

@@ -3,6 +3,9 @@ name: flow-selector
 description: Apply before any non-trivial task — when the work touches behavior, adds a new module, changes an API or data model, exceeds ~5 files, or lacks an existing spec. Outputs a flow (Quick / Standard / Extended) with visible chain-of-thought reasoning over boundary signals, then waits for human confirmation. Renamed from `tier-selector` in `core` v0.5.2; the three flows were `T1` / `T2` / `T3`.
 ---
 
+> **Trace.** On load, print first: `=============== [core/skills/flow-selector/SKILL.md] [core] ===============`
+
+
 # Flow Selector
 
 Classify a task into Quick / Standard / Extended by weighing boundary signals, then stop and wait for the human to confirm the flow before any downstream LSA ceremony fires. Per `vision/VISION.md` §4 (`vision/VISION.md:122`): *"the orchestrator picks the flow by chain-of-thought, then states its reasoning and the human confirms or overrides."*

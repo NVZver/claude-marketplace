@@ -1,3 +1,5 @@
+> **Trace.** On load, print first: `=============== [vision/specs/standards/testing.md] [vision] ===============`
+
 # Testing Standards — claude-marketplace
 
 ## Manual probes per plugin

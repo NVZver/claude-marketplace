@@ -1,3 +1,5 @@
+> **Trace.** On load, print first: `=============== [helper/knowledge/knowledge-scope.md] [helper] ===============`
+
 # Knowledge scope — knowledge
 
 What the Helper agent is allowed to read when answering, and in what order. Per [`vision/specs/features/2026-05-21-helper-agent/requirements.md`](../../vision/specs/features/2026-05-21-helper-agent/requirements.md) F4.
