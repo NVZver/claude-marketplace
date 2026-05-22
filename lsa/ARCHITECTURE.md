@@ -1,7 +1,7 @@
 # Living Spec Architecture (LSA)
 **Version:** 0.4.0 (plugin)
 **Author:** Nikita Zverev
-**Status:** 0.4.0 — Vision-aligned; dogfooded on `claude-marketplace`; each skill cites `core/output` for output discipline. See [`../vision/specs/2026-05-20-lsa-v0.2.0-design.md`](../vision/specs/2026-05-20-lsa-v0.2.0-design.md) for the earlier baseline and [`../vision/plans/2026-05-20-credo-rollout-plan.md`](../vision/plans/2026-05-20-credo-rollout-plan.md) for the credo-rollout restructure.
+**Status:** 0.4.0 — Vision-aligned; dogfooded on `claude-marketplace`; each skill cites `core/output` for output discipline. See [`../vision/specs/archive/2026-05-20-lsa-v0.2.0/design.md`](../vision/specs/archive/2026-05-20-lsa-v0.2.0/design.md) for the earlier baseline and [`../vision/plans/2026-05-20-credo-rollout-plan.md`](../vision/plans/2026-05-20-credo-rollout-plan.md) for the credo-rollout restructure.
 
 ---
 

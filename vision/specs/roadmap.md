@@ -1,6 +1,6 @@
 # Roadmap — claude-marketplace
 
-Prioritized list of upcoming work, populated from `vision/VISION.md` §6 *"Adjust"* items, §7 *"Open decisions"*, and post-0.2.0 follow-ups from `vision/specs/2026-05-20-lsa-v0.2.0-design.md` §15.
+Prioritized list of upcoming work, populated from `vision/VISION.md` §6 *"Adjust"* items, §7 *"Open decisions"*, and post-0.2.0 follow-ups from `vision/specs/archive/2026-05-20-lsa-v0.2.0/design.md` §15.
 
 ## Feature Backlog
 
@@ -16,16 +16,16 @@ Prioritized list of upcoming work, populated from `vision/VISION.md` §6 *"Adjus
 | LSA gate prompts must be concrete (no IDs, no jargon, must-decide only) | **Must** | shipped — core v0.5.0 (Rule 5) + core v0.5.1 (Rule 5 promoted to *prompt voice*) + lsa v0.6.1 (gate-prompt scaffolding) | Per user observation 2026-05-21 — dominant reason `lsa-specify` "takes forever". Quote: *"I have no IDEA what it means…wording is too…i don't know, it just means nothing to me…I want concrete questions to make decisions with clear problem to solve. I do not give a fuck about minor things."* Three fix-points all landed: (1) **No opaque IDs in user-facing prompts** + (2) **Strip project jargon** + (3) **Surface only must-decide** — `core/output` Rule 5 (Concrete — prompt voice; `core` v0.5.0/v0.5.1) names all three; `lsa` v0.6.1 (Bundle A, 2026-05-22) wires explicit subject-voice scaffolds into the Present block of `lsa-specify` Steps 2/4/5/6, `lsa-plan` Step 5, `lsa-init` Step 2 (brownfield), so the picker question names the feature subject not the Gate ID. |
 | Tier-selector threshold finalization | Should | backlog | Per `vision/VISION.md:242` — pin the exact file-count threshold + add more worked examples to `core/tier-selector`'s few-shot block. Needs the two-week dogfood log first. |
 | Project naming | Could | deferred | Per `vision/VISION.md:249` — currently "Vision" placeholder. |
-| `core/registry` skill resurrection | Could | deferred to core v0.3.0 | Per `vision/specs/2026-05-20-lsa-v0.2.0-design.md` §15 — if a second pack arrives and starts duplicating lazy-load logic Claude Code's native discovery doesn't cover, design the skill. |
-| Two-week dogfood log | Should | not started | Per `vision/specs/2026-05-20-lsa-v0.2.0-design.md` §15 — capture every tier call, every reconcile run, every verify outcome on this repo for the first two weeks. Validate ~90% trigger thresholds. |
-| Doc-mode strict per-line tracing | Could | deferred | Per `vision/specs/2026-05-20-lsa-v0.2.0-design.md` §15 — v0.2.0 accepts "intended per spec" as the trace bar. Tighten if untraced changes become a real problem. |
-| Marketplace dependency field | Could | blocked | Per `vision/specs/2026-05-20-lsa-v0.2.0-design.md` §14 — adopt when Claude Code's plugin manifest supports a `dependencies` field. Currently prose-only in `lsa/.claude-plugin/plugin.json: description`. |
+| `core/registry` skill resurrection | Could | deferred to core v0.3.0 | Per `vision/specs/archive/2026-05-20-lsa-v0.2.0/design.md` §15 — if a second pack arrives and starts duplicating lazy-load logic Claude Code's native discovery doesn't cover, design the skill. |
+| Two-week dogfood log | Should | not started | Per `vision/specs/archive/2026-05-20-lsa-v0.2.0/design.md` §15 — capture every tier call, every reconcile run, every verify outcome on this repo for the first two weeks. Validate ~90% trigger thresholds. |
+| Doc-mode strict per-line tracing | Could | deferred | Per `vision/specs/archive/2026-05-20-lsa-v0.2.0/design.md` §15 — v0.2.0 accepts "intended per spec" as the trace bar. Tighten if untraced changes become a real problem. |
+| Marketplace dependency field | Could | blocked | Per `vision/specs/archive/2026-05-20-lsa-v0.2.0/design.md` §14 — adopt when Claude Code's plugin manifest supports a `dependencies` field. Currently prose-only in `lsa/.claude-plugin/plugin.json: description`. |
 | Retro habit (`vision/specs/retro.md` or equivalent) | Should | deferred to lsa v0.3.0 | Per `vision/VISION.md:159` — scratchpad of mistakes and fixes, with a promotion path into standards or new skills. File format + promotion gate need design. |
 | Self-eval harness | Should | deferred to lsa v0.3.0 | Per `vision/VISION.md:160` — structural checks (every actor has its sections), boundary checks (no Knowledge file holds execution flow), banned-hedge-word lint. Implementable as a `core` skill once surface stabilizes. |
-| T2 metrics surface | Could | deferred to lsa v0.3.0 | Per `vision/specs/2026-05-20-lsa-v0.2.0-design.md` §15 — v0.2.0 emits metrics for T3 only. If T2 becomes the dominant flow, design a coarser-grain aggregate (per-day/per-week) from the dogfood log. |
-| `lsa-discover` → `lsa-specify` handoff format | Could | deferred to lsa v0.3.0 | Per `vision/specs/2026-05-20-lsa-v0.2.0-design.md` §15 — formalize `discovery.md` if T3 invocations frequently want richer handoff (arch sketch, dep graph). |
-| Tier-selector as Vision §3 amendment | Could | open | Per `vision/specs/2026-05-20-lsa-v0.2.0-design.md` §15 — Vision §3 currently lists `tier-selector` as on-demand only; v0.2.0 made the invocation rule always-on via `core/CLAUDE.md`. Codify as a Vision §3 amendment in a future Vision revision. |
-| Reconcile classification automation | Could | deferred | Per `vision/specs/2026-05-20-lsa-v0.2.0-design.md` §15 — class (a)/(b) is currently agent-judged. If misclassifications become a real problem, design a deterministic check (per-requirement IDs). |
+| T2 metrics surface | Could | deferred to lsa v0.3.0 | Per `vision/specs/archive/2026-05-20-lsa-v0.2.0/design.md` §15 — v0.2.0 emits metrics for T3 only. If T2 becomes the dominant flow, design a coarser-grain aggregate (per-day/per-week) from the dogfood log. |
+| `lsa-discover` → `lsa-specify` handoff format | Could | deferred to lsa v0.3.0 | Per `vision/specs/archive/2026-05-20-lsa-v0.2.0/design.md` §15 — formalize `discovery.md` if T3 invocations frequently want richer handoff (arch sketch, dep graph). |
+| Tier-selector as Vision §3 amendment | Could | open | Per `vision/specs/archive/2026-05-20-lsa-v0.2.0/design.md` §15 — Vision §3 currently lists `tier-selector` as on-demand only; v0.2.0 made the invocation rule always-on via `core/CLAUDE.md`. Codify as a Vision §3 amendment in a future Vision revision. |
+| Reconcile classification automation | Could | deferred | Per `vision/specs/archive/2026-05-20-lsa-v0.2.0/design.md` §15 — class (a)/(b) is currently agent-judged. If misclassifications become a real problem, design a deterministic check (per-requirement IDs). |
 
 ## Recently merged
 

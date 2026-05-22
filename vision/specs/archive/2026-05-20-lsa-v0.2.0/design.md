@@ -1,3 +1,5 @@
+<!-- ARCHIVED 2026-05-22: moved from vision/specs/2026-05-20-lsa-v0.2.0-design.md → vision/specs/archive/2026-05-20-lsa-v0.2.0/design.md as part of feature/2026-05-21-maintenance-cleanup. The companion plan moved to ./plan.md (sibling). Internal historical path references preserved as written at time of authorship. -->
+
 # LSA v0.2.0 + Core v0.2.0 — Design
 
 **Date:** 2026-05-20

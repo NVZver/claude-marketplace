@@ -178,7 +178,7 @@ Pure DRY / SRP / KISS docs prune. No skill behavior change. Per [`vision/plans/2
 
 ## [0.2.0] — 2026-05-20
 
-Closes the seven Vision-alignment gaps between v0.1.1 and `vision/VISION.md` v0.4. Per `vision/specs/2026-05-20-lsa-v0.2.0-design.md`.
+Closes the seven Vision-alignment gaps between v0.1.1 and `vision/VISION.md` v0.4. Per `vision/specs/archive/2026-05-20-lsa-v0.2.0/design.md`.
 
 ### Added
 - `lsa/skills/lsa-discover/SKILL.md` — light three-question discovery probe at the start of every T2 and T3 task (Phase 0). T2 oral; T3 emits scratch `discovery.md` consumed by `lsa-specify`. Design §4.3.

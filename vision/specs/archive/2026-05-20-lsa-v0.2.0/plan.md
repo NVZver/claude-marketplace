@@ -1,3 +1,5 @@
+<!-- ARCHIVED 2026-05-22: moved from vision/plans/2026-05-20-lsa-v0.2.0-plan.md → vision/specs/archive/2026-05-20-lsa-v0.2.0/plan.md as part of feature/2026-05-21-maintenance-cleanup. Internal historical path references below are preserved as written at time of authorship; only the active "Source spec" link (line 13) was rewritten to resolve from the new location. -->
+
 # LSA v0.2.0 + Core v0.2.0 Implementation Plan
 
 > **For agentic workers:** Use `dev-plugin:implement` or `lsa:lsa-plan`'s sub-agent pattern to execute this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking. Each task has explicit Inputs / Outputs / Files / Verification / Spec trace.
@@ -8,7 +10,7 @@
 
 **Tech Stack:** Markdown (`SKILL.md`, `ARCHITECTURE.md`, specs), JSON (`plugin.json`, `marketplace.json`, `.lsa-sync-state.json`), YAML (`.lsa.yaml`), bash (hook scripts), Claude Code (`/plugin`, `/help`, `/reload-plugins`, slash-skill invocation).
 
-**Source spec:** [`../specs/2026-05-20-lsa-v0.2.0-design.md`](../specs/2026-05-20-lsa-v0.2.0-design.md) — every task below traces to a spec section.
+**Source spec:** [`./design.md`](./design.md) — every task below traces to a spec section.
 
 ---
 
