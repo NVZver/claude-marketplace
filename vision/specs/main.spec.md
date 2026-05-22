@@ -12,14 +12,14 @@ The marketplace ships two domain-neutral plugins (`core` and `lsa`) installable 
 
 | Module | Spec | Status |
 |---|---|---|
-| `core` | [`vision/specs/modules/core/spec.md`](./modules/core/spec.md) | active — v0.5.1 |
-| `lsa` | [`vision/specs/modules/lsa/spec.md`](./modules/lsa/spec.md) | active — v0.6.1 | <!-- added: 2026-05-21-ears-journey-shape-ac 2026-05-21; bumped: fix/discipline-ground 2026-05-22 -->
+| `core` | [`vision/specs/modules/core/spec.md`](./modules/core/spec.md) | active — v0.5.2 |
+| `lsa` | [`vision/specs/modules/lsa/spec.md`](./modules/lsa/spec.md) | active — v0.6.2 | <!-- added: 2026-05-21-ears-journey-shape-ac 2026-05-21; bumped: fix/discipline-ground + fix/naming-clarity 2026-05-22 -->
 
 ## Cross-Module Contracts
 
 - **`lsa` depends on `core`.** Documented in [`lsa/README.md`](../../lsa/README.md) "Depends on". Specifically:
   - `core/ground-rules` is the source of LSA's fact-grounding policy (`lsa/ARCHITECTURE.md` §2 P4 and §7).
-  - `core/tier-selector` (new in core v0.2.0) is invoked upstream of `lsa-discover` for every T2 / T3 task — its confirmed tier hand-off is the input to `lsa-discover`.
+  - `core/flow-selector` (added as `core/tier-selector` in core v0.2.0; renamed to `core/flow-selector` in core v0.5.2) is invoked upstream of `lsa-discover` for every Standard / Extended task (was `T2 / T3`) — its confirmed flow hand-off is the input to `lsa-discover`.
   - Claude Code's plugin manifest does not (as of this release) expose a `dependencies` field; the dependency is prose-only in `lsa/README.md` and `lsa/.claude-plugin/plugin.json`'s `description`. Adopt the field when Claude Code adds it.
 - **`core/actor-template` is the shape any actor in this repo must follow.** Every LSA skill body in `lsa/skills/*/SKILL.md` matches Goal / Input / Steps / Output / Constraints. Boundary violation = highest-severity defect (`vision/VISION.md:57`).
 

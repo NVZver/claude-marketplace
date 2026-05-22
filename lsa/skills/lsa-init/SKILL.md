@@ -97,7 +97,7 @@ Scaffold the LSA spec tree on a project so the rest of the LSA skills (`lsa-disc
 
    Observable result: the three files exist with the templates above.
 
-4. **Report to human.** List all files created. State: "Run `/lsa:discover` (T2/T3 entry) or `/lsa:specify` (T3 direct) to start the first feature."
+4. **Report to human.** List all files created. State: "Run `/lsa:discover` (Standard / Extended entry) or `/lsa:specify` (Extended direct) to start the first feature."
 
 ## Output
 

@@ -16,7 +16,7 @@ Humans write and own specs. Agents write and own artifacts. Direct artifact edit
 Every LSA skill's human-facing prompt and output adopts a component-specific format (the S1–S17 samples in `vision/plans/2026-05-20-credo-rollout-plan.md`) that satisfies the five golden rules in [`../core/skills/output/SKILL.md`](../core/skills/output/SKILL.md): structured, minimal, formatted, sourced, concrete. The mechanical consequences across LSA:
 
 - **`lsa-discover` Output is a 3-row table** (Module / Change / AC), not a paragraph — verdict-first, scannable.
-- **`lsa-specify` collapses 7 confirm stops to 3 bundled gates** (Gate 1 = requirements + contract-trigger; Gate 2 = test-suites + contract + design; Gate 3 = final integration) — fewer interruptions, same coverage.
+- **`lsa-specify` collapses 7 confirm stops to 3 bundled User Verifications** (1: Requirements + Contract Trigger; 2: Test Suites + Contract + Design; 3: Final Integration) — fewer interruptions, same coverage. Renamed from `Gate N` in `lsa` v0.6.2; prior CHANGELOG entries use the old name.
 - **`lsa-verify` reports lead with the verdict** (`✅ PASS` / `❌ FAIL` / `⚠️ PASS WITH WARNINGS`); metadata moves below the fold.
 - **Every decision-bearing prompt uses `AskUserQuestion`** in Claude Code (per `vision/VISION.md` §2 principle 9 — *"Substrate-native first"*); text decision-blocks are the fallback for plain-text rendering.
 
@@ -28,7 +28,7 @@ This document is the design-rationale narrative for `lsa`. For other concerns, s
 - **Module-level invariants** — [`../vision/specs/modules/lsa/spec.md`](../vision/specs/modules/lsa/spec.md)
 - **Content discipline** — [`../core/skills/ground-rules/SKILL.md`](../core/skills/ground-rules/SKILL.md) (6 rules)
 - **Output discipline** — [`../core/skills/output/SKILL.md`](../core/skills/output/SKILL.md) (4 golden rules)
-- **Tier flow (T1 / T2 / T3) + boundary signals** — [`../vision/VISION.md`](../vision/VISION.md) §4
+- **Flow types (Quick / Standard / Extended — was T1/T2/T3) + boundary signals** — [`../vision/VISION.md`](../vision/VISION.md) §4
 - **Testing policy** — [`../vision/specs/standards/testing.md`](../vision/specs/standards/testing.md)
 
 ---
@@ -45,7 +45,7 @@ This document is the design-rationale narrative for `lsa`. For other concerns, s
 │   └── skills/
 │       ├── ground-rules/SKILL.md
 │       ├── actor-template/SKILL.md
-│       └── tier-selector/SKILL.md
+│       └── flow-selector/SKILL.md           (renamed from tier-selector in core v0.5.2)
 ├── lsa/
 │   ├── hooks/
 │   │   ├── hooks.json
@@ -72,7 +72,7 @@ This document is the design-rationale narrative for `lsa`. For other concerns, s
     └── archive/
         └── YYYY-MM-DD-<feature-name>/
             ├── (the archived feature spec files)
-            └── metrics.md             (written by lsa-verify on clean T3 PASS)
+            └── metrics.md             (written by lsa-verify on clean Extended-flow PASS — was T3)
 ```
 
 `${specs_root}` is configurable via `.lsa.yaml` (see §3). Defaults match v0.1.1 (`/specs/`).
@@ -152,6 +152,6 @@ constitution branch → main (after human approval, independent of features)
 | OQ3 | Constitution revision | Separate skill `lsa-revise-constitution`. Single Responsibility — one skill, one job |
 | OQ4 | Research backlog mid-feature | Kept. Updated by human or agent to a known file without branching. Reviewed during replan |
 | OQ5 | Path configuration | `.lsa.yaml` at repo root. Falls back to v0.1.1 defaults when absent |
-| OQ6 | T2 path | `lsa-discover` (three-question probe) → implement (TDD) → `lsa-verify`. No specify, no plan, no sync, no per-feature metrics |
+| OQ6 | Standard-flow path (was T2) | `lsa-discover` (three-question probe) → implement (TDD) → `lsa-verify`. No specify, no plan, no sync, no per-feature metrics |
 | OQ7 | Reconcile placement | New skill `lsa-reconcile` (SRP, mirrors LSA's one-skill-per-phase pattern) |
 | OQ8 | Drift detection | `.lsa-sync-state.json` records last-sync commit SHA per module. SessionStart hook diffs current ↔ recorded; surfaces a one-line notice if non-empty |

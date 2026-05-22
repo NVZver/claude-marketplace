@@ -1,19 +1,19 @@
 ---
 name: lsa-discover
-description: Light three-question discovery probe at the start of every T2 and T3 task — module, change, acceptance criterion. Use before any code or spec change when tier is T2 or T3.
+description: Light three-question discovery probe at the start of every Standard and Extended task — module, change, acceptance criterion. Use before any code or spec change when flow is Standard or Extended.
 ---
 
 # LSA Discover
 
-The light discovery phase between `core/tier-selector` and either implementation (T2) or `lsa-specify` (T3). Cheap by design: three questions, no spec writes for T2, a small scratch handoff for T3.
+The light discovery phase between `core/flow-selector` and either implementation (Standard) or `lsa-specify` (Extended). Cheap by design: three questions, no spec writes for Standard, a small scratch handoff for Extended.
 
 ## Goal
 
-Establish minimum-viable context — which module the change touches, what the change is in one sentence, and the acceptance criterion in one sentence — and hand off to the next phase appropriate to the tier.
+Establish minimum-viable context — which module the change touches, what the change is in one sentence, and the acceptance criterion in one sentence — and hand off to the next phase appropriate to the flow.
 
 ## Input
 
-- The task description from `core/tier-selector`'s confirmed handoff, including the confirmed tier (T2 or T3).
+- The task description from `core/flow-selector`'s confirmed handoff, including the confirmed flow (Standard or Extended).
 - `.lsa.yaml` at repo root (defaults per [`../knowledge/conventions.md`](../knowledge/conventions.md) §"`.lsa.yaml` defaults") for the list of candidate module names.
 
 ## Steps
@@ -29,9 +29,9 @@ Establish minimum-viable context — which module the change touches, what the c
 
    Format per [`core/output`](../../../core/skills/output/SKILL.md); `AskUserQuestion` for each pick in Claude Code. Observable result: three answers captured (module + change + AC) in the working scratch.
 
-3. **For T2 only** — render the discovery as a 3-row table (Module / Change / Acceptance) per [`core/output`](../../../core/skills/output/SKILL.md). **Stop** there. The agent then writes a failing test, implements the change, and runs `/lsa:verify`. Observable result: the table printed back to the human; no files written to `${specs_root}/`.
+3. **For Standard only** — render the discovery as a 3-row table (Module / Change / Acceptance) per [`core/output`](../../../core/skills/output/SKILL.md). **Stop** there. The agent then writes a failing test, implements the change, and runs `/lsa:verify`. Observable result: the table printed back to the human; no files written to `${specs_root}/`.
 
-4. **For T3 only** — write a draft `discovery.md` block under the working feature directory (a scratch file, not yet committed; `lsa-specify` consumes and expands it into the formal feature spec):
+4. **For Extended only** — write a draft `discovery.md` block under the working feature directory (a scratch file, not yet committed; `lsa-specify` consumes and expands it into the formal feature spec):
 
    ```markdown
    # Discovery — <feature-name>
@@ -45,16 +45,16 @@ Establish minimum-viable context — which module the change touches, what the c
 
 ## Output
 
-- **T2** — short context paragraph (oral only; no file).
-- **T3** — `discovery.md` scratch file at the working feature path, plus a one-line handoff message naming the chosen module(s) and the feature name.
+- **Standard** — short context paragraph (oral only; no file).
+- **Extended** — `discovery.md` scratch file at the working feature path, plus a one-line handoff message naming the chosen module(s) and the feature name.
 
 ## Constraints
 
-- **Three questions, no more.** If deeper context is needed, escalate back to `tier-selector` for a tier-bump rather than asking question four.
-- **Do not write to the configured `specs_root`.** That is `lsa-specify`'s responsibility. The T3 `discovery.md` is a working scratch file, not a spec write.
+- **Three questions, no more.** If deeper context is needed, escalate back to `flow-selector` for a flow-bump rather than asking question four.
+- **Do not write to the configured `specs_root`.** That is `lsa-specify`'s responsibility. The Extended `discovery.md` is a working scratch file, not a spec write.
 - **Do not invent module names** not present in `.lsa.yaml` (or under `${specs_root}/modules/` when `.lsa.yaml` is absent). If the chosen module does not exist, capture it explicitly as `new module: <name>` so downstream phases know to create it.
 - Outputs follow [`core/output`](../../../core/skills/output/SKILL.md) golden rules (structured, minimal, formatted, sourced).
 
 ---
 
-`/lsa:discover` — manual invocation. On T3 completion, downstream is `lsa-specify`.
+`/lsa:discover` — manual invocation. On Extended completion, downstream is `lsa-specify`.
