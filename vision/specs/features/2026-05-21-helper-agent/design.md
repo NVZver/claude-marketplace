@@ -88,10 +88,7 @@ None — `contract.yaml` skipped at User Verification 1 (no API endpoint, no req
 
 ## Open Questions
 
-- **OQ1 — Cross-cutting AC handling.** AC6 (substrate-native pickers), AC7 (re-grounding gloss), AC8 (length budget) are constraints on every Helper response, not discrete journeys. Two resolutions:
-  - (a) Keep as ACs; treat all 3 journeys as "Covers" them collectively (current draft).
-  - (b) Demote to NFRs (already partially covered by NF3 substrate-native).
-  - **Tentative:** (a) — preserves `lsa-verify` traceability. Diagonal AC→Journey row treats them as covered by every journey.
-- **OQ2 — Friction-signal cooldown specifics.** Current design: cooldown is per signal-type within one friction window. To finalise at `lsa-plan` epic decomposition.
-- **OQ3 — Helper spawning subagents.** When user asks a wide question (e.g. "explain the diagonal coverage check"), Helper might benefit from spawning an `Explore` subagent. F3 says "invoke matching skill", which is narrower than subagent spawn. **Tentative:** NO — Helper uses `Read` / `Grep` directly, no subagent spawn (Out of Scope at requirements.md). To finalise here or move to `lsa-plan`.
+- **OQ1 — Cross-cutting AC handling. RESOLVED 2026-05-22 (step 2 / `feature/2026-05-21-helper-agent-e2`):** AC6 (substrate-native pickers), AC7 (re-grounding gloss), AC8 (length budget) **kept as cross-cutting ACs** (option (a)). Preserves `lsa-verify` traceability via per-journey `**Covers:**` lines. Implementation lands as three explicit Constraints in `helper/agents/helper.md` ("Substrate-native decisions", "Re-ground project jargon", "Output length budget ≤1.5 screens per turn") — each fires on every response.
+- **OQ2 — Friction-signal cooldown specifics.** Current design: cooldown is per signal-type within one friction window. To finalise at step 4 (Epic 4) when the detection logic lands.
+- **OQ3 — Helper spawning subagents. RESOLVED 2026-05-22 (step 2 / `feature/2026-05-21-helper-agent-e2`):** **NO subagent spawn.** Helper uses `Read` / `Grep` / `Glob` directly; tools list in `helper/agents/helper.md` deliberately omits the `Agent` tool. If implementation later reveals this is too narrow, re-enter `lsa-specify` for a spec amendment — do not silently widen.
 - **OQ4 — Auto-engage in plain Claude Code, no `lsa-specify` context.** Signal (a) requires `lsa-specify` to be active. If user is not in `lsa-specify`, signal (a) cannot fire. Acceptable: Helper still works via signals (b) and (c). Documented explicitly so a `lsa-verify` reviewer doesn't flag missing trace.
