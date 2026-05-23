@@ -36,6 +36,7 @@ Prioritized list of upcoming work, populated from `vision/VISION.md` §6 *"Adjus
 | LSA: what-and-why preamble on every verb-headline | Should | backlog | Detail: §"2026-05-22 backlog detail" #4. Touches all 8 LSA skill bodies. |
 | Show actual changes inline (LSA / Core / Helper) | **Must** | backlog (partial — `lsa-reconcile` already meets the bar) | Detail: §"2026-05-22 backlog detail" #5. System-wide; likely new `core/output` rule + skill sweeps. |
 | Sweep custom inventions; remove the unjustified | Should | backlog (proof-of-concept shipped — lsa v0.7.0 trace-tag removal, commit `c226623`) | Detail: §"2026-05-22 backlog detail" #6. Opportunistic audit; starts with 3 named candidates. |
+| Remove `vision/specs/archive/` (rely on CHANGELOG + git + permanent module specs) | Could | backlog | User-proposed 2026-05-23. Archive is a custom invention not mandated by any 3rd-party standard; CHANGELOG entries + git history + absorbed module specs cover traceability. Touches `lsa-sync` (archive step → delete step), `lsa/ARCHITECTURE.md`, `vision/VISION.md:206` reference, removal of existing `vision/specs/archive/2026-05-21-ears-journey-shape-ac/`. Spec TBD. |
 
 ## Recently merged
 
