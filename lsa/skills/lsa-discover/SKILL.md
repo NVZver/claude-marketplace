@@ -1,6 +1,6 @@
 ---
 name: lsa-discover
-description: Light three-question discovery probe at the start of every Standard and Extended task — module, change, acceptance criterion. Use before any code or spec change when flow is Standard or Extended.
+description: Infer-then-confirm discovery at the start of every Standard and Extended task — module, change, acceptance criterion. Use before any code or spec change when flow is Standard or Extended.
 ---
 
 > **Trace.** On load, print first: `=============== [lsa/skills/lsa-discover/SKILL.md] [lsa] ===============`
@@ -8,7 +8,7 @@ description: Light three-question discovery probe at the start of every Standard
 
 # LSA Discover
 
-The light discovery phase between `core/flow-selector` and either implementation (Standard) or `lsa-specify` (Extended). Cheap by design: three questions, no spec writes for Standard, a small scratch handoff for Extended.
+The light discovery phase between `core/flow-selector` and either implementation (Standard) or `lsa-specify` (Extended). Cheap by design: three inferred answers confirmed in one shot, no spec writes for Standard, a small scratch handoff for Extended.
 
 ## Goal
 
@@ -21,16 +21,15 @@ Establish minimum-viable context — which module the change touches, what the c
 
 ## Steps
 
-1. **Read `.lsa.yaml` and list candidate module names.** Read `modules.*` keys; if `.lsa.yaml` is absent, list module directories under `${specs_root}/modules/` instead. Observable result: the candidate-module list printed back to the human (so the answer to question (a) below is constrained, not invented).
+1. **Read `.lsa.yaml` and build module context.** Read `modules.*` keys (names + `artifact_paths` + spec paths); if `.lsa.yaml` is absent, list module directories under `${specs_root}/modules/` instead. Observable result: the candidate-module list available for Step 2's inference.
 
-2. **Ask the three-question discovery probe — assume-then-override.** Question (a) is constrained to the candidates from Step 1. For (b) and (c), propose 2 candidate framings from the module spec(s) so the human picks rather than invents. Silence on a line = approval.
+2. **Infer all three discovery answers — then confirm.** For each answer, cross-reference the task description against the module context from Step 1:
 
-   Present:
-   - module(s) — picked from Step 1's list, or `new module: <name>`
-   - 2 candidate one-line framings for the change + `custom` option
-   - 2 candidate one-line acceptance criteria + `custom` option
+   - **Module** — match against each module's `artifact_paths` globs and spec content; if none match, capture as `new module: <name>`.
+   - **Change** — one-sentence framing grounded in the task description and the matched module spec's current state.
+   - **AC** — one-sentence criterion grounded in the task description and the module spec's existing invariants or gaps.
 
-   Format per [`core/output`](../../../core/skills/output/SKILL.md); `AskUserQuestion` for each pick in Claude Code. Observable result: three answers captured (module + change + AC) in the working scratch.
+   Present all three in a single `AskUserQuestion` as a confirmation, not a quiz. The human overrides any line that is wrong; silence = approval. Observable result: three answers captured (module + change + AC).
 
 3. **For Standard only** — render the discovery as a 3-row table (Module / Change / Acceptance) per [`core/output`](../../../core/skills/output/SKILL.md). **Stop** there. The agent then writes a failing test, implements the change, and runs `/lsa:verify`. Observable result: the table printed back to the human; no files written to `${specs_root}/`.
 
@@ -53,7 +52,7 @@ Establish minimum-viable context — which module the change touches, what the c
 
 ## Constraints
 
-- **Three questions, no more.** If deeper context is needed, escalate back to `flow-selector` for a flow-bump rather than asking question four.
+- **Infer, don't ask.** Never ask the human for information derivable from repo state. Present all three answers in a single confirmation prompt. If deeper context is needed, escalate back to `flow-selector` for a flow-bump rather than asking question four.
 - **Do not write to the configured `specs_root`.** That is `lsa-specify`'s responsibility. The Extended `discovery.md` is a working scratch file, not a spec write.
 - **Do not invent module names** not present in `.lsa.yaml` (or under `${specs_root}/modules/` when `.lsa.yaml` is absent). If the chosen module does not exist, capture it explicitly as `new module: <name>` so downstream phases know to create it.
 - Outputs follow [`core/output`](../../../core/skills/output/SKILL.md) — citation by link, never restated.

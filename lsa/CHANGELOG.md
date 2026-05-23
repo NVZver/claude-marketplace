@@ -4,6 +4,20 @@ All notable changes to the `lsa` plugin are documented here. Format follows [Kee
 
 ## [Unreleased]
 
+## [0.7.1] — 2026-05-23
+
+`lsa-discover` infer-then-confirm. The agent now reads the codebase to determine module, change framing, and acceptance criterion — then presents all three as a pre-filled table for human override in a single `AskUserQuestion`. Previously the skill asked three questions the agent should have answered itself. Same pattern as the `lsa-init` v0.3.1 fix (greenfield/brownfield mechanical detection). Per user feedback 2026-05-23.
+
+### Changed
+- **`lsa/skills/lsa-discover/SKILL.md` Step 2** — replaced "Ask the three-question discovery probe" with "Infer all three discovery answers — then confirm." New sub-steps 2a (module inference via artifact_paths cross-reference), 2b (change framing from module spec), 2c (AC from task description + spec invariants), 2d (single confirmation prompt). The agent does the discovery work; the human confirms or overrides.
+- **`lsa/skills/lsa-discover/SKILL.md` Goal** — updated to reflect agent-inferred, human-confirmed pattern.
+- **`lsa/skills/lsa-discover/SKILL.md` Constraints** — first bullet changed from "Three questions, no more" to "Infer, don't ask" with the rule that the agent never asks for information derivable from repo state.
+- **`lsa/README.md`** — `lsa-discover` row updated from "Light three-question probe" to "Infer-then-confirm discovery."
+
+### Notes
+- **Patch bump rationale.** Behavioral improvement to an existing skill — discovery answers are now agent-inferred rather than human-provided. The three-answer shape and downstream handoff (Standard oral / Extended scratch) are unchanged.
+- **Precedent.** Mirrors `lsa-init` v0.3.1 (`lsa/CHANGELOG.md:163-166`) which replaced the redundant "Greenfield or brownfield?" question with mechanical detection.
+
 ## [0.7.0] — 2026-05-22
 
 Remove the trace-tag convention and stop emitting `<!-- added/reconciled/revised: ... -->` HTML comments. The format was opaque to non-LSA collaborators and not required by EARS (`vision/VISION.md:187-206`) or any other adopted 3rd-party standard. Minor bump — three skills' observable output changes.
