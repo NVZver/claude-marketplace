@@ -22,9 +22,10 @@ The Living Spec Architecture plugin. Nine skills + one SessionStart hook + a con
 | File | Owner | Purpose |
 |---|---|---|
 | `.lsa.yaml` | Human (or `init`) | Path + mode + module config. |
-| `.lsa-sync-state.json` | Orphaned — `lsa-sync` removed in lsa v0.8.0; `reconcile` (write on confirm) | Per-module last-sync SHA + ISO timestamp. Consumed by the SessionStart drift hook and by `reconcile`'s diff base. Orphaned on the `lsa-sync` side since sync was removed. |
 | `${specs_root}/archive/<feature>/metrics.md` | `verify` (write on clean Extended-flow PASS — was `T3`) | Per-feature metric counts (accuracy / facts / only-required-changes). |
 | `${specs_root}/metrics.md` | Orphaned — `lsa-sync` removed in lsa v0.8.0 | Aggregate row per archived Extended-flow feature (was `T3`). Optional. No longer written since sync was removed. |
+
+Baseline SHA per module (consumed by the SessionStart drift hook and `reconcile`'s diff base) is recovered on demand from `git log -1 --format=%H -- <spec-path>`; no separate state file is written.
 
 ## Invariants
 

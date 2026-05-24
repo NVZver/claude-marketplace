@@ -38,7 +38,6 @@ This document is the design-rationale narrative for `lsa`. For other concerns, s
 /
 ├── CLAUDE.md                          ← Slim Claude Code entry point.
 ├── .lsa.yaml                          ← LSA configuration (optional; defaults applied if absent)
-├── .lsa-sync-state.json               ← Per-module last-sync SHA (written by reconcile)
 ├── core/                              (the core plugin — independent of LSA)
 │   ├── CLAUDE.md                      ← The canonical always-on fragment
 │   └── skills/
@@ -109,7 +108,7 @@ modules:
 
 **When absent**, LSA falls back to v0.1.1 behavior: `constitution: /CLAUDE.md`, `specs_root: /specs/`, `mode: code`, `modules: {}`. This preserves all existing behavior for projects that haven't opted in.
 
-The SessionStart hook (`hooks/hooks.json` declares `matcher: "startup"`) invokes `hooks/session-start-drift-check.sh`. If any module's `artifact_paths` differ from the SHA recorded in `.lsa-sync-state.json`, the hook prints a one-line notice; control returns to the user, who chooses when to invoke `/lsa:reconcile`. The hook exits 0 always — it must never block session start.
+The SessionStart hook (`hooks/hooks.json` declares `matcher: "startup"`) invokes `hooks/session-start-drift-check.sh`. For each module, the hook resolves the baseline SHA as the last commit that modified the module's spec file (`git log -1 --format=%H -- <spec-path>`); if any of the module's `artifact_paths` differ from that SHA, the hook prints a one-line notice; control returns to the user, who chooses when to invoke `/lsa:reconcile`. The hook exits 0 always — it must never block session start.
 
 ---
 
@@ -153,4 +152,4 @@ constitution branch → main (after human approval, independent of features)
 | OQ5 | Path configuration | `.lsa.yaml` at repo root. Falls back to v0.1.1 defaults when absent |
 | OQ6 | Standard-flow path (was T2) | `discover` (three-question probe) → implement (TDD) → `verify`. No plan, no per-feature metrics |
 | OQ7 | Reconcile placement | Skill `reconcile` (SRP, mirrors LSA's one-skill-per-phase pattern) |
-| OQ8 | Drift detection | `.lsa-sync-state.json` records last-sync commit SHA per module. SessionStart hook diffs current ↔ recorded; surfaces a one-line notice if non-empty |
+| OQ8 | Drift detection | Baseline SHA per module is resolved on demand from `git log -1 --format=%H -- <spec-path>` (the last commit that touched the module's spec file). SessionStart hook diffs current ↔ baseline; surfaces a one-line notice if non-empty. |

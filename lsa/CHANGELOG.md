@@ -4,6 +4,16 @@ All notable changes to the `lsa` plugin are documented here. Format follows [Kee
 
 ## [Unreleased]
 
+## [0.9.0] — 2026-05-24
+
+### Removed
+
+- `.lsa-sync-state.json` baseline-SHA file deleted. The per-module last-sync SHA + ISO timestamp the file held is recoverable from `git log -1 --format=%H -- <module-spec-path>`; switched `reconcile` (Inputs, Step 1 prose, Step 5 substep + Observable, Output, Constraints) and `lsa/hooks/session-start-drift-check.sh` (full rewrite — consolidated YAML parsing into one awk pattern mirroring `emit_module_paths`, dropped JSON parser and cache layer) to derive the SHA from git history instead. Documentation refs cleared in `lsa/ARCHITECTURE.md` (directory diagram, SessionStart paragraph, OQ8 row), `lsa/README.md` (SessionStart paragraph), `vision/specs/main.spec.md` (out-of-scope-files table), and `vision/specs/modules/lsa/spec.md` (State files table). Closes the orphan introduced by v0.8.0's `lsa-sync` removal. Per the custom-inventions sweep at `vision/specs/features/2026-05-22-custom-inventions-sweep/design.md` inventory row #1.
+
+### Behavior — baseline-SHA semantics
+
+The substitution is **not** a pure substrate swap. Baseline semantics shifted: the previous `last_sync_sha` was written only by `lsa-sync` (since removed in v0.8.0) and `reconcile`, so direct spec edits made for any other reason (typo fix, restructuring, adding a new requirement) did not advance the baseline. Under `git log -1 -- <spec-path>`, **any** commit that touches the spec file advances the baseline. The case that matters: if accumulated artifact drift is unreconciled when an unrelated direct spec edit is committed, that drift is silently absorbed by the new baseline — `reconcile` will not surface it on the next run. The previous behavior would have continued to surface it until an explicit reconcile cycle. Treat direct spec edits as implicit reconciliations; if drift is suspected, run `/lsa:reconcile` *before* editing the spec for unrelated reasons.
+
 ## [0.8.0] — 2026-05-24
 
 Command rename + flow simplification. All LSA skills drop the `lsa-` directory prefix (commands become `lsa:discover`, `lsa:plan`, etc. instead of `lsa:lsa-discover`). `lsa-specify` and `lsa-discover` merged into a single `discover` skill with Standard/Extended flow branch. `lsa-sync` removed entirely. Two new entry-point skills: `new` (creates branch → flow-selector → discover) and `next` (reads roadmap → confirms pick → creates branch → discover). Every skill description rewritten to state input/output and make the workflow order (discover → plan → implement → verify) self-evident. Also incorporates lsa v0.7.2–v0.9.0 content that landed on main in parallel (genuine-fork test, what-and-why preamble, show-changes-inline sweep, Hard/Soft Confirm vocabulary removal). Minor bump — skill slugs, invocation names, and workflow structure all change.
