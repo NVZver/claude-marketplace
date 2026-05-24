@@ -18,7 +18,7 @@ Every LSA User Verification is a decision asked of the human with explicit conse
 | **`lsa-plan`** | Decompose an approved spec into ≤5 parallel-safe epics. Each epic carries a `**Covers:**` line citing requirement IDs (`F<n>`, `NF<n>`, `AC<n>`) — sourced by `lsa-verify`. |
 | **`lsa-verify`** | Verify every change traces to a spec requirement via dual predicates: orphan-diff (broad — every non-trivial hunk covered) + orphan-AC (narrow — every AC implemented). Code-mode, doc-mode, or mixed (per `.lsa.yaml`). Emit per-feature `metrics.md` on clean Extended-flow PASS (was `T3`). |
 | **`lsa-sync`** | Extract delta into permanent module specs; archive feature spec; record per-module HEAD SHA in `.lsa-sync-state.json`; append aggregate metrics row. Since `lsa` v0.7.1: the post-completion PR-or-hold picker is an optional closing offer (not a gate) with silent-default = `hold`. |
-| **`lsa-reconcile`** | Absorb direct artifact edits into module specs — Level 2.5 (`vision/VISION.md:138`). Per-module hard confirm. |
+| **`lsa-reconcile`** | Absorb direct artifact edits into module specs — Level 2.5 (`vision/VISION.md:138`). One delta at a time — stop and present each individually; do not proceed without explicit approval. |
 | **`lsa-revise-constitution`** | Propose and apply changes to the configured constitution and `${specs_root}/standards/` only. |
 
 ## Configuration
