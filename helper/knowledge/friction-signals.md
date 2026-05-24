@@ -35,8 +35,6 @@ This prevents nag-spam: if the user wants Helper out of the way for one kind of 
 - The user accepts (`Yes`) but then rejects the Verification again afterwards. The first auto-engage was successful; Helper does not re-engage on the *next* `[c]` cycle within the same Verification sequence regardless (see "One per friction window" below).
 - The user picks a non-Helper option from a non-Helper picker (e.g. answers an `lsa-specify` User Verification picker normally).
 
-> **Note.** If Step 5 closes without a picker, no cooldown event is recorded; cooldown applies per-picker. Per `vision/specs/features/2026-05-22-askuserquestion-audit/tasks.md` C4.
-
 ### One per friction window
 
 Even on the same signal-type with no explicit "No": Helper auto-engages **at most once** per continuous friction window. A friction window for signal (a) ends when the user either approves the Verification (`[a]`), accepts an `[b] approve with overrides`, or abandons the skill. After the window closes, signal (a) is eligible again on a fresh User-Verification-reject pair.
