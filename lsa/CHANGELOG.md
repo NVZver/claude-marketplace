@@ -4,6 +4,26 @@ All notable changes to the `lsa` plugin are documented here. Format follows [Kee
 
 ## [Unreleased]
 
+## [0.9.0] — 2026-05-24
+
+Remove the LSA-internal "Hard Confirm" / "Soft Confirm" vocabulary. The named distinction was custom LSA invention with no upstream mandate; substituted plain-English phrasing inline at each cite site. Minor bump — the documented convention section in `lsa/knowledge/conventions.md` and its inline references across 4 skill bodies are user-visible. Matches the `c226623` (v0.7.0) precedent for documented-convention removal. Per `vision/specs/features/2026-05-22-custom-inventions-sweep/` Task T1 (inventory row #3). T2 (`.lsa-sync-state.json` removal) ships in a separate follow-up PR.
+
+### Removed
+- **`lsa/knowledge/conventions.md` §"Confirm gate types"** — section deleted (was lines 40-50). Defined `Hard Confirm` (stop, present, wait for explicit approval) and `Soft Confirm` (present, allow inline corrections). No upstream standard mandated the two-shape distinction; plain-English phrasing is clearer at each cite site.
+
+### Changed
+- **`lsa/skills/lsa-specify/SKILL.md`** (4 lines — `:21` Goal preamble + Steps 4 / 5 / 6 section headers) — *"All three Verifications in this skill are **Hard Confirm**"* → *"All three Verifications stop until the human explicitly approves; no implicit approval is accepted."* Section headers `User Verification N: ... → Hard Confirm` → `User Verification N: ... (stop and present; do not proceed without explicit approval)`. The parenthetical citing `conventions.md` §"Confirm gate types" (used to clarify why lsa-specify drops Soft) is also gone — the defining section no longer exists.
+- **`lsa/skills/lsa-reconcile/SKILL.md`** (2 lines — preamble at `:11` + Step 4 name at `:37`) — *"One module at a time, hard confirm per module."* → *"One module at a time — stop and present each delta individually; do not proceed without explicit approval."* Step 4 *"Per-module hard confirm."* → *"Per-module — stop and present each delta individually; do not proceed without explicit approval."* PR #21 verdict preamble citing [`../../../core/skills/output/SKILL.md`](../skills/output/SKILL.md) Rule 6 preserved verbatim immediately after the new step name.
+- **`lsa/skills/lsa-revise-constitution/SKILL.md`** (1 line — Constraints at `:87`) — *"Hard confirm per change."* → *"Stop and present each proposed change individually; do not proceed without explicit approval."* Step 3 (`:61`) "Human review gate." sentence + PR #21 verdict preamble citing Rule 6 preserved verbatim — Step 3 did not carry the vocabulary directly, so no edit needed at `:61`.
+- **`lsa/README.md`** (1 line — `lsa-reconcile` skill table row at `:21`) — *"Per-module hard confirm."* → *"One delta at a time — stop and present each individually; do not proceed without explicit approval."* Keeps the README description aligned with the renamed skill body per the same-commit README rule in `/CLAUDE.md`.
+
+### Notes
+- **Minor bump rationale.** Matches the `c226623` precedent (`lsa/CHANGELOG.md` v0.7.0 entry — trace-tag removal moved `0.6.5` → `0.7.0` for a user-visible documented-convention removal). This PR removes another user-visible documented convention section (`conventions.md` §"Confirm gate types") plus its inline references in 4 skill bodies and 1 README cell. Anyone who learned the Hard / Soft vocabulary sees it disappear.
+- **`lsa-sync` carries no Hard / Soft Confirm references.** Verified via `grep -n "Hard\|Soft" lsa/skills/lsa-sync/SKILL.md` (only matches were in unrelated words like "Verdict" — no vocabulary site). No edit needed in `lsa-sync` for this sweep.
+- **`grep -rn "Hard Confirm\|Soft Confirm" lsa/`** returns zero hits in active files after this sweep. Historical CHANGELOG entries (pre-v0.9.0) keep their original wording — they are frozen records of how the convention existed at the time, and nothing parses them.
+- **T2 deferred.** `.lsa-sync-state.json` removal (inventory row #1) ships as a separate PR — medium blast radius (7 files + 1 hook script) plus adjacent-line-citation conflicts with PR #22 (Show actual changes inline) warrant the split.
+- **Spec source.** `vision/specs/features/2026-05-22-custom-inventions-sweep/design.md` §"Invention inventory" row #3; `tasks.md` §"T1 — PR: Remove 'Hard Confirm' / 'Soft Confirm' vocabulary".
+
 ## [0.8.1] — 2026-05-24
 
 Apply the new `core` v0.8.0 **Rule 7 — Show changes inline (write, show, comment)** to every LSA skill body whose `Observable result:` line currently names a file write/edit/append/mark without naming what is quoted back. 16 lines edited across 7 LSA skills (`lsa-sync` ×6, `lsa-specify` ×3, `lsa-init` ×2, `lsa-revise-constitution` ×2, `lsa-plan` ×1, `lsa-verify` ×1, `lsa-discover` ×1). Each touch is a one-line replacement — no surrounding-content rewrite, no behavior change; the clause now names the quote-back format (full single-change block when ≤10 lines, compressed inspection table when larger) and the type tag (add / edit / replace / append / mark). One-line forward-link added to `lsa-reconcile` naming its 8-element drift block as the in-repo exemplar Rule 7 generalizes from. Per `vision/specs/features/2026-05-22-show-changes-inline/`. Standard flow.

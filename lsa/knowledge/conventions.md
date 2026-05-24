@@ -34,16 +34,3 @@ Every LSA skill begins with the same protocol — read in this order, print a on
 If a source does not exist, note the gap rather than guessing. Per `core/skills/ground-rules/SKILL.md` Rule 3.
 
 Observable result: per-source one-liner printed back to the human.
-
----
-
-## Confirm gate types
-
-Two gate shapes govern every human-in-the-loop interaction:
-
-- **Hard Confirm.** Stop completely. Present the artifact. Do not proceed until the human explicitly approves. No implicit approval accepted.
-- **Soft Confirm.** Present the artifact. Wait for approval or corrections. Human may approve, correct inline, or delegate corrections to agent. Proceed once human is satisfied.
-
-Used by:
-- **Hard:** `lsa-specify` (`requirements.md`, `test-suites.md`), `lsa-plan` (`tasks.md`), `lsa-reconcile` (per module), `lsa-revise-constitution` (per change), `lsa-sync` (delta).
-- **Soft:** `lsa-specify` (`contract.yaml`, `design.md`).

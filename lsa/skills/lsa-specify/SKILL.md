@@ -18,7 +18,7 @@ Write the formal feature spec — `requirements.md`, `test-suites.md`, `contract
 - Optional `discovery.md` scratch file produced by `lsa-discover` for Extended flows (was `T3`). When present, the answers in `discovery.md` seed Step 2 so the clarification block becomes a deeper round, not the first round.
 - `.lsa.yaml` for `constitution` path and `specs_root` (defaults per [`../knowledge/conventions.md`](../knowledge/conventions.md) §"`.lsa.yaml` defaults").
 
-All three Verifications in this skill are **Hard Confirm** — present artifact(s), wait for explicit approval, no implicit pass. (`conventions.md` §"Confirm gate types" still defines both Hard and Soft for other skills' use; lsa-specify no longer uses Soft after the audit-C gate collapse.)
+All three Verifications stop until the human explicitly approves; no implicit approval is accepted.
 
 ## Steps
 
@@ -52,7 +52,7 @@ All three Verifications in this skill are **Hard Confirm** — present artifact(
 
    Feature name: kebab-case. Create git branch: `feature/<feature-name>`. Observable result: the created paths quoted back inline per [`core/output`](../../../core/skills/output/SKILL.md) Rule 7 (add type tag) — names `${specs_root}/features/<feature-name>/` with the per-file listing, names the new `feature/<feature-name>` branch.
 
-4. **User Verification 1: Requirements + Contract Trigger → Hard Confirm (bundled).**
+4. **User Verification 1: Requirements + Contract Trigger (bundled — stop and present; do not proceed without explicit approval).**
 
    Write `requirements.md`:
    ```markdown
@@ -98,7 +98,7 @@ All three Verifications in this skill are **Hard Confirm** — present artifact(
 
    When asking about individual requirements that need clarification, ask one decision per question; resolve each `F<n>` / `NF<n>` / `AC<n>` to its subject phrase ("Add password reset endpoint?"), not the ID. Format per [`core/output`](../../../core/skills/output/SKILL.md); `AskUserQuestion` in Claude Code. Observable result: `requirements.md` quoted back inline per [`core/output`](../../../core/skills/output/SKILL.md) Rule 7 (add type tag) — full single-change block for each section (Summary / Functional Requirements / Non-Functional Requirements / Inputs & Outputs / Constraints / Out of Scope / Acceptance Criteria) when ≤10 lines, compressed inspection table when larger; contract-trigger logged; human approval logged.
 
-5. **User Verification 2: Test Suites + Contract + Design → Hard Confirm (bundled).**
+5. **User Verification 2: Test Suites + Contract + Design (bundled — stop and present; do not proceed without explicit approval).**
 
    Before writing `test-suites.md`: verify every AC from `requirements.md` is assigned to at least one journey. Do not present until all ACs are covered.
 
@@ -203,7 +203,7 @@ All three Verifications in this skill are **Hard Confirm** — present artifact(
 
    Failing rows surface as Rule 6 decision blocks (batched in one multi-question `AskUserQuestion`); approval is blocked until every `✗` row is resolved. Each failing-row picker uses subject voice — name the two artifact lines in conflict, not the row number. Format per [`core/output`](../../../core/skills/output/SKILL.md); `AskUserQuestion` in Claude Code. Observable result: the three written files quoted back inline per [`core/output`](../../../core/skills/output/SKILL.md) Rule 7 (add type tag) — `test-suites.md` / `contract.yaml` (or skip-note) / `design.md` each rendered as a compressed inspection table (one row per top-level section) given multi-file batch size, with file:line pointers; diagonal coverage table rendered (every row `✓` or `N/A`); human approval logged.
 
-6. **User Verification 3: Final Integration → Hard Confirm.** Cross-artifact integrity, not a re-read of files.
+6. **User Verification 3: Final Integration — stop and present; do not proceed without explicit approval.** Cross-artifact integrity, not a re-read of files.
 
    Present: integrity checks (every AC has a journey covering it? design matches contract? Open Questions resolved or deferred?) + decision. **Prompt voice (per [`core/output`](../../../core/skills/output/SKILL.md) Rule 5).** Picker **question**: *"Final approval — start implementation planning for `<feature-name>`?"* — not *"Approve User Verification 3?"*. Option **labels**:
 
