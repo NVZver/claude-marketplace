@@ -45,20 +45,34 @@ Apply the new `core` v0.7.0 **Rule 6 — What-and-why preamble** to every LSA sk
 - **Three LSA skills with zero verdict emissions stay untouched.** `lsa-discover`, `lsa-specify`, `lsa-plan` emit no verdict label per the inventory in `vision/specs/features/2026-05-22-lsa-what-why-preamble/design.md` §"Verb-headline inventory". The rule still ships in `core/output`, so the moment any of them adds a verdict emission the preamble obligation attaches automatically. (`lsa-plan` uses `PASS / FAIL` as in-table cell values, not verdict headlines — Open Question 2 resolution.)
 - **Spec source.** `vision/specs/features/2026-05-22-lsa-what-why-preamble/requirements.md` AC1–AC8 + F1–F7; `design.md` §"Worked examples" carries the verbatim preamble strings used at each emission site; `tasks.md` Epics 0–5 enumerate the edits.
 
-## [0.7.1] — 2026-05-24
+## [0.7.2] — 2026-05-24
 
-Apply the `core` v0.6.0 *Genuine-fork test* to 3 LSA call sites — tightening `lsa-discover`'s per-line picker, softening `lsa-sync`'s post-completion picker, and renaming `lsa-verify`'s verdict-picker prompt. Per `vision/specs/features/2026-05-22-askuserquestion-audit/` Epic B (rows L2 / L9 / L12 in the design inventory). Standard flow.
+Apply the `core` v0.6.0 *Genuine-fork test* to 3 LSA call sites — tightening `lsa-discover`'s per-line picker (composes with v0.7.1 infer-then-confirm), softening `lsa-sync`'s post-completion picker, and renaming `lsa-verify`'s verdict-picker prompt. Per `vision/specs/features/2026-05-22-askuserquestion-audit/` Epic B (rows L2 / L9 / L12 in the design inventory). Standard flow. Renumbered from v0.7.1 → v0.7.2 to coexist with the v0.7.1 infer-then-confirm release that landed independently.
 
 ### Changed
-- **`lsa/skills/lsa-discover/SKILL.md` Step 2 (L2 — `keep + tighten`)** — added "Skip per-line picker when N=1 candidate AND no `custom`" semantics. When Step 1 yields a single unambiguous candidate for a line (one module, one change framing, or one AC framing) and the human hasn't asked for `custom`, the skill accepts the candidate as the answer and surfaces a one-line `assumed: <answer>` note instead of opening `AskUserQuestion`. When at least one line needs picking, the remaining picks batch into ONE multi-question `AskUserQuestion` call, not three. Existing *"Silence on a line = approval"* line preserved. Maps to AC3 in the feature spec.
-- **`lsa/skills/lsa-sync/SKILL.md` Step 8 (L12 — `convert-to-closing-offer`)** — post-completion PR-or-hold picker reframed as an *optional closing offer*, not a mandatory gate. Sync is complete at this point; the picker resolves a next-step the user may want, not a fork the skill must resolve. **Silent-default = `hold`** — if the human does not respond, the skill exits cleanly with the branch ready; `gh pr create` runs only on explicit `Yes`. Cites the `core/output` Rule 5 Genuine-fork test as the rationale.
-- **`lsa/skills/lsa-verify/SKILL.md` Step 4 + Step 5 (L9 — `keep + tighten` verdict-picker prompt voice)** — verdict-picker prompts rewritten to name the verdict in the subject. PASS variant now reads *"Verdict: PASS — sync now? — Yes / No"*, FAIL variant reads *"Verdict: FAIL — block merge? — Yes / Reduce scope / Escalate"*, PASS WITH WARNINGS reads *"Verdict: PASS WITH WARNINGS — accept the warnings and sync? — Yes / Fix first / Hold"*. The human picks the next action given the verdict; the verdict itself is already settled by the checklist. Step 5's gate sentence updated to reference the new verdict-named prompt directly.
+- **`lsa/skills/lsa-discover/SKILL.md` Step 2 (L2 — `keep + tighten`)** — added "Skip per-line picker when N=1 candidate AND no `custom`" semantics on top of v0.7.1's infer-then-confirm reshape. When Step 1 yields a single unambiguous candidate for a line and the human hasn't asked for `custom`, the skill accepts the candidate silently. Remaining picks batch into ONE multi-question `AskUserQuestion`.
+- **`lsa/skills/lsa-sync/SKILL.md` Step 8 (L12 — `convert-to-closing-offer`)** — post-completion PR-or-hold picker reframed as an *optional closing offer*, not a mandatory gate. **Silent-default = `hold`** — `gh pr create` runs only on explicit `Yes`. Cites `core/output` Rule 5 Genuine-fork test.
+- **`lsa/skills/lsa-verify/SKILL.md` Step 4 + Step 5 (L9 — `keep + tighten` verdict-picker prompt voice)** — verdict-picker prompts rewritten to name the verdict in the subject: *"Verdict: PASS — sync now?"* / *"Verdict: FAIL — block merge?"* / *"Verdict: PASS WITH WARNINGS — accept the warnings and sync?"*. Human picks the next action; verdict itself is already settled by the checklist.
 
 ### Notes
-- **Minor bump rationale.** B1 (`lsa-discover` skip when N=1) and B2 (`lsa-sync` closing-offer) both change observable behavior — fewer pickers, sensible silent-default. B4 (`lsa-verify` prompt voice) is a prompt-text change but no behavior shift. Cumulative effect is user-visible, so 0.7.0 → 0.7.1 patch bump is on the boundary; chose patch because no rule/skill is added or removed, only existing pickers' wording and conditional rendering changed. If a reviewer reads this as minor-bump-worthy, that's defensible too.
-- **Sibling core minor bump.** `core` v0.6.0 in the same feature ships the canonical rule this changelog cites (`core/skills/output/SKILL.md` Rule 5 *Genuine-fork test*). LSA edits are downstream of the rule.
-- **Out of scope for this PR.** Helper-side call-site sweep (Epic C — H1, H2, H3, H4, H5m in the inventory) ships in a later PR; it blocks on `helper` v0.3.0 landing first (PR #19) to avoid re-introducing the mandatory closing picker the Epic C edits remove.
+- **Patch bump rationale.** L2 (skip when N=1) + L12 (closing-offer) change observable behavior; L9 (verdict prompt) is prompt-text only. Cumulative effect is on the patch/minor boundary; chose patch — no rule/skill added or removed, only existing pickers' wording and conditional rendering changed.
+- **Sibling `core` minor bump.** `core` v0.6.0 in the same feature ships the canonical rule this changelog cites (`core/skills/output/SKILL.md` Rule 5 *Genuine-fork test*). LSA edits are downstream of the rule.
+- **Out of scope for this PR.** Helper-side call-site sweep (Epic C — H1, H2, H3, H4, H5m in the inventory) ships in a later PR; it folds with feature 5's Epic 3 since most Epic C work was substantially done by helper v0.3.0 (PR #19).
 - **Spec source.** `vision/specs/features/2026-05-22-askuserquestion-audit/design.md` §"Call-site Inventory" rows L2, L9, L12 carry the verdict + reason; `tasks.md` Epic B enumerates B1–B6.
+
+## [0.7.1] — 2026-05-23
+
+`lsa-discover` infer-then-confirm. The agent now reads the codebase to determine module, change framing, and acceptance criterion — then presents all three as a pre-filled table for human override in a single `AskUserQuestion`. Previously the skill asked three questions the agent should have answered itself. Same pattern as the `lsa-init` v0.3.1 fix (greenfield/brownfield mechanical detection). Per user feedback 2026-05-23.
+
+### Changed
+- **`lsa/skills/lsa-discover/SKILL.md` Step 2** — replaced "Ask the three-question discovery probe" with "Infer all three discovery answers — then confirm." New sub-steps 2a (module inference via artifact_paths cross-reference), 2b (change framing from module spec), 2c (AC from task description + spec invariants), 2d (single confirmation prompt). The agent does the discovery work; the human confirms or overrides.
+- **`lsa/skills/lsa-discover/SKILL.md` Goal** — updated to reflect agent-inferred, human-confirmed pattern.
+- **`lsa/skills/lsa-discover/SKILL.md` Constraints** — first bullet changed from "Three questions, no more" to "Infer, don't ask" with the rule that the agent never asks for information derivable from repo state.
+- **`lsa/README.md`** — `lsa-discover` row updated from "Light three-question probe" to "Infer-then-confirm discovery."
+
+### Notes
+- **Patch bump rationale.** Behavioral improvement to an existing skill — discovery answers are now agent-inferred rather than human-provided. The three-answer shape and downstream handoff (Standard oral / Extended scratch) are unchanged.
+- **Precedent.** Mirrors `lsa-init` v0.3.1 (`lsa/CHANGELOG.md:163-166`) which replaced the redundant "Greenfield or brownfield?" question with mechanical detection.
 
 ## [0.7.0] — 2026-05-22
 
