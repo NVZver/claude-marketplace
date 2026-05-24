@@ -4,6 +4,27 @@ All notable changes to the `core` plugin are documented here. Format follows [Ke
 
 ## [Unreleased]
 
+## [0.7.0] — 2026-05-24
+
+Adds **Rule 6 — What-and-why preamble** to `core/output`. Every emission of a verdict label from `core/knowledge/output-vocabulary.md` §"Verdicts" must be preceded in the same paragraph by a one-sentence preamble naming (a) the action in plain English in the user's frame, and (b) the concrete consequence if the human does not act. Canonical format: `<context sentence>. <VERDICT> verdict + <details>.` A bare verdict line fails the rule. Per `vision/specs/features/2026-05-22-lsa-what-why-preamble/`. Standard flow.
+
+### Added
+- **`core/skills/output/SKILL.md` Rule 6 "What-and-why preamble — verdicts carry a one-sentence frame"** — new top-level rule appended after Rule 5. Cites `core/knowledge/output-vocabulary.md` §"Verdicts" by link. Body kept short (≤6 wrapped lines per NF1). Not a sub-bullet under Rule 5 — Rule 5 governs picker-prompt voice (decision prompts), Rule 6 governs action-framing (verdict emissions). Different categories. See `vision/specs/features/2026-05-22-lsa-what-why-preamble/design.md` §"Where the rule lives".
+
+### Changed
+- **`core/skills/output/SKILL.md` frontmatter `description:`** — "five golden rules" → "six golden rules"; rule list extended with *"what-and-why preamble"*.
+- **`core/skills/output/SKILL.md` H1 lead-in** — *"Five golden rules"* → *"Six golden rules"*.
+- **`core/CLAUDE.md` § Output discipline** — rule-count line updated from *"five format golden rules"* → *"six format golden rules"*; rule list extended.
+- **`core/README.md` `output` row** — rule-count updated 5 → 6; rule list extended; appended a one-sentence summary of Rule 6 with citation to `core/knowledge/output-vocabulary.md`.
+- **`core/.claude-plugin/plugin.json` `description`** — rule-count updated 5 → 6; rule list extended.
+- **`CLAUDE.md` (repo root) § Always-on rules** — rule-count line updated 5 → 6; rule list extended.
+
+### Notes
+- **Minor bump rationale.** New rule with marketplace-wide reach — every plugin that emits verdict labels inherits the obligation by virtue of citing `core/output`. User-visible discipline change; not a refactor.
+- **Sibling LSA bump.** `lsa` v0.8.0 in the same feature sweeps the 5 LSA skill bodies that currently emit verdict labels (`lsa-init`, `lsa-reconcile`, `lsa-sync`, `lsa-revise-constitution`, `lsa-verify`) to render preamble-first verdicts citing Rule 6 by link.
+- **Spec source.** `vision/specs/features/2026-05-22-lsa-what-why-preamble/requirements.md` F5 fixes the rule's location at `core/output`; `design.md` §"Where the rule lives" resolves OQ1 to *new Rule 6, not a sub-bullet under Rule 5*.
+- **Roadmap coordination.** Rule 6 = *What-and-why preamble* (this feature, row #4). Rule 7 = *Show changes inline (write-show-comment)* will be claimed by roadmap row #5 when it lands.
+
 ## [0.6.0] — 2026-05-24
 
 Rule 5 expansion — **Genuine-fork test** as a new operational sub-rule under "Must-decide only". Replaces the prior one-line "Must-decide only" bullet at `core/skills/output/SKILL.md:39` with a checklist that makes "meaningfully change the outcome" testable: a picker is justified only when at least one of four conditions holds (destructive write / two named designs in scope / fact absent from context / per-row triage). Orthogonal to `vision/VISION.md:66` Principle 9 — Principle 9 governs *which* substrate (`AskUserQuestion` vs `[a]/[b]/[c]`); the Genuine-fork test governs *whether to ask at all*. Per `vision/specs/features/2026-05-22-askuserquestion-audit/`. Standard flow.

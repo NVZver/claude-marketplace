@@ -12,7 +12,7 @@ Apply [`core/ground-rules`](./skills/ground-rules/SKILL.md) to every substantive
 
 ## Output discipline (always-on)
 
-Apply [`core/output`](./skills/output/SKILL.md) to every human-facing output — five format golden rules (structured, minimal, formatted, sourced, concrete). Each component picks its own format within these rules.
+Apply [`core/output`](./skills/output/SKILL.md) to every human-facing output — six format golden rules (structured, minimal, formatted, sourced, concrete, what-and-why preamble). Each component picks its own format within these rules.
 
 **Three operational checkpoints (commonly skipped — surface them every turn):**
 

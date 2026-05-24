@@ -1,15 +1,15 @@
 ---
 name: output
-description: Apply to every human-facing output — agent responses, skill bodies, plan files, READMEs, commit messages, PR descriptions, comments. Enforces five golden rules — structured, minimal, formatted, sourced, concrete (cites ground-rules Rule 1).
+description: Apply to every human-facing output — agent responses, skill bodies, plan files, READMEs, commit messages, PR descriptions, comments. Enforces six golden rules — structured, minimal, formatted, sourced, concrete, what-and-why preamble (cites ground-rules Rule 1).
 ---
 
 > **Trace.** On load, print first: `=============== [core/skills/output/SKILL.md] [core] ===============`
 
-> **Canonical source.** This file is the single source-of-truth for output discipline across the NVZver marketplace. Other plugins MAY cite it and MAY add component-specific formats that satisfy these five rules. They MUST NOT restate the rule count or rule names outside this file (citation by markdown link only). They MUST NOT override or relax any rule. Re-grounded summaries that restate the rules in prose are permitted only when they cite this file by link at the top — see `helper/knowledge/output-discipline.md` for the canonical adherent example. Enforced by `core/tests/repo-anchored.md` probe D2.
+> **Canonical source.** This file is the single source-of-truth for output discipline across the NVZver marketplace. Other plugins MAY cite it and MAY add component-specific formats that satisfy these six rules. They MUST NOT restate the rule count or rule names outside this file (citation by markdown link only). They MUST NOT override or relax any rule. Re-grounded summaries that restate the rules in prose are permitted only when they cite this file by link at the top — see `helper/knowledge/output-discipline.md` for the canonical adherent example. Enforced by `core/tests/repo-anchored.md` probe D2.
 
 # Output Discipline
 
-Five golden rules. Component-specific formats (per-skill) are free choices WITHIN these rules.
+Six golden rules. Component-specific formats (per-skill) are free choices WITHIN these rules.
 
 ## 1. Structured
 Output has a shape: headings, sections, tables, lists, blocks. No stream-of-consciousness prose.
@@ -38,6 +38,15 @@ Questions and options name the real-world subject — not spec IDs, not project 
 - **No project jargon.** Strip terms a first-time user can't decode (`contract-trigger`, `Hard Confirm`, `diagonal coverage`). Reserve jargon for skill bodies, not user-facing prompts.
 - **Must-decide only — Genuine-fork test.** Surface as picker questions only choices that meaningfully change the outcome. Before opening a picker, the agent answers: *is there a real fork I cannot resolve from in-scope sources?* A fork is real when **at least one** holds: (a) **destructive** — the next action edits a file, deletes a row, calls an external service, or starts a multi-turn skill flow; (b) **two named designs in scope and neither overrides the other** — the agent has identified ≥2 reasonable continuations from in-scope sources (`vision/VISION.md:63` Principle 6) and no source ranks one above the other; (c) **a fact required by the next step is absent from working context and cannot be derived** — spec, repo, and prior turns do not supply it; (d) **per-row triage** — N items each need an independent decision (batched into one multi-question picker). If none apply, deliver the cited answer directly and offer at most ONE closing picker for the user to override. Substrate selection (which primitive) is governed by `vision/VISION.md:66` Principle 9.
 - **One decision per question.** Don't bundle "approve A and B and C?" — split into separate questions.
+
+## 6. What-and-why preamble — verdicts carry a one-sentence frame
+Every emission of a verdict label from
+[`core/knowledge/output-vocabulary.md`](../../knowledge/output-vocabulary.md) §"Verdicts"
+is preceded in the same paragraph by a one-sentence preamble naming
+(a) the action in plain English in the user's frame, and (b) the concrete
+consequence if the human does not act. Canonical format:
+`<context sentence>. <VERDICT> verdict + <details>.` A bare verdict line
+fails this rule.
 
 ---
 
