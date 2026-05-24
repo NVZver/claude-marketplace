@@ -42,7 +42,6 @@ Files tracked by git but not LSA-verified (catalog/configuration, not behavior-b
 |---|---|
 | `.claude-plugin/marketplace.json` | Marketplace catalog. Listing the plugins; not behavior. |
 | `.lsa.yaml` | LSA's own configuration. Read by the skills; not their target. |
-| `.lsa-sync-state.json` | LSA's per-module last-sync state. Orphaned — `lsa-sync` was removed in lsa v0.8.0. |
 | `.gitignore`, `.editorconfig`, etc. | Repo plumbing. |
 
 Changes here are tracked by git but do not trigger `verify`. If marketplace.json or .lsa.yaml introduce *behavioral* changes (e.g., adding a new plugin, changing `mode`), the change appears in the main.spec.md module index and is reviewed there.

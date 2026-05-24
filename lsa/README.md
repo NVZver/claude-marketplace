@@ -44,7 +44,7 @@ modules:
 
 When `.lsa.yaml` is absent, LSA falls back to v0.1.1 behavior (`/CLAUDE.md`, `/specs/`, code-mode). See [`ARCHITECTURE.md`](./ARCHITECTURE.md) §4.10 for the full schema.
 
-A SessionStart drift hook (`lsa/hooks/hooks.json`) compares `artifact_paths` against the per-module SHA recorded in `.lsa-sync-state.json` (written by `reconcile`) and surfaces a one-line notice when there's drift — pointing the user at `/lsa:reconcile`.
+A SessionStart drift hook (`lsa/hooks/hooks.json`) compares each module's `artifact_paths` against the baseline SHA — the last commit that modified the module's spec file, resolved at hook runtime via `git log -1 --format=%H -- <spec-path>` — and surfaces a one-line notice when there's drift, pointing the user at `/lsa:reconcile`.
 
 ## Depends on
 
