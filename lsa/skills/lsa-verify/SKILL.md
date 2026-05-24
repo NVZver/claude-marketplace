@@ -115,7 +115,7 @@ Confirm that the implementation on the current feature branch matches the approv
    - **Score:** M/N (1.00 = no scope creep)
    ```
 
-   Pass/fail counts only — no statistical eval (deferred per `vision/VISION.md` §6 adjust #3). Observable result: `metrics.md` exists when the gate is clean PASS; absent otherwise.
+   Pass/fail counts only — no statistical eval (deferred per `vision/VISION.md` §6 adjust #3). Observable result: when the gate is clean PASS, the written `${specs_root}/archive/<feature-name>/metrics.md` body quoted back inline per [`core/output`](../../../core/skills/output/SKILL.md) Rule 7 (add type tag) — full single-change block of the three score sections when ≤10 lines, compressed inspection table when larger; absent (no write) otherwise.
 
 ## Output
 

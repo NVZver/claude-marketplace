@@ -4,6 +4,30 @@ All notable changes to the `lsa` plugin are documented here. Format follows [Kee
 
 ## [Unreleased]
 
+## [0.8.1] — 2026-05-24
+
+Apply the new `core` v0.8.0 **Rule 7 — Show changes inline (write, show, comment)** to every LSA skill body whose `Observable result:` line currently names a file write/edit/append/mark without naming what is quoted back. 16 lines edited across 7 LSA skills (`lsa-sync` ×6, `lsa-specify` ×3, `lsa-init` ×2, `lsa-revise-constitution` ×2, `lsa-plan` ×1, `lsa-verify` ×1, `lsa-discover` ×1). Each touch is a one-line replacement — no surrounding-content rewrite, no behavior change; the clause now names the quote-back format (full single-change block when ≤10 lines, compressed inspection table when larger) and the type tag (add / edit / replace / append / mark). One-line forward-link added to `lsa-reconcile` naming its 8-element drift block as the in-repo exemplar Rule 7 generalizes from. Per `vision/specs/features/2026-05-22-show-changes-inline/`. Standard flow.
+
+### Changed
+- **`lsa/skills/lsa-sync/SKILL.md`** (6 lines — Steps 2 / 3 / 4 / 5 / 6 / 7) — `Observable result:` lines for the delta scratch, per-module diff, `main.spec.md` diff, archive `mv`, `.lsa-sync-state.json` write, and `metrics.md` row append now cite [`core/output`](../skills/output/SKILL.md) Rule 7 and name the quote-back format. Verdict-emission step at line 131 (closing-offer) untouched — already cites Rule 6 for the preamble.
+- **`lsa/skills/lsa-specify/SKILL.md`** (3 lines — Steps 3 / 4 / 5) — `Observable result:` lines for the spec-dir + branch creation, `requirements.md` write, and the three-file write (`test-suites.md` / `contract.yaml` / `design.md`) now cite Rule 7 and name the quote-back format.
+- **`lsa/skills/lsa-init/SKILL.md`** (2 lines — Step 2 brownfield / Step 3) — `Observable result:` lines for the brownfield spec-tree write and the three-file write (`main.spec.md` / `roadmap.md` / `research-backlog.md`) now cite Rule 7 and name the compressed-inspection-table format given the multi-file batch size.
+- **`lsa/skills/lsa-revise-constitution/SKILL.md`** (2 lines — Steps 4 / 5) — `Observable result:` lines for the per-file edit (`${constitution}` / `${specs_root}/standards/*`) and the branch + commit creation now cite Rule 7 and name the quote-back format.
+- **`lsa/skills/lsa-plan/SKILL.md`** (1 line — Step 4) — `Observable result:` line for the `tasks.md` write now cites Rule 7 and names the per-epic compressed-table format.
+- **`lsa/skills/lsa-verify/SKILL.md`** (1 line — Step 6) — `Observable result:` line for the conditional `metrics.md` write (only on clean PASS) now cites Rule 7 and names the quote-back format. Borderline-write per `design.md` §"Inventory" row 15 — resolved to (a) "treat as a write step, apply Rule 7" per the implementor's call (the recommended branch).
+- **`lsa/skills/lsa-discover/SKILL.md`** (1 line — Step 4 Extended) — `Observable result:` line for the `discovery.md` scratch write now cites Rule 7 and names the full single-change block format with the three captured answers.
+
+### Added
+- **`lsa/skills/lsa-reconcile/SKILL.md` ## Steps preamble** — one-line forward-link near the top of `## Steps`: *"The 8-element drift block below is the exemplar that [`core/output`](../skills/output/SKILL.md) Rule 7 generalizes from."* Closes the cross-cite — `core/output` Rule 7 already cites `lsa-reconcile` as the exemplar; this is the reverse pointer.
+
+### Notes
+- **Patch bump rationale.** Output-discipline only — no behavior change. Each edit is a one-line touch; per-skill `## Goal` / `## Constraints` / `## Output` sections untouched (per `requirements.md` NF3). The user-visible delta is each touched `Observable result:` line now names the quote-back format the human sees, instead of only that the file changed.
+- **Sibling core minor bump.** `core` v0.8.0 in the same feature ships the canonical Rule 7 these LSA edits cite (`core/skills/output/SKILL.md` Rule 7 *"Show changes inline — write, show, comment"*). LSA cites by markdown link, never restates.
+- **`lsa-reconcile` is excluded from the sweep.** It is the exemplar Rule 7 generalizes from; touching its `Observable result:` lines would risk circular drift (per `requirements.md` Constraint *"Do not edit `lsa-reconcile`. It is the exemplar"*). The one-line forward-link added to `lsa-reconcile` `## Steps` is the only edit — additive, not a rewrite.
+- **Helper Constraint deferred.** Epic 3 (Helper `## Constraints` bullet citing Rule 7) ships in a separate follow-up PR after PR #19's helper changes merge, to avoid conflicts. The 16-line sweep + `lsa-reconcile` cross-cite ship together in this LSA patch.
+- **42 `Observable result:` lines total in `lsa/skills/` after sweep.** 16 cite Rule 7 (the violation set); 26 are read-only (read-protocol prints, in-memory captures, verdict reports already covered by Rule 6, exemplar `lsa-reconcile`) and require no Rule 7 citation per the audit framing in `design.md` §"Inventory".
+- **Spec source.** `vision/specs/features/2026-05-22-show-changes-inline/design.md` §"Inventory — current Observable result: violations" enumerates the 16 lines; §"Step B — LSA skill sweep" carries the before/after template; `tasks.md` Epics 1–2 + 4.
+
 ## [0.8.0] — 2026-05-24
 
 Apply the new `core` v0.7.0 **Rule 6 — What-and-why preamble** to every LSA skill body that currently emits a verdict label from `core/knowledge/output-vocabulary.md` §"Verdicts". 5 skill bodies updated; 7 emission sites gain a one-sentence preamble in the user's frame, naming (a) what the verdict means and (b) the concrete consequence if the user does not act. PR #20 work (verdict-named picker prompts in `lsa-verify`, closing-offer reframe in `lsa-sync`) preserved intact — preambles land BEFORE the verdict line without disturbing the existing prompt voice. Per `vision/specs/features/2026-05-22-lsa-what-why-preamble/`. Standard flow.

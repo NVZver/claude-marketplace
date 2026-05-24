@@ -64,7 +64,7 @@ After a feature is merged, propose and apply constitution / standards changes th
    1. Edit the target file (the configured `${constitution}` or a file under `${specs_root}/standards/`).
    2. Do not rewrite surrounding content.
 
-   Observable result: diff shown per file.
+   Observable result: per-file diff quoted back inline per [`../../../core/skills/output/SKILL.md`](../../../core/skills/output/SKILL.md) Rule 7 (edit type tag) — full single-change block (previous content + new content with file:line) when the change is ≤10 lines, compressed inspection table when larger.
 
 5. **Create branch and commit.**
 
@@ -74,7 +74,7 @@ After a feature is merged, propose and apply constitution / standards changes th
    git commit -m "constitution: [summary of changes]"
    ```
 
-   Branch merges to `main` independently of any feature branch. Observable result: branch + commit exist.
+   Branch merges to `main` independently of any feature branch. Observable result: the branch name `constitution/<change-description>` and the verbatim commit message quoted back inline per [`../../../core/skills/output/SKILL.md`](../../../core/skills/output/SKILL.md) Rule 7 (mark type tag) — names the new commit SHA + branch + the staged files (`${constitution}` and any `${specs_root}/standards/` paths).
 
 6. **Report.** List each change applied with file, section, and type. State: "Constitution updated. Branch ready for PR to main."
 

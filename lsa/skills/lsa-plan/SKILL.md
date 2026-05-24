@@ -109,7 +109,7 @@ Decompose an approved feature spec into ≤5 parallel-safe epics with self-verif
    - [ ] PR to main created
    ```
 
-   Observable result: `${specs_root}/features/<feature-name>/tasks.md` exists.
+   Observable result: `${specs_root}/features/<feature-name>/tasks.md` quoted back inline per [`../../../core/skills/output/SKILL.md`](../../../core/skills/output/SKILL.md) Rule 7 (add type tag) — Epic Overview table rendered, full single-change block per epic when ≤10 lines, compressed inspection table (one row per epic) when larger.
 
 5. **Human review gate.** Present rendered `tasks.md` + the 5-row self-verification table (Traceability / Accuracy / Consistency / Test coverage / Completeness — PASS / FAIL per row with reason on FAIL) + decision. **Prompt voice (per [`../../../core/skills/output/SKILL.md`](../../../core/skills/output/SKILL.md) Rule 5).** Picker **question**: *"Approve the `<N>` epics for `<feature-name>` and start implementation?"* — not *"Approve tasks.md?"* or *"Approve epic decomposition?"* (`epic decomposition` is project jargon — name the count and the feature). Option **labels**:
 

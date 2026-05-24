@@ -50,7 +50,7 @@ All three Verifications in this skill are **Hard Confirm** — present artifact(
      tasks.md           ← empty, filled by lsa-plan
    ```
 
-   Feature name: kebab-case. Create git branch: `feature/<feature-name>`. Observable result: directory and branch both exist.
+   Feature name: kebab-case. Create git branch: `feature/<feature-name>`. Observable result: the created paths quoted back inline per [`core/output`](../../../core/skills/output/SKILL.md) Rule 7 (add type tag) — names `${specs_root}/features/<feature-name>/` with the per-file listing, names the new `feature/<feature-name>` branch.
 
 4. **User Verification 1: Requirements + Contract Trigger → Hard Confirm (bundled).**
 
@@ -96,7 +96,7 @@ All three Verifications in this skill are **Hard Confirm** — present artifact(
    - `[b]` approve with corrections → I edit requirements and re-present
    - `[c]` reject → return to clarification round
 
-   When asking about individual requirements that need clarification, ask one decision per question; resolve each `F<n>` / `NF<n>` / `AC<n>` to its subject phrase ("Add password reset endpoint?"), not the ID. Format per [`core/output`](../../../core/skills/output/SKILL.md); `AskUserQuestion` in Claude Code. Observable result: `requirements.md` exists; contract-trigger logged; human approval logged.
+   When asking about individual requirements that need clarification, ask one decision per question; resolve each `F<n>` / `NF<n>` / `AC<n>` to its subject phrase ("Add password reset endpoint?"), not the ID. Format per [`core/output`](../../../core/skills/output/SKILL.md); `AskUserQuestion` in Claude Code. Observable result: `requirements.md` quoted back inline per [`core/output`](../../../core/skills/output/SKILL.md) Rule 7 (add type tag) — full single-change block for each section (Summary / Functional Requirements / Non-Functional Requirements / Inputs & Outputs / Constraints / Out of Scope / Acceptance Criteria) when ≤10 lines, compressed inspection table when larger; contract-trigger logged; human approval logged.
 
 5. **User Verification 2: Test Suites + Contract + Design → Hard Confirm (bundled).**
 
@@ -201,7 +201,7 @@ All three Verifications in this skill are **Hard Confirm** — present artifact(
    - `[b]` approve with corrections → I edit and re-present
    - `[c]` reject → return to requirements
 
-   Failing rows surface as Rule 6 decision blocks (batched in one multi-question `AskUserQuestion`); approval is blocked until every `✗` row is resolved. Each failing-row picker uses subject voice — name the two artifact lines in conflict, not the row number. Format per [`core/output`](../../../core/skills/output/SKILL.md); `AskUserQuestion` in Claude Code. Observable result: three files exist (or contract skip-note logged); diagonal coverage table rendered (every row `✓` or `N/A`); human approval logged.
+   Failing rows surface as Rule 6 decision blocks (batched in one multi-question `AskUserQuestion`); approval is blocked until every `✗` row is resolved. Each failing-row picker uses subject voice — name the two artifact lines in conflict, not the row number. Format per [`core/output`](../../../core/skills/output/SKILL.md); `AskUserQuestion` in Claude Code. Observable result: the three written files quoted back inline per [`core/output`](../../../core/skills/output/SKILL.md) Rule 7 (add type tag) — `test-suites.md` / `contract.yaml` (or skip-note) / `design.md` each rendered as a compressed inspection table (one row per top-level section) given multi-file batch size, with file:line pointers; diagonal coverage table rendered (every row `✓` or `N/A`); human approval logged.
 
 6. **User Verification 3: Final Integration → Hard Confirm.** Cross-artifact integrity, not a re-read of files.
 
