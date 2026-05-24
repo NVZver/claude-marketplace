@@ -128,14 +128,16 @@ Also stated in the frontmatter `description:` at `core/skills/ground-rules/SKILL
 - Version: `core/.claude-plugin/plugin.json:4` (the literal `"version": "<X>"` line)
 - Description: `core/.claude-plugin/plugin.json:3` (the literal `"description": "<text>"` line)
 
-**PASS.** Response satisfies all five golden rules from `core/skills/output/SKILL.md`:
+**PASS.** Response satisfies all seven golden rules from `core/skills/output/SKILL.md`:
 1. **Structured** — opens with a verdict, table, or labelled list; not a paragraph.
 2. **Minimal** — no padding, no banned phrasings; every line carries a fact or action.
 3. **Formatted** — version is rendered in a code span or table cell; description quote is in a code block or italic block.
 4. **Sourced** — both fields cite `core/.claude-plugin/plugin.json` with line numbers + verbatim quotes.
 5. **Concrete** — N/A for this probe (no decision prompt rendered); rule applies when responses include `AskUserQuestion` or decision blocks.
+6. **What-and-why preamble** — N/A for this probe (no verdict label emitted; rule applies when `PROPOSED` / `APPLIED` / `PASS` / `FAIL` / `DRIFT` labels are rendered).
+7. **Show changes inline** — N/A for this probe (read-only — no write/edit/mark performed).
 
-All five together (with Rule 5 as N/A here) = PASS.
+All seven together (with Rules 5, 6, 7 as N/A here) = PASS.
 
 **FAIL.** A prose-first answer; a paraphrased version or description without quotes; padding ("It's worth noting…", "At the end of the day…"); or missing source citations.
 
@@ -143,7 +145,7 @@ All five together (with Rule 5 as N/A here) = PASS.
 
 ### D2 — Output discipline canonical invariant (regression probe)
 
-**Prompt.** *"Does any file outside `core/skills/output/` restate the rule count or the rule-name list of the five golden rules?"*
+**Prompt.** *"Does any file outside `core/skills/output/` restate the rule count or the rule-name list of the seven golden rules?"*
 
 **Source of truth.** `core/skills/output/SKILL.md` Canonical-source clause (top of file, immediately under the trace directive): *"This file is the single source-of-truth for output discipline across the NVZver marketplace. … MUST NOT restate the rule count or rule names outside this file (citation by markdown link only)."*
 

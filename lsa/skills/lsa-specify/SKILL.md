@@ -173,14 +173,14 @@ All three Verifications stop until the human explicitly approves; no implicit ap
    |---|------|----------|----------------------|
    | 1 | AC→Journey | Each AC in `requirements.md` § Acceptance Criteria has at least one Journey in `test-suites.md` with that AC in its `**Covers:**` line. | Always evaluated. |
    | 1a | EARS-pattern | Each AC matches one of the five EARS patterns per `vision/VISION.md:201`. | Always evaluated. |
-   | 1b | Journey-shape | Each AC describes a user-observable behavior at the user/system boundary per `vision/VISION.md` §2 sub-principle 2a — not a unit-test of an internal helper. Agent-judged; the human owns the call via Rule 6. | Always evaluated. |
+   | 1b | Journey-shape | Each AC describes a user-observable behavior at the user/system boundary per `vision/VISION.md` §2 sub-principle 2a — not a unit-test of an internal helper. Agent-judged; the human owns the call via the failing-row decision block (below). | Always evaluated. |
    | 2 | Journey→Design | Every Journey in `test-suites.md` is grounded in a section of `design.md` (module, contract, or technical-approach reference). | Always evaluated. |
    | 3 | Design→Contract | Every endpoint or schema named in `design.md` § API / Interface Changes appears in `contract.yaml`. | Renders `N/A — contract skipped`. |
    | 4 | Contract→test-suites | Every endpoint/schema in `contract.yaml` is exercised by at least one Journey path in `test-suites.md`. | Renders `N/A — contract skipped`. |
 
    Each row in the rendered table has three columns: pair name, status (`✓` / `✗` / `N/A`), and citation in `<file>:<line> ↔ <file>:<line>` format. Per `core/ground-rules` Rule 1, citations are searchable `file:line` pointers — never paraphrases. Row 1 (AC→Journey) is the same check named in this step's opening paragraph, now rendered as the first row of the diagonal table rather than as a separate verbal check.
 
-   **Failing-row render.** When a row's status is `✗`, render a Rule 6 decision block per failing row:
+   **Failing-row render.** When a row's status is `✗`, render a failing-row decision block per failing row:
 
    ````
    ✗ Row N (<pair>):  <fileA>:<lineA> ↔ <fileB>:<lineB>
@@ -201,7 +201,7 @@ All three Verifications stop until the human explicitly approves; no implicit ap
    - `[b]` approve with corrections → I edit and re-present
    - `[c]` reject → return to requirements
 
-   Failing rows surface as Rule 6 decision blocks (batched in one multi-question `AskUserQuestion`); approval is blocked until every `✗` row is resolved. Each failing-row picker uses subject voice — name the two artifact lines in conflict, not the row number. Format per [`core/output`](../../../core/skills/output/SKILL.md); `AskUserQuestion` in Claude Code. Observable result: the three written files quoted back inline per [`core/output`](../../../core/skills/output/SKILL.md) Rule 7 (add type tag) — `test-suites.md` / `contract.yaml` (or skip-note) / `design.md` each rendered as a compressed inspection table (one row per top-level section) given multi-file batch size, with file:line pointers; diagonal coverage table rendered (every row `✓` or `N/A`); human approval logged.
+   Failing rows surface as failing-row decision blocks (batched in one multi-question `AskUserQuestion`); approval is blocked until every `✗` row is resolved. Each failing-row picker uses subject voice — name the two artifact lines in conflict, not the row number. Format per [`core/output`](../../../core/skills/output/SKILL.md); `AskUserQuestion` in Claude Code. Observable result: the three written files quoted back inline per [`core/output`](../../../core/skills/output/SKILL.md) Rule 7 (add type tag) — `test-suites.md` / `contract.yaml` (or skip-note) / `design.md` each rendered as a compressed inspection table (one row per top-level section) given multi-file batch size, with file:line pointers; diagonal coverage table rendered (every row `✓` or `N/A`); human approval logged.
 
 6. **User Verification 3: Final Integration — stop and present; do not proceed without explicit approval.** Cross-artifact integrity, not a re-read of files.
 
