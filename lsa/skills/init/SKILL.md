@@ -1,16 +1,16 @@
 ---
-name: lsa-init
-description: Initializes the Living Spec Architecture (LSA) for a project (greenfield or brownfield). Use whenever the user says "initialize LSA", "set up specs", "init the spec structure", starts a new project, or wants to retrofit specs onto an existing codebase.
+name: init
+description: Initialize Living Spec Architecture for a project. Input: existing codebase (greenfield or brownfield). Output: .lsa.yaml + specs_root directory + module specs.
 ---
 
-> **Trace.** On load, print first: `=============== [lsa/skills/lsa-init/SKILL.md] [lsa] ===============`
+> **Trace.** On load, print first: `=============== [lsa/skills/init/SKILL.md] [lsa] ===============`
 
 
 # LSA Init
 
 ## Goal
 
-Scaffold the LSA spec tree on a project so the rest of the LSA skills (`lsa-discover`, `lsa-specify`, `lsa-plan`, `lsa-verify`, `lsa-sync`, `lsa-reconcile`, `lsa-revise-constitution`) can run against it.
+Scaffold the LSA spec tree on a project so the rest of the LSA skills (`discover`, `plan`, `verify`, `new`, `next`, `reconcile`, `revise-constitution`) can run against it.
 
 ## Input
 

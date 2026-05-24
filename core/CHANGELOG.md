@@ -4,6 +4,18 @@ All notable changes to the `core` plugin are documented here. Format follows [Ke
 
 ## [Unreleased]
 
+## [0.5.6] — 2026-05-24
+
+Cross-reference update for LSA v0.8.0 command rename. Updated `core/CLAUDE.md` flow outcomes to use new LSA skill names (`lsa:discover`, `lsa:plan`, `lsa:verify` — dropped former `lsa-discover` → `lsa-specify` → `lsa-plan` → `lsa-verify` → `lsa-sync` chain). Updated `core/skills/flow-selector/SKILL.md` and `core/knowledge/output-vocabulary.md` references. Also incorporates core v0.6.0–v0.8.0 content that landed on main in parallel (Rules 5 expansion, Rule 6, Rule 7, 5→7 golden rules bump).
+
+### Changed
+- **`core/CLAUDE.md`** — flow outcomes updated: Standard is now `lsa:discover` → TDD → `lsa:verify`; Extended is now `lsa:discover` → `lsa:plan` → implement → `lsa:verify` (sync removed, specify merged into discover).
+- **`core/skills/flow-selector/SKILL.md`** — LSA skill name references updated to new names.
+- **`core/knowledge/output-vocabulary.md`** — `lsa-verify` → `verify` in example references.
+- **`core/skills/output/SKILL.md`** — Rule 5 expanded with Genuine-fork test; Rule 6 (what-and-why preamble) and Rule 7 (show changes inline) added; rule count 5 → 7.
+- **`core/CLAUDE.md` § Output discipline** — seven format golden rules; four operational checkpoints (substrate-native pickers, 1–1.5 screen budget, file-load trace, show changes inline).
+- **`core/.claude-plugin/plugin.json` `description`** — rule-count updated to 7; rule list extended with what-and-why preamble and show-changes-inline.
+
 ## [0.8.0] — 2026-05-24
 
 Adds **Rule 7 — Show changes inline (write, show, comment)** to `core/output`. Every write, edit, or mark performed by an agent must be echoed back inline before commentary — single-change block (path:line + verbatim previous + verbatim new + reason + source + type tag) for one edit; compressed inspection table (`#` / `file:line` / `type` / `summary` / `pointer`) when the turn produces more than ~5 file changes or more than ~10 lines of new content. Generalizes the 8-element drift block from `lsa-reconcile` (user-endorsed gold standard, 2026-05-22). Adds operational checkpoint #4 in `core/CLAUDE.md`. Per `vision/specs/features/2026-05-22-show-changes-inline/`. Standard flow.

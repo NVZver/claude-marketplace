@@ -56,7 +56,7 @@ These are the rules the whole system answers to. Short on purpose.
 1. **Trust is the product.** A fast wrong answer is a defect. A grounded "I cannot verify this" is a feature.
    - **1a. Ownership over automation.** The system surfaces facts, lays out options, and demands choice. It never silently decides on the human's behalf. (See `core/ground-rules` Rule 0.)
 2. **Two groundings, always.** Facts trace to sources. Code traces to specs. No exceptions; only explicit, marked assumptions.
-   - **2a. Acceptance criteria are journey-shaped.** Each AC in `requirements.md` describes a user-observable behavior at the user/system boundary — how a user achieves a goal or how the system handles a corner case. Unit-test-scope checks (correctness of an internal function, helper, or non-user-observable computation) live in `test-suites.md` paths or downstream tests, not in the AC sub-block. Spec-grounding at the AC level is only meaningful when traced behavior is user-observable. (See `lsa/skills/lsa-specify/SKILL.md` User Verification 2 rows 1a + 1b.)
+   - **2a. Acceptance criteria are journey-shaped.** Each AC in `requirements.md` describes a user-observable behavior at the user/system boundary — how a user achieves a goal or how the system handles a corner case. Unit-test-scope checks (correctness of an internal function, helper, or non-user-observable computation) live in `test-suites.md` paths or downstream tests, not in the AC sub-block. Spec-grounding at the AC level is only meaningful when traced behavior is user-observable. (See `lsa/skills/discover/SKILL.md` User Verification 2 rows 1a + 1b.)
 3. **Ceremony scales to weight.** A typo fix does not get a discovery phase. A new module does not skip one. The system *escalates* rigor; it never front-loads it.
 4. **Knowledge is not Actor.** Keep what-is-true separate from how-to-act. Boundary violations are the highest-severity defect.
 5. **The map is not the territory.** Load registries always; load full definitions only on match. Context is a budget.
@@ -122,7 +122,7 @@ This is the one genuinely new design decision versus the six docs. The enterpris
 | --- | --- | --- | --- |
 | **Quick** (was `T1`) | Typo, rename, one-line fix, a question | Single pass. Cite sources if any claim is made. | Fact-grounding only |
 | **Standard** (was `T2`) | A bug, a small task, a refactor | Discover (light) → implement TDD → verify | Both, lightweight |
-| **Extended** (was `T3`) | A new feature or module | Full LSA: specify → plan → implement → verify → sync | Both, full lifecycle + permanent spec |
+| **Extended** (was `T3`) | A new feature or module | Full LSA: discover → plan → implement → verify | Both, full lifecycle + permanent spec |
 
 **The escalation rule** is the heart of it: start at the lowest plausible flow; escalate the moment the work crosses a boundary. The **orchestrator picks the flow by chain-of-thought**, then states its reasoning and the human confirms or overrides. The reasoning is visible, not hidden — that is itself the fact-grounding principle applied to the system's own decisions.
 
@@ -172,7 +172,7 @@ Honest read, grounded in current sources. Three buckets.
 
 ### Ahead — keep and defend
 
-- **Spec-anchored lifecycle.** Your `lsa-sync` merges decisions into permanent module specs on every merge — zero-drift by design. The mainstream tools are critiqued precisely for *not* doing this: spec-kit is spec-first only (branch-per-change, no feature-lifetime spec), and OpenSpec's proposal docs drift during long implementations. This is your clearest lead.
+- **Spec-anchored lifecycle.** Feature specs are the permanent record of decisions — zero-drift by design. The mainstream tools are critiqued precisely for *not* doing this: spec-kit is spec-first only (branch-per-change, no feature-lifetime spec), and OpenSpec's proposal docs drift during long implementations. This is your clearest lead.
 - **Verification as the real work.** Your verifier traces every code change to a requirement and blocks untraced changes, so the human reviews spec diffs, not code diffs (bounded AI fatigue). The field's sharpest critique of SDD tooling is that they multiply artifacts without easing verification. You attack that head-on.
 - **Fact-grounding as a ground rule.** `Statement + Source + searchable quote` enforced platform-wide is stronger and more general than most tools' API-hallucination fixes.
 
@@ -203,7 +203,7 @@ When a 401 is returned for an expired session,
 
 EARS has five fixed patterns: Ubiquitous ("shall always"), Event ("When X… shall"), State ("While X… shall"), Optional ("Where feature X… shall"), Unwanted ("If X happens, then… shall"). You cannot write "handles errors gracefully" in EARS — no pattern accepts a vague line. GWT reads better to humans; EARS is harder to fake and one-line-to-one-test for your verifier. **Verdict: keep GWT for the spec narrative; add EARS only in the acceptance-criteria block, since that's what the verifier traces to code. A tightening, not a replacement.**
 
-**Decision: RESOLVED → adopted.** See §2 sub-principle 2a (Acceptance criteria are journey-shaped) and `lsa/skills/lsa-specify/SKILL.md` User Verification 2 rows 1a + 1b; `lsa/skills/lsa-verify/SKILL.md` AC-ID trace; `lsa/skills/lsa-plan/SKILL.md` epic `**Covers:**` line. Feature: `vision/specs/archive/2026-05-21-ears-journey-shape-ac/`.
+**Decision: RESOLVED → adopted.** See §2 sub-principle 2a (Acceptance criteria are journey-shaped) and `lsa/skills/discover/SKILL.md` User Verification 2 rows 1a + 1b; `lsa/skills/verify/SKILL.md` AC-ID trace; `lsa/skills/plan/SKILL.md` epic `**Covers:**` line. Feature: `vision/specs/archive/2026-05-21-ears-journey-shape-ac/`.
 
 
 **2. A small library-spec cache (the Tessl idea, shrunk).**

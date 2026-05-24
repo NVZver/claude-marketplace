@@ -1,9 +1,9 @@
 ---
-name: lsa-verify
-description: Verifies that the implementation on a feature branch matches the approved feature spec, with every change traced to a requirement. Use whenever an epic or feature is marked implemented, before any merge — when the user says "verify this", "check the implementation", or "ready to merge". Mandatory before `lsa-sync`.
+name: verify
+description: Verify implementation matches the spec. Input: completed implementation on feature branch. Output: pass/fail verdict with requirement trace.
 ---
 
-> **Trace.** On load, print first: `=============== [lsa/skills/lsa-verify/SKILL.md] [lsa] ===============`
+> **Trace.** On load, print first: `=============== [lsa/skills/verify/SKILL.md] [lsa] ===============`
 
 
 # LSA Verify
@@ -12,7 +12,7 @@ Core contract: every change must trace to a spec requirement. No code or artifac
 
 ## Goal
 
-Confirm that the implementation on the current feature branch matches the approved feature spec, every change traces to a requirement, and tests pass — and on clean PASS, emit a per-feature `metrics.md` so `lsa-sync` can aggregate it.
+Confirm that the implementation on the current feature branch matches the approved feature spec, every change traces to a requirement, and tests pass — and on clean PASS, emit a per-feature `metrics.md`.
 
 ## Input
 
@@ -80,9 +80,9 @@ Confirm that the implementation on the current feature branch matches the approv
 
 4. **Verification report — verdict-first.** Three variants by checklist outcome. Each variant's `AskUserQuestion` prompt names the verdict in the subject — the human is picking a *next action given the verdict*, not re-issuing it. Apply [`core/output`](../../../core/skills/output/SKILL.md) Rule 5 *Genuine-fork test*: the verdict is already settled by the checklist; the picker resolves the next-action fork the verdict creates. Each variant's verdict line carries a one-sentence preamble per [`core/output`](../../../core/skills/output/SKILL.md) Rule 6 — naming what the verdict means and the concrete consequence in the user's frame, before the verdict header.
 
-   - **PASS:** Preamble *"Every checklist item passed; no untraced changes; tests green — the implementation matches the approved spec and is safe to merge."* PASS verdict + 1-sentence headline + per-check-group results table (Scope / Accuracy / Tests / Code quality, m/n per row) + decision. **Prompt:** *"Verdict: PASS — sync now? — Yes (run `lsa-sync`) / No (hold; verify later)"*. Metadata (branch / mode / date) + full checklist below the fold.
-   - **FAIL:** Preamble *"Two code changes in this branch have no matching epic in tasks.md — merging now would ship code that no requirement covers, breaking the trace chain."* (adapt the count + cause to the actual failure). FAIL verdict + 1-sentence headline naming the failed groups + Issues table (BLOCKER rows: Item / Required action) + decision. **Prompt:** *"Verdict: FAIL — block merge? — Yes (fix and re-verify) / Reduce scope (re-run `lsa-specify`) / Escalate (human review)"*. Metadata + full checklist below the fold.
-   - **PASS WITH WARNINGS:** Preamble *"All blockers cleared but `<N>` non-blocking issues remain — merging now ships the feature with the warnings logged in the archive; ignoring them means the next contributor inherits the same issues."* PASS WITH WARNINGS verdict + 1-sentence headline + Issues table (WARNING rows: Item / Reason) + decision. **Prompt:** *"Verdict: PASS WITH WARNINGS — accept the warnings and sync? — Yes (sync; warning logged in archive) / Fix first (re-verify) / Hold (stop)"*. Metadata + full checklist below the fold.
+   - **PASS:** Preamble *"Every checklist item passed; no untraced changes; tests green — the implementation matches the approved spec and is safe to merge."* PASS verdict + 1-sentence headline + per-check-group results table (Scope / Accuracy / Tests / Code quality, m/n per row) + decision. **Prompt:** *"Verdict: PASS — proceed to PR to main? — Yes / No (hold; verify later)"*. Metadata (branch / mode / date) + full checklist below the fold.
+   - **FAIL:** Preamble *"Two code changes in this branch have no matching epic in tasks.md — merging now would ship code that no requirement covers, breaking the trace chain."* (adapt the count + cause to the actual failure). FAIL verdict + 1-sentence headline naming the failed groups + Issues table (BLOCKER rows: Item / Required action) + decision. **Prompt:** *"Verdict: FAIL — block merge? — Yes (fix and re-verify) / Reduce scope (re-run `lsa:discover`) / Escalate (human review)"*. Metadata + full checklist below the fold.
+   - **PASS WITH WARNINGS:** Preamble *"All blockers cleared but `<N>` non-blocking issues remain — merging now ships the feature with the warnings logged in the archive; ignoring them means the next contributor inherits the same issues."* PASS WITH WARNINGS verdict + 1-sentence headline + Issues table (WARNING rows: Item / Reason) + decision. **Prompt:** *"Verdict: PASS WITH WARNINGS — accept the warnings? — Yes (warning logged in archive, proceed to PR) / Fix first (re-verify) / Hold (stop)"*. Metadata + full checklist below the fold.
 
    Format per [`core/output`](../../../core/skills/output/SKILL.md); verdict labels (`PASS` / `FAIL` / `PASS WITH WARNINGS`) cite [`core/knowledge/output-vocabulary.md`](../../../core/knowledge/output-vocabulary.md). `AskUserQuestion` for the decision in Claude Code — the picker prompt names the verdict in the subject (per the three variants above), not a generic *"Approve?"*. Observable result: report printed in the variant matching the verdict; picker prompt names the verdict.
 
@@ -97,7 +97,7 @@ Confirm that the implementation on the current feature branch matches the approv
    # Metrics — <feature-name>
 
    **Feature archived:** YYYY-MM-DD
-   **Verified by:** lsa-verify
+   **Verified by:** lsa:verify
 
    ## Accuracy to the task
    - ACs declared: <N>

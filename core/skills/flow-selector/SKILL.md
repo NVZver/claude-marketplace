@@ -14,7 +14,7 @@ The three flows replace the prior `T1` / `T2` / `T3` tier labels (renamed in `co
 
 - **Quick** (was `T1`) — single pass, no LSA ceremony.
 - **Standard** (was `T2`) — light discovery + agent TDD + verify.
-- **Extended** (was `T3`) — full spec-driven flow: discover → specify → plan → implement → verify → sync.
+- **Extended** (was `T3`) — full spec-driven flow: discover → plan → implement → verify.
 
 ## Goal
 
@@ -43,7 +43,7 @@ Produce a flow label (`Quick`, `Standard`, or `Extended`) plus a 2–4-sentence 
    - the rationale paragraph from Step 3
    - decision. **Prompt voice (per [`../output/SKILL.md`](../output/SKILL.md) Rule 5).** Picker **question**: *"Run `<task-subject>` as a Quick / Standard / Extended flow?"* — not *"Confirm tier?"* (`tier` is the prior label; the user sees the new flow name). Option **labels**:
 
-     - `[a]` confirm `<proposed>` flow → hand off to `lsa-discover` (Standard / Extended) or direct response (Quick)
+     - `[a]` confirm `<proposed>` flow → hand off to `lsa:discover` (Standard / Extended) or direct response (Quick)
      - `[b]` override to a different flow — I re-route accordingly
      - `[c]` reconsider — I re-run the signal checklist
 
@@ -51,8 +51,8 @@ Produce a flow label (`Quick`, `Standard`, or `Extended`) plus a 2–4-sentence 
 
 5. **On confirm, hand off** per flow:
    - **Quick** — return control to the agent for a direct single-pass response. `ground-rules` still applies.
-   - **Standard** — invoke `lsa-discover` for the light three-question probe.
-   - **Extended** — invoke `lsa-discover` first, then `lsa-specify`. (Extension to `vision/VISION.md:120`: Vision's Extended loop is "specify → plan → implement → verify → sync"; v0.2.0 puts `lsa-discover` upfront so the light Q&A is universal across Standard and Extended.)
+   - **Standard** — invoke `lsa:discover` for the light three-question probe.
+   - **Extended** — invoke `lsa:discover` (which includes the specify phase internally). Vision's Extended loop is "discover → plan → implement → verify".
 
    Observable result: the named downstream skill is invoked, or — for Quick — direct response begins.
 
@@ -62,7 +62,7 @@ A flow label (`Quick` / `Standard` / `Extended`) and a 2–4-sentence rationale.
 
 ## Constraints
 
-- Do not start LSA ceremony before flow confirmation. No `lsa-discover`, `lsa-specify`, or any other skill fires until the human responds.
+- Do not start LSA ceremony before flow confirmation. No `lsa:discover`, `lsa:plan`, or any other LSA skill fires until the human responds.
 - Do not invent boundary signals that are not actually present in the task description. If the task does not mention an API change, do not assume one.
 - Do not silently choose a heavier flow than the human picks. If the human overrides downward (e.g., Extended → Standard), log the override in the rationale and proceed at the human's flow.
 - Outputs follow [`../output/SKILL.md`](../output/SKILL.md) — citation by link, never restated.
