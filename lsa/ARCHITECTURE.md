@@ -15,9 +15,8 @@ Humans write and own specs. Agents write and own artifacts. Direct artifact edit
 
 Every LSA skill's human-facing prompt and output adopts a component-specific format (the S1–S17 samples in `vision/plans/2026-05-20-credo-rollout-plan.md`) that satisfies the five golden rules in [`../core/skills/output/SKILL.md`](../core/skills/output/SKILL.md): structured, minimal, formatted, sourced, concrete. The mechanical consequences across LSA:
 
-- **`lsa-discover` Output is a 3-row table** (Module / Change / AC), not a paragraph — verdict-first, scannable.
-- **`lsa-specify` collapses 7 confirm stops to 3 bundled User Verifications** (1: Requirements + Contract Trigger; 2: Test Suites + Contract + Design; 3: Final Integration) — fewer interruptions, same coverage. Renamed from `Gate N` in `lsa` v0.6.2; prior CHANGELOG entries use the old name.
-- **`lsa-verify` reports lead with the verdict** (`✅ PASS` / `❌ FAIL` / `⚠️ PASS WITH WARNINGS`); metadata moves below the fold.
+- **`discover` Standard-flow output is a 3-row table** (Module / Change / AC), not a paragraph — verdict-first, scannable. Extended-flow continues into 3 bundled User Verifications (1: Requirements + Contract Trigger; 2: Test Suites + Contract + Design; 3: Final Integration) — fewer interruptions, same coverage. Formerly split across `lsa-discover` + `lsa-specify`; merged in v0.8.0.
+- **`verify` reports lead with the verdict** (`✅ PASS` / `❌ FAIL` / `⚠️ PASS WITH WARNINGS`); metadata moves below the fold.
 - **Every decision-bearing prompt uses `AskUserQuestion`** in Claude Code (per `vision/VISION.md` §2 principle 9 — *"Substrate-native first"*); text decision-blocks are the fallback for plain-text rendering.
 
 This document is the design-rationale narrative for `lsa`. For other concerns, see:
@@ -39,7 +38,7 @@ This document is the design-rationale narrative for `lsa`. For other concerns, s
 /
 ├── CLAUDE.md                          ← Slim Claude Code entry point.
 ├── .lsa.yaml                          ← LSA configuration (optional; defaults applied if absent)
-├── .lsa-sync-state.json               ← Per-module last-sync SHA (written by lsa-sync)
+├── .lsa-sync-state.json               ← Per-module last-sync SHA (written by reconcile)
 ├── core/                              (the core plugin — independent of LSA)
 │   ├── CLAUDE.md                      ← The canonical always-on fragment
 │   └── skills/
@@ -50,7 +49,7 @@ This document is the design-rationale narrative for `lsa`. For other concerns, s
 │   ├── hooks/
 │   │   ├── hooks.json
 │   │   └── session-start-drift-check.sh
-│   └── skills/                        (eight skills — see README.md for the table)
+│   └── skills/                        (nine skills — see README.md for the table)
 └── ${specs_root}/                     (defaults to /specs/)
     ├── main.spec.md                   ← App-level behavior, module index, global contracts
     ├── roadmap.md                     ← Prioritized feature backlog
@@ -72,7 +71,7 @@ This document is the design-rationale narrative for `lsa`. For other concerns, s
     └── archive/
         └── YYYY-MM-DD-<feature-name>/
             ├── (the archived feature spec files)
-            └── metrics.md             (written by lsa-verify on clean Extended-flow PASS — was T3)
+            └── metrics.md             (written by verify on clean Extended-flow PASS)
 ```
 
 `${specs_root}` is configurable via `.lsa.yaml` (see §3). Defaults match v0.1.1 (`/specs/`).
@@ -129,7 +128,7 @@ The SessionStart hook (`hooks/hooks.json` declares `matcher: "startup"`) invokes
 
 ```
 epic branches → feature branch (after verify per epic)
-feature branch → main (after lsa-sync + human PR review)
+feature branch → main (after lsa:verify + human PR review)
 constitution branch → main (after human approval, independent of features)
 ```
 
@@ -137,8 +136,8 @@ constitution branch → main (after human approval, independent of features)
 
 - `main` is always stable and spec-synced
 - No direct commits to `main`
-- Feature branch is created during `lsa-specify`
-- Epic branches are created during `lsa-plan`
+- Feature branch is created during `lsa:new`, `lsa:next`, or `lsa:discover` (Extended flow)
+- Epic branches are created during `lsa:plan`
 - Feature branch is deleted after merge. Epic branches are deleted after merging into feature branch
 
 ---
@@ -149,9 +148,9 @@ constitution branch → main (after human approval, independent of features)
 |---|----------|----------|
 | OQ1 | Sub-agent source of truth | `tasks.md` is the single source. Each agent reads and writes only its own epic section |
 | OQ2 | Epic agent context | All agents inherit the configured constitution. No scoped overrides |
-| OQ3 | Constitution revision | Separate skill `lsa-revise-constitution`. Single Responsibility — one skill, one job |
+| OQ3 | Constitution revision | Separate skill `revise-constitution`. Single Responsibility — one skill, one job |
 | OQ4 | Research backlog mid-feature | Kept. Updated by human or agent to a known file without branching. Reviewed during replan |
 | OQ5 | Path configuration | `.lsa.yaml` at repo root. Falls back to v0.1.1 defaults when absent |
-| OQ6 | Standard-flow path (was T2) | `lsa-discover` (three-question probe) → implement (TDD) → `lsa-verify`. No specify, no plan, no sync, no per-feature metrics |
-| OQ7 | Reconcile placement | New skill `lsa-reconcile` (SRP, mirrors LSA's one-skill-per-phase pattern) |
+| OQ6 | Standard-flow path (was T2) | `discover` (three-question probe) → implement (TDD) → `verify`. No plan, no per-feature metrics |
+| OQ7 | Reconcile placement | Skill `reconcile` (SRP, mirrors LSA's one-skill-per-phase pattern) |
 | OQ8 | Drift detection | `.lsa-sync-state.json` records last-sync commit SHA per module. SessionStart hook diffs current ↔ recorded; surfaces a one-line notice if non-empty |

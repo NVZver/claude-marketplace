@@ -2,7 +2,7 @@
 
 # Clarification — 2026-05-21-helper-agent
 
-Captures the human's answers to `lsa-specify` Step 2 assume-then-override. Silence on a line = approval; overrides logged inline.
+Captures the human's answers to `lsa:discover` Step 2 assume-then-override. Silence on a line = approval; overrides logged inline.
 
 Five must-decide questions surfaced via `AskUserQuestion` and answered by the human; the remainder were rendered as assumptions A1–A5 with batch approval.
 
@@ -15,7 +15,7 @@ Five must-decide questions surfaced via `AskUserQuestion` and answered by the hu
   - **Answered:** Can start workflows. If user expresses intent ("I want to add X"), Helper invokes the matching skill via the `Skill` tool — under explicit `AskUserQuestion` confirmation per A2.
 
 - **F3 — When does the Helper auto-engage (interrupt the current flow)?**
-  - **Answered:** Only on user-friction signals — (a) two consecutive `[c] reject` at any `lsa-specify` User Verification; (b) user types a free-form `?` / `what is X?` mid-session; (c) explicit `/help`. Not the "aggressive" hesitation-pattern detector.
+  - **Answered:** Only on user-friction signals — (a) two consecutive `[c] reject` at any `lsa:discover` User Verification; (b) user types a free-form `?` / `what is X?` mid-session; (c) explicit `/help`. Not the "aggressive" hesitation-pattern detector.
 
 - **F4 — What is the Helper allowed to read?**
   - **Answered:** Repo + installed plugins + web via `context7` MCP. Helper reads `vision/`, `core/`, `lsa/`, READMEs of this repo; READMEs and `SKILL.md` of other installed plugins; external library docs via `context7` when relevant.
@@ -43,8 +43,8 @@ Five must-decide questions surfaced via `AskUserQuestion` and answered by the hu
     - `helper/knowledge/` — any standalone Knowledge files Helper reads (per NFR5 Knowledge vs Actor).
     - `.claude-plugin/marketplace.json` — list new plugin in catalog.
     - `README.md` (repo root) — name `helper` in the install lede alongside `core` + `lsa`.
-    - `vision/specs/main.spec.md` — add `helper` row to Module Index after `lsa-sync`.
-    - `vision/specs/modules/helper/spec.md` — new module spec (created by `lsa-sync` post-merge).
+    - `vision/specs/main.spec.md` — add `helper` row to Module Index (post-merge).
+    - `vision/specs/modules/helper/spec.md` — new module spec (post-merge).
     - `vision/specs/roadmap.md` — mark Help agent shipped after sync.
 
 - **B2 — Out of scope.**

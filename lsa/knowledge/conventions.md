@@ -45,5 +45,5 @@ Two gate shapes govern every human-in-the-loop interaction:
 - **Soft Confirm.** Present the artifact. Wait for approval or corrections. Human may approve, correct inline, or delegate corrections to agent. Proceed once human is satisfied.
 
 Used by:
-- **Hard:** `lsa-specify` (`requirements.md`, `test-suites.md`), `lsa-plan` (`tasks.md`), `lsa-reconcile` (per module), `lsa-revise-constitution` (per change), `lsa-sync` (delta).
-- **Soft:** `lsa-specify` (`contract.yaml`, `design.md`).
+- **Hard:** `discover` Extended flow (`requirements.md`, `test-suites.md`), `plan` (`tasks.md`), `reconcile` (per module), `revise-constitution` (per change).
+- **Soft:** `discover` Extended flow (`contract.yaml`, `design.md`).

@@ -12,14 +12,14 @@ Every LSA User Verification is a decision asked of the human with explicit conse
 
 | Skill | Purpose |
 |---|---|
-| **`lsa-init`** | Initialize the spec tree on a project. Greenfield or brownfield. |
-| **`lsa-discover`** | Infer-then-confirm discovery at the start of every Standard / Extended task (was `T2 / T3`). Agent reads codebase to determine module, change, and AC; presents pre-filled answers for human override. Standard oral; Extended scratch `discovery.md`. |
-| **`lsa-specify`** | Create a feature spec from a description, with three bundled hard-confirm **User Verifications** (1: Requirements + Contract Trigger; 2: Test Suites + Contract + Design; 3: Final Integration). User Verification 2 renders a 6-row diagonal cross-artifact coverage check (5 with contract skipped) — including EARS-pattern + journey-shape rows per `vision/VISION.md` §2 sub-principle 2a. Renamed from `Gate N` in `lsa` v0.6.2. |
-| **`lsa-plan`** | Decompose an approved spec into ≤5 parallel-safe epics. Each epic carries a `**Covers:**` line citing requirement IDs (`F<n>`, `NF<n>`, `AC<n>`) — sourced by `lsa-verify`. |
-| **`lsa-verify`** | Verify every change traces to a spec requirement via dual predicates: orphan-diff (broad — every non-trivial hunk covered) + orphan-AC (narrow — every AC implemented). Code-mode, doc-mode, or mixed (per `.lsa.yaml`). Emit per-feature `metrics.md` on clean Extended-flow PASS (was `T3`). |
-| **`lsa-sync`** | Extract delta into permanent module specs; archive feature spec; record per-module HEAD SHA in `.lsa-sync-state.json`; append aggregate metrics row. |
-| **`lsa-reconcile`** | Absorb direct artifact edits into module specs — Level 2.5 (`vision/VISION.md:138`). Per-module hard confirm. |
-| **`lsa-revise-constitution`** | Propose and apply changes to the configured constitution and `${specs_root}/standards/` only. |
+| **`new`** | Start a new feature (creates branch → selects flow → discovers). Input: feature name or description. Output: feature branch created, discovery phase running. |
+| **`next`** | Pick and start the next backlog item (reads roadmap → confirms pick → creates branch → discovers). Input: none. Output: feature branch created, discovery phase running. |
+| **`discover`** | Discover and specify a feature. Standard flow: 3-row context table. Extended flow: full spec artifacts with three User Verifications. Merges the former `lsa-specify` + `lsa-discover`. |
+| **`plan`** | Break a spec into implementation epics. Input: approved spec artifacts. Output: tasks.md with ≤5 ordered epics, each with a `**Covers:**` line citing requirement IDs. |
+| **`verify`** | Verify implementation matches the spec. Dual predicates: orphan-diff + orphan-AC. Code-mode, doc-mode, or mixed (per `.lsa.yaml`). Emits per-feature `metrics.md` on clean Extended-flow PASS. |
+| **`init`** | Initialize Living Spec Architecture for a project. Input: existing codebase (greenfield or brownfield). Output: .lsa.yaml + specs_root directory + module specs. |
+| **`reconcile`** | Absorb a direct artifact edit into its module spec — Level 2.5 (`vision/VISION.md:138`). Per-module hard confirm. |
+| **`revise-constitution`** | Propose changes to the project constitution and standards. Input: feature decisions that should become permanent. Output: updated constitution + standards files. |
 
 ## Configuration
 
@@ -44,7 +44,7 @@ modules:
 
 When `.lsa.yaml` is absent, LSA falls back to v0.1.1 behavior (`/CLAUDE.md`, `/specs/`, code-mode). See [`ARCHITECTURE.md`](./ARCHITECTURE.md) §4.10 for the full schema.
 
-A SessionStart drift hook (`lsa/hooks/hooks.json`) compares `artifact_paths` against the per-module SHA recorded in `.lsa-sync-state.json` (written by `lsa-sync`) and surfaces a one-line notice when there's drift — pointing the user at `/lsa:reconcile`.
+A SessionStart drift hook (`lsa/hooks/hooks.json`) compares `artifact_paths` against the per-module SHA recorded in `.lsa-sync-state.json` (written by `reconcile`) and surfaces a one-line notice when there's drift — pointing the user at `/lsa:reconcile`.
 
 ## Depends on
 
@@ -68,7 +68,7 @@ The dependency is declared in [`lsa/.claude-plugin/plugin.json`](./.claude-plugi
 /reload-plugins
 ```
 
-Invoke LSA skills directly via `/lsa:init`, `/lsa:specify`, etc., or let Claude trigger by description match. Core's `ground-rules` and `actor-template` apply automatically once installed.
+Invoke LSA skills directly via `/lsa:new`, `/lsa:discover`, `/lsa:plan`, etc., or let Claude trigger by description match. Core's `ground-rules` and `actor-template` apply automatically once installed.
 
 ## Install on Claude.ai
 

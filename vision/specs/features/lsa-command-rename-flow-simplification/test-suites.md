@@ -60,6 +60,37 @@
 
 **Expected outcome:** No skill file exists at `lsa/skills/sync/` or `lsa/skills/lsa-sync/`. The system's standard "skill not found" behavior applies.
 
+## Journey: New feature entry point (`lsa:new`)
+
+**Goal:** User has a feature idea and wants to start working on it immediately — without manually creating a branch, running flow-selector, or invoking discover separately.
+**Covers:** AC7
+
+**Paths:**
+
+| # | Path | Actions |
+|---|------|---------|
+| 1 | Happy — Extended | User invokes `lsa:new "payment retry logic"` → system derives slug `payment-retry-logic` → creates branch `feature/payment-retry-logic` → runs flow-selector → user selects Extended → system hands off to `lsa:discover` Extended → spec artifacts produced |
+| 2 | Happy — Standard | User invokes `lsa:new "fix date format"` → system derives slug → creates branch → flow-selector → user selects Standard → system hands off to `lsa:discover` Standard → 3-row table rendered, no spec files |
+| 3 | Branch already exists | User invokes `lsa:new "my-feature"` → branch `feature/my-feature` already exists → system reports the branch exists and asks whether to switch to it or pick a different name |
+
+**Expected outcome:** Feature branch exists, flow type confirmed, discovery phase running — all from a single command invocation.
+
+## Journey: Next backlog item (`lsa:next`)
+
+**Goal:** User wants to pick the next highest-priority backlog item from the roadmap and start working on it, without manually scanning the roadmap or creating a branch.
+**Covers:** AC8
+
+**Paths:**
+
+| # | Path | Actions |
+|---|------|---------|
+| 1 | Happy | User invokes `lsa:next` → system reads roadmap → presents top Must-priority backlog item with name, priority, notes excerpt → user confirms "Start this one" → system creates branch → runs flow-selector → hands off to `lsa:discover` |
+| 2 | Skip to second | User invokes `lsa:next` → system presents top item → user selects "Skip — show next" → system presents second item → user confirms → branch created → discover starts |
+| 3 | Cancel | User invokes `lsa:next` → system presents top item → user selects "Cancel" → system stops, no branch created |
+| 4 | Empty backlog | User invokes `lsa:next` → roadmap has no items with status "backlog" → system reports nothing to pick |
+
+**Expected outcome:** User confirms a backlog item, feature branch is created, and discovery begins — all from a single command invocation.
+
 ## Journey: Skill description readability
 
 **Goal:** A user (or collaborator) reads the LSA skill descriptions and understands what each command does, what it needs, and the workflow order — without opening documentation.

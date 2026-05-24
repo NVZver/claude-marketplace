@@ -66,7 +66,7 @@ Make `helper` installable as a third plugin alongside `core` and `lsa`. Ship the
 - [ ] All E1 ACs pass
 - [ ] V1 probe documented in `helper/README.md`
 - [ ] No code smells per `vision/specs/standards/code.md` *"Markdown-only"*
-- [ ] `lsa-verify` PASS on `feature/2026-05-21-helper-agent-e1`
+- [ ] `lsa:verify` PASS on `feature/2026-05-21-helper-agent-e1`
 - [ ] Repo README + marketplace edits committed in the SAME commit as the plugin scaffold (per `CLAUDE.md` *"READMEs are living documents"*)
 
 ---
@@ -108,7 +108,7 @@ Flesh out `helper/agents/helper.md` from the E1 stub into a full Actor per `core
 - [ ] E2-AC5: Manual probe — Helper response length ≤1.5 screens; longer answers split across turns ending with `AskUserQuestion` (per AC8).
 - [ ] E2-AC6: Manual probe — Helper uses `AskUserQuestion` for every decision; no text `[a]/[b]/[c]` blocks (per AC6, NF3).
 - [ ] E2-AC7: Manual probe — Helper re-grosses project jargon on first turn-use (e.g. "Standard — moderate-effort flow") (per AC7).
-- [ ] E2-AC8: Manual probe — Helper recognises new-feature intent ("I want to add X") → asks `AskUserQuestion` "Start `lsa-specify`? — Yes/No"; on Yes invokes `Skill(lsa-specify)` (per AC3, F3).
+- [ ] E2-AC8: Manual probe — Helper recognises new-feature intent ("I want to add X") → asks `AskUserQuestion` "Start `lsa:discover`? — Yes/No"; on Yes invokes `Skill(lsa:discover)` (per AC3, F3).
 
 ### Testing Plan
 
@@ -123,7 +123,7 @@ Flesh out `helper/agents/helper.md` from the E1 stub into a full Actor per `core
 - [ ] All E2 ACs pass
 - [ ] V2 probe + 5+ E2E session transcripts captured in `helper/VERIFICATION.md`
 - [ ] OQ1 + OQ3 marked RESOLVED in `design.md` § Open Questions
-- [ ] `lsa-verify` PASS on `feature/2026-05-21-helper-agent-e2`
+- [ ] `lsa:verify` PASS on `feature/2026-05-21-helper-agent-e2`
 - [ ] `helper/README.md` agent row filled; `helper/CHANGELOG.md` updated in the same commit
 
 ---
@@ -169,7 +169,7 @@ Flesh out `helper/commands/help.md` from the E1 stub into a working slash comman
 
 - [ ] All E3 ACs pass
 - [ ] V1 + E2E probe documented in `helper/VERIFICATION.md`
-- [ ] `lsa-verify` PASS on `feature/2026-05-21-helper-agent-e3`
+- [ ] `lsa:verify` PASS on `feature/2026-05-21-helper-agent-e3`
 
 ---
 
@@ -186,21 +186,21 @@ Wire the auto-engage path. Extend `helper/agents/helper.md` (from E2) with the i
   - `helper/knowledge/friction-signals.md` — NEW (signals a/b/c definitions, trigger patterns, cooldown rule)
   - `helper/README.md` — MODIFY (note auto-engage behavior)
   - `helper/CHANGELOG.md` — MODIFY (note auto-engage landed)
-- Does NOT touch: `lsa/skills/lsa-specify/SKILL.md` (signal observation is one-way from Helper's side — `lsa-specify` stays unaware per `design.md:84`)
+- Does NOT touch: `lsa/skills/discover/SKILL.md` (signal observation is one-way from Helper's side — `lsa:discover` stays unaware per `design.md:84`)
 
 **Covers:** F2, AC2, NF6
 
 ### Technical Details
 
-- **Signal (a) — User-Verification-reject:** Helper agent body's Steps add a precondition check: "before responding to any user message, check if the most recent `AskUserQuestion` answer was `[c] reject` at an `lsa-specify` User Verification AND the prior answer was also `[c] reject` at the same Verification". If true, fire auto-engage.
+- **Signal (a) — User-Verification-reject:** Helper agent body's Steps add a precondition check: "before responding to any user message, check if the most recent `AskUserQuestion` answer was `[c] reject` at an `lsa:discover` User Verification AND the prior answer was also `[c] reject` at the same Verification". If true, fire auto-engage.
 - **Signal (b) — free-form question:** check if user message matches `^\s*\?` OR contains `(what|why|how)\s+(is|are|does|do)` AND user is not inside an active skill flow. If true, fire auto-engage.
 - **Signal (c) — explicit `/help`:** handled by E3's command, not detection.
 - **Cooldown (OQ2 resolution):** after Helper auto-engages once for a signal-type and the user declines re-explanation (`AskUserQuestion` → No), do not re-auto-engage on the same signal-type until a different signal-type fires OR the user explicitly invokes `/help`. Track cooldown in agent's working memory for the session.
-- **OQ4 acknowledgement:** signal (a) only fires when `lsa-specify` is the active flow; documented in `helper/knowledge/friction-signals.md`.
+- **OQ4 acknowledgement:** signal (a) only fires when `lsa:discover` is the active flow; documented in `helper/knowledge/friction-signals.md`.
 
 ### Acceptance Criteria
 
-- [ ] E4-AC1: Manual probe — invoke `lsa-specify`, reject a User Verification with `[c]` twice → Helper auto-engages with `AskUserQuestion` "Want me to explain what this User Verification is checking?" (per AC2).
+- [ ] E4-AC1: Manual probe — invoke `lsa:discover`, reject a User Verification with `[c]` twice → Helper auto-engages with `AskUserQuestion` "Want me to explain what this User Verification is checking?" (per AC2).
 - [ ] E4-AC2: Manual probe — user types `what is the Standard flow?` mid-session (no active skill) → Helper auto-engages and answers (per F2 signal b).
 - [ ] E4-AC3: Manual probe — same trigger as E4-AC1, user picks No → Helper steps back; same trigger fires again immediately, Helper does NOT re-engage (cooldown).
 - [ ] E4-AC4: Manual probe — user persists rejecting after Helper explained → Helper does NOT re-engage (no nag).
@@ -217,7 +217,7 @@ Wire the auto-engage path. Extend `helper/agents/helper.md` (from E2) with the i
 
 - [ ] All E4 ACs pass
 - [ ] OQ2 marked RESOLVED in `design.md` § Open Questions
-- [ ] `lsa-verify` PASS on `feature/2026-05-21-helper-agent-e4`
+- [ ] `lsa:verify` PASS on `feature/2026-05-21-helper-agent-e4`
 - [ ] `helper/VERIFICATION.md` extended with auto-engage probes
 - [ ] `helper/CHANGELOG.md` finalized — bump to `0.1.0` if all E1–E4 land in one minor release
 
@@ -229,7 +229,7 @@ Wire the auto-engage path. Extend `helper/agents/helper.md` (from E2) with the i
 - [ ] E2 + E3 merged into `feature/2026-05-21-helper-agent` (parallel)
 - [ ] E4 merged into `feature/2026-05-21-helper-agent`
 - [ ] All 8 ACs (AC1–AC8) verified end-to-end on the feature branch via test-suites.md journeys
-- [ ] `lsa-verify` PASS on the feature branch with 0 untraced changes
-- [ ] `lsa-sync` lands `vision/specs/modules/helper/spec.md`, updates `vision/specs/main.spec.md` Module Index, marks roadmap row shipped
-- [ ] `lsa-revise-constitution` reviewed (no constitution change expected for this feature)
+- [ ] `lsa:verify` PASS on the feature branch with 0 untraced changes
+- [ ] Post-merge: `vision/specs/modules/helper/spec.md` lands, `vision/specs/main.spec.md` Module Index updated, roadmap row marked shipped
+- [ ] `lsa:revise-constitution` reviewed (no constitution change expected for this feature)
 - [ ] PR to `main` opened: title `feat(helper): friendly fact-grounded assistant (v0.1.0)`

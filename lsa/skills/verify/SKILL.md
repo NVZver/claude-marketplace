@@ -1,9 +1,9 @@
 ---
-name: lsa-verify
-description: Verifies that the implementation on a feature branch matches the approved feature spec, with every change traced to a requirement. Use whenever an epic or feature is marked implemented, before any merge — when the user says "verify this", "check the implementation", or "ready to merge". Mandatory before `lsa-sync`.
+name: verify
+description: Verify implementation matches the spec. Input: completed implementation on feature branch. Output: pass/fail verdict with requirement trace.
 ---
 
-> **Trace.** On load, print first: `=============== [lsa/skills/lsa-verify/SKILL.md] [lsa] ===============`
+> **Trace.** On load, print first: `=============== [lsa/skills/verify/SKILL.md] [lsa] ===============`
 
 
 # LSA Verify
@@ -12,7 +12,7 @@ Core contract: every change must trace to a spec requirement. No code or artifac
 
 ## Goal
 
-Confirm that the implementation on the current feature branch matches the approved feature spec, every change traces to a requirement, and tests pass — and on clean PASS, emit a per-feature `metrics.md` so `lsa-sync` can aggregate it.
+Confirm that the implementation on the current feature branch matches the approved feature spec, every change traces to a requirement, and tests pass — and on clean PASS, emit a per-feature `metrics.md`.
 
 ## Input
 
@@ -80,8 +80,8 @@ Confirm that the implementation on the current feature branch matches the approv
 
 4. **Verification report — verdict-first.** Three variants by checklist outcome:
 
-   - **PASS:** verdict + 1-sentence headline + per-check-group results table (Scope / Accuracy / Tests / Code quality, m/n per row) + decision `[a] proceed → lsa-sync invoked` / `[b] hold → verify later`. Metadata (branch / mode / date) + full checklist below the fold.
-   - **FAIL:** verdict + 1-sentence headline naming the failed groups + Issues table (BLOCKER rows: Item / Required action) + decision `[a] fix and re-verify` / `[b] reduce scope → re-run lsa-specify` / `[c] escalate → human review`. Metadata + full checklist below the fold.
+   - **PASS:** verdict + 1-sentence headline + per-check-group results table (Scope / Accuracy / Tests / Code quality, m/n per row) + decision `[a] proceed → PR to main` / `[b] hold → verify later`. Metadata (branch / mode / date) + full checklist below the fold.
+   - **FAIL:** verdict + 1-sentence headline naming the failed groups + Issues table (BLOCKER rows: Item / Required action) + decision `[a] fix and re-verify` / `[b] reduce scope → re-run lsa:discover` / `[c] escalate → human review`. Metadata + full checklist below the fold.
    - **PASS WITH WARNINGS:** verdict + 1-sentence headline + Issues table (WARNING rows: Item / Reason) + decision `[a] accept and sync → warning logged in archive` / `[b] fix first → re-verify` / `[c] hold → stop`. Metadata + full checklist below the fold.
 
    Format per [`core/output`](../../../core/skills/output/SKILL.md); verdict labels (`PASS` / `FAIL` / `PASS WITH WARNINGS`) cite [`core/knowledge/output-vocabulary.md`](../../../core/knowledge/output-vocabulary.md). `AskUserQuestion` for the decision in Claude Code. Observable result: report printed in the variant matching the verdict.
@@ -97,7 +97,7 @@ Confirm that the implementation on the current feature branch matches the approv
    # Metrics — <feature-name>
 
    **Feature archived:** YYYY-MM-DD
-   **Verified by:** lsa-verify
+   **Verified by:** lsa:verify
 
    ## Accuracy to the task
    - ACs declared: <N>

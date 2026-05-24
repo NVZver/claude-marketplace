@@ -8,7 +8,7 @@ A Claude Code marketplace shipping three composable plugins (one under construct
 
 - **`core`** — three always-on skills that keep the agent honest: `ground-rules` (content discipline), `output` (format discipline), and `flow-selector` (process ceremony — one-pass for a typo, full spec lifecycle for a new module; renamed from `tier-selector` in `core` v0.5.2).
 - **`lsa`** — **L**iving **S**pec **A**rchitecture: spec-first development where every change traces to a requirement, and hand-edits to code are *absorbed* into the spec instead of forbidden.
-- **`helper`** *(under construction — scaffold only)* — friendly fact-grounded assistant: a `/help` slash command + an auto-engaging subagent that activates on user-friction signals (consecutive `lsa-specify` gate rejections, free-form `what is X?` mid-flow). Agent + command bodies land across steps 2–4 of [`vision/specs/features/2026-05-21-helper-agent/`](./vision/specs/features/2026-05-21-helper-agent/).
+- **`helper`** *(under construction — scaffold only)* — friendly fact-grounded assistant: a `/help` slash command + an auto-engaging subagent that activates on user-friction signals (consecutive `lsa:discover` gate rejections, free-form `what is X?` mid-flow). Agent + command bodies land across steps 2–4 of [`vision/specs/features/2026-05-21-helper-agent/`](./vision/specs/features/2026-05-21-helper-agent/).
 
 ---
 
@@ -52,20 +52,20 @@ Canonical list in [`core/CLAUDE.md`](./core/CLAUDE.md). Three always-on skills (
 
 > *"LSA doesn't automate your thinking — it makes you own it."*
 
-Specs are the permanent source of truth; every change traces to a spec requirement. Eight skills enforce the lifecycle:
+Specs are the permanent source of truth; every change traces to a spec requirement. Nine skills enforce the lifecycle:
 
 | Skill | What it does |
 |---|---|
-| `lsa-init` | Stand up the spec tree on a project (greenfield or brownfield). |
-| `lsa-discover` | Light three-question probe at the start of every standard/full task. |
-| `lsa-specify` | Capture a new feature spec, with hard/soft confirm gates per file. |
-| `lsa-plan` | Decompose an approved spec into ≤ 5 parallel-safe epics. |
-| `lsa-verify` | Block any change that doesn't trace to a requirement. |
-| `lsa-sync` | Merge feature delta into permanent module specs at merge time. |
-| `lsa-reconcile` | Absorb direct code/artifact edits into the spec — never block. |
-| `lsa-revise-constitution` | Promote feature decisions into permanent standards. |
+| `init` | Stand up the spec tree on a project (greenfield or brownfield). |
+| `discover` | Three-phase probe (specify → discover → confirm) at the start of every Standard/Extended task. |
+| `plan` | Decompose an approved spec into ≤ 5 parallel-safe epics. |
+| `verify` | Block any change that doesn't trace to a requirement. |
+| `new` | Scaffold a new feature branch + spec directory from a one-liner. |
+| `next` | Show the next actionable step in the current LSA flow. |
+| `reconcile` | Absorb direct code/artifact edits into the spec — never block. |
+| `revise-constitution` | Promote feature decisions into permanent standards. |
 
-**The developer may edit code by hand.** When the spec and the code diverge, `lsa-reconcile` detects the delta and offers to update the spec to match. Drift becomes a conversation, not a violation. The goal is to improve devs' lives, not retrain how they work.
+**The developer may edit code by hand.** When the spec and the code diverge, `reconcile` detects the delta and offers to update the spec to match. Drift becomes a conversation, not a violation. The goal is to improve devs' lives, not retrain how they work.
 
 ---
 
@@ -85,8 +85,8 @@ Install `core` first — `lsa` cites it for fact-grounding and flow selection. T
 
 1. Every task fires `ground-rules` + `output` automatically. Sources, no hedging, no padding, verdict-first.
 2. Non-trivial tasks fire the flow selector first. The agent proposes Quick / Standard / Extended with reasoning; you confirm.
-3. Standard and Extended tasks run through LSA: discover → (specify → plan →) implement → verify → sync. Every line of code traces back to a requirement.
-4. If you hand-edit code, `lsa-reconcile` offers to update the spec — it never blocks the edit.
+3. Standard and Extended tasks run through LSA: discover → plan → implement → verify. Every line of code traces back to a requirement.
+4. If you hand-edit code, `lsa:reconcile` offers to update the spec — it never blocks the edit.
 
 The single test the whole system answers: **what is the minimum ceremony that still guarantees grounded, spec-anchored output for *this* task?**
 

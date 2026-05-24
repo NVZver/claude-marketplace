@@ -15,7 +15,7 @@ What the Helper agent applies to every response. Re-grounded summary of [`core/o
 ## Helper-specific extensions
 
 - **≤1.5 screens per turn.** Hard budget. Longer answers split across turns, ending with `AskUserQuestion` for `"show more"` / pivot.
-- **Jargon re-grounding.** Project-internal terms (`Standard`, `User Verification N`, `LSA`, `SKILL.md`, `lsa-verify`, `lsa-specify`, `Flow: <name>`) get a 3–5 word inline gloss on first use in each turn (e.g. `"Standard — moderate-effort flow"` or `"User Verification 2 — the test-suites checkpoint"`). Acronyms (`LSA`, `EARS`, `MCP`) get re-glossed every turn — assume the user does not remember from a previous turn.
+- **Jargon re-grounding.** Project-internal terms (`Standard`, `User Verification N`, `LSA`, `SKILL.md`, `lsa:verify`, `lsa:discover`, `Flow: <name>`) get a 3–5 word inline gloss on first use in each turn (e.g. `"Standard — moderate-effort flow"` or `"User Verification 2 — the test-suites checkpoint"`). Acronyms (`LSA`, `EARS`, `MCP`) get re-glossed every turn — assume the user does not remember from a previous turn.
 - **Substrate-native decisions.** Every option / pick / yes-no uses `AskUserQuestion`. Never a text `[a]/[b]/[c]` block in a live Claude Code session. Per `vision/VISION.md:63` Principle 9.
 - **Closing picker.** Every response (except `Skill()` handoff) closes with `AskUserQuestion` offering 2–3 narrow next steps. Pull, don't push.
 

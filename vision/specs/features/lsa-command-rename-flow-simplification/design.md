@@ -4,7 +4,7 @@
 
 | Module | Change Type |
 |--------|-------------|
-| `lsa` | modify — skill directory renames, skill merge (specify+discover → discover), skill removal (sync), description rewrites, plugin.json update, README update, ARCHITECTURE.md update, CHANGELOG entry, version bump to 0.8.0 |
+| `lsa` | modify — skill directory renames, skill merge (specify+discover → discover), skill removal (sync), two new entry-point skills (new, next), description rewrites, plugin.json update, README update, ARCHITECTURE.md update, CHANGELOG entry, version bump to 0.8.0 |
 | `core` | modify — cross-reference updates in `core/CLAUDE.md` where it names LSA skills (patch bump if changes land) |
 | `vision` | modify — cross-reference updates in `VISION.md`, `main.spec.md`, `modules/lsa/spec.md`, `roadmap.md` |
 
@@ -24,6 +24,8 @@ Rename each skill directory under `lsa/skills/`:
 | `lsa/skills/lsa-reconcile/` | `lsa/skills/reconcile/` |
 | `lsa/skills/lsa-revise-constitution/` | `lsa/skills/revise-constitution/` |
 | `lsa/skills/lsa-sync/` | *(deleted)* |
+| *(new)* | `lsa/skills/new/` |
+| *(new)* | `lsa/skills/next/` |
 
 Claude Code discovers skills by scanning `skills/*/SKILL.md` under a plugin's root directory. The directory name becomes the skill slug. Renaming the directory is the only change needed for the command name to update — no registry or routing config exists.
 
@@ -69,6 +71,40 @@ verify: "Verify implementation matches the spec (step 4 of 4: discover → plan 
 ```
 
 Utility skills (init, reconcile, revise-constitution) omit the position marker.
+
+### New entry-point skill: `new` (F6)
+
+Create `lsa/skills/new/SKILL.md` as an Actor (Goal/Input/Steps/Output/Constraints per `core/actor-template`).
+
+**Steps:**
+1. Accept feature name or intent from the user (argument or first-turn prompt).
+2. Derive kebab-case slug from the name (same logic currently in `lsa-specify` Step 3).
+3. Create git branch `feature/<slug>` from `main`.
+4. Invoke `core/flow-selector` — present the flow question to the user.
+5. On flow confirmation, hand off to `lsa:discover` with the confirmed flow type.
+
+The skill is an orchestrator — it does not duplicate discovery logic. Step 5 is a skill-to-skill handoff within the same conversation turn (Claude Code supports sequential skill invocation; the agent calls the next skill's Steps directly after completing this one's Steps).
+
+**Description pattern:**
+```
+Start a new feature (creates branch → selects flow → discovers). Input: feature name or description. Output: feature branch created, discovery phase running.
+```
+
+### New entry-point skill: `next` (F7)
+
+Create `lsa/skills/next/SKILL.md` as an Actor.
+
+**Steps:**
+1. Read `${specs_root}/roadmap.md` §"Feature Backlog" table.
+2. Filter rows where Status = "backlog". Sort by Priority (Must > Should > Could).
+3. Present the top candidate to the user: feature name, priority, notes excerpt. Use `AskUserQuestion` with options: [Start this one] / [Skip — show next] / [Cancel].
+4. On "Skip" — present the next candidate. On "Cancel" — stop.
+5. On "Start this one" — derive kebab-case slug, create branch `feature/<slug>`, invoke `core/flow-selector`, hand off to `lsa:discover`.
+
+**Description pattern:**
+```
+Pick and start the next backlog item (reads roadmap → confirms pick → creates branch → discovers). Input: none. Output: feature branch created, discovery phase running.
+```
 
 ### Cross-reference sweep
 

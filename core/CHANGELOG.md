@@ -4,6 +4,15 @@ All notable changes to the `core` plugin are documented here. Format follows [Ke
 
 ## [Unreleased]
 
+## [0.5.6] — 2026-05-24
+
+Cross-reference update for LSA v0.8.0 command rename. Updated `core/CLAUDE.md` flow outcomes to use new LSA skill names (`lsa:discover`, `lsa:plan`, `lsa:verify` — dropped former `lsa-discover` → `lsa-specify` → `lsa-plan` → `lsa-verify` → `lsa-sync` chain). Updated `core/skills/flow-selector/SKILL.md` and `core/knowledge/output-vocabulary.md` references.
+
+### Changed
+- **`core/CLAUDE.md`** — flow outcomes updated: Standard is now `lsa:discover` → TDD → `lsa:verify`; Extended is now `lsa:discover` → `lsa:plan` → implement → `lsa:verify` (sync removed, specify merged into discover).
+- **`core/skills/flow-selector/SKILL.md`** — LSA skill name references updated to new names.
+- **`core/knowledge/output-vocabulary.md`** — `lsa-verify` → `verify` in example references.
+
 ## [0.5.5] — 2026-05-22
 
 Declare `core/output` as the marketplace-wide canonical source-of-truth for output discipline. Adds a canonical-source clause + a regression probe (`core/tests/repo-anchored.md` D2) that catches future drift. Sweeps known Core-internal drift; LSA sweep ships in sibling `lsa` v0.6.5. Per user request 2026-05-22 (*"Core/output is the source of truth. All goes to it adheres it or extend but never breaks"*). Standard flow.

@@ -24,7 +24,7 @@ The canonical always-on fragment lives at [`core/CLAUDE.md`](./core/CLAUDE.md): 
 ## Discipline (sourced)
 
 - **Per-plugin SemVer + CHANGELOG** — every plugin maintains its own `CHANGELOG.md` (Keep a Changelog) and SemVer in `plugin.json`. Bump version in the same commit as the changelog entry. Per [`vision/VISION.md`](./vision/VISION.md) §1 *"Distribution + versioning"*.
-- **Spec-grounding + Fact-grounding** — every artifact change traces to a spec; every claim carries a source + searchable quote. Direct artifact edits are absorbed via `lsa-reconcile` (Level 2.5). Per [`vision/VISION.md:35-36`](./vision/VISION.md).
+- **Spec-grounding + Fact-grounding** — every artifact change traces to a spec; every claim carries a source + searchable quote. Direct artifact edits are absorbed via `reconcile` (Level 2.5). Per [`vision/VISION.md:35-36`](./vision/VISION.md).
 - **READMEs are living documents.** Any functional change to a plugin — new/removed skill, behavior change to an existing skill, new install/usage step, version bump that affects user-facing surface — updates the relevant README ([`README.md`](./README.md) at the repo root, plus [`core/README.md`](./core/README.md) or [`lsa/README.md`](./lsa/README.md)) in the **same commit**, if any user-visible aspect changed. Pure refactors with no user-visible delta are exempt. README delta lands alongside the CHANGELOG entry and the SemVer bump.
 - **GitHub account.** Repo lives at `github.com/NVZver/claude-marketplace`. Push under the `NVZver` GitHub account (`gh auth switch` if needed) — not the work account.
 

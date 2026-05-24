@@ -28,5 +28,5 @@ Before any non-trivial task, invoke [`core/flow-selector`](./skills/flow-selecto
 
 **Flow outcomes:**
 - **Quick** (was `T1`) — single pass, no LSA ceremony. `ground-rules` + `output` still apply.
-- **Standard** (was `T2`) — `lsa-discover` (light) → agent TDD → `lsa-verify`.
-- **Extended** (was `T3`) — `lsa-discover` → `lsa-specify` → `lsa-plan` → implement → `lsa-verify` → `lsa-sync`.
+- **Standard** (was `T2`) — `lsa:discover` (light) → agent TDD → `lsa:verify`.
+- **Extended** (was `T3`) — `lsa:discover` → `lsa:plan` → implement → `lsa:verify`.

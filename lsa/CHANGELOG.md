@@ -4,6 +4,28 @@ All notable changes to the `lsa` plugin are documented here. Format follows [Kee
 
 ## [Unreleased]
 
+## [0.8.0] — 2026-05-24
+
+Command rename + flow simplification. All LSA skills drop the `lsa-` directory prefix (commands become `lsa:discover`, `lsa:plan`, etc. instead of `lsa:lsa-discover`). `lsa-specify` and `lsa-discover` merged into a single `discover` skill with Standard/Extended flow branch. `lsa-sync` removed entirely. Two new entry-point skills: `new` (creates branch → flow-selector → discover) and `next` (reads roadmap → confirms pick → creates branch → discover). Every skill description rewritten to state input/output and make the workflow order (discover → plan → implement → verify) self-evident. Minor bump — skill slugs, invocation names, and workflow structure all change.
+
+### Added
+- **`lsa/skills/new/SKILL.md`** — entry-point skill: accepts feature name, creates branch, runs flow-selector, hands off to discover.
+- **`lsa/skills/next/SKILL.md`** — entry-point skill: reads roadmap, presents highest-priority backlog item, confirms, creates branch, hands off to discover.
+
+### Changed
+- **All skill directories** — renamed from `lsa/skills/lsa-X/` to `lsa/skills/X/` (dropped `lsa-` prefix). Commands now `lsa:discover`, `lsa:plan`, `lsa:verify`, `lsa:init`, `lsa:reconcile`, `lsa:revise-constitution`.
+- **`lsa/skills/discover/SKILL.md`** — merged former `lsa-discover` + `lsa-specify` into one skill. Standard flow: infer-then-confirm → 3-row table → stop. Extended flow: infer-then-confirm → clarify → create spec dir → User Verification 1 → User Verification 2 → User Verification 3.
+- **All skill YAML frontmatter `description` fields** — rewritten to state input required and output produced. Main-flow skills include position marker (step N of 4).
+- **`lsa/.claude-plugin/plugin.json`** — version 0.8.0, description updated with nine skills and main flow.
+- **`lsa/README.md`** — skill table rewritten with new names and descriptions.
+- **`lsa/ARCHITECTURE.md`** — directory tree, branch management, resolved decisions updated.
+- **`lsa/knowledge/conventions.md`** — confirm gate types updated with new skill names.
+- **Cross-references** — all active files across `core/`, `vision/`, `helper/`, root swept for old names.
+
+### Removed
+- **`lsa/skills/lsa-sync/`** — deleted entirely. Feature specs are the permanent record; no promotion into module specs.
+- **`lsa/skills/lsa-specify/`** — deleted (content merged into `discover`).
+
 ## [0.7.1] — 2026-05-23
 
 `lsa-discover` infer-then-confirm. The agent now reads the codebase to determine module, change framing, and acceptance criterion — then presents all three as a pre-filled table for human override in a single `AskUserQuestion`. Previously the skill asked three questions the agent should have answered itself. Same pattern as the `lsa-init` v0.3.1 fix (greenfield/brownfield mechanical detection). Per user feedback 2026-05-23.

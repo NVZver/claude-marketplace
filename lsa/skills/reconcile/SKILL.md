@@ -1,9 +1,9 @@
 ---
-name: lsa-reconcile
-description: Absorbs direct artifact edits into the matching module spec (Level 2.5) — never blocks or reverts the edit. Use after direct edits to artifact files (a `SKILL.md`, a config, a plugin file edited by hand), or when SessionStart warns of drift.
+name: reconcile
+description: Absorb a direct artifact edit into its module spec (Level 2.5). Input: artifact file edited outside the spec flow. Output: module spec updated, drift resolved.
 ---
 
-> **Trace.** On load, print first: `=============== [lsa/skills/lsa-reconcile/SKILL.md] [lsa] ===============`
+> **Trace.** On load, print first: `=============== [lsa/skills/reconcile/SKILL.md] [lsa] ===============`
 
 
 # LSA Reconcile
