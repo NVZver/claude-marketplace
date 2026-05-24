@@ -7,7 +7,11 @@ Each task is sized for a **single PR**. Tasks within an epic ship together; epic
 
 ## Epic 1 — Agent body Steps reshape + Constraint updates
 
-**Branch.** `feature/helper-assistant-refactor-e1`. **Covers ACs.** AC1, AC3, AC4, AC5, AC6, AC7 (no-regression). **Depends on.** None.
+**Branch.** `feature/helper-assistant-refactor-e1`. **Covers:** AC1, AC3, AC4, AC5, AC6, AC7 (no-regression). **Depends on.** None.
+
+### Scope
+
+- `helper/agents/helper.md` (Steps 1, 3, 5 + description frontmatter + Constraints block confirmed unchanged)
 
 | # | Task | Files | Verification |
 |---|------|-------|--------------|
@@ -18,7 +22,12 @@ Each task is sized for a **single PR**. Tasks within an epic ship together; epic
 
 ## Epic 2 — `helper/commands/help.md` no-argument behavior + knowledge update
 
-**Branch.** `feature/helper-assistant-refactor-e2`. **Covers ACs.** AC2 (bare `/help`), F3, knowledge migration. **Depends on.** Epic 1 lands first (the agent Step 1 must already handle a bare-prompt invocation cleanly before this epic removes the picker from the command body).
+**Branch.** `feature/helper-assistant-refactor-e2`. **Covers:** AC2 (bare `/help`), F3, knowledge migration. **Depends on.** Epic 1 lands first (the agent Step 1 must already handle a bare-prompt invocation cleanly before this epic removes the picker from the command body).
+
+### Scope
+
+- `helper/commands/help.md` (no-argument block rewrite + description frontmatter)
+- `helper/knowledge/output-discipline.md` (new "Starter-topic examples" section migrated from `help.md`)
 
 | # | Task | Files | Verification |
 |---|------|-------|--------------|
@@ -28,7 +37,11 @@ Each task is sized for a **single PR**. Tasks within an epic ship together; epic
 
 ## Epic 3 — `helper/knowledge/output-discipline.md` rules update
 
-**Branch.** `feature/helper-assistant-refactor-e3`. **Covers ACs.** AC4, F2, F4. **Depends on.** Epic 1 (must already enforce the conditional close in Steps). May ship in same PR as Epic 1 if reviewer prefers — they're tightly coupled.
+**Branch.** `feature/helper-assistant-refactor-e3`. **Covers:** AC4, F2, F4. **Depends on.** Epic 1 (must already enforce the conditional close in Steps). May ship in same PR as Epic 1 if reviewer prefers — they're tightly coupled.
+
+### Scope
+
+- `helper/knowledge/output-discipline.md` (closing-picker rule revision + new "Genuine fork — operating definition" section + new "Goal-restatement opening" rule + violation bullet)
 
 | # | Task | Files | Verification |
 |---|------|-------|--------------|
@@ -39,7 +52,14 @@ Each task is sized for a **single PR**. Tasks within an epic ship together; epic
 
 ## Epic 4 — README + CHANGELOG + version bump
 
-**Branch.** `feature/helper-assistant-refactor-e4`. **Covers ACs.** AC8, NF1, NF2. **Depends on.** Epics 1–3 (the user-facing surface must already match the new behavior before the README describes it).
+**Branch.** `feature/helper-assistant-refactor-e4`. **Covers:** AC8, NF1, NF2. **Depends on.** Epics 1–3 (the user-facing surface must already match the new behavior before the README describes it).
+
+### Scope
+
+- `helper/README.md` (default-flow phrasing + v0.3.0 status row)
+- `helper/CHANGELOG.md` (v0.3.0 entry)
+- `helper/.claude-plugin/plugin.json` (version bump)
+- `README.md`, `CONTRIBUTING.md` (read-only verification — confirmed no edits needed)
 
 | # | Task | Files | Verification |
 |---|------|-------|--------------|
@@ -52,7 +72,12 @@ Each task is sized for a **single PR**. Tasks within an epic ship together; epic
 ## Epic 5 — Manual verification + sync
 
 **Branch.** `feature/helper-assistant-refactor` (parent) after epics 1–4 merge in.
-**Covers ACs.** All ACs end-to-end. **Depends on.** Epics 1–4.
+**Covers:** All ACs end-to-end. **Depends on.** Epics 1–4.
+
+### Scope
+
+- (no artifact edits — runs `lsa-verify` + `lsa-sync` skills against the merged feature branch; on sync, `vision/specs/features/2026-05-22-helper-assistant-refactor/` moves to `vision/specs/archive/...`)
+- Optional: `vision/specs/features/2026-05-22-helper-assistant-refactor/verify-run.md` (probe outcomes log)
 
 | # | Task | Files | Verification |
 |---|------|-------|--------------|
@@ -64,7 +89,11 @@ Each task is sized for a **single PR**. Tasks within an epic ship together; epic
 ## Epic 6 — Roadmap status update on merge
 
 **Branch.** `feature/helper-assistant-refactor` (parent), final commit before / with merge.
-**Covers ACs.** Roadmap living-document discipline. **Depends on.** Epic 5.
+**Covers:** Roadmap living-document discipline (NF2 — Living READMEs / roadmap is a living document per `CLAUDE.md` §"Discipline (sourced)"). **Depends on.** Epic 5.
+
+### Scope
+
+- `vision/specs/roadmap.md` (move the row "Refactor Helper from command-router to assistant" from Feature Backlog to Recently merged)
 
 | # | Task | Files | Verification |
 |---|------|-------|--------------|
