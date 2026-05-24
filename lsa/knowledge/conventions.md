@@ -34,3 +34,16 @@ Every LSA skill begins with the same protocol — read in this order, print a on
 If a source does not exist, note the gap rather than guessing. Per `core/skills/ground-rules/SKILL.md` Rule 3.
 
 Observable result: per-source one-liner printed back to the human.
+
+---
+
+## Library documentation protocol
+
+When any LSA skill needs to call a library API it is unsure about:
+
+1. Check available tools for `resolve-library-id` (context7 MCP).
+2. **If context7 available:** read `package.json` (or equivalent) for the library version → call `resolve-library-id` → call `query-docs` with the specific API question. Cite as `lib:<name>:<api> via context7`.
+3. **If no context7:** use `WebSearch` for official docs (prefer `.md` over `.html`). Cite as `lib:<name>:<api> via <url>`.
+4. **If nothing found:** state it. Use codebase patterns and types. Never guess API signatures.
+
+Skills that perform discovery (`lsa:discover`) do this proactively; execution skills (`lsa:implement`) do this only when an unknown API is encountered mid-work.

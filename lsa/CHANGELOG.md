@@ -4,6 +4,19 @@ All notable changes to the `lsa` plugin are documented here. Format follows [Kee
 
 ## [Unreleased]
 
+## [0.10.0] — 2026-05-24
+
+### Added
+
+- **`lsa/skills/implement/SKILL.md`** — TDD implementation skill. Executes approved `tasks.md` epic-by-epic using strict RED→GREEN→REFACTOR discipline: write failing test, implement minimum code to pass, refactor while green. Per-epic checkpoint with human approval gate before proceeding. Auto-detects project tooling (test runner, type checker, linter) from constitution and project config. Handles flow interruptions (errors → fix in place; new requirements → pause and ask; scope changes → suggest re-discover). Closes the "implement" gap in the main flow: `discover → plan → implement → verify`. Addresses the critical bug where `lsa:plan` output had no enforced TDD structure downstream — the skill itself is the enforcement mechanism. Adapted from `dev-plugin`'s TDD workflow (developer agent, verifier agent, quality rules) with all project-specific content (GoGlobal, NextJS, moon tasks) removed.
+
+### Changed
+
+- **`lsa/skills/discover/SKILL.md`** — new Step 1.5 (prompt refinement): before inferring module/change/AC, the agent refines the user's original description for ambiguities and implicit assumptions, presents original vs. refined side-by-side, and confirms before proceeding.
+- **`lsa/skills/verify/SKILL.md`** — three new checklist groups: **Imports** (every import resolves to a real exported symbol, type imports use `import type`), **Test quality** (assertions test actual requirements not tautologies, happy + error paths covered, no brittle coupling to internals), **Implementation accuracy** (logic matches requirement, edge cases handled, no unrelated side effects). Added iterative re-check: on FAIL/WARN, re-read cited files to confirm findings are real, max 3 iterations.
+- **`lsa/knowledge/conventions.md`** — new §"Library documentation protocol": context7 MCP lookup → WebSearch fallback → state unknown. Referenced by discover (proactive) and implement (on-demand).
+- **`lsa/.claude-plugin/plugin.json`** — version 0.10.0, description updated: nine → ten skills, `implement (TDD execution)` added to skill list.
+
 ## [0.9.0] — 2026-05-24
 
 ### Removed

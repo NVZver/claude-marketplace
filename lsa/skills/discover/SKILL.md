@@ -25,7 +25,16 @@ Establish context for a task (module, change, acceptance criterion), then — fo
 
 1. **Read `.lsa.yaml` and build module context.** Read `modules.*` keys (names + `artifact_paths` + spec paths); if `.lsa.yaml` is absent, list module directories under `${specs_root}/modules/` instead. Observable result: the candidate-module list available for Step 2's inference.
 
-2. **Infer all three discovery answers — then confirm.** For each answer, cross-reference the task description against the module context from Step 1:
+1.5. **Refine the task prompt.** Analyze the user's original description for ambiguities, missing context, and implicit assumptions. Present the refined version alongside the original:
+
+   ```
+   **Original:** [user's prompt]
+   **Refined:** [clearer, more specific version]
+   ```
+
+   The human confirms or adjusts before proceeding. Observable result: refined prompt captured.
+
+2. **Infer all three discovery answers — then confirm.** For each answer, cross-reference the task description (refined from Step 1.5) against the module context from Step 1:
 
    - **Module** — match against each module's `artifact_paths` globs and spec content; if none match, capture as `new module: <name>`.
    - **Change** — one-sentence framing grounded in the task description and the matched module spec's current state.
@@ -33,7 +42,7 @@ Establish context for a task (module, change, acceptance criterion), then — fo
 
    Present all three in a single `AskUserQuestion` as a confirmation, not a quiz. The human overrides any line that is wrong; silence = approval. Observable result: three answers captured (module + change + AC).
 
-3. **Standard flow → stop.** Render the discovery as a 3-row table (Module / Change / Acceptance) per [`core/output`](../../../core/skills/output/SKILL.md). **Stop.** The agent then writes a failing test, implements the change, and runs `/lsa:verify`. Observable result: the table printed back to the human; no files written to `${specs_root}/`.
+3. **Standard flow → hand off to implement.** Render the discovery as a 3-row table (Module / Change / Acceptance) per [`core/output`](../../../core/skills/output/SKILL.md). Then invoke `lsa:implement` with the discovery context (module, change, acceptance criterion). No files written to `${specs_root}/`. Observable result: the table printed back to the human; `lsa:implement` executing.
 
 ### Phase 2: Specification (Extended flow only)
 

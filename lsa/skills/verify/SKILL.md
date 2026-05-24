@@ -64,11 +64,25 @@ Confirm that the implementation on the current feature branch matches the approv
    - [ ] API/interface changes match `design.md`.
    - [ ] API implementation matches `contract.yaml` (if contract exists).
 
+   **Imports** (code-mode only)
+   - [ ] Every import in implementation files resolves to an existing exported symbol (read the source module to confirm).
+   - [ ] Type imports use `import type` (not value imports for types).
+
    **Tests** (skipped or relaxed in `mode: docs` when no executable tests exist)
    - [ ] Unit tests exist for all new functions/methods (code-mode).
    - [ ] Integration tests cover module boundaries touched (code-mode).
    - [ ] E2E tests cover all journeys and paths in `test-suites.md`.
    - [ ] All tests pass (use test command from the constitution).
+
+   **Test quality** (code-mode only — read each test file, not just check existence)
+   - [ ] Assertions test the actual requirement, not a tautology or unrelated property.
+   - [ ] Happy path and error path both covered for each requirement.
+   - [ ] Tests verify behavior, not implementation internals (no brittle coupling to private structure).
+
+   **Implementation accuracy** (read implementing code for each requirement matched above)
+   - [ ] Logic matches the requirement (not just named after it).
+   - [ ] Edge cases handled (nulls, empty inputs, boundaries) — flag gaps.
+   - [ ] No unrelated side effects introduced.
 
    **Code quality**
    - [ ] No duplicated logic.
@@ -77,6 +91,8 @@ Confirm that the implementation on the current feature branch matches the approv
    - [ ] File structure matches the constitution.
 
    Observable result: checklist printed with PASS/FAIL/WARN per row.
+
+   **Iterative re-check.** If any checklist item is FAIL or WARN, re-read the cited files to confirm the finding is real (not a stale read or misattribution). Remove any unverified claims. Maximum 3 iterations — if issues persist after 3 passes, they are real. Observable result: iteration count noted.
 
 4. **Verification report — verdict-first.** Three variants by checklist outcome. Each variant's `AskUserQuestion` prompt names the verdict in the subject — the human is picking a *next action given the verdict*, not re-issuing it. Apply [`core/output`](../../../core/skills/output/SKILL.md) Rule 5 *Genuine-fork test*: the verdict is already settled by the checklist; the picker resolves the next-action fork the verdict creates. Each variant's verdict line carries a one-sentence preamble per [`core/output`](../../../core/skills/output/SKILL.md) Rule 6 — naming what the verdict means and the concrete consequence in the user's frame, before the verdict header.
 

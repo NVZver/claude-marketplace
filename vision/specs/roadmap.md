@@ -37,12 +37,14 @@ Prioritized list of upcoming work, populated from `vision/VISION.md` §6 *"Adjus
 | LSA: what-and-why preamble on every verb-headline | Should | shipped — core v0.7.0 + lsa v0.8.0 | Detail: §"2026-05-22 backlog detail" #4. Touches 5 LSA skill bodies (the verdict-emitting ones). Feature: `vision/specs/archive/2026-05-22-lsa-what-why-preamble/`. |
 | Show actual changes inline (LSA / Core / Helper) | **Must** | shipped (partial) — core v0.8.0 + lsa v0.8.1 (Epic 1 + 2 + 4); Epic 3 (helper) deferred until helper v0.3.0 lands | Detail: §"2026-05-22 backlog detail" #5. New `core/output` Rule 7 + LSA 16-line sweep + lsa-reconcile cross-cite. Spec at `vision/specs/features/2026-05-22-show-changes-inline/` (NOT yet archived — Epic 3 still pending; archive after Epic 3 merges). |
 | Sweep custom inventions; remove the unjustified | Should | shipped (partial) — lsa v0.7.0 (trace-tag) + lsa v0.9.0 (Hard/Soft Confirm vocabulary); T2 (`.lsa-sync-state.json` removal) deferred | Detail: §"2026-05-22 backlog detail" #6. Opportunistic audit. T2 deferred due to medium blast radius + line-citation conflicts with show-changes-inline (PR #22). Spec at `vision/specs/features/2026-05-22-custom-inventions-sweep/` (NOT yet archived — T2 still pending). |
+| Planning quality: `lsa-plan` must enforce TDD in every epic | **Must** | shipped — lsa v0.10.0 | User-reported 2026-05-24 — planning entirely skipped TDD; this is a critical bug. Fixed by adding `lsa:implement` skill that enforces RED→GREEN→REFACTOR per epic; `lsa:plan` approval gate now hands off to `lsa:implement`. Detail: §"2026-05-24 backlog detail" #2. |
 | Remove `vision/specs/archive/` (rely on CHANGELOG + git + permanent module specs) | Could | backlog | User-proposed 2026-05-23. Archive is a custom invention not mandated by any 3rd-party standard; CHANGELOG entries + git history + absorbed module specs cover traceability. Touches `lsa/ARCHITECTURE.md`, `vision/VISION.md:206` reference, removal of existing `vision/specs/archive/2026-05-21-ears-journey-shape-ac/`. Spec TBD. |
 
 ## Recently merged
 
 | Release | Date | Highlights |
 |---|---|---|
+| `lsa` v0.10.0 | 2026-05-24 | New `lsa:implement` skill — TDD execution of approved epics. Strict RED→GREEN→REFACTOR per subtask, per-epic human checkpoint, auto-detected project tooling, flow interruption handling. Closes the "implement" gap in the main flow and addresses the critical TDD-skipping bug. `lsa:plan` approval gate now hands off to `lsa:implement`. Adapted from `dev-plugin` TDD workflow with all GoGlobal/NextJS content removed. |
 | `lsa` v0.9.0 | 2026-05-24 | Remove Hard Confirm / Soft Confirm vocabulary (T1 of custom-inventions-sweep). LSA-internal vocabulary with no upstream mandate; substituted plain-English phrasing at each cite site. PR #21 verdict preambles + Rule 6 / Rule 7 citations preserved verbatim. Minor bump per the c226623 trace-tag-removal precedent. T2 (`.lsa-sync-state.json` removal) deferred to a follow-up PR. Standard flow. Spec at `vision/specs/features/2026-05-22-custom-inventions-sweep/` (kept active until T2 ships). |
 | `core` v0.8.0 / `lsa` v0.8.1 | 2026-05-24 | Show changes inline rule + LSA 16-line sweep. New `core/output` Rule 7 *"Show changes inline — write, show, comment"*: every write/edit/mark is echoed back inline before commentary. 7-element single-change template (what / where / previous / new / reason / source / type tag) for ≤10-line changes; compressed inspection table for batches. Generalizes the 8-element drift block from `lsa-reconcile` (user-endorsed gold standard 2026-05-22). New operational checkpoint #4 in `core/CLAUDE.md`. 7 LSA skills updated across 16 `Observable result:` lines — each cites Rule 7 and names the quote-back format. `lsa-reconcile` carries a one-line forward-link as the exemplar Rule 7 generalizes from. Core framing 6 → 7 golden rules. Epic 3 (helper Constraint citing Rule 7) deferred to a follow-up PR. Standard flow. Spec at `vision/specs/features/2026-05-22-show-changes-inline/` (kept active until Epic 3 ships). |
 | `core` v0.7.0 / `lsa` v0.8.0 | 2026-05-24 | What-and-why preamble on every LSA verdict. New `core/output` Rule 6 *"What-and-why preamble — verdicts carry a one-sentence frame"*: every verdict label from `core/knowledge/output-vocabulary.md` is preceded by a one-sentence preamble naming (a) what the agent is doing in plain English in the user's frame, and (b) the concrete consequence if the human does not act. Bare verdict lines fail this rule. 5 LSA skill bodies updated: `lsa-init` (PROPOSED), `lsa-reconcile` (DRIFT), `lsa-sync` (APPLIED), `lsa-revise-constitution` (PROPOSED), `lsa-verify` (PASS / FAIL / PASS WITH WARNINGS). Targets the 2026-05-22 user friction *"I want LSA always provide a short explanation of what it's doing and why."* core framing shifts from 5 → 6 golden rules. Standard flow. Feature: `vision/specs/archive/2026-05-22-lsa-what-why-preamble/`. |
@@ -106,7 +108,7 @@ Prioritized list of upcoming work, populated from `vision/VISION.md` §6 *"Adjus
 
 ## 2026-05-24 backlog detail
 
-`READY` — one backlog row added 2026-05-24 from user feedback on LSA usability.
+`READY` — two backlog rows added 2026-05-24 from user feedback on LSA usability.
 
 ### 1. LSA command rename + flow simplification
 
@@ -118,6 +120,12 @@ Prioritized list of upcoming work, populated from `vision/VISION.md` §6 *"Adjus
   3. **Drop `lsa-sync` entirely.** Feature specs are the permanent record — no promotion into module specs. The audit (2026-05-24) confirmed `lsa-sync` was a spec-to-spec operation (not code-to-spec), but the promotion step is unnecessary overhead. Module-spec role may need rethinking later.
   4. **`lsa-reconcile` stays as exception-path only** — for unavoidable cases where code changed without a spec (the code-first exception to the spec-first default).
 - **Expected Output.** Main flow (Standard and Extended): `lsa:discover` → `lsa:plan` → `lsa:implement` → `lsa:verify`. Four commands, clear order, no stutter. Utility commands: `lsa:init`, `lsa:reconcile`, `lsa:revise-constitution`. Every command has a clear short description stating what is required before running and what will be the output. Touches: all LSA skill file names + `plugin.json` + `core/CLAUDE.md` + `vision/VISION.md` + both READMEs + both module specs + `CONTRIBUTING.md` + `lsa/ARCHITECTURE.md`.
+
+### 2. Planning quality: `lsa-plan` must enforce TDD in every epic
+
+- **Problem.** `lsa-plan` generated implementation epics that entirely skipped TDD — no failing-test-first step, no test-then-implement cycle. TDD is a non-negotiable discipline in this project; a plan that omits it is a critical bug because downstream implementation follows the plan's structure and will skip tests too.
+- **Example.** User 2026-05-24: *"Planning quality is bad: it entirely skipped TDD. This is a critical bug, it must never happen."*
+- **Expected Output.** Every epic produced by `lsa-plan` includes an explicit test-first step before the implementation step — write a failing test that encodes the acceptance criterion, then implement to make it pass. The plan template or skill body must enforce this structurally so it cannot be omitted. Touches: `lsa/skills/plan/SKILL.md` (epic template / step scaffolding).
 
 ## 2026-05-22 backlog detail
 

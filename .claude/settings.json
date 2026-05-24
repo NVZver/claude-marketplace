@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch"
+    ],
+    "deny": [
+      "Bash(rm -rf :*)",
+      "Bash(git push --force :*)",
+      "Bash(git reset --hard :*)"
+    ]
+  }
+}

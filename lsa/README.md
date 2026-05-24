@@ -16,6 +16,7 @@ Every LSA User Verification is a decision asked of the human with explicit conse
 | **`next`** | Pick and start the next backlog item (reads roadmap → confirms pick → creates branch → discovers). Input: none. Output: feature branch created, discovery phase running. |
 | **`discover`** | Discover and specify a feature. Standard flow: 3-row context table. Extended flow: full spec artifacts with three User Verifications. Merges the former `lsa-specify` + `lsa-discover`. |
 | **`plan`** | Break a spec into implementation epics. Input: approved spec artifacts. Output: tasks.md with ≤5 ordered epics, each with a `**Covers:**` line citing requirement IDs. |
+| **`implement`** | Execute TDD implementation of approved epics. Input: approved tasks.md. Output: all epics implemented with passing tests via strict RED→GREEN→REFACTOR cycle, ready for `lsa:verify`. |
 | **`verify`** | Verify implementation matches the spec. Dual predicates: orphan-diff + orphan-AC. Code-mode, doc-mode, or mixed (per `.lsa.yaml`). Emits per-feature `metrics.md` on clean Extended-flow PASS. |
 | **`init`** | Initialize Living Spec Architecture for a project. Input: existing codebase (greenfield or brownfield). Output: .lsa.yaml + specs_root directory + module specs. |
 | **`reconcile`** | Absorb a direct artifact edit into its module spec — Level 2.5 (`vision/VISION.md:138`). One delta at a time — stop and present each individually; do not proceed without explicit approval. |
@@ -68,7 +69,7 @@ The dependency is declared in [`lsa/.claude-plugin/plugin.json`](./.claude-plugi
 /reload-plugins
 ```
 
-Invoke LSA skills directly via `/lsa:new`, `/lsa:discover`, `/lsa:plan`, etc., or let Claude trigger by description match. Core's `ground-rules` and `actor-template` apply automatically once installed.
+Invoke LSA skills directly via `/lsa:new`, `/lsa:discover`, `/lsa:plan`, `/lsa:implement`, `/lsa:verify`, etc., or let Claude trigger by description match. Core's `ground-rules` and `actor-template` apply automatically once installed.
 
 ## Install on Claude.ai
 

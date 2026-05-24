@@ -32,8 +32,8 @@ Every non-trivial change invokes [`core/flow-selector`](./core/skills/flow-selec
 | Flow | When | Loop |
 |---|---|---|
 | **Quick** (was `T1`) | One file / one string / no behavior change | Single pass; `ground-rules` still applies |
-| **Standard** (was `T2`) | Bug in a spec'd module, refactor | `lsa:discover` (light) → TDD → `lsa:verify` |
-| **Extended** (was `T3`) | New feature, new contract, new module | `lsa:discover` → `lsa:plan` → implement → `lsa:verify` |
+| **Standard** (was `T2`) | Bug in a spec'd module, refactor | `lsa:discover` (light) → `lsa:implement` → `lsa:verify` |
+| **Extended** (was `T3`) | New feature, new contract, new module | `lsa:discover` → `lsa:plan` → `lsa:implement` → `lsa:verify` |
 
 For doc-only refactors that span many files, a plan file at `vision/plans/YYYY-MM-DD-<name>.md` may serve as the feature spec — **declare that judgment upfront** and reflect every change against the plan in your verification report.
 

@@ -112,21 +112,24 @@ Decompose an approved feature spec into ≤5 parallel-safe epics with self-verif
 
 5. **Human review gate.** Present rendered `tasks.md` + the 5-row self-verification table (Traceability / Accuracy / Consistency / Test coverage / Completeness — PASS / FAIL per row with reason on FAIL) + decision. **Prompt voice (per [`../../../core/skills/output/SKILL.md`](../../../core/skills/output/SKILL.md) Rule 5).** Picker **question**: *"Approve the `<N>` epics for `<feature-name>` and start implementation?"* — not *"Approve tasks.md?"* or *"Approve epic decomposition?"* (`epic decomposition` is project jargon — name the count and the feature). Option **labels**:
 
-   - `[a]` approve → I start TDD per epic (parallel where safe)
+   - `[a]` approve → hand off to `lsa:implement` for TDD execution
    - `[b]` adjust → I re-decompose with your feedback and re-present
    - `[c]` reject → return to `lsa:discover` to reduce scope
 
    Format per [`../../../core/skills/output/SKILL.md`](../../../core/skills/output/SKILL.md); `AskUserQuestion` in Claude Code (per `core/CLAUDE.md` operational checkpoint #1). Do not start implementation until human gives explicit approval. Observable result: human approval logged.
 
+6. **Hand off to implement.** On `[a] approve`: invoke `lsa:implement` with the feature name. Observable result: `lsa:implement` executing against the approved `tasks.md`.
+
 ## Output
 
-`${specs_root}/features/<feature-name>/tasks.md` containing ≤5 epics, each independently runnable, with explicit dependency annotations where unavoidable; self-verification table attached.
+`${specs_root}/features/<feature-name>/tasks.md` containing ≤5 epics, each independently runnable, with explicit dependency annotations where unavoidable; self-verification table attached. On approval, `lsa:implement` is running.
 
 ## Constraints
 
 - **Maximum five epics.** If the work cannot be decomposed in five parallel-safe slices, escalate back to `lsa:discover` for scope reduction before planning.
 - **Each epic is independent (or its dependency is explicit).** Implicit ordering is not permitted.
 - **Do not start implementation** until human approves `tasks.md`.
+- **On approval, hand off to `lsa:implement`.** Do not implement inline — invoke the skill.
 - Outputs follow [`core/output`](../../../core/skills/output/SKILL.md) — citation by link, never restated.
 
 ---
