@@ -25,16 +25,16 @@ Three journeys, each anchored to a distinct user goal. Cross-cutting ACs (AC6 su
 
 ---
 
-## Journey 2: Friction auto-engage at an `lsa-specify` User Verification
+## Journey 2: Friction auto-engage at an `lsa:discover` User Verification
 
-**Goal:** User is stuck at an `lsa-specify` User Verification (rejected it once, about to reject again); Helper unsticks them without forcing them through the Verification.
+**Goal:** User is stuck at an `lsa:discover` User Verification (rejected it once, about to reject again); Helper unsticks them without forcing them through the Verification.
 **Covers:** AC2, AC6, AC7, AC8.
 
 **Paths:**
 
 | # | Path | Actions |
 |---|------|---------|
-| 1 | Happy — re-explain accepted | User selects `[c] reject` at, say, User Verification 1 in `lsa-specify`; the skill re-presents; user selects `[c] reject` again → friction signal (a) fires → Helper auto-engages with `AskUserQuestion`: "Want me to explain what this User Verification is asking? — Yes / No" → user picks Yes → Helper re-grounds the Verification purpose with `file:line` citation from `lsa/skills/lsa-specify/SKILL.md` (re-gloss "User Verification" as "the checkpoint where you approve the artifact") → user understands, returns to the Verification and approves or makes a substantive override. |
+| 1 | Happy — re-explain accepted | User selects `[c] reject` at, say, User Verification 1 in `lsa:discover`; the skill re-presents; user selects `[c] reject` again → friction signal (a) fires → Helper auto-engages with `AskUserQuestion`: "Want me to explain what this User Verification is asking? — Yes / No" → user picks Yes → Helper re-grounds the Verification purpose with `file:line` citation from `lsa/skills/discover/SKILL.md` (re-gloss "User Verification" as "the checkpoint where you approve the artifact") → user understands, returns to the Verification and approves or makes a substantive override. |
 | 2 | Alternate — re-explain declined | Same trigger → user picks No on `AskUserQuestion` → Helper steps back silently; the original Verification picker re-presents; Helper does not re-auto-engage for this same Verification sequence (cooldown). |
 | 3 | Error — user persists rejecting after re-explanation | User picks Yes, gets explanation, returns to the Verification, rejects again → Helper does NOT re-auto-engage (one auto-engage per friction window). User can always pull help explicitly via `/help`. |
 
@@ -54,9 +54,9 @@ Three journeys, each anchored to a distinct user goal. Cross-cutting ACs (AC6 su
 
 | # | Path | Actions |
 |---|------|---------|
-| 1 | Happy — new-feature intent → `lsa-specify` | User types `I want to add password reset` (via `/help` or as a free-form question caught by signal (b)) → Helper recognises new-feature intent → `AskUserQuestion` "Start `lsa-specify` for this? — Yes / No" (with re-gloss `lsa-specify — Extended-flow feature spec skill`) → user picks Yes → Helper invokes `Skill(lsa-specify)` with the user's description as argument → user lands inside `lsa-specify`. |
-| 2 | Alternate — decline handoff | Same trigger → user picks No → Helper offers alternate next steps: explain why `lsa-specify` was the recommendation, point to relevant docs, suggest a different skill (`lsa-discover` for lighter probe). |
-| 3 | Error — ambiguous intent | User types `I think I want to do something with the gates` → Helper cannot map to a single skill → `AskUserQuestion` "Which sounds closest? — New feature spec (`lsa-specify`) / Bug fix or quick task (`lsa-discover`) / Just exploring (no skill)" → routes from there or stops. |
+| 1 | Happy — new-feature intent → `lsa:discover` | User types `I want to add password reset` (via `/help` or as a free-form question caught by signal (b)) → Helper recognises new-feature intent → `AskUserQuestion` "Start `lsa:discover` for this? — Yes / No" (with re-gloss `lsa:discover — discovery + feature spec skill`) → user picks Yes → Helper invokes `Skill(lsa:discover)` with the user's description as argument → user lands inside `lsa:discover`. |
+| 2 | Alternate — decline handoff | Same trigger → user picks No → Helper offers alternate next steps: explain why `lsa:discover` was the recommendation, point to relevant docs, suggest a different skill (`lsa:discover` for lighter probe). |
+| 3 | Error — ambiguous intent | User types `I think I want to do something with the gates` → Helper cannot map to a single skill → `AskUserQuestion` "Which sounds closest? — New feature spec (`lsa:discover`) / Bug fix or quick task (`lsa:discover`) / Just exploring (no skill)" → routes from there or stops. |
 
 **Expected outcome:**
 - *Happy path (1):* User is inside the right skill in one turn, with explicit confirmation logged.

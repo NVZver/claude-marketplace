@@ -32,8 +32,8 @@ Every non-trivial change invokes [`core/flow-selector`](./core/skills/flow-selec
 | Flow | When | Loop |
 |---|---|---|
 | **Quick** (was `T1`) | One file / one string / no behavior change | Single pass; `ground-rules` still applies |
-| **Standard** (was `T2`) | Bug in a spec'd module, refactor | `lsa-discover` (light) → TDD → `lsa-verify` |
-| **Extended** (was `T3`) | New feature, new contract, new module | `lsa-discover` → `lsa-specify` → `lsa-plan` → implement → `lsa-verify` → `lsa-sync` |
+| **Standard** (was `T2`) | Bug in a spec'd module, refactor | `lsa:discover` (light) → TDD → `lsa:verify` |
+| **Extended** (was `T3`) | New feature, new contract, new module | `lsa:discover` → `lsa:plan` → implement → `lsa:verify` |
 
 For doc-only refactors that span many files, a plan file at `vision/plans/YYYY-MM-DD-<name>.md` may serve as the feature spec — **declare that judgment upfront** and reflect every change against the plan in your verification report.
 
@@ -58,7 +58,7 @@ Knowledge files capture cross-cutting reference content (defaults, protocols, de
 
 - Lives at `<plugin>/knowledge/<topic>.md`.
 - **Pure Knowledge: no Goal / Input / Steps / Output / Constraints.**
-- Add `<plugin>/knowledge/**/*.md` to `.lsa.yaml: modules.<plugin>.artifact_paths` so it's tracked by `lsa-verify` doc-mode.
+- Add `<plugin>/knowledge/**/*.md` to `.lsa.yaml: modules.<plugin>.artifact_paths` so it's tracked by `verify` doc-mode.
 - Actors cite by section name: `[<topic>.md](...) §"Section name"`. **Cite by section, not by line number** — line numbers drift, section names survive edits.
 
 ---
@@ -100,7 +100,7 @@ Per [`vision/specs/standards/testing.md`](./vision/specs/standards/testing.md):
 - **V2 — description-match triggers reliably.** One probe per affected skill in a fresh session. Target ~90% trigger rate.
 - **V3 — behavior changes observably.** Run the same small task with and without the plugin; compare on the three Vision §5 metrics: accuracy / facts-with-sources / only-required-changes.
 
-For LSA-tracked changes (anything under `artifact_paths`): run `lsa-verify` against the feature spec. If the change wasn't preceded by `lsa-specify`/`lsa-plan`, **declare what's serving as the spec** (e.g., a plan file at `vision/plans/`) and walk every change against it in your verification report.
+For LSA-tracked changes (anything under `artifact_paths`): run `lsa:verify` against the feature spec. If the change wasn't preceded by `lsa:discover`/`lsa:plan`, **declare what's serving as the spec** (e.g., a plan file at `vision/plans/`) and walk every change against it in your verification report.
 
 ---
 

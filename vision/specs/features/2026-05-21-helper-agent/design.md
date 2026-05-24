@@ -8,9 +8,9 @@
 |--------|-------------|
 | `helper` (new) | new — entire plugin tree under `helper/` |
 | `core` | read-only — Helper cites `core/output`, `core/ground-rules`, `core/actor-template`, `core/flow-selector`; no code change |
-| `lsa` | read-only — Helper observes `lsa-specify` User-Verification-reject state via main-agent context; cites all `lsa/skills/*/SKILL.md`; no code change |
-| `vision/specs/main.spec.md` | modify (post-merge) — add `helper` row to Module Index; done by `lsa-sync` |
-| `vision/specs/modules/helper/spec.md` | new (post-merge) — created by `lsa-sync` |
+| `lsa` | read-only — Helper observes `lsa:discover` User-Verification-reject state via main-agent context; cites all `lsa/skills/*/SKILL.md`; no code change |
+| `vision/specs/main.spec.md` | modify (post-merge) — add `helper` row to Module Index |
+| `vision/specs/modules/helper/spec.md` | new (post-merge) |
 | `.claude-plugin/marketplace.json` | modify — list `helper` in plugins catalog |
 | `README.md` (repo root) | modify — name `helper` in install lede alongside `core` + `lsa` |
 | `vision/specs/roadmap.md` | modify (post-merge) — mark Help agent shipped |
@@ -62,7 +62,7 @@ Detection runs in the **main Claude Code agent's own context** — not as a sepa
 
 | Signal | Definition | Trigger condition |
 |---|---|---|
-| (a) User-Verification-reject pattern | Two consecutive `[c] reject` selections at any `lsa-specify` User Verification within the same Verification sequence | After the second `[c] reject`, before re-presenting the Verification, invoke Helper. |
+| (a) User-Verification-reject pattern | Two consecutive `[c] reject` selections at any `lsa:discover` User Verification within the same Verification sequence | After the second `[c] reject`, before re-presenting the Verification, invoke Helper. |
 | (b) Free-form question | User message contains `?` OR matches `(what\|why\|how) (is\|are\|does)` patterns OR starts with `?` | On user message receipt, before normal routing, check pattern. If match AND user is not already inside a skill flow, invoke Helper. |
 | (c) Explicit `/help` | User invokes the `/help` slash command | Always invoke Helper. |
 
@@ -84,13 +84,13 @@ None — `contract.yaml` skipped at User Verification 1 (no API endpoint, no req
 
 ## Cross-Module Contracts
 
-- **`helper` ↔ `lsa-specify` (auto-engage signal).** Helper observes `lsa-specify` User-Verification-reject state through the main-agent's own conversation context — no typed signal is emitted by `lsa-specify`. The detection logic reads the most recent `AskUserQuestion` answer at an `lsa-specify` User Verification. Behavioural contract only; no API change to `lsa-specify`.
+- **`helper` ↔ `lsa:discover` (auto-engage signal).** Helper observes `lsa:discover` User-Verification-reject state through the main-agent's own conversation context — no typed signal is emitted by `lsa:discover`. The detection logic reads the most recent `AskUserQuestion` answer at an `lsa:discover` User Verification. Behavioural contract only; no API change to `lsa:discover`.
 - **`helper` ↔ `core` (output discipline).** Helper inherits `core/output` 5 golden rules and `core/ground-rules` 6 content rules by citation. Pure prose reference; no code dependency.
-- **`helper` ↔ `core/actor-template` (Actor shape).** `helper/agents/helper.md` matches the Goal / Input / Steps / Output / Constraints structure. Validated by `lsa-verify` post-implementation.
+- **`helper` ↔ `core/actor-template` (Actor shape).** `helper/agents/helper.md` matches the Goal / Input / Steps / Output / Constraints structure. Validated by `lsa:verify` post-implementation.
 
 ## Open Questions
 
-- **OQ1 — Cross-cutting AC handling. RESOLVED 2026-05-22 (step 2 / `feature/2026-05-21-helper-agent-e2`):** AC6 (substrate-native pickers), AC7 (re-grounding gloss), AC8 (length budget) **kept as cross-cutting ACs** (option (a)). Preserves `lsa-verify` traceability via per-journey `**Covers:**` lines. Implementation lands as three explicit Constraints in `helper/agents/helper.md` ("Substrate-native decisions", "Re-ground project jargon", "Output length budget ≤1.5 screens per turn") — each fires on every response.
+- **OQ1 — Cross-cutting AC handling. RESOLVED 2026-05-22 (step 2 / `feature/2026-05-21-helper-agent-e2`):** AC6 (substrate-native pickers), AC7 (re-grounding gloss), AC8 (length budget) **kept as cross-cutting ACs** (option (a)). Preserves `lsa:verify` traceability via per-journey `**Covers:**` lines. Implementation lands as three explicit Constraints in `helper/agents/helper.md` ("Substrate-native decisions", "Re-ground project jargon", "Output length budget ≤1.5 screens per turn") — each fires on every response.
 - **OQ2 — Friction-signal cooldown specifics. RESOLVED 2026-05-22 (step 4 / `feature/2026-05-21-helper-agent-e3`):** **Per-signal-type, per-session cooldown.** After Helper auto-engages once on a given signal-type (a or b) and the user declines re-explanation, the main agent does not re-auto-engage on the same signal-type until: (1) a different signal-type fires, OR (2) the user explicitly invokes `/help` (signal c always resets all cooldowns), OR (3) the session ends. Additional rule: even with no explicit "No", Helper auto-engages at most once per continuous friction window (window for signal (a) ends when the User Verification is approved, overridden, or abandoned). Canonical definitions live in [`../../../../helper/knowledge/friction-signals.md`](../../../../helper/knowledge/friction-signals.md) § *Cooldown rule*. Implemented as Constraint *"One auto-engage per signal-type per friction window"* in [`../../../../helper/agents/helper.md`](../../../../helper/agents/helper.md).
-- **OQ3 — Helper spawning subagents. RESOLVED 2026-05-22 (step 2 / `feature/2026-05-21-helper-agent-e2`):** **NO subagent spawn.** Helper uses `Read` / `Grep` / `Glob` directly; tools list in `helper/agents/helper.md` deliberately omits the `Agent` tool. If implementation later reveals this is too narrow, re-enter `lsa-specify` for a spec amendment — do not silently widen.
-- **OQ4 — Auto-engage in plain Claude Code, no `lsa-specify` context.** Signal (a) requires `lsa-specify` to be active. If user is not in `lsa-specify`, signal (a) cannot fire. Acceptable: Helper still works via signals (b) and (c). Documented explicitly so a `lsa-verify` reviewer doesn't flag missing trace.
+- **OQ3 — Helper spawning subagents. RESOLVED 2026-05-22 (step 2 / `feature/2026-05-21-helper-agent-e2`):** **NO subagent spawn.** Helper uses `Read` / `Grep` / `Glob` directly; tools list in `helper/agents/helper.md` deliberately omits the `Agent` tool. If implementation later reveals this is too narrow, re-enter `lsa:discover` for a spec amendment — do not silently widen.
+- **OQ4 — Auto-engage in plain Claude Code, no `lsa:discover` context.** Signal (a) requires `lsa:discover` to be active. If user is not in `lsa:discover`, signal (a) cannot fire. Acceptable: Helper still works via signals (b) and (c). Documented explicitly so an `lsa:verify` reviewer doesn't flag missing trace.

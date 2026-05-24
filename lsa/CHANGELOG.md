@@ -4,6 +4,28 @@ All notable changes to the `lsa` plugin are documented here. Format follows [Kee
 
 ## [Unreleased]
 
+## [0.8.0] — 2026-05-24
+
+Command rename + flow simplification. All LSA skills drop the `lsa-` directory prefix (commands become `lsa:discover`, `lsa:plan`, etc. instead of `lsa:lsa-discover`). `lsa-specify` and `lsa-discover` merged into a single `discover` skill with Standard/Extended flow branch. `lsa-sync` removed entirely. Two new entry-point skills: `new` (creates branch → flow-selector → discover) and `next` (reads roadmap → confirms pick → creates branch → discover). Every skill description rewritten to state input/output and make the workflow order (discover → plan → implement → verify) self-evident. Also incorporates lsa v0.7.2–v0.9.0 content that landed on main in parallel (genuine-fork test, what-and-why preamble, show-changes-inline sweep, Hard/Soft Confirm vocabulary removal). Minor bump — skill slugs, invocation names, and workflow structure all change.
+
+### Added
+- **`lsa/skills/new/SKILL.md`** — entry-point skill: accepts feature name, creates branch, runs flow-selector, hands off to discover.
+- **`lsa/skills/next/SKILL.md`** — entry-point skill: reads roadmap, presents highest-priority backlog item, confirms, creates branch, hands off to discover.
+
+### Changed
+- **All skill directories** — renamed from `lsa/skills/lsa-X/` to `lsa/skills/X/` (dropped `lsa-` prefix). Commands now `lsa:discover`, `lsa:plan`, `lsa:verify`, `lsa:init`, `lsa:reconcile`, `lsa:revise-constitution`.
+- **`lsa/skills/discover/SKILL.md`** — merged former `lsa-discover` + `lsa-specify` into one skill. Standard flow: infer-then-confirm → 3-row table → stop. Extended flow: infer-then-confirm → clarify → create spec dir → User Verification 1 → User Verification 2 → User Verification 3.
+- **All skill YAML frontmatter `description` fields** — rewritten to state input required and output produced. Main-flow skills include position marker (step N of 4).
+- **`lsa/.claude-plugin/plugin.json`** — version 0.8.0, description updated with nine skills and main flow.
+- **`lsa/README.md`** — skill table rewritten with new names and descriptions.
+- **`lsa/ARCHITECTURE.md`** — directory tree, branch management, resolved decisions updated.
+- **`lsa/knowledge/conventions.md`** — "Confirm gate types" section removed (plain-English phrasing used at each cite site instead; per main's v0.9.0 Hard/Soft Confirm vocabulary removal).
+- **Cross-references** — all active files across `core/`, `vision/`, `helper/`, root swept for old names.
+
+### Removed
+- **`lsa/skills/lsa-sync/`** — deleted entirely. Feature specs are the permanent record; no promotion into module specs.
+- **`lsa/skills/lsa-specify/`** — deleted (content merged into `discover`).
+
 ## [0.9.0] — 2026-05-24
 
 Remove the LSA-internal "Hard Confirm" / "Soft Confirm" vocabulary. The named distinction was custom LSA invention with no upstream mandate; substituted plain-English phrasing inline at each cite site. Minor bump — the documented convention section in `lsa/knowledge/conventions.md` and its inline references across 4 skill bodies are user-visible. Matches the `c226623` (v0.7.0) precedent for documented-convention removal. Per `vision/specs/features/2026-05-22-custom-inventions-sweep/` Task T1 (inventory row #3). T2 (`.lsa-sync-state.json` removal) ships in a separate follow-up PR.
@@ -48,7 +70,7 @@ Apply the new `core` v0.8.0 **Rule 7 — Show changes inline (write, show, comme
 - **42 `Observable result:` lines total in `lsa/skills/` after sweep.** 16 cite Rule 7 (the violation set); 26 are read-only (read-protocol prints, in-memory captures, verdict reports already covered by Rule 6, exemplar `lsa-reconcile`) and require no Rule 7 citation per the audit framing in `design.md` §"Inventory".
 - **Spec source.** `vision/specs/features/2026-05-22-show-changes-inline/design.md` §"Inventory — current Observable result: violations" enumerates the 16 lines; §"Step B — LSA skill sweep" carries the before/after template; `tasks.md` Epics 1–2 + 4.
 
-## [0.8.0] — 2026-05-24
+## [0.8.0-main] — 2026-05-24
 
 Apply the new `core` v0.7.0 **Rule 6 — What-and-why preamble** to every LSA skill body that currently emits a verdict label from `core/knowledge/output-vocabulary.md` §"Verdicts". 5 skill bodies updated; 7 emission sites gain a one-sentence preamble in the user's frame, naming (a) what the verdict means and (b) the concrete consequence if the user does not act. PR #20 work (verdict-named picker prompts in `lsa-verify`, closing-offer reframe in `lsa-sync`) preserved intact — preambles land BEFORE the verdict line without disturbing the existing prompt voice. Per `vision/specs/features/2026-05-22-lsa-what-why-preamble/`. Standard flow.
 

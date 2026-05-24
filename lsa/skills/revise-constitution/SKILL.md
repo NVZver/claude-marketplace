@@ -1,9 +1,9 @@
 ---
-name: lsa-revise-constitution
-description: Proposes and applies changes to the project constitution and `${specs_root}/standards/`. Use after a feature is merged during replan, when the user says "update the constitution", "revise standards", "update CLAUDE.md", or when feature decisions should become permanent standards.
+name: revise-constitution
+description: Propose changes to the project constitution and standards. Input: feature decisions that should become permanent. Output: updated constitution + standards files.
 ---
 
-> **Trace.** On load, print first: `=============== [lsa/skills/lsa-revise-constitution/SKILL.md] [lsa] ===============`
+> **Trace.** On load, print first: `=============== [lsa/skills/revise-constitution/SKILL.md] [lsa] ===============`
 
 
 # LSA Revise Constitution

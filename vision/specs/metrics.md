@@ -2,7 +2,7 @@
 
 # Metrics — claude-marketplace
 
-Aggregate one-line row per archived Extended-flow feature (was `T3`). Written by `lsa-sync` after `lsa-verify` returns clean PASS. Pass/fail counts only — no statistical eval per `vision/VISION.md` §6 *"Adjust #3"*.
+Aggregate one-line row per archived Extended-flow feature (was `T3`). Written by `lsa:verify` on clean PASS. Pass/fail counts only — no statistical eval per `vision/VISION.md` §6 *"Adjust #3"*.
 
 Schema: `feature` · `archived` · `accuracy (M/N)` · `facts (M/N)` · `only-required-changes (M/N)` · `notes`.
 

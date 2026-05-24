@@ -1,9 +1,9 @@
 ---
-name: lsa-plan
-description: Breaks an approved feature spec into independent implementation epics. Use whenever a feature spec has been approved and needs decomposing into tasks — when the user says "plan this feature", "break this into tasks", "ready to implement", or when `requirements.md` + `design.md` exist but `tasks.md` is empty.
+name: plan
+description: Break a spec into implementation epics. Input: approved spec artifacts (requirements.md + design.md + test-suites.md). Output: tasks.md with ≤5 ordered epics.
 ---
 
-> **Trace.** On load, print first: `=============== [lsa/skills/lsa-plan/SKILL.md] [lsa] ===============`
+> **Trace.** On load, print first: `=============== [lsa/skills/plan/SKILL.md] [lsa] ===============`
 
 
 # LSA Plan
@@ -30,7 +30,7 @@ Decompose an approved feature spec into ≤5 parallel-safe epics with self-verif
    Observable result: per-source one-liner printed per the protocol.
 
 2. **Decompose into epics.** Rules:
-   - Maximum 5 epics — chosen to keep epic-level human review tractable; if the work cannot be decomposed in five, the feature is too large and should be split at the spec level rather than at the plan level (escalate back to `lsa-specify` for scope reduction).
+   - Maximum 5 epics — chosen to keep epic-level human review tractable; if the work cannot be decomposed in five, the feature is too large and should be split at the spec level rather than at the plan level (escalate back to `lsa:discover` for scope reduction).
    - Each epic has zero runtime dependency on another epic
    - Each epic runs on its own branch
    - If a dependency is unavoidable, mark it explicitly in the Epic Overview table
@@ -48,7 +48,7 @@ Decompose an approved feature spec into ≤5 parallel-safe epics with self-verif
    - Creates / modifies / deletes: ...
    - Does NOT touch: ...
 
-   **Covers:** <ID>, <ID>     <!-- requirement IDs from requirements.md the epic implements: F<n>, NF<n>, or AC<n>. Parallel to test-suites.md Journey **Covers:** line. Sourced by lsa-verify trace predicates. -->
+   **Covers:** <ID>, <ID>     <!-- requirement IDs from requirements.md the epic implements: F<n>, NF<n>, or AC<n>. Parallel to test-suites.md Journey **Covers:** line. Sourced by lsa:verify trace predicates. -->
 
    ### Technical Details
    [Implementation patterns per the constitution]
@@ -68,7 +68,7 @@ Decompose an approved feature spec into ≤5 parallel-safe epics with self-verif
    - [ ] All ACs pass
    - [ ] Tests written and passing
    - [ ] No code smells per the constitution
-   - [ ] lsa-verify passed
+   - [ ] lsa:verify passed
    ```
 
    Observable result: a per-epic block written to the working scratch.
@@ -104,8 +104,7 @@ Decompose an approved feature spec into ≤5 parallel-safe epics with self-verif
    - [ ] All epics merged into feature branch
    - [ ] E2E tests pass on feature branch
    - [ ] Integration tests pass on feature branch
-   - [ ] lsa-verify passed on feature branch
-   - [ ] lsa-sync completed
+   - [ ] lsa:verify passed on feature branch
    - [ ] PR to main created
    ```
 
@@ -115,7 +114,7 @@ Decompose an approved feature spec into ≤5 parallel-safe epics with self-verif
 
    - `[a]` approve → I start TDD per epic (parallel where safe)
    - `[b]` adjust → I re-decompose with your feedback and re-present
-   - `[c]` reject → return to `lsa-specify` to reduce scope
+   - `[c]` reject → return to `lsa:discover` to reduce scope
 
    Format per [`../../../core/skills/output/SKILL.md`](../../../core/skills/output/SKILL.md); `AskUserQuestion` in Claude Code (per `core/CLAUDE.md` operational checkpoint #1). Do not start implementation until human gives explicit approval. Observable result: human approval logged.
 
@@ -125,7 +124,7 @@ Decompose an approved feature spec into ≤5 parallel-safe epics with self-verif
 
 ## Constraints
 
-- **Maximum five epics.** If the work cannot be decomposed in five parallel-safe slices, escalate back to `lsa-specify` for scope reduction before planning.
+- **Maximum five epics.** If the work cannot be decomposed in five parallel-safe slices, escalate back to `lsa:discover` for scope reduction before planning.
 - **Each epic is independent (or its dependency is explicit).** Implicit ordering is not permitted.
 - **Do not start implementation** until human approves `tasks.md`.
 - Outputs follow [`core/output`](../../../core/skills/output/SKILL.md) — citation by link, never restated.
