@@ -2,6 +2,12 @@
 
 All notable changes to the `helper` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.3.1] – 2026-05-24
+
+### Changed
+
+- **Agent body Step 5 citation upgraded** ([`./agents/helper.md`](./agents/helper.md)) — *"genuine-fork test"* now cites [`core/skills/output/SKILL.md`](../core/skills/output/SKILL.md) Rule 5 (*Concrete — Genuine-fork test*) as the canonical source; the local [`./knowledge/output-discipline.md`](./knowledge/output-discipline.md) § *Genuine fork — operating definition* is referenced as a re-grounded summary. Step 5 wording itself unchanged. Per [`vision/specs/features/2026-05-22-askuserquestion-audit/`](../vision/specs/features/2026-05-22-askuserquestion-audit/) Epic C — closes the helper-side call-site audit.
+
 ## [0.3.0] – 2026-05-24
 
 Two bundled changes: (1) **Answer-first refactor** — Helper from command-router to assistant; default reply becomes a direct cited answer in Helper's voice opening with a one-sentence goal restatement, the closing `AskUserQuestion` becomes conditional on a "genuine fork" remaining after the answer, and bare `/help` no longer opens a 3-option starter-topic picker (Helper prompts inline instead). Targets the *"Helper-as-phone-tree"* symptom per [`vision/specs/roadmap.md:104-108`](../vision/specs/roadmap.md). Spec at [`vision/specs/features/2026-05-22-helper-assistant-refactor/`](../vision/specs/features/2026-05-22-helper-assistant-refactor/). (2) **Onboarding fast-path** — Helper short-circuits to README excerpts for *install / start / what-is-X / how-do-I-run* patterns. Latency target ≤5s wall-clock for catalog-matched questions vs. ~3min deep-research baseline (user-reported, 2026-05-22). New Knowledge file [`./knowledge/onboarding-fast-path.md`](./knowledge/onboarding-fast-path.md) holds the 6-row catalog; new Step 1.5 in [`./agents/helper.md`](./agents/helper.md) wires it into the agent. Spec at [`vision/specs/features/2026-05-22-helper-onboarding-fast-path/`](../vision/specs/features/2026-05-22-helper-onboarding-fast-path/). Bundled per user decision 2026-05-23. Standard flow.
