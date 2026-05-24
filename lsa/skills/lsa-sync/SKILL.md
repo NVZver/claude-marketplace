@@ -128,7 +128,7 @@ Extract the feature delta into permanent module specs, archive the feature spec,
    - [ ] Branch ready for PR to main
    ```
 
-   Present: APPLIED verdict + updated-modules list (module → spec path) + main.spec.md updated note + archive path + count of module SHAs bumped in `.lsa-sync-state.json` + decision `[a] create PR → gh pr create` / `[b] hold → branch ready; PR later`. Format per [`core/output`](../../../core/skills/output/SKILL.md); `AskUserQuestion` for the decision. Observable result: report on screen; human decision logged.
+   Present: APPLIED verdict + updated-modules list (module → spec path) + main.spec.md updated note + archive path + count of module SHAs bumped in `.lsa-sync-state.json`. **Closing offer (optional, not a gate).** Sync is complete at this point — module specs are written, the feature is archived, the branch is ready for PR. Offer *one* closing picker: *"Create PR now? — Yes (run `gh pr create`) / No (hold; PR later)"*. **Silent-default = `hold`** — if the human does not respond, the skill exits cleanly with the branch ready; no PR is created without explicit `Yes`. Apply the [`core/output`](../../../core/skills/output/SKILL.md) Rule 5 *Genuine-fork test*: this is a next-step offer the user can override, not a mid-flow fork the skill must resolve before proceeding. Format per [`core/output`](../../../core/skills/output/SKILL.md); `AskUserQuestion` in Claude Code if the offer is shown. Observable result: report on screen; if the human picks `Yes`, `gh pr create` runs; on `No` or silence, the skill exits with the branch held.
 
 ## Output
 

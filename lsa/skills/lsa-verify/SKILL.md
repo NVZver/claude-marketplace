@@ -78,15 +78,15 @@ Confirm that the implementation on the current feature branch matches the approv
 
    Observable result: checklist printed with PASS/FAIL/WARN per row.
 
-4. **Verification report — verdict-first.** Three variants by checklist outcome:
+4. **Verification report — verdict-first.** Three variants by checklist outcome. Each variant's `AskUserQuestion` prompt names the verdict in the subject — the human is picking a *next action given the verdict*, not re-issuing it. Apply [`core/output`](../../../core/skills/output/SKILL.md) Rule 5 *Genuine-fork test*: the verdict is already settled by the checklist; the picker resolves the next-action fork the verdict creates.
 
-   - **PASS:** verdict + 1-sentence headline + per-check-group results table (Scope / Accuracy / Tests / Code quality, m/n per row) + decision `[a] proceed → lsa-sync invoked` / `[b] hold → verify later`. Metadata (branch / mode / date) + full checklist below the fold.
-   - **FAIL:** verdict + 1-sentence headline naming the failed groups + Issues table (BLOCKER rows: Item / Required action) + decision `[a] fix and re-verify` / `[b] reduce scope → re-run lsa-specify` / `[c] escalate → human review`. Metadata + full checklist below the fold.
-   - **PASS WITH WARNINGS:** verdict + 1-sentence headline + Issues table (WARNING rows: Item / Reason) + decision `[a] accept and sync → warning logged in archive` / `[b] fix first → re-verify` / `[c] hold → stop`. Metadata + full checklist below the fold.
+   - **PASS:** verdict + 1-sentence headline + per-check-group results table (Scope / Accuracy / Tests / Code quality, m/n per row) + decision. **Prompt:** *"Verdict: PASS — sync now? — Yes (run `lsa-sync`) / No (hold; verify later)"*. Metadata (branch / mode / date) + full checklist below the fold.
+   - **FAIL:** verdict + 1-sentence headline naming the failed groups + Issues table (BLOCKER rows: Item / Required action) + decision. **Prompt:** *"Verdict: FAIL — block merge? — Yes (fix and re-verify) / Reduce scope (re-run `lsa-specify`) / Escalate (human review)"*. Metadata + full checklist below the fold.
+   - **PASS WITH WARNINGS:** verdict + 1-sentence headline + Issues table (WARNING rows: Item / Reason) + decision. **Prompt:** *"Verdict: PASS WITH WARNINGS — accept the warnings and sync? — Yes (sync; warning logged in archive) / Fix first (re-verify) / Hold (stop)"*. Metadata + full checklist below the fold.
 
-   Format per [`core/output`](../../../core/skills/output/SKILL.md); verdict labels (`PASS` / `FAIL` / `PASS WITH WARNINGS`) cite [`core/knowledge/output-vocabulary.md`](../../../core/knowledge/output-vocabulary.md). `AskUserQuestion` for the decision in Claude Code. Observable result: report printed in the variant matching the verdict.
+   Format per [`core/output`](../../../core/skills/output/SKILL.md); verdict labels (`PASS` / `FAIL` / `PASS WITH WARNINGS`) cite [`core/knowledge/output-vocabulary.md`](../../../core/knowledge/output-vocabulary.md). `AskUserQuestion` for the decision in Claude Code — the picker prompt names the verdict in the subject (per the three variants above), not a generic *"Approve?"*. Observable result: report printed in the variant matching the verdict; picker prompt names the verdict.
 
-5. **Gate.** Decision is part of the report (Step 4) — the report's decision block IS the gate. In Claude Code, prefer `AskUserQuestion` for the decision. Branch on the verdict:
+5. **Gate.** Decision is part of the report (Step 4) — the report's decision block IS the gate. In Claude Code, use `AskUserQuestion` with the verdict-named prompt from Step 4 (the prompt always starts *"Verdict: <PASS|FAIL|PASS WITH WARNINGS> — …"*). Branch on the verdict:
    - **FAIL:** no `metrics.md` write; no sync handoff regardless of the decision (only re-verify / scope-reduce / escalate are valid).
    - **PASS WITH WARNINGS:** sync handoff only on `[a] accept and sync`; warning logged in archive.
    - **PASS:** sync handoff on `[a] proceed`; proceed to Step 6.

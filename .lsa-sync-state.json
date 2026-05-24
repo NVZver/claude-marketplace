@@ -1,12 +1,12 @@
 {
   "modules": {
     "core": {
-      "last_sync_sha": "ca476560b32289c64fded562c286d001ca064666",
-      "last_sync_iso": "2026-05-22T07:25:03Z"
+      "last_sync_sha": "1d3fb335a1e6ea41fd7a347d8e6e70d68b895543",
+      "last_sync_iso": "2026-05-24T09:00:00Z"
     },
     "lsa": {
-      "last_sync_sha": "ca476560b32289c64fded562c286d001ca064666",
-      "last_sync_iso": "2026-05-22T07:25:03Z"
+      "last_sync_sha": "1d3fb335a1e6ea41fd7a347d8e6e70d68b895543",
+      "last_sync_iso": "2026-05-24T09:00:00Z"
     },
     "helper": {
       "last_sync_sha": "5f768ce5b2dab1f7df835a542144aa282f4eb044",

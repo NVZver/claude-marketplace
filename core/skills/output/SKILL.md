@@ -36,7 +36,7 @@ Questions and options name the real-world subject — not spec IDs, not project 
   - ✗ *"Approve F3 in requirements.md §Functional Requirements?"*
   - ✓ *"Add password reset endpoint?"*
 - **No project jargon.** Strip terms a first-time user can't decode (`contract-trigger`, `Hard Confirm`, `diagonal coverage`). Reserve jargon for skill bodies, not user-facing prompts.
-- **Must-decide only.** Surface as picker questions only choices that meaningfully change the outcome. Bundle consistency checks; defer nice-to-decide to non-blocking summary lines.
+- **Must-decide only — Genuine-fork test.** Surface as picker questions only choices that meaningfully change the outcome. Before opening a picker, the agent answers: *is there a real fork I cannot resolve from in-scope sources?* A fork is real when **at least one** holds: (a) **destructive** — the next action edits a file, deletes a row, calls an external service, or starts a multi-turn skill flow; (b) **two named designs in scope and neither overrides the other** — the agent has identified ≥2 reasonable continuations from in-scope sources (`vision/VISION.md:63` Principle 6) and no source ranks one above the other; (c) **a fact required by the next step is absent from working context and cannot be derived** — spec, repo, and prior turns do not supply it; (d) **per-row triage** — N items each need an independent decision (batched into one multi-question picker). If none apply, deliver the cited answer directly and offer at most ONE closing picker for the user to override. Substrate selection (which primitive) is governed by `vision/VISION.md:66` Principle 9.
 - **One decision per question.** Don't bundle "approve A and B and C?" — split into separate questions.
 
 ---

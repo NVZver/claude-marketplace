@@ -13,11 +13,11 @@ Every LSA User Verification is a decision asked of the human with explicit conse
 | Skill | Purpose |
 |---|---|
 | **`lsa-init`** | Initialize the spec tree on a project. Greenfield or brownfield. |
-| **`lsa-discover`** | Infer-then-confirm discovery at the start of every Standard / Extended task (was `T2 / T3`). Agent reads codebase to determine module, change, and AC; presents pre-filled answers for human override. Standard oral; Extended scratch `discovery.md`. |
+| **`lsa-discover`** | Infer-then-confirm discovery at the start of every Standard / Extended task (was `T2 / T3`). Agent reads codebase to determine module, change, and AC; presents pre-filled answers for human override. Standard oral; Extended scratch `discovery.md`. Since `lsa` v0.7.1: per-line picker is skipped when Step 1 yields a single unambiguous candidate AND the human hasn't asked for `custom` (silent-acceptance); remaining picks batch into one multi-question call. |
 | **`lsa-specify`** | Create a feature spec from a description, with three bundled hard-confirm **User Verifications** (1: Requirements + Contract Trigger; 2: Test Suites + Contract + Design; 3: Final Integration). User Verification 2 renders a 6-row diagonal cross-artifact coverage check (5 with contract skipped) — including EARS-pattern + journey-shape rows per `vision/VISION.md` §2 sub-principle 2a. Renamed from `Gate N` in `lsa` v0.6.2. |
 | **`lsa-plan`** | Decompose an approved spec into ≤5 parallel-safe epics. Each epic carries a `**Covers:**` line citing requirement IDs (`F<n>`, `NF<n>`, `AC<n>`) — sourced by `lsa-verify`. |
 | **`lsa-verify`** | Verify every change traces to a spec requirement via dual predicates: orphan-diff (broad — every non-trivial hunk covered) + orphan-AC (narrow — every AC implemented). Code-mode, doc-mode, or mixed (per `.lsa.yaml`). Emit per-feature `metrics.md` on clean Extended-flow PASS (was `T3`). |
-| **`lsa-sync`** | Extract delta into permanent module specs; archive feature spec; record per-module HEAD SHA in `.lsa-sync-state.json`; append aggregate metrics row. |
+| **`lsa-sync`** | Extract delta into permanent module specs; archive feature spec; record per-module HEAD SHA in `.lsa-sync-state.json`; append aggregate metrics row. Since `lsa` v0.7.1: the post-completion PR-or-hold picker is an optional closing offer (not a gate) with silent-default = `hold`. |
 | **`lsa-reconcile`** | Absorb direct artifact edits into module specs — Level 2.5 (`vision/VISION.md:138`). Per-module hard confirm. |
 | **`lsa-revise-constitution`** | Propose and apply changes to the configured constitution and `${specs_root}/standards/` only. |
 

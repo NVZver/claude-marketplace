@@ -4,6 +4,21 @@ All notable changes to the `lsa` plugin are documented here. Format follows [Kee
 
 ## [Unreleased]
 
+## [0.7.2] — 2026-05-24
+
+Apply the `core` v0.6.0 *Genuine-fork test* to 3 LSA call sites — tightening `lsa-discover`'s per-line picker (composes with v0.7.1 infer-then-confirm), softening `lsa-sync`'s post-completion picker, and renaming `lsa-verify`'s verdict-picker prompt. Per `vision/specs/features/2026-05-22-askuserquestion-audit/` Epic B (rows L2 / L9 / L12 in the design inventory). Standard flow. Renumbered from v0.7.1 → v0.7.2 to coexist with the v0.7.1 infer-then-confirm release that landed independently.
+
+### Changed
+- **`lsa/skills/lsa-discover/SKILL.md` Step 2 (L2 — `keep + tighten`)** — added "Skip per-line picker when N=1 candidate AND no `custom`" semantics on top of v0.7.1's infer-then-confirm reshape. When Step 1 yields a single unambiguous candidate for a line and the human hasn't asked for `custom`, the skill accepts the candidate silently. Remaining picks batch into ONE multi-question `AskUserQuestion`.
+- **`lsa/skills/lsa-sync/SKILL.md` Step 8 (L12 — `convert-to-closing-offer`)** — post-completion PR-or-hold picker reframed as an *optional closing offer*, not a mandatory gate. **Silent-default = `hold`** — `gh pr create` runs only on explicit `Yes`. Cites `core/output` Rule 5 Genuine-fork test.
+- **`lsa/skills/lsa-verify/SKILL.md` Step 4 + Step 5 (L9 — `keep + tighten` verdict-picker prompt voice)** — verdict-picker prompts rewritten to name the verdict in the subject: *"Verdict: PASS — sync now?"* / *"Verdict: FAIL — block merge?"* / *"Verdict: PASS WITH WARNINGS — accept the warnings and sync?"*. Human picks the next action; verdict itself is already settled by the checklist.
+
+### Notes
+- **Patch bump rationale.** L2 (skip when N=1) + L12 (closing-offer) change observable behavior; L9 (verdict prompt) is prompt-text only. Cumulative effect is on the patch/minor boundary; chose patch — no rule/skill added or removed, only existing pickers' wording and conditional rendering changed.
+- **Sibling `core` minor bump.** `core` v0.6.0 in the same feature ships the canonical rule this changelog cites (`core/skills/output/SKILL.md` Rule 5 *Genuine-fork test*). LSA edits are downstream of the rule.
+- **Out of scope for this PR.** Helper-side call-site sweep (Epic C — H1, H2, H3, H4, H5m in the inventory) ships in a later PR; it folds with feature 5's Epic 3 since most Epic C work was substantially done by helper v0.3.0 (PR #19).
+- **Spec source.** `vision/specs/features/2026-05-22-askuserquestion-audit/design.md` §"Call-site Inventory" rows L2, L9, L12 carry the verdict + reason; `tasks.md` Epic B enumerates B1–B6.
+
 ## [0.7.1] — 2026-05-23
 
 `lsa-discover` infer-then-confirm. The agent now reads the codebase to determine module, change framing, and acceptance criterion — then presents all three as a pre-filled table for human override in a single `AskUserQuestion`. Previously the skill asked three questions the agent should have answered itself. Same pattern as the `lsa-init` v0.3.1 fix (greenfield/brownfield mechanical detection). Per user feedback 2026-05-23.
