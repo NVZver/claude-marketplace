@@ -2,6 +2,33 @@
 
 All notable changes to the `helper` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.3.0] – 2026-05-24
+
+Answer-first refactor — Helper from command-router to assistant. Default reply becomes a direct cited answer in Helper's voice opening with a one-sentence goal restatement; the closing `AskUserQuestion` becomes conditional on a "genuine fork" remaining after the answer. Bare `/help` no longer opens a 3-option starter-topic picker — Helper prompts inline for the question instead. Targets the *"Helper-as-phone-tree"* symptom per [`vision/specs/roadmap.md:104-108`](../vision/specs/roadmap.md). Spec at [`vision/specs/features/2026-05-22-helper-assistant-refactor/`](../vision/specs/features/2026-05-22-helper-assistant-refactor/). Standard flow.
+
+### Changed
+
+- **Agent body Steps 1, 3, 5 reshaped** ([`./agents/helper.md`](./agents/helper.md)). Step 1 gains a goal-restatement sub-step ("You want to: [install / learn X / find a skill / start a flow / fix Y]"). Step 3 prefixes the answer with the Step 1 sentence (or collapses to a half-sentence prefix for one-word factual questions). Step 5 becomes conditional: clean end when the answer fully resolves the question; `AskUserQuestion` only when a genuine fork remains (destructive action, two architecturally equivalent options, missing input the agent cannot infer, or per-row triage at scale). Steps 2 and 4 unchanged. Each Step preserves its observable-result line per [`core/skills/actor-template/SKILL.md`](../core/skills/actor-template/SKILL.md).
+- **Agent description frontmatter** ([`./agents/helper.md`](./agents/helper.md)) — tail clause *"`AskUserQuestion` for every decision"* replaced with *"`AskUserQuestion` only for genuine forks"*.
+- **Bare `/help` no-argument behavior** ([`./commands/help.md`](./commands/help.md)). Removed the 3-option `AskUserQuestion` starter-topic picker (install / pick a skill / explain a concept). The command now dispatches `Skill(helper)` with an empty argument; Helper's Step 1 emits a one-sentence inline prompt in Helper's voice inviting the user to state their question. The starter-topic phrasings migrated to [`./knowledge/output-discipline.md`](./knowledge/output-discipline.md) § *Starter-topic examples* as illustrative examples — not a runtime fork.
+- **Command description frontmatter** ([`./commands/help.md`](./commands/help.md)) — *"opens a 3-option starter-topic picker"* replaced with *"dispatches to Helper; if no argument, Helper prompts inline for the question"*.
+- **Output discipline closing-picker rule** ([`./knowledge/output-discipline.md`](./knowledge/output-discipline.md)) — *"Every response (except `Skill()` handoff) closes with `AskUserQuestion`"* replaced with *"Close with `AskUserQuestion` only when a genuine fork remains after the answer ... Otherwise end cleanly."*
+- **`helper/README.md:8` default-flow phrasing** — *"`AskUserQuestion` for every decision"* replaced with *"`AskUserQuestion` for every **genuine fork** — destructive actions, real choices, missing inputs"*. Per [`CLAUDE.md`](../CLAUDE.md) §*"Discipline (sourced)"* (*"READMEs are living documents"*).
+
+### Added
+
+- **"Genuine fork — operating definition" section** in [`./knowledge/output-discipline.md`](./knowledge/output-discipline.md). Four concrete tests: destructive/irreversible action, two architecturally equivalent options, missing required input the agent cannot infer, per-row triage at scale. Cites `vision/VISION.md:57` (Ownership over automation) and project memory `feedback_askuserquestion_overuse.md`.
+- **"Goal-restatement opening" rule** in [`./knowledge/output-discipline.md`](./knowledge/output-discipline.md). Every response opens with a one-sentence goal restatement; for one-word factual questions a half-sentence prefix suffices. Per `requirements.md` F4 / AC3.
+- **"Starter-topic examples" section** in [`./knowledge/output-discipline.md`](./knowledge/output-discipline.md). The install / pick-a-skill / explain-a-concept phrasings migrated from `helper/commands/help.md` as illustrative content, not a runtime picker.
+- **"What violates discipline" bullet** in [`./knowledge/output-discipline.md`](./knowledge/output-discipline.md): *"A response that opens with `AskUserQuestion` instead of a cited answer (except cannot-verify per `helper/agents/helper.md` Step 3)."*
+- **v0.3.0 row** in the status table of [`./README.md`](./README.md).
+
+### Notes
+
+- **Minor bump rationale.** User-visible default-flow change (the picker stops being mandatory; bare `/help` shape changes). Underlying capabilities are unchanged — still cited, still ≤1.5 screens, still `AskUserQuestion` as the picker primitive *when a picker is appropriate*. Per [`vision/specs/main.spec.md:32`](../vision/specs/main.spec.md) NFR3.
+- **Constraints block in `./agents/helper.md` (lines 46–58) unchanged.** Substrate-native, cannot-ground fallback, no-persona, cooldown, signal-(a) precondition — all preserved. Per `tasks.md` Task 1.4.
+- **`core/output` confirmed untouched.** The "closing picker every turn" rule never lived in [`core/skills/output/SKILL.md`](../core/skills/output/SKILL.md); it was a Helper-specific extension at [`./knowledge/output-discipline.md:20`](./knowledge/output-discipline.md). `core/output` Rule 5 (*"Pickers surface only choices that change the outcome"*, `core/skills/output/SKILL.md:33`) is consistent with this refactor — no `core/` edit needed. Resolves OQ2 in [`vision/specs/features/2026-05-22-helper-assistant-refactor/design.md`](../vision/specs/features/2026-05-22-helper-assistant-refactor/design.md).
+
 ## [0.2.1] – 2026-05-22
 
 File-load trace adoption. The Helper agent body, the `/help` command, and all 3 `helper/knowledge/*.md` files carry the new one-line trace directive at their top, per `core` v0.5.4 Rule 4 (Sourced) → *File-load trace*. On load, each file prints `=============== [<file>] [helper] ===============` verbatim. Replaces the v0.5.3 `[plugin:skill]` marker scheme. Per user request 2026-05-22. Quick flow.
