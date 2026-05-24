@@ -7,6 +7,10 @@
     "lsa": {
       "last_sync_sha": "ca476560b32289c64fded562c286d001ca064666",
       "last_sync_iso": "2026-05-22T07:25:03Z"
+    },
+    "helper": {
+      "last_sync_sha": "eef2547954bcba4bb91d1212fe02d9614ebc0951",
+      "last_sync_iso": "2026-05-24T07:24:10Z"
     }
   }
 }
