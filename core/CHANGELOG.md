@@ -4,6 +4,19 @@ All notable changes to the `core` plugin are documented here. Format follows [Ke
 
 ## [Unreleased]
 
+## [0.6.0] — 2026-05-24
+
+Rule 5 expansion — **Genuine-fork test** as a new operational sub-rule under "Must-decide only". Replaces the prior one-line "Must-decide only" bullet at `core/skills/output/SKILL.md:39` with a checklist that makes "meaningfully change the outcome" testable: a picker is justified only when at least one of four conditions holds (destructive write / two named designs in scope / fact absent from context / per-row triage). Orthogonal to `vision/VISION.md:66` Principle 9 — Principle 9 governs *which* substrate (`AskUserQuestion` vs `[a]/[b]/[c]`); the Genuine-fork test governs *whether to ask at all*. Per `vision/specs/features/2026-05-22-askuserquestion-audit/`. Standard flow.
+
+### Changed
+- **`core/skills/output/SKILL.md` Rule 5 "Must-decide only"** — bullet replaced (in place, not appended) with the expanded "Must-decide only — Genuine-fork test" version. Names the four real-fork categories with operational criteria; closes with "deliver the cited answer directly and offer at most ONE closing picker for the user to override". Cites `vision/VISION.md:63` Principle 6 (in-scope source ranking) and `vision/VISION.md:66` Principle 9 (substrate selection). Body ≤6 wrapped markdown lines per NF2 in the feature requirements.
+- **`core/CLAUDE.md` operational checkpoint #1 ("Substrate-native pickers")** — one clarifying line appended: *"This checkpoint is downstream of the Rule 5 'Genuine-fork test' in `core/skills/output/SKILL.md` — if a picker is justified, then use `AskUserQuestion`. Don't render a picker that wasn't justified in the first place."* Makes the orthogonality explicit at the checkpoint surface so reviewers don't conflate fork-existence with primitive choice.
+
+### Notes
+- **Minor bump rationale.** New operational sub-rule with user-visible enforcement — Helper and LSA call-site sweeps in sibling PRs cite this rule. No existing behavior breaks; every prior caller that already passed the old "must-decide" filter passes the new checklist (which is strictly more permissive at the upstream gate but more demanding inside it).
+- **Sibling LSA patch.** `lsa` v0.7.1 in the same feature sweeps the 2 LSA call sites the rule reclassifies (L2 `lsa-discover` per-line tighten, L12 `lsa-sync` closing-offer) plus the L9 `lsa-verify` verdict-picker prompt voice. Helper call-site sweep (Epic C) ships in a separate later PR — blocks on `helper` v0.3.0.
+- **Spec source.** `vision/specs/features/2026-05-22-askuserquestion-audit/design.md` §"Proposed `core/output` Rule 5 expansion of 'Must-decide only'" carries the exact bullet text used here; `tasks.md` Epic A enumerates A1–A4.
+
 ## [0.5.5] — 2026-05-22
 
 Declare `core/output` as the marketplace-wide canonical source-of-truth for output discipline. Adds a canonical-source clause + a regression probe (`core/tests/repo-anchored.md` D2) that catches future drift. Sweeps known Core-internal drift; LSA sweep ships in sibling `lsa` v0.6.5. Per user request 2026-05-22 (*"Core/output is the source of truth. All goes to it adheres it or extend but never breaks"*). Standard flow.

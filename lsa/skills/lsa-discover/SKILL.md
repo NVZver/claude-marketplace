@@ -30,7 +30,9 @@ Establish minimum-viable context — which module the change touches, what the c
    - 2 candidate one-line framings for the change + `custom` option
    - 2 candidate one-line acceptance criteria + `custom` option
 
-   Format per [`core/output`](../../../core/skills/output/SKILL.md); `AskUserQuestion` for each pick in Claude Code. Observable result: three answers captured (module + change + AC) in the working scratch.
+   **Skip per-line picker when N=1 candidate AND no `custom` request.** Apply the [`core/output`](../../../core/skills/output/SKILL.md) Rule 5 *Genuine-fork test* before opening `AskUserQuestion`: if Step 1 yields a single unambiguous candidate for a line (one module, one change framing, or one AC framing) and the human has not asked for `custom`, the per-line picker is not a genuine fork — accept the candidate as the answer and surface it as a one-line "assumed: <answer>" note instead. Open `AskUserQuestion` only for lines where ≥2 candidates exist or `custom` was requested. When at least one line needs picking, batch the remaining picks into ONE `AskUserQuestion` call (one question per ambiguous line), not three separate calls. Silence on any line = approval per the line above.
+
+   Format per [`core/output`](../../../core/skills/output/SKILL.md); `AskUserQuestion` for each remaining pick in Claude Code. Observable result: three answers captured (module + change + AC) in the working scratch — by silent-acceptance when N=1, by batched picker when any line has ≥2 candidates or `custom`.
 
 3. **For Standard only** — render the discovery as a 3-row table (Module / Change / Acceptance) per [`core/output`](../../../core/skills/output/SKILL.md). **Stop** there. The agent then writes a failing test, implements the change, and runs `/lsa:verify`. Observable result: the table printed back to the human; no files written to `${specs_root}/`.
 
