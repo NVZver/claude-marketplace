@@ -8,6 +8,7 @@ Prioritized list of upcoming work, populated from `vision/VISION.md` §6 *"Adjus
 
 | Feature | Priority | Status | Notes |
 |---|---|---|---|
+| LSA command rename + flow simplification | **Must** | backlog | Detail: §"2026-05-24 backlog detail" #1. Touches all LSA skill files, `plugin.json`, `core/CLAUDE.md`, `vision/VISION.md`, both READMEs, both module specs. |
 | EARS notation in AC block | Should | shipped — lsa v0.6.0 | Adopted via Tech Picture 2026-05-20 — see §"Tech Picture adoption — 2026-05-20" #1. Shipped with the journey-shape AC sub-principle (`vision/VISION.md` §2 sub-principle 2a) and `lsa-verify` dual trace predicates. Feature: `vision/specs/archive/2026-05-21-ears-journey-shape-ac/`. |
 | Library-spec cache for top 3–5 libraries | Could | backlog | Adopted via Tech Picture 2026-05-20 — see §"Tech Picture adoption — 2026-05-20" #2. |
 | Diagonal cross-artifact analysis at `lsa-specify` User Verification 2 (formerly Gate 2) | Should | shipped — lsa v0.5.0 | Adopted via Tech Picture 2026-05-20 — see §"Tech Picture adoption — 2026-05-20" #3. Feature: `vision/specs/archive/2026-05-21-diagonal-cross-artifact-analysis/`. Renamed Gate 2 → User Verification 2 in `lsa` v0.6.2. |
@@ -96,6 +97,21 @@ Prioritized list of upcoming work, populated from `vision/VISION.md` §6 *"Adjus
   - **Direct.** Verdict-first per Rule 7; the human's eye lands on `✗` rows first; passing rows collapse below the fold.
   - **Factual.** Every row cites the two specific artifact lines being compared — no aggregated "looks good".
   - **Make-you-own-it.** Conflicts surface as explicit options with outcomes (Rule 6); the agent refuses to pick which artifact "wins". The human owns the reconciliation.
+
+## 2026-05-24 backlog detail
+
+`READY` — one backlog row added 2026-05-24 from user feedback on LSA usability.
+
+### 1. LSA command rename + flow simplification
+
+- **Problem.** LSA command names are confusing in three ways: (a) the `lsa:lsa-*` double-prefix stutter makes commands verbose and hard to scan; (b) the correct workflow order isn't obvious from the names — users have to ask Helper to guide them; (c) `lsa-specify` and `lsa-discover` are separate commands with an unclear relationship, and `lsa-sync` sounds like a code-to-spec catch-up when it's actually spec-to-spec promotion.
+- **Example.** User 2026-05-24: *"While using it, I got always confused what each command does and what's the correct order of the command. I miss lsa:discover → lsa:plan → lsa:implement → lsa:verify. Right now, I always have to ask helper to guide me."*
+- **Decisions confirmed 2026-05-24:**
+  1. **Drop `lsa-` prefix** from all skill file names → commands become `lsa:discover`, `lsa:plan`, `lsa:verify`, etc.
+  2. **Merge `lsa-specify` + `lsa-discover`** into a single `lsa:discover` with three internal phases: specify (user describes intent) → discover (agent reads codebase, infers answers) → confirm (user approves).
+  3. **Drop `lsa-sync` entirely.** Feature specs are the permanent record — no promotion into module specs. The audit (2026-05-24) confirmed `lsa-sync` was a spec-to-spec operation (not code-to-spec), but the promotion step is unnecessary overhead. Module-spec role may need rethinking later.
+  4. **`lsa-reconcile` stays as exception-path only** — for unavoidable cases where code changed without a spec (the code-first exception to the spec-first default).
+- **Expected Output.** Main flow (Standard and Extended): `lsa:discover` → `lsa:plan` → `lsa:implement` → `lsa:verify`. Four commands, clear order, no stutter. Utility commands: `lsa:init`, `lsa:reconcile`, `lsa:revise-constitution`. Every command has a clear short description stating what is required before running and what will be the output. Touches: all LSA skill file names + `plugin.json` + `core/CLAUDE.md` + `vision/VISION.md` + both READMEs + both module specs + `CONTRIBUTING.md` + `lsa/ARCHITECTURE.md`.
 
 ## 2026-05-22 backlog detail
 
