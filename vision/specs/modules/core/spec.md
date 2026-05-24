@@ -4,7 +4,7 @@
 
 The domain-neutral discipline plugin. Ships three skills + one always-on `CLAUDE.md` fragment.
 
-**Plugin manifest:** [`core/.claude-plugin/plugin.json`](../../../../core/.claude-plugin/plugin.json) (v0.6.0)
+**Plugin manifest:** [`core/.claude-plugin/plugin.json`](../../../../core/.claude-plugin/plugin.json) (v0.7.0)
 **Plugin README** (skill list, install): [`core/README.md`](../../../../core/README.md)
 **Always-on fragment** (canonical source): [`core/CLAUDE.md`](../../../../core/CLAUDE.md)
 **Per-skill behavior** (source of truth per skill): [`core/skills/*/SKILL.md`](../../../../core/skills/)
@@ -31,3 +31,4 @@ The `core/CLAUDE.md` fragment is the **canonical source** for the always-on rule
 - **Spec source-of-truth.** Each skill's behavior is owned by its `SKILL.md`; this module spec carries module-level invariants only — not a per-skill catalog (that's `core/README.md`).
 - **Output discipline canonical.** `core/skills/output/SKILL.md` is the marketplace-wide source-of-truth for output discipline. Every plugin cites it by markdown link; no plugin outside `core/` restates the rule count or rule names. Re-grounded summaries are permitted only when they cite the canonical file at the top (per `helper/knowledge/output-discipline.md:5` precedent). Enforced by `core/tests/repo-anchored.md` D2.
 - **Rule 5 — Genuine-fork test.** A picker is justified only when at least one holds: (a) destructive write, (b) two named designs in scope and neither overrides the other, (c) a fact required by the next step is absent from working context and cannot be derived, (d) per-row triage. If none apply, deliver the cited answer directly and offer at most ONE closing picker for the user to override. Substrate selection (which primitive) is governed by `vision/VISION.md:66` Principle 9 — orthogonal to fork existence. Canonical statement at `core/skills/output/SKILL.md:39`; the `core/CLAUDE.md` Substrate-native checkpoint cites it as upstream gate.
+- **Rule 6 — What-and-why preamble.** Every emission of a verdict label from `core/knowledge/output-vocabulary.md` §"Verdicts" is preceded in the same paragraph by a one-sentence preamble naming (a) the action in plain English in the user's frame, and (b) the concrete consequence if the human does not act. Canonical format: `<context sentence>. <VERDICT> verdict + <details>.` A bare verdict line fails this rule. Canonical statement at `core/skills/output/SKILL.md:42`; cited by all 5 LSA skills that emit verdicts (lsa-init, lsa-reconcile, lsa-sync, lsa-revise-constitution, lsa-verify).
