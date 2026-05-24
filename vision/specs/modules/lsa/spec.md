@@ -4,7 +4,7 @@
 
 The Living Spec Architecture plugin. Eight skills + one SessionStart hook + a config schema.
 
-**Plugin manifest:** [`lsa/.claude-plugin/plugin.json`](../../../../lsa/.claude-plugin/plugin.json) (v0.6.2)
+**Plugin manifest:** [`lsa/.claude-plugin/plugin.json`](../../../../lsa/.claude-plugin/plugin.json) (v0.7.1)
 **Plugin README** (skill table, install, configuration): [`lsa/README.md`](../../../../lsa/README.md)
 **Architecture** (directory structure, `.lsa.yaml` schema, branch management, resolved decisions): [`lsa/ARCHITECTURE.md`](../../../../lsa/ARCHITECTURE.md)
 **Per-skill behavior** (source of truth per skill): [`lsa/skills/*/SKILL.md`](../../../../lsa/skills/)
@@ -28,10 +28,11 @@ The Living Spec Architecture plugin. Eight skills + one SessionStart hook + a co
 
 ## Invariants
 
-- **Versioning.** `lsa` evolves with its own SemVer + CHANGELOG (`vision/VISION.md` §1 *"Distribution + versioning"*). Currently v0.6.2.
+- **Versioning.** `lsa` evolves with its own SemVer + CHANGELOG (`vision/VISION.md` §1 *"Distribution + versioning"*). Currently v0.7.1.
 - **Markdown + small JSON / YAML / bash surface.** No `/src/`. Plugin manifest is JSON; config is YAML; hook is bash. Per `vision/specs/standards/code.md`.
 - **Depends on `core` v0.5.2+** for `flow-selector` (added as `tier-selector` v0.2.0; renamed v0.5.2) and `core/output` (added v0.4.0; cited from every LSA skill per `lsa/CHANGELOG.md` [0.4.0]). Documented in `lsa/.claude-plugin/plugin.json: description` and `lsa/README.md` *"Depends on"*.
 - **Spec source-of-truth.** Each skill's behavior is owned by its `SKILL.md`; this module spec carries module-level invariants only — not a per-skill catalog (that's `lsa/README.md`).
 - **Reconcile is absorptive, not blocking** (`vision/VISION.md:144`). The `lsa-reconcile` skill never blocks, reverts, or reformats artifact edits.
 - **`lsa-specify` User Verification 2 — diagonal cross-artifact coverage.** User Verification 2 renders a 4-row coverage table (AC→Journey, Journey→Design, Design→Contract, Contract→test-suites). Each row cites two artifact lines in `file:line` format; `✗` rows surface as Rule 6 decision blocks that block approval until resolved. Per `lsa/skills/lsa-specify/SKILL.md:154` (Step 5 body) and `vision/specs/archive/2026-05-21-diagonal-cross-artifact-analysis/`.
 - **`lsa-specify` User Verification 2 — EARS + journey-shape rows.** User Verification 2 evaluates two additional rows: **1a** (EARS-pattern, per `vision/VISION.md:201`) and **1b** (Journey-shape, per `vision/VISION.md` §2 sub-principle 2a). Failing rows surface as Rule 6 decision blocks per the existing render. `lsa-plan` epics carry a `**Covers:** <ID>` line citing requirement IDs each epic implements; `lsa-verify` runs an orphan-diff predicate (broad — any requirement ID) and an orphan-AC predicate (narrow — behavior coverage). Per `lsa/skills/lsa-specify/SKILL.md` User Verification 2 body, `lsa/skills/lsa-plan/SKILL.md` epic template, `lsa/skills/lsa-verify/SKILL.md` Scope checklist, and `vision/specs/archive/2026-05-21-ears-journey-shape-ac/`.
+- **Genuine-fork test applied to LSA pickers.** Three LSA skills apply `core/output` Rule 5 Genuine-fork test: `lsa-discover` skips the per-line picker when Step 1 yields a single unambiguous candidate AND no `custom` is requested; `lsa-sync`'s post-completion PR-or-hold picker is an optional closing offer with silent-default = `hold`; `lsa-verify`'s verdict-picker prompts name the verdict in the subject (*"Verdict: PASS — sync now?"* etc). Per `lsa/skills/lsa-discover/SKILL.md` Step 2, `lsa/skills/lsa-sync/SKILL.md` Step 8, `lsa/skills/lsa-verify/SKILL.md` Step 4–5.

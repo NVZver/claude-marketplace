@@ -4,7 +4,7 @@
 
 The domain-neutral discipline plugin. Ships three skills + one always-on `CLAUDE.md` fragment.
 
-**Plugin manifest:** [`core/.claude-plugin/plugin.json`](../../../../core/.claude-plugin/plugin.json) (v0.5.5)
+**Plugin manifest:** [`core/.claude-plugin/plugin.json`](../../../../core/.claude-plugin/plugin.json) (v0.6.0)
 **Plugin README** (skill list, install): [`core/README.md`](../../../../core/README.md)
 **Always-on fragment** (canonical source): [`core/CLAUDE.md`](../../../../core/CLAUDE.md)
 **Per-skill behavior** (source of truth per skill): [`core/skills/*/SKILL.md`](../../../../core/skills/)
@@ -30,3 +30,4 @@ The `core/CLAUDE.md` fragment is the **canonical source** for the always-on rule
 - **Always-loadable on Claude.ai.** Skills upload one-by-one as zips per `core/README.md` *"Install on Claude.ai"*.
 - **Spec source-of-truth.** Each skill's behavior is owned by its `SKILL.md`; this module spec carries module-level invariants only — not a per-skill catalog (that's `core/README.md`).
 - **Output discipline canonical.** `core/skills/output/SKILL.md` is the marketplace-wide source-of-truth for output discipline. Every plugin cites it by markdown link; no plugin outside `core/` restates the rule count or rule names. Re-grounded summaries are permitted only when they cite the canonical file at the top (per `helper/knowledge/output-discipline.md:5` precedent). Enforced by `core/tests/repo-anchored.md` D2.
+- **Rule 5 — Genuine-fork test.** A picker is justified only when at least one holds: (a) destructive write, (b) two named designs in scope and neither overrides the other, (c) a fact required by the next step is absent from working context and cannot be derived, (d) per-row triage. If none apply, deliver the cited answer directly and offer at most ONE closing picker for the user to override. Substrate selection (which primitive) is governed by `vision/VISION.md:66` Principle 9 — orthogonal to fork existence. Canonical statement at `core/skills/output/SKILL.md:39`; the `core/CLAUDE.md` Substrate-native checkpoint cites it as upstream gate.
