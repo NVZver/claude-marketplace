@@ -22,6 +22,8 @@ Close the drift between artifact reality and module specs by absorbing each delt
 
 ## Steps
 
+> The 8-element drift block below is the exemplar that [`core/output`](../../../core/skills/output/SKILL.md) Rule 7 generalizes from.
+
 1. **Per-module drift diff.** For each module in `.lsa.yaml`, run `git diff <recorded-sha> -- <artifact_paths>` (working-tree against the recorded SHA — **no `..HEAD` suffix**; that form misses uncommitted edits, which is the very case `vision/VISION.md:138` is designed for). Observable result: a per-module diff summary printed (file count + line count + one-line summary of what changed).
 
 2. **Exit if clean.** If no module has drift, print "no drift detected" and **stop**. No further steps.

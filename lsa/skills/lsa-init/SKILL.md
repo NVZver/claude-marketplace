@@ -57,7 +57,7 @@ Scaffold the LSA spec tree on a project so the rest of the LSA skills (`lsa-disc
    Format per [`../../../core/skills/output/SKILL.md`](../../../core/skills/output/SKILL.md); `AskUserQuestion` in Claude Code (per `core/CLAUDE.md` operational checkpoint #1).
    5. Wait for explicit human confirmation before writing any spec files.
 
-   Observable result: the spec tree exists on disk after approval; the human confirms the skeleton.
+   Observable result: the brownfield spec tree quoted back inline per [`core/output`](../../../core/skills/output/SKILL.md) Rule 7 (add type tag) — compressed inspection table (one row per `${specs_root}/modules/<module-name>/spec.md` written) given multi-file batch size, with file:line pointers and the `[assumption: inferred from <source>; verify]` tag visible per row; the human confirms the skeleton.
 
 3. **Write spec files.** Write `${specs_root}/main.spec.md`:
 
@@ -98,7 +98,7 @@ Scaffold the LSA spec tree on a project so the rest of the LSA skills (`lsa-disc
    |------|-------|---------|----------------|--------|
    ```
 
-   Observable result: the three files exist with the templates above.
+   Observable result: the three written files quoted back inline per [`core/output`](../../../core/skills/output/SKILL.md) Rule 7 (add type tag) — compressed inspection table (one row per file: `${specs_root}/main.spec.md` / `${specs_root}/roadmap.md` / `${specs_root}/research-backlog.md`) given multi-file batch size, with file:line pointers to the rendered templates above.
 
 4. **Report to human.** List all files created. State: "Run `/lsa:discover` (Standard / Extended entry) or `/lsa:specify` (Extended direct) to start the first feature."
 

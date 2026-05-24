@@ -46,7 +46,7 @@ Establish minimum-viable context — which module the change touches, what the c
    - **Acceptance:** <answer (c)>
    ```
 
-   Then hand off to `lsa-specify` with a one-line message naming the chosen module(s) and feature name. Observable result: `discovery.md` exists; the handoff is invoked.
+   Then hand off to `lsa-specify` with a one-line message naming the chosen module(s) and feature name. Observable result: the written `discovery.md` block quoted back inline per [`core/output`](../../../core/skills/output/SKILL.md) Rule 7 (add type tag) — full single-change block of the three captured answers (Module(s) / Change / Acceptance) with file:line pointer; the handoff is invoked.
 
 ## Output
 

@@ -4,6 +4,29 @@ All notable changes to the `core` plugin are documented here. Format follows [Ke
 
 ## [Unreleased]
 
+## [0.8.0] — 2026-05-24
+
+Adds **Rule 7 — Show changes inline (write, show, comment)** to `core/output`. Every write, edit, or mark performed by an agent must be echoed back inline before commentary — single-change block (path:line + verbatim previous + verbatim new + reason + source + type tag) for one edit; compressed inspection table (`#` / `file:line` / `type` / `summary` / `pointer`) when the turn produces more than ~5 file changes or more than ~10 lines of new content. Generalizes the 8-element drift block from `lsa-reconcile` (user-endorsed gold standard, 2026-05-22). Adds operational checkpoint #4 in `core/CLAUDE.md`. Per `vision/specs/features/2026-05-22-show-changes-inline/`. Standard flow.
+
+### Added
+- **`core/skills/output/SKILL.md` Rule 7 "Show changes inline — write, show, comment"** — new top-level rule appended after Rule 6. Body carries: 7-element single-change template (what / where / previous / new / reason / source / type tag), batch compressed-inspection-table template, the "what this rule forbids" list, three worked examples (single-file edit / multi-file batch / state mark), and an inheritance-and-gaps clause naming Rules 2/3/4/5. Cites `lsa-reconcile` 8-element drift block as the in-repo exemplar by markdown link.
+- **`core/CLAUDE.md` operational checkpoint #4 — Show changes inline.** Sibling to checkpoints #1 (Substrate-native pickers) / #2 (1–1.5 screen budget) / #3 (File-load trace). Cites Rule 7 by markdown link.
+
+### Changed
+- **`core/skills/output/SKILL.md` frontmatter `description:`** — "six golden rules" → "seven golden rules"; rule list extended with *"show-changes-inline"*.
+- **`core/skills/output/SKILL.md` H1 lead-in + canonical-source clause** — *"Six golden rules"* → *"Seven golden rules"*; *"these six rules"* → *"these seven rules"*.
+- **`core/CLAUDE.md` § Output discipline** — rule-count line updated from *"six format golden rules"* → *"seven format golden rules"*; rule list extended; checkpoint header *"Three operational checkpoints"* → *"Four operational checkpoints"*.
+- **`core/README.md` `output` row** — rule-count updated 6 → 7; rule list extended; appended a one-sentence summary of Rule 7 with citation to `lsa-reconcile` exemplar.
+- **`core/.claude-plugin/plugin.json` `description`** — rule-count updated 6 → 7; rule list extended with *"show-changes-inline"*.
+- **`CLAUDE.md` (repo root) § Always-on rules** — rule-count line updated 6 → 7; rule list extended.
+
+### Notes
+- **Minor bump rationale.** New rule with marketplace-wide reach — every plugin that writes/edits/marks anything inherits the obligation by virtue of citing `core/output`. User-visible discipline change driven by 2026-05-22 user feedback (*"they say 'I put something in a file...' and make the user to go and search"*); not a refactor.
+- **Sibling LSA bump.** `lsa` v0.8.1 in the same feature sweeps the 16 `Observable result:` lines across 7 LSA skill bodies (`lsa-sync`, `lsa-specify`, `lsa-init`, `lsa-plan`, `lsa-revise-constitution`, `lsa-verify`, `lsa-discover`) to cite Rule 7 and name the quote-back format (full single-change block vs. compressed inspection table). Optional Epic 4 adds a one-line forward-link from `lsa-reconcile` to Rule 7.
+- **Rule-numbering coordination resolved.** Rule 6 = *What-and-why preamble* (row #4, shipped v0.7.0); Rule 7 = *Show changes inline* (this feature, row #5). Spec drafts mention "Rule 6" because they were written before row #4 locked the slot; implementation renumbers per the explicit coordination note in `vision/specs/features/2026-05-22-lsa-what-why-preamble/` archived tasks.md.
+- **Spec source.** `vision/specs/features/2026-05-22-show-changes-inline/design.md` §"The new core/output Rule 6 — drafted in full" carries the verbatim Rule body used here; `requirements.md` AC1–AC7 + F1–F8.
+- **Helper Constraint deferred.** Epic 3 (Helper `## Constraints` bullet citing Rule 7) ships in a separate follow-up PR after PR #19's helper changes merge, to avoid conflicts.
+
 ## [0.7.0] — 2026-05-24
 
 Adds **Rule 6 — What-and-why preamble** to `core/output`. Every emission of a verdict label from `core/knowledge/output-vocabulary.md` §"Verdicts" must be preceded in the same paragraph by a one-sentence preamble naming (a) the action in plain English in the user's frame, and (b) the concrete consequence if the human does not act. Canonical format: `<context sentence>. <VERDICT> verdict + <details>.` A bare verdict line fails the rule. Per `vision/specs/features/2026-05-22-lsa-what-why-preamble/`. Standard flow.

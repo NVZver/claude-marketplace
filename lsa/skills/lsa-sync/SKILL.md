@@ -56,7 +56,7 @@ Extract the feature delta into permanent module specs, archive the feature spec,
    [Module index changes, new global NFRs. If none, write "none"]
    ```
 
-   Present: Module Deltas table (Module / Type / Decision) + specs-touched list (module → spec path) + main.spec.md updates list + decision `[a] apply → module specs edited; feature archived next` / `[b] modify → revise delta, re-present` / `[c] reject → stop, sync aborted`. Format per [`core/output`](../../../core/skills/output/SKILL.md); `AskUserQuestion` for the decision. Wait for explicit approval before writing any files. Observable result: delta written to scratch; human approval logged.
+   Present: Module Deltas table (Module / Type / Decision) + specs-touched list (module → spec path) + main.spec.md updates list + decision `[a] apply → module specs edited; feature archived next` / `[b] modify → revise delta, re-present` / `[c] reject → stop, sync aborted`. Format per [`core/output`](../../../core/skills/output/SKILL.md); `AskUserQuestion` for the decision. Wait for explicit approval before writing any files. Observable result: delta scratch quoted back inline per [`core/output`](../../../core/skills/output/SKILL.md) Rule 7 — full single-change block when the delta is ≤10 lines, compressed inspection table when larger; human approval logged.
 
 3. **Merge into module specs.** For each affected module:
    1. Open `${specs_root}/modules/<module-name>/spec.md`.
@@ -64,14 +64,14 @@ Extract the feature delta into permanent module specs, archive the feature spec,
    3. Do not rewrite or delete existing content.
    4. If a conflict exists between new and existing content, stop and ask human.
 
-   Observable result: per-module diff shown.
+   Observable result: per-module diff shown inline per [`core/output`](../../../core/skills/output/SKILL.md) Rule 7 — full single-change block when the merge is ≤10 lines, compressed inspection table when larger.
 
 4. **Update `main.spec.md`.**
    - Add new modules to the module index if created.
    - Add new global NFRs or contracts if any.
    - If `contract.yaml` exists, update the Cross-Module Contracts section with new or modified endpoints and data types.
 
-   Observable result: `${specs_root}/main.spec.md` updated; diff shown.
+   Observable result: `${specs_root}/main.spec.md` updated; diff quoted back inline per [`core/output`](../../../core/skills/output/SKILL.md) Rule 7 — full single-change block when ≤10 lines, compressed inspection table when larger.
 
 5. **Archive feature spec.**
 
@@ -79,7 +79,7 @@ Extract the feature delta into permanent module specs, archive the feature spec,
    mv ${specs_root}/features/<feature-name>/ ${specs_root}/archive/$(date +%Y-%m-%d)-<feature-name>/
    ```
 
-   `${specs_root}/features/` must be empty after this step (for this feature). Observable result: archive directory exists at the new path; original is gone.
+   `${specs_root}/features/` must be empty after this step (for this feature). Observable result: `mv` command echoed back with source + destination paths quoted inline per [`core/output`](../../../core/skills/output/SKILL.md) Rule 7 (mark type tag) — names the archived directory at `${specs_root}/archive/<date>-<feature-name>/`, names the now-absent `${specs_root}/features/<feature-name>/` source.
 
 6. **Update `.lsa-sync-state.json`** at the repo root (sibling of `.lsa.yaml`). Shape:
 
@@ -94,9 +94,9 @@ Extract the feature delta into permanent module specs, archive the feature spec,
    }
    ```
 
-   If the file exists, update only the modules touched by this feature; preserve other modules' entries. If absent, create it. Observable result: the file contains a fresh SHA + ISO timestamp per touched module.
+   If the file exists, update only the modules touched by this feature; preserve other modules' entries. If absent, create it. Observable result: the new `.lsa-sync-state.json` fragment per touched module quoted back inline as a fenced `json` code block per [`core/output`](../../../core/skills/output/SKILL.md) Rule 7 (edit type tag) — names the fresh SHA + ISO timestamp; full single-change block when ≤10 lines, compressed inspection table when larger.
 
-7. **Aggregate metrics (optional).** If `${specs_root}/archive/$(date +%Y-%m-%d)-<feature-name>/metrics.md` exists (i.e., `lsa-verify` wrote it on clean PASS for this Extended-flow feature; was `T3`), append a one-line row to `${specs_root}/metrics.md` (create the file with a header if absent). One row per archived feature. Observable result: aggregate file has the new row.
+7. **Aggregate metrics (optional).** If `${specs_root}/archive/$(date +%Y-%m-%d)-<feature-name>/metrics.md` exists (i.e., `lsa-verify` wrote it on clean PASS for this Extended-flow feature; was `T3`), append a one-line row to `${specs_root}/metrics.md` (create the file with a header if absent). One row per archived feature. Observable result: the appended row quoted back inline per [`core/output`](../../../core/skills/output/SKILL.md) Rule 7 (append type tag) — names `${specs_root}/metrics.md` path with line number, quotes the verbatim row content.
 
 8. **Sync report.**
 
