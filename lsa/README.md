@@ -18,7 +18,7 @@ Every LSA User Verification is a decision asked of the human with explicit conse
 | **`plan`** | Break a spec into implementation epics. Input: approved spec artifacts. Output: tasks.md with ≤5 ordered epics, each with a `**Covers:**` line citing requirement IDs. |
 | **`verify`** | Verify implementation matches the spec. Dual predicates: orphan-diff + orphan-AC. Code-mode, doc-mode, or mixed (per `.lsa.yaml`). Emits per-feature `metrics.md` on clean Extended-flow PASS. |
 | **`init`** | Initialize Living Spec Architecture for a project. Input: existing codebase (greenfield or brownfield). Output: .lsa.yaml + specs_root directory + module specs. |
-| **`reconcile`** | Absorb a direct artifact edit into its module spec — Level 2.5 (`vision/VISION.md:138`). Per-module hard confirm. |
+| **`reconcile`** | Absorb a direct artifact edit into its module spec — Level 2.5 (`vision/VISION.md:138`). One delta at a time — stop and present each individually; do not proceed without explicit approval. |
 | **`revise-constitution`** | Propose changes to the project constitution and standards. Input: feature decisions that should become permanent. Output: updated constitution + standards files. |
 
 ## Configuration

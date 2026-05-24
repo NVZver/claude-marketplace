@@ -6,7 +6,7 @@ All notable changes to the `lsa` plugin are documented here. Format follows [Kee
 
 ## [0.8.0] — 2026-05-24
 
-Command rename + flow simplification. All LSA skills drop the `lsa-` directory prefix (commands become `lsa:discover`, `lsa:plan`, etc. instead of `lsa:lsa-discover`). `lsa-specify` and `lsa-discover` merged into a single `discover` skill with Standard/Extended flow branch. `lsa-sync` removed entirely. Two new entry-point skills: `new` (creates branch → flow-selector → discover) and `next` (reads roadmap → confirms pick → creates branch → discover). Every skill description rewritten to state input/output and make the workflow order (discover → plan → implement → verify) self-evident. Minor bump — skill slugs, invocation names, and workflow structure all change.
+Command rename + flow simplification. All LSA skills drop the `lsa-` directory prefix (commands become `lsa:discover`, `lsa:plan`, etc. instead of `lsa:lsa-discover`). `lsa-specify` and `lsa-discover` merged into a single `discover` skill with Standard/Extended flow branch. `lsa-sync` removed entirely. Two new entry-point skills: `new` (creates branch → flow-selector → discover) and `next` (reads roadmap → confirms pick → creates branch → discover). Every skill description rewritten to state input/output and make the workflow order (discover → plan → implement → verify) self-evident. Also incorporates lsa v0.7.2–v0.9.0 content that landed on main in parallel (genuine-fork test, what-and-why preamble, show-changes-inline sweep, Hard/Soft Confirm vocabulary removal). Minor bump — skill slugs, invocation names, and workflow structure all change.
 
 ### Added
 - **`lsa/skills/new/SKILL.md`** — entry-point skill: accepts feature name, creates branch, runs flow-selector, hands off to discover.
@@ -19,12 +19,88 @@ Command rename + flow simplification. All LSA skills drop the `lsa-` directory p
 - **`lsa/.claude-plugin/plugin.json`** — version 0.8.0, description updated with nine skills and main flow.
 - **`lsa/README.md`** — skill table rewritten with new names and descriptions.
 - **`lsa/ARCHITECTURE.md`** — directory tree, branch management, resolved decisions updated.
-- **`lsa/knowledge/conventions.md`** — confirm gate types updated with new skill names.
+- **`lsa/knowledge/conventions.md`** — "Confirm gate types" section removed (plain-English phrasing used at each cite site instead; per main's v0.9.0 Hard/Soft Confirm vocabulary removal).
 - **Cross-references** — all active files across `core/`, `vision/`, `helper/`, root swept for old names.
 
 ### Removed
 - **`lsa/skills/lsa-sync/`** — deleted entirely. Feature specs are the permanent record; no promotion into module specs.
 - **`lsa/skills/lsa-specify/`** — deleted (content merged into `discover`).
+
+## [0.9.0] — 2026-05-24
+
+Remove the LSA-internal "Hard Confirm" / "Soft Confirm" vocabulary. The named distinction was custom LSA invention with no upstream mandate; substituted plain-English phrasing inline at each cite site. Minor bump — the documented convention section in `lsa/knowledge/conventions.md` and its inline references across 4 skill bodies are user-visible. Matches the `c226623` (v0.7.0) precedent for documented-convention removal. Per `vision/specs/features/2026-05-22-custom-inventions-sweep/` Task T1 (inventory row #3). T2 (`.lsa-sync-state.json` removal) ships in a separate follow-up PR.
+
+### Removed
+- **`lsa/knowledge/conventions.md` §"Confirm gate types"** — section deleted (was lines 40-50). Defined `Hard Confirm` (stop, present, wait for explicit approval) and `Soft Confirm` (present, allow inline corrections). No upstream standard mandated the two-shape distinction; plain-English phrasing is clearer at each cite site.
+
+### Changed
+- **`lsa/skills/lsa-specify/SKILL.md`** (4 lines — `:21` Goal preamble + Steps 4 / 5 / 6 section headers) — *"All three Verifications in this skill are **Hard Confirm**"* → *"All three Verifications stop until the human explicitly approves; no implicit approval is accepted."* Section headers `User Verification N: ... → Hard Confirm` → `User Verification N: ... (stop and present; do not proceed without explicit approval)`. The parenthetical citing `conventions.md` §"Confirm gate types" (used to clarify why lsa-specify drops Soft) is also gone — the defining section no longer exists.
+- **`lsa/skills/lsa-reconcile/SKILL.md`** (2 lines — preamble at `:11` + Step 4 name at `:37`) — *"One module at a time, hard confirm per module."* → *"One module at a time — stop and present each delta individually; do not proceed without explicit approval."* Step 4 *"Per-module hard confirm."* → *"Per-module — stop and present each delta individually; do not proceed without explicit approval."* PR #21 verdict preamble citing [`../../../core/skills/output/SKILL.md`](../skills/output/SKILL.md) Rule 6 preserved verbatim immediately after the new step name.
+- **`lsa/skills/lsa-revise-constitution/SKILL.md`** (1 line — Constraints at `:87`) — *"Hard confirm per change."* → *"Stop and present each proposed change individually; do not proceed without explicit approval."* Step 3 (`:61`) "Human review gate." sentence + PR #21 verdict preamble citing Rule 6 preserved verbatim — Step 3 did not carry the vocabulary directly, so no edit needed at `:61`.
+- **`lsa/README.md`** (1 line — `lsa-reconcile` skill table row at `:21`) — *"Per-module hard confirm."* → *"One delta at a time — stop and present each individually; do not proceed without explicit approval."* Keeps the README description aligned with the renamed skill body per the same-commit README rule in `/CLAUDE.md`.
+
+### Notes
+- **Minor bump rationale.** Matches the `c226623` precedent (`lsa/CHANGELOG.md` v0.7.0 entry — trace-tag removal moved `0.6.5` → `0.7.0` for a user-visible documented-convention removal). This PR removes another user-visible documented convention section (`conventions.md` §"Confirm gate types") plus its inline references in 4 skill bodies and 1 README cell. Anyone who learned the Hard / Soft vocabulary sees it disappear.
+- **`lsa-sync` carries no Hard / Soft Confirm references.** Verified via `grep -n "Hard\|Soft" lsa/skills/lsa-sync/SKILL.md` (only matches were in unrelated words like "Verdict" — no vocabulary site). No edit needed in `lsa-sync` for this sweep.
+- **`grep -rn "Hard Confirm\|Soft Confirm" lsa/`** returns zero hits in active files after this sweep. Historical CHANGELOG entries (pre-v0.9.0) keep their original wording — they are frozen records of how the convention existed at the time, and nothing parses them.
+- **T2 deferred.** `.lsa-sync-state.json` removal (inventory row #1) ships as a separate PR — medium blast radius (7 files + 1 hook script) plus adjacent-line-citation conflicts with PR #22 (Show actual changes inline) warrant the split.
+- **Spec source.** `vision/specs/features/2026-05-22-custom-inventions-sweep/design.md` §"Invention inventory" row #3; `tasks.md` §"T1 — PR: Remove 'Hard Confirm' / 'Soft Confirm' vocabulary".
+
+## [0.8.1] — 2026-05-24
+
+Apply the new `core` v0.8.0 **Rule 7 — Show changes inline (write, show, comment)** to every LSA skill body whose `Observable result:` line currently names a file write/edit/append/mark without naming what is quoted back. 16 lines edited across 7 LSA skills (`lsa-sync` ×6, `lsa-specify` ×3, `lsa-init` ×2, `lsa-revise-constitution` ×2, `lsa-plan` ×1, `lsa-verify` ×1, `lsa-discover` ×1). Each touch is a one-line replacement — no surrounding-content rewrite, no behavior change; the clause now names the quote-back format (full single-change block when ≤10 lines, compressed inspection table when larger) and the type tag (add / edit / replace / append / mark). One-line forward-link added to `lsa-reconcile` naming its 8-element drift block as the in-repo exemplar Rule 7 generalizes from. Per `vision/specs/features/2026-05-22-show-changes-inline/`. Standard flow.
+
+### Changed
+- **`lsa/skills/lsa-sync/SKILL.md`** (6 lines — Steps 2 / 3 / 4 / 5 / 6 / 7) — `Observable result:` lines for the delta scratch, per-module diff, `main.spec.md` diff, archive `mv`, `.lsa-sync-state.json` write, and `metrics.md` row append now cite [`core/output`](../skills/output/SKILL.md) Rule 7 and name the quote-back format. Verdict-emission step at line 131 (closing-offer) untouched — already cites Rule 6 for the preamble.
+- **`lsa/skills/lsa-specify/SKILL.md`** (3 lines — Steps 3 / 4 / 5) — `Observable result:` lines for the spec-dir + branch creation, `requirements.md` write, and the three-file write (`test-suites.md` / `contract.yaml` / `design.md`) now cite Rule 7 and name the quote-back format.
+- **`lsa/skills/lsa-init/SKILL.md`** (2 lines — Step 2 brownfield / Step 3) — `Observable result:` lines for the brownfield spec-tree write and the three-file write (`main.spec.md` / `roadmap.md` / `research-backlog.md`) now cite Rule 7 and name the compressed-inspection-table format given the multi-file batch size.
+- **`lsa/skills/lsa-revise-constitution/SKILL.md`** (2 lines — Steps 4 / 5) — `Observable result:` lines for the per-file edit (`${constitution}` / `${specs_root}/standards/*`) and the branch + commit creation now cite Rule 7 and name the quote-back format.
+- **`lsa/skills/lsa-plan/SKILL.md`** (1 line — Step 4) — `Observable result:` line for the `tasks.md` write now cites Rule 7 and names the per-epic compressed-table format.
+- **`lsa/skills/lsa-verify/SKILL.md`** (1 line — Step 6) — `Observable result:` line for the conditional `metrics.md` write (only on clean PASS) now cites Rule 7 and names the quote-back format. Borderline-write per `design.md` §"Inventory" row 15 — resolved to (a) "treat as a write step, apply Rule 7" per the implementor's call (the recommended branch).
+- **`lsa/skills/lsa-discover/SKILL.md`** (1 line — Step 4 Extended) — `Observable result:` line for the `discovery.md` scratch write now cites Rule 7 and names the full single-change block format with the three captured answers.
+
+### Added
+- **`lsa/skills/lsa-reconcile/SKILL.md` ## Steps preamble** — one-line forward-link near the top of `## Steps`: *"The 8-element drift block below is the exemplar that [`core/output`](../skills/output/SKILL.md) Rule 7 generalizes from."* Closes the cross-cite — `core/output` Rule 7 already cites `lsa-reconcile` as the exemplar; this is the reverse pointer.
+
+### Notes
+- **Patch bump rationale.** Output-discipline only — no behavior change. Each edit is a one-line touch; per-skill `## Goal` / `## Constraints` / `## Output` sections untouched (per `requirements.md` NF3). The user-visible delta is each touched `Observable result:` line now names the quote-back format the human sees, instead of only that the file changed.
+- **Sibling core minor bump.** `core` v0.8.0 in the same feature ships the canonical Rule 7 these LSA edits cite (`core/skills/output/SKILL.md` Rule 7 *"Show changes inline — write, show, comment"*). LSA cites by markdown link, never restates.
+- **`lsa-reconcile` is excluded from the sweep.** It is the exemplar Rule 7 generalizes from; touching its `Observable result:` lines would risk circular drift (per `requirements.md` Constraint *"Do not edit `lsa-reconcile`. It is the exemplar"*). The one-line forward-link added to `lsa-reconcile` `## Steps` is the only edit — additive, not a rewrite.
+- **Helper Constraint deferred.** Epic 3 (Helper `## Constraints` bullet citing Rule 7) ships in a separate follow-up PR after PR #19's helper changes merge, to avoid conflicts. The 16-line sweep + `lsa-reconcile` cross-cite ship together in this LSA patch.
+- **42 `Observable result:` lines total in `lsa/skills/` after sweep.** 16 cite Rule 7 (the violation set); 26 are read-only (read-protocol prints, in-memory captures, verdict reports already covered by Rule 6, exemplar `lsa-reconcile`) and require no Rule 7 citation per the audit framing in `design.md` §"Inventory".
+- **Spec source.** `vision/specs/features/2026-05-22-show-changes-inline/design.md` §"Inventory — current Observable result: violations" enumerates the 16 lines; §"Step B — LSA skill sweep" carries the before/after template; `tasks.md` Epics 1–2 + 4.
+
+## [0.8.0-main] — 2026-05-24
+
+Apply the new `core` v0.7.0 **Rule 6 — What-and-why preamble** to every LSA skill body that currently emits a verdict label from `core/knowledge/output-vocabulary.md` §"Verdicts". 5 skill bodies updated; 7 emission sites gain a one-sentence preamble in the user's frame, naming (a) what the verdict means and (b) the concrete consequence if the user does not act. PR #20 work (verdict-named picker prompts in `lsa-verify`, closing-offer reframe in `lsa-sync`) preserved intact — preambles land BEFORE the verdict line without disturbing the existing prompt voice. Per `vision/specs/features/2026-05-22-lsa-what-why-preamble/`. Standard flow.
+
+### Changed
+- **`lsa/skills/lsa-init/SKILL.md` Step 2 brownfield** — `PROPOSED` verdict at the "Stop" sub-step now carries a preamble in the user's frame: *"I scanned this repo and drafted `<N>` module specs from /src/ so future LSA steps can attach changes to a specific module — without these specs the next /lsa:discover has nothing to pick."* Citation line added: *"Verdict carries a preamble per `core/output` Rule 6."* PR #20's prompt-voice scaffold (Rule 5 picker question naming the project subject) preserved unchanged. Maps to AC1.
+- **`lsa/skills/lsa-reconcile/SKILL.md` Step 4** — `DRIFT` verdict at the per-module hard confirm now carries a preamble in the user's frame: *"The auth spec says sessions expire after 24 hours, but the code now sets 7 days — one needs to win, otherwise the next review will block the merge until you pick one."* (adapted per delta at runtime). Citation line added. Maps to AC2.
+- **`lsa/skills/lsa-sync/SKILL.md` Step 8** — `APPLIED` verdict at the post-completion report now carries a preamble in the user's frame: *"Module specs for `<modules>` now reflect the merged feature — the docs are current, and the next decision is just whether to open the PR now or later."* Citation line added. PR #20's closing-offer reframe (silent-default `hold`, Rule 5 Genuine-fork-test citation) preserved unchanged. Maps to AC4.
+- **`lsa/skills/lsa-revise-constitution/SKILL.md` Step 3** — `PROPOSED` verdict at the per-change human review gate now carries a preamble in the user's frame: *"Last feature surfaced a rule worth making permanent: I'm offering to add a 'no inline secrets' line to CLAUDE.md — accepting makes it enforced on every future change; rejecting means the next contributor can still paste a secret without a warning."* (adapted per change at runtime). Citation line added. Maps to AC5.
+- **`lsa/skills/lsa-verify/SKILL.md` Step 4** — all three variant verdicts (`PASS` / `FAIL` / `PASS WITH WARNINGS`) now carry a one-sentence preamble before the verdict line, naming what the verdict means and the consequence in the user's frame. Single citation line added at the top of Step 4 covering all three variants. PR #20's verdict-named `AskUserQuestion` prompts (*"Verdict: PASS — sync now? …"* etc.) preserved unchanged. Maps to AC3.
+
+### Notes
+- **Minor bump rationale.** 5 skill bodies' user-visible output shape changes — every verdict emission now leads with a plain-English preamble instead of a bare label. Per `vision/VISION.md` *"Distribution + versioning"* — observable behavior change across multiple skills is minor-bump territory.
+- **Sibling core minor bump.** `core` v0.7.0 in the same feature ships the canonical Rule 6 these LSA edits cite (`core/skills/output/SKILL.md` Rule 6 *"What-and-why preamble — verdicts carry a one-sentence frame"*). The rule lives at the marketplace layer alongside the verdict vocabulary itself (`core/knowledge/output-vocabulary.md`); LSA cites by link, never restates.
+- **Three LSA skills with zero verdict emissions stay untouched.** `lsa-discover`, `lsa-specify`, `lsa-plan` emit no verdict label per the inventory in `vision/specs/features/2026-05-22-lsa-what-why-preamble/design.md` §"Verb-headline inventory". The rule still ships in `core/output`, so the moment any of them adds a verdict emission the preamble obligation attaches automatically. (`lsa-plan` uses `PASS / FAIL` as in-table cell values, not verdict headlines — Open Question 2 resolution.)
+- **Spec source.** `vision/specs/features/2026-05-22-lsa-what-why-preamble/requirements.md` AC1–AC8 + F1–F7; `design.md` §"Worked examples" carries the verbatim preamble strings used at each emission site; `tasks.md` Epics 0–5 enumerate the edits.
+
+## [0.7.2] — 2026-05-24
+
+Apply the `core` v0.6.0 *Genuine-fork test* to 3 LSA call sites — tightening `lsa-discover`'s per-line picker (composes with v0.7.1 infer-then-confirm), softening `lsa-sync`'s post-completion picker, and renaming `lsa-verify`'s verdict-picker prompt. Per `vision/specs/features/2026-05-22-askuserquestion-audit/` Epic B (rows L2 / L9 / L12 in the design inventory). Standard flow. Renumbered from v0.7.1 → v0.7.2 to coexist with the v0.7.1 infer-then-confirm release that landed independently.
+
+### Changed
+- **`lsa/skills/lsa-discover/SKILL.md` Step 2 (L2 — `keep + tighten`)** — added "Skip per-line picker when N=1 candidate AND no `custom`" semantics on top of v0.7.1's infer-then-confirm reshape. When Step 1 yields a single unambiguous candidate for a line and the human hasn't asked for `custom`, the skill accepts the candidate silently. Remaining picks batch into ONE multi-question `AskUserQuestion`.
+- **`lsa/skills/lsa-sync/SKILL.md` Step 8 (L12 — `convert-to-closing-offer`)** — post-completion PR-or-hold picker reframed as an *optional closing offer*, not a mandatory gate. **Silent-default = `hold`** — `gh pr create` runs only on explicit `Yes`. Cites `core/output` Rule 5 Genuine-fork test.
+- **`lsa/skills/lsa-verify/SKILL.md` Step 4 + Step 5 (L9 — `keep + tighten` verdict-picker prompt voice)** — verdict-picker prompts rewritten to name the verdict in the subject: *"Verdict: PASS — sync now?"* / *"Verdict: FAIL — block merge?"* / *"Verdict: PASS WITH WARNINGS — accept the warnings and sync?"*. Human picks the next action; verdict itself is already settled by the checklist.
+
+### Notes
+- **Patch bump rationale.** L2 (skip when N=1) + L12 (closing-offer) change observable behavior; L9 (verdict prompt) is prompt-text only. Cumulative effect is on the patch/minor boundary; chose patch — no rule/skill added or removed, only existing pickers' wording and conditional rendering changed.
+- **Sibling `core` minor bump.** `core` v0.6.0 in the same feature ships the canonical rule this changelog cites (`core/skills/output/SKILL.md` Rule 5 *Genuine-fork test*). LSA edits are downstream of the rule.
+- **Out of scope for this PR.** Helper-side call-site sweep (Epic C — H1, H2, H3, H4, H5m in the inventory) ships in a later PR; it folds with feature 5's Epic 3 since most Epic C work was substantially done by helper v0.3.0 (PR #19).
+- **Spec source.** `vision/specs/features/2026-05-22-askuserquestion-audit/design.md` §"Call-site Inventory" rows L2, L9, L12 carry the verdict + reason; `tasks.md` Epic B enumerates B1–B6.
 
 ## [0.7.1] — 2026-05-23
 

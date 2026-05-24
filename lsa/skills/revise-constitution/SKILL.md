@@ -58,13 +58,13 @@ After a feature is merged, propose and apply constitution / standards changes th
 
    Observable result: one proposal block per change written to scratch.
 
-3. **Human review gate.** Present each proposed change individually (one per turn): PROPOSED verdict + change-N-of-M + file path + section name + type (add / modify / remove) + verbatim current content (or "none") + proposed content + one-line reason + source (feature name or "manual") + decision `[a] apply → file edited, committed to constitution branch` / `[b] modify → apply your correction, re-present` / `[c] reject → change not applied`. Format per [`core/output`](../../../core/skills/output/SKILL.md); `AskUserQuestion` for the decision. Do not write until approval. Observable result: per-change decision logged.
+3. **Human review gate.** Verdict carries a preamble per [`../../../core/skills/output/SKILL.md`](../../../core/skills/output/SKILL.md) Rule 6. Present each proposed change individually (one per turn) with a preamble in the user's frame naming the constitution section about to change and the consequence of accepting / rejecting — e.g., *"Last feature surfaced a rule worth making permanent: I'm offering to add a 'no inline secrets' line to CLAUDE.md — accepting makes it enforced on every future change; rejecting means the next contributor can still paste a secret without a warning."* — then: PROPOSED verdict + change-N-of-M + file path + section name + type (add / modify / remove) + verbatim current content (or "none") + proposed content + one-line reason + source (feature name or "manual") + decision `[a] apply → file edited, committed to constitution branch` / `[b] modify → apply your correction, re-present` / `[c] reject → change not applied`. Format per [`core/output`](../../../core/skills/output/SKILL.md); `AskUserQuestion` for the decision. Do not write until approval. Observable result: per-change decision logged.
 
 4. **Apply approved changes.** For each approved change:
    1. Edit the target file (the configured `${constitution}` or a file under `${specs_root}/standards/`).
    2. Do not rewrite surrounding content.
 
-   Observable result: diff shown per file.
+   Observable result: per-file diff quoted back inline per [`../../../core/skills/output/SKILL.md`](../../../core/skills/output/SKILL.md) Rule 7 (edit type tag) — full single-change block (previous content + new content with file:line) when the change is ≤10 lines, compressed inspection table when larger.
 
 5. **Create branch and commit.**
 
@@ -74,7 +74,7 @@ After a feature is merged, propose and apply constitution / standards changes th
    git commit -m "constitution: [summary of changes]"
    ```
 
-   Branch merges to `main` independently of any feature branch. Observable result: branch + commit exist.
+   Branch merges to `main` independently of any feature branch. Observable result: the branch name `constitution/<change-description>` and the verbatim commit message quoted back inline per [`../../../core/skills/output/SKILL.md`](../../../core/skills/output/SKILL.md) Rule 7 (mark type tag) — names the new commit SHA + branch + the staged files (`${constitution}` and any `${specs_root}/standards/` paths).
 
 6. **Report.** List each change applied with file, section, and type. State: "Constitution updated. Branch ready for PR to main."
 
@@ -84,7 +84,7 @@ Updated `${constitution}` and/or files under `${specs_root}/standards/`. A `cons
 
 ## Constraints
 
-- **Hard confirm per change.** No bulk approval; each proposal stands or falls on its own.
+- **Stop and present each proposed change individually; do not proceed without explicit approval.** No bulk approval; each proposal stands or falls on its own.
 - **Never touch specs, src, or skills** — only the configured constitution and `${specs_root}/standards/`.
 - **Never rewrite surrounding content.** Limit edits to the proposed section.
 - Outputs follow [`core/output`](../../../core/skills/output/SKILL.md) — citation by link, never restated.

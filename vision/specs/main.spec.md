@@ -14,7 +14,7 @@ The marketplace ships two domain-neutral plugins (`core` and `lsa`) installable 
 
 | Module | Spec | Status |
 |---|---|---|
-| `core` | [`vision/specs/modules/core/spec.md`](./modules/core/spec.md) | active — v0.5.2 |
+| `core` | [`vision/specs/modules/core/spec.md`](./modules/core/spec.md) | active — v0.5.6 |
 | `lsa` | [`vision/specs/modules/lsa/spec.md`](./modules/lsa/spec.md) | active — v0.8.0 |
 
 ## Cross-Module Contracts

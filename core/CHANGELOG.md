@@ -6,12 +6,72 @@ All notable changes to the `core` plugin are documented here. Format follows [Ke
 
 ## [0.5.6] — 2026-05-24
 
-Cross-reference update for LSA v0.8.0 command rename. Updated `core/CLAUDE.md` flow outcomes to use new LSA skill names (`lsa:discover`, `lsa:plan`, `lsa:verify` — dropped former `lsa-discover` → `lsa-specify` → `lsa-plan` → `lsa-verify` → `lsa-sync` chain). Updated `core/skills/flow-selector/SKILL.md` and `core/knowledge/output-vocabulary.md` references.
+Cross-reference update for LSA v0.8.0 command rename. Updated `core/CLAUDE.md` flow outcomes to use new LSA skill names (`lsa:discover`, `lsa:plan`, `lsa:verify` — dropped former `lsa-discover` → `lsa-specify` → `lsa-plan` → `lsa-verify` → `lsa-sync` chain). Updated `core/skills/flow-selector/SKILL.md` and `core/knowledge/output-vocabulary.md` references. Also incorporates core v0.6.0–v0.8.0 content that landed on main in parallel (Rules 5 expansion, Rule 6, Rule 7, 5→7 golden rules bump).
 
 ### Changed
 - **`core/CLAUDE.md`** — flow outcomes updated: Standard is now `lsa:discover` → TDD → `lsa:verify`; Extended is now `lsa:discover` → `lsa:plan` → implement → `lsa:verify` (sync removed, specify merged into discover).
 - **`core/skills/flow-selector/SKILL.md`** — LSA skill name references updated to new names.
 - **`core/knowledge/output-vocabulary.md`** — `lsa-verify` → `verify` in example references.
+- **`core/skills/output/SKILL.md`** — Rule 5 expanded with Genuine-fork test; Rule 6 (what-and-why preamble) and Rule 7 (show changes inline) added; rule count 5 → 7.
+- **`core/CLAUDE.md` § Output discipline** — seven format golden rules; four operational checkpoints (substrate-native pickers, 1–1.5 screen budget, file-load trace, show changes inline).
+- **`core/.claude-plugin/plugin.json` `description`** — rule-count updated to 7; rule list extended with what-and-why preamble and show-changes-inline.
+
+## [0.8.0] — 2026-05-24
+
+Adds **Rule 7 — Show changes inline (write, show, comment)** to `core/output`. Every write, edit, or mark performed by an agent must be echoed back inline before commentary — single-change block (path:line + verbatim previous + verbatim new + reason + source + type tag) for one edit; compressed inspection table (`#` / `file:line` / `type` / `summary` / `pointer`) when the turn produces more than ~5 file changes or more than ~10 lines of new content. Generalizes the 8-element drift block from `lsa-reconcile` (user-endorsed gold standard, 2026-05-22). Adds operational checkpoint #4 in `core/CLAUDE.md`. Per `vision/specs/features/2026-05-22-show-changes-inline/`. Standard flow.
+
+### Added
+- **`core/skills/output/SKILL.md` Rule 7 "Show changes inline — write, show, comment"** — new top-level rule appended after Rule 6. Body carries: 7-element single-change template (what / where / previous / new / reason / source / type tag), batch compressed-inspection-table template, the "what this rule forbids" list, three worked examples (single-file edit / multi-file batch / state mark), and an inheritance-and-gaps clause naming Rules 2/3/4/5. Cites `lsa-reconcile` 8-element drift block as the in-repo exemplar by markdown link.
+- **`core/CLAUDE.md` operational checkpoint #4 — Show changes inline.** Sibling to checkpoints #1 (Substrate-native pickers) / #2 (1–1.5 screen budget) / #3 (File-load trace). Cites Rule 7 by markdown link.
+
+### Changed
+- **`core/skills/output/SKILL.md` frontmatter `description:`** — "six golden rules" → "seven golden rules"; rule list extended with *"show-changes-inline"*.
+- **`core/skills/output/SKILL.md` H1 lead-in + canonical-source clause** — *"Six golden rules"* → *"Seven golden rules"*; *"these six rules"* → *"these seven rules"*.
+- **`core/CLAUDE.md` § Output discipline** — rule-count line updated from *"six format golden rules"* → *"seven format golden rules"*; rule list extended; checkpoint header *"Three operational checkpoints"* → *"Four operational checkpoints"*.
+- **`core/README.md` `output` row** — rule-count updated 6 → 7; rule list extended; appended a one-sentence summary of Rule 7 with citation to `lsa-reconcile` exemplar.
+- **`core/.claude-plugin/plugin.json` `description`** — rule-count updated 6 → 7; rule list extended with *"show-changes-inline"*.
+- **`CLAUDE.md` (repo root) § Always-on rules** — rule-count line updated 6 → 7; rule list extended.
+
+### Notes
+- **Minor bump rationale.** New rule with marketplace-wide reach — every plugin that writes/edits/marks anything inherits the obligation by virtue of citing `core/output`. User-visible discipline change driven by 2026-05-22 user feedback (*"they say 'I put something in a file...' and make the user to go and search"*); not a refactor.
+- **Sibling LSA bump.** `lsa` v0.8.1 in the same feature sweeps the 16 `Observable result:` lines across 7 LSA skill bodies (`lsa-sync`, `lsa-specify`, `lsa-init`, `lsa-plan`, `lsa-revise-constitution`, `lsa-verify`, `lsa-discover`) to cite Rule 7 and name the quote-back format (full single-change block vs. compressed inspection table). Optional Epic 4 adds a one-line forward-link from `lsa-reconcile` to Rule 7.
+- **Rule-numbering coordination resolved.** Rule 6 = *What-and-why preamble* (row #4, shipped v0.7.0); Rule 7 = *Show changes inline* (this feature, row #5). Spec drafts mention "Rule 6" because they were written before row #4 locked the slot; implementation renumbers per the explicit coordination note in `vision/specs/features/2026-05-22-lsa-what-why-preamble/` archived tasks.md.
+- **Spec source.** `vision/specs/features/2026-05-22-show-changes-inline/design.md` §"The new core/output Rule 6 — drafted in full" carries the verbatim Rule body used here; `requirements.md` AC1–AC7 + F1–F8.
+- **Helper Constraint deferred.** Epic 3 (Helper `## Constraints` bullet citing Rule 7) ships in a separate follow-up PR after PR #19's helper changes merge, to avoid conflicts.
+
+## [0.7.0] — 2026-05-24
+
+Adds **Rule 6 — What-and-why preamble** to `core/output`. Every emission of a verdict label from `core/knowledge/output-vocabulary.md` §"Verdicts" must be preceded in the same paragraph by a one-sentence preamble naming (a) the action in plain English in the user's frame, and (b) the concrete consequence if the human does not act. Canonical format: `<context sentence>. <VERDICT> verdict + <details>.` A bare verdict line fails the rule. Per `vision/specs/features/2026-05-22-lsa-what-why-preamble/`. Standard flow.
+
+### Added
+- **`core/skills/output/SKILL.md` Rule 6 "What-and-why preamble — verdicts carry a one-sentence frame"** — new top-level rule appended after Rule 5. Cites `core/knowledge/output-vocabulary.md` §"Verdicts" by link. Body kept short (≤6 wrapped lines per NF1). Not a sub-bullet under Rule 5 — Rule 5 governs picker-prompt voice (decision prompts), Rule 6 governs action-framing (verdict emissions). Different categories. See `vision/specs/features/2026-05-22-lsa-what-why-preamble/design.md` §"Where the rule lives".
+
+### Changed
+- **`core/skills/output/SKILL.md` frontmatter `description:`** — "five golden rules" → "six golden rules"; rule list extended with *"what-and-why preamble"*.
+- **`core/skills/output/SKILL.md` H1 lead-in** — *"Five golden rules"* → *"Six golden rules"*.
+- **`core/CLAUDE.md` § Output discipline** — rule-count line updated from *"five format golden rules"* → *"six format golden rules"*; rule list extended.
+- **`core/README.md` `output` row** — rule-count updated 5 → 6; rule list extended; appended a one-sentence summary of Rule 6 with citation to `core/knowledge/output-vocabulary.md`.
+- **`core/.claude-plugin/plugin.json` `description`** — rule-count updated 5 → 6; rule list extended.
+- **`CLAUDE.md` (repo root) § Always-on rules** — rule-count line updated 5 → 6; rule list extended.
+
+### Notes
+- **Minor bump rationale.** New rule with marketplace-wide reach — every plugin that emits verdict labels inherits the obligation by virtue of citing `core/output`. User-visible discipline change; not a refactor.
+- **Sibling LSA bump.** `lsa` v0.8.0 in the same feature sweeps the 5 LSA skill bodies that currently emit verdict labels (`lsa-init`, `lsa-reconcile`, `lsa-sync`, `lsa-revise-constitution`, `lsa-verify`) to render preamble-first verdicts citing Rule 6 by link.
+- **Spec source.** `vision/specs/features/2026-05-22-lsa-what-why-preamble/requirements.md` F5 fixes the rule's location at `core/output`; `design.md` §"Where the rule lives" resolves OQ1 to *new Rule 6, not a sub-bullet under Rule 5*.
+- **Roadmap coordination.** Rule 6 = *What-and-why preamble* (this feature, row #4). Rule 7 = *Show changes inline (write-show-comment)* will be claimed by roadmap row #5 when it lands.
+
+## [0.6.0] — 2026-05-24
+
+Rule 5 expansion — **Genuine-fork test** as a new operational sub-rule under "Must-decide only". Replaces the prior one-line "Must-decide only" bullet at `core/skills/output/SKILL.md:39` with a checklist that makes "meaningfully change the outcome" testable: a picker is justified only when at least one of four conditions holds (destructive write / two named designs in scope / fact absent from context / per-row triage). Orthogonal to `vision/VISION.md:66` Principle 9 — Principle 9 governs *which* substrate (`AskUserQuestion` vs `[a]/[b]/[c]`); the Genuine-fork test governs *whether to ask at all*. Per `vision/specs/features/2026-05-22-askuserquestion-audit/`. Standard flow.
+
+### Changed
+- **`core/skills/output/SKILL.md` Rule 5 "Must-decide only"** — bullet replaced (in place, not appended) with the expanded "Must-decide only — Genuine-fork test" version. Names the four real-fork categories with operational criteria; closes with "deliver the cited answer directly and offer at most ONE closing picker for the user to override". Cites `vision/VISION.md:63` Principle 6 (in-scope source ranking) and `vision/VISION.md:66` Principle 9 (substrate selection). Body ≤6 wrapped markdown lines per NF2 in the feature requirements.
+- **`core/CLAUDE.md` operational checkpoint #1 ("Substrate-native pickers")** — one clarifying line appended: *"This checkpoint is downstream of the Rule 5 'Genuine-fork test' in `core/skills/output/SKILL.md` — if a picker is justified, then use `AskUserQuestion`. Don't render a picker that wasn't justified in the first place."* Makes the orthogonality explicit at the checkpoint surface so reviewers don't conflate fork-existence with primitive choice.
+
+### Notes
+- **Minor bump rationale.** New operational sub-rule with user-visible enforcement — Helper and LSA call-site sweeps in sibling PRs cite this rule. No existing behavior breaks; every prior caller that already passed the old "must-decide" filter passes the new checklist (which is strictly more permissive at the upstream gate but more demanding inside it).
+- **Sibling LSA patch.** `lsa` v0.7.1 in the same feature sweeps the 2 LSA call sites the rule reclassifies (L2 `lsa-discover` per-line tighten, L12 `lsa-sync` closing-offer) plus the L9 `lsa-verify` verdict-picker prompt voice. Helper call-site sweep (Epic C) ships in a separate later PR — blocks on `helper` v0.3.0.
+- **Spec source.** `vision/specs/features/2026-05-22-askuserquestion-audit/design.md` §"Proposed `core/output` Rule 5 expansion of 'Must-decide only'" carries the exact bullet text used here; `tasks.md` Epic A enumerates A1–A4.
 
 ## [0.5.5] — 2026-05-22
 

@@ -13,7 +13,7 @@ Humans write and own specs. Agents write and own artifacts. Direct artifact edit
 
 ### How `core/output` constrains LSA
 
-Every LSA skill's human-facing prompt and output adopts a component-specific format (the S1–S17 samples in `vision/plans/2026-05-20-credo-rollout-plan.md`) that satisfies the five golden rules in [`../core/skills/output/SKILL.md`](../core/skills/output/SKILL.md): structured, minimal, formatted, sourced, concrete. The mechanical consequences across LSA:
+Every LSA skill's human-facing prompt and output adopts a component-specific format (the S1–S17 samples in `vision/plans/2026-05-20-credo-rollout-plan.md`) that satisfies the golden rules in [`../core/skills/output/SKILL.md`](../core/skills/output/SKILL.md) (canonical list lives there — no rule restatement here per the canonical-source clause). The mechanical consequences across LSA:
 
 - **`discover` Standard-flow output is a 3-row table** (Module / Change / AC), not a paragraph — verdict-first, scannable. Extended-flow continues into 3 bundled User Verifications (1: Requirements + Contract Trigger; 2: Test Suites + Contract + Design; 3: Final Integration) — fewer interruptions, same coverage. Formerly split across `lsa-discover` + `lsa-specify`; merged in v0.8.0.
 - **`verify` reports lead with the verdict** (`✅ PASS` / `❌ FAIL` / `⚠️ PASS WITH WARNINGS`); metadata moves below the fold.
