@@ -16,6 +16,7 @@ The marketplace ships two domain-neutral plugins (`core` and `lsa`) installable 
 |---|---|---|
 | `core` | [`vision/specs/modules/core/spec.md`](./modules/core/spec.md) | active — v0.5.6 |
 | `lsa` | [`vision/specs/modules/lsa/spec.md`](./modules/lsa/spec.md) | active — v0.8.0 |
+| `management` | [`vision/specs/modules/management/spec.md`](./modules/management/spec.md) | active — v0.1.0 |
 
 ## Cross-Module Contracts
 
@@ -24,6 +25,7 @@ The marketplace ships two domain-neutral plugins (`core` and `lsa`) installable 
   - `core/flow-selector` (added as `core/tier-selector` in core v0.2.0; renamed to `core/flow-selector` in core v0.5.2) is invoked upstream of `discover` for every Standard / Extended task (was `T2 / T3`) — its confirmed flow hand-off is the input to `discover`.
   - Claude Code's plugin manifest does not (as of this release) expose a `dependencies` field; the dependency is prose-only in `lsa/README.md` and `lsa/.claude-plugin/plugin.json`'s `description`. Adopt the field when Claude Code adds it.
 - **`core/actor-template` is the shape any actor in this repo must follow.** Every LSA skill body in `lsa/skills/*/SKILL.md` matches Goal / Input / Steps / Output / Constraints. Boundary violation = highest-severity defect (`vision/VISION.md:57`).
+- **`management` depends on `core`.** Cites `core/ground-rules` for fact-grounding and `core/output` for format discipline. Declared in `management/.claude-plugin/plugin.json` `dependencies` field. Reads `lsa` artifacts (roadmap, specs) but `lsa` does not depend on `management`.
 
 ## Non-Functional Requirements
 
