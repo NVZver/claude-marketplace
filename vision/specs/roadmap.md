@@ -39,6 +39,8 @@ Prioritized list of upcoming work, populated from `vision/VISION.md` §6 *"Adjus
 | Sweep custom inventions; remove the unjustified | Should | shipped (partial) — lsa v0.7.0 (trace-tag) + lsa v0.9.0 (Hard/Soft Confirm vocabulary); T2 (`.lsa-sync-state.json` removal) deferred | Detail: §"2026-05-22 backlog detail" #6. Opportunistic audit. T2 deferred due to medium blast radius + line-citation conflicts with show-changes-inline (PR #22). Spec at `vision/specs/features/2026-05-22-custom-inventions-sweep/` (NOT yet archived — T2 still pending). |
 | Planning quality: `lsa-plan` must enforce TDD in every epic | **Must** | shipped — lsa v0.10.0 | User-reported 2026-05-24 — planning entirely skipped TDD; this is a critical bug. Fixed by adding `lsa:implement` skill that enforces RED→GREEN→REFACTOR per epic; `lsa:plan` approval gate now hands off to `lsa:implement`. Detail: §"2026-05-24 backlog detail" #2. |
 | Remove `vision/specs/archive/` (rely on CHANGELOG + git + permanent module specs) | Could | backlog | User-proposed 2026-05-23. Archive is a custom invention not mandated by any 3rd-party standard; CHANGELOG entries + git history + absorbed module specs cover traceability. Touches `lsa/ARCHITECTURE.md`, `vision/VISION.md:206` reference, removal of existing `vision/specs/archive/2026-05-21-ears-journey-shape-ac/`. Spec TBD. |
+| `management` plugin — `product-manager` agent + `start-feature` skill | **Should** | backlog | User-proposed 2026-05-26. New standalone plugin (`management`). The system has strong *build* discipline but no *what to build* discipline. A `product-manager` agent operates upstream of `lsa:discover`: takes a vague problem/opportunity, shapes it into a buildable pitch (problem, appetite, solution sketch, rabbit holes, no-gos), and hands off to discovery. Detail: §"2026-05-26 backlog detail" #1. |
+| `management` plugin — `project-manager` agent + `task-status` skill | **Should** | backlog | User-proposed 2026-05-26. Same plugin. The system has no *when to ship* or *in what order* discipline. A `project-manager` agent operates across features: tracks scope vs. progress, flags risks, manages dependencies between features, produces status snapshots, and reasons about sequencing. Detail: §"2026-05-26 backlog detail" #2. |
 
 ## Recently merged
 
@@ -169,3 +171,35 @@ Prioritized list of upcoming work, populated from `vision/VISION.md` §6 *"Adjus
   - **`.lsa-sync-state.json`** — per-module last-sync SHA + ISO timestamp. The SHA is recoverable via `git log` against the module's spec file. Removal cost: `lsa-reconcile`'s baseline-SHA logic needs derivation from git history instead of file lookup.
   - **File-load trace directive** — every skill / knowledge file prints `=============== [<path>] [<plugin>] ===============` on load (core v0.5.4 / lsa v0.6.4 / helper v0.2.1). User-requested 2026-05-22. Assess: does the source-attribution payoff exceed the visual noise on every response?
   - **"Hard Confirm" / "Soft Confirm"** vocabulary in `lsa/knowledge/conventions.md` §"Confirm gate types". Skills could describe their gate behavior in plain English (*"approval required"* vs *"approve or correct inline"*) and lose the named-distinction overhead.
+
+## 2026-05-26 backlog detail
+
+`READY` — two backlog rows added 2026-05-26 from user brainstorm on missing roles in the marketplace.
+
+### 1. `management` plugin — `product-manager` agent + `start-feature` skill
+
+- **Problem.** The marketplace has a strong *build* discipline (`lsa:discover` → `lsa:plan` → `lsa:implement` → `lsa:verify`) and a principal-engineer-level developer agent, but no *what to build* discipline. Today, work enters the system as a user-stated feature idea passed directly to `lsa:discover`. There is no structured step that shapes a vague problem or opportunity into a well-framed pitch — no appetite sizing, no explicit rabbit-hole identification, no "what we're NOT building" boundary. The user carries this entire burden mentally before typing a feature description.
+- **Example.** User 2026-05-26: *"I'm missing a principal project and product managers."* Current flow: user thinks of an idea → types it into `lsa:discover` → discovery asks clarifying questions. Missing: a shaping phase that takes a vague signal (*"users struggle with onboarding"*) and produces a pitch with problem, appetite, solution sketch, rabbit holes, and no-gos — before discovery begins specifying the solution.
+- **Inspiration.** Basecamp's Shape Up methodology — specifically the *shaping* phase that sits between raw requests and the build cycle. The `product-manager` agent is not a backlog groomer or a ticket writer; it is a shaping tool that produces a fixed-appetite pitch the human approves before committing to a build cycle. Source: [Basecamp — Shape Up: Shaping](https://basecamp.com/shapeup/1.1-chapter-02) [unverified — cited from training knowledge, not verified against the source page].
+- **Where it lives.** New standalone `management` plugin. Depends on `core` (ground-rules, output). Reads `lsa` artifacts (roadmap, specs, branches) but `lsa` does not depend on `management`. Separate concern from the build methodology — the `management` plugin owns "what to build" and "when to ship"; `lsa` owns "how to build." The plugin can grow to include a business analyst agent without bloating the build lifecycle.
+- **Expected Output.**
+  - A **`management:start-feature` skill** that dispatches the `product-manager` agent.
+  - A **pitch artifact** with fixed structure: Problem (who has it, evidence), Appetite (time/scope boundary — what we're willing to spend), Solution sketch (rough enough to direct, loose enough to allow design freedom), Rabbit holes (known complexities to call out up front), No-gos (what this pitch explicitly excludes).
+  - A **human gate** between shaping and discovery — the user approves or reshapes the pitch before `lsa:discover` runs.
+  - The `product-manager` agent reads codebase, existing specs, and roadmap to ground the pitch in reality — no greenfield fantasy.
+  - Flow integration: `management:start-feature` → (human approves pitch) → `lsa:discover` → `lsa:plan` → `lsa:implement` → `lsa:verify`.
+  - **Open question: `lsa:new` overlap.** `lsa:new` currently creates a branch and kicks off discovery. `management:start-feature` subsumes that — shaping + branch creation + handoff to `lsa:discover`. When `management` ships, `lsa:new` should either be removed or redirect to `management:start-feature`. Resolve during implementation.
+
+### 2. `management` plugin — `project-manager` agent + `task-status` skill
+
+- **Problem.** The marketplace manages features one at a time. There is no agent or skill that thinks across features — no dependency tracking between in-flight work, no risk flagging when scope creeps, no status snapshots for the human to review their overall progress, no sequencing reasoning ("feature B depends on feature A's data model, so A ships first"). The user carries the cross-feature mental model entirely in their head.
+- **Example.** User 2026-05-26: same session as #1. The roadmap file (`vision/specs/roadmap.md`) is a static table maintained by hand — no agent reads it to flag stale items, identify blockers, or recommend what to pick next beyond `lsa:next`'s simple backlog-pop. When multiple features are in flight, there is no structured way to see "where are we across all of them."
+- **Where it lives.** Same `management` plugin as #1. Depends on `core`. Reads `lsa` artifacts and git state but does not require `lsa` to depend on it.
+- **Expected Output.**
+  - A **`management:task-status` skill** that dispatches the `project-manager` agent.
+  - A **status snapshot**: reads the roadmap, active feature branches, spec artifacts, and git history to produce a current-state summary — what's in flight, what's blocked, what's next, what's at risk.
+  - A **dependency reasoning** capability: when the user starts a new feature, the `project-manager` flags if it depends on uncommitted work from another feature branch.
+  - A **scope-watch** capability: during `lsa:plan` or `lsa:implement`, the `project-manager` can flag when an epic's actual scope exceeds the pitch's appetite (links to `product-manager` output).
+  - A **sequencing recommendation**: given N backlog items, recommend an order based on dependencies, risk, and value — grounded in the roadmap and codebase state, not generic prioritization frameworks.
+  - Integration with existing `lsa:next` — the `project-manager`'s sequencing recommendation informs which item `lsa:next` proposes.
+- **Future growth.** The `management` plugin is the natural home for a `business-analyst` agent if one is added later — same concern family (understanding the problem domain), same dependency pattern (reads `lsa` artifacts, depends on `core`).
