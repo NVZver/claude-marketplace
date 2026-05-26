@@ -1,6 +1,6 @@
 ---
 name: prompt-review
-description: Report prompt quality issues against ground rules
+description: Scan prompts for ground rule, KISS/DRY, AI sweep, and context budget violations
 allowed-tools: Read, Grep, Glob, Agent
 ---
 
@@ -16,7 +16,7 @@ Constraints:
 
 ## Steps
 
-1. Read `.claude/agents/prompt-engineer.md` → extract Ground Rules 1-10 and Severity Levels
+1. Read `.claude/agents/prompt-engineer.md` → extract Ground Rules 1-10, Knowledge Quality Checks 1-6, KISS/DRY 1-5, AI Sweep 1-5, Context Budget 1-4, and Severity Levels
 2. Resolve target:
    - File path → single file
    - Directory → find all `.md` files with prompt frontmatter (has `name:` or `description:` in YAML)
@@ -27,8 +27,11 @@ Constraints:
    c. Steps (rule 5): each step has observable result → vague steps = MEDIUM
    d. Example Output (rule 10): section exists with synthetic example → missing = HIGH
    e. Output spec (rule 4): format and length defined → missing = MEDIUM
-   f. Wording (rule 9): check for adverbs, hedging, filler, passive voice → list of wording violations, each = LOW
-   g. Assumptions (rule 7): check for unverified claims ("probably", "likely", "usually") → list of assumption violations, each = MEDIUM
+   f. Wording (rule 9): check for adverbs, hedging, filler, passive voice → each = LOW
+   g. Assumptions (rule 7): check for unverified claims ("probably", "likely", "usually") → each = MEDIUM
+   h. KISS/DRY (rules 1-5): duplicate content across sibling files, format definitions hardcoded where a knowledge file defines them, files with multiple concerns, steps restating LLM defaults → each = MEDIUM
+   i. AI sweep (rules 1-5): rules formalizing natural LLM behavior, custom terminology replacing established frameworks, hardcoded thresholds without grounding → each = MEDIUM; example bloat, missing paradigm provenance → each = LOW
+   j. Context budget (rules 1-4): Goal restating frontmatter description, mergeable constraints, examples over-constraining output, low-density padding → restating/mergeable = MEDIUM, padding = LOW
 4. Compile all findings → output table
 
 ## Output
