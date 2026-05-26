@@ -8,7 +8,7 @@ The top-level spec for this repo. Sources the constitution at [`vision/VISION.md
 
 Build a personal, model-agnostic agentic engineering system whose single job is **trustworthy output** — every fact traces to a source, every line of code (or any other behavior-bearing artifact) traces to a spec — and whose **ceremony scales to the weight of the task**. Per `vision/VISION.md:11`.
 
-The marketplace ships two domain-neutral plugins (`core` and `lsa`) installable natively via Claude Code. Both evolve independently with their own SemVer + CHANGELOG (per `vision/VISION.md` §1 *"per-plugin SemVer + CHANGELOG"*).
+The marketplace ships three plugins (`core`, `lsa`, and `management`) installable natively via Claude Code. Each evolves independently with its own SemVer + CHANGELOG (per `vision/VISION.md` §1 *"per-plugin SemVer + CHANGELOG"*).
 
 ## Module Index
 
@@ -16,7 +16,7 @@ The marketplace ships two domain-neutral plugins (`core` and `lsa`) installable 
 |---|---|---|
 | `core` | [`vision/specs/modules/core/spec.md`](./modules/core/spec.md) | active — v0.5.6 |
 | `lsa` | [`vision/specs/modules/lsa/spec.md`](./modules/lsa/spec.md) | active — v0.8.0 |
-| `management` | [`vision/specs/modules/management/spec.md`](./modules/management/spec.md) | active — v0.1.0 |
+| `management` | [`vision/specs/modules/management/spec.md`](./modules/management/spec.md) | active — v0.2.0 |
 
 ## Cross-Module Contracts
 

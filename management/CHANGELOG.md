@@ -2,6 +2,22 @@
 
 All notable changes to the `management` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.2.0] – 2026-05-26
+
+Project-manager agent and roadmap skill. Bridges the gap between shaping (product-manager → pitch) and building (LSA cycle) with structured roadmap stewardship.
+
+### Added
+
+- **Project-manager agent** ([`./agents/project-manager.md`](./agents/project-manager.md)). Roadmap steward with three modes: (1) Recommend next — applies sequencing heuristics (dependency order, technical risk, value delivery) from linked pitches to recommend what to build next; (2) Tidy — flags stale items, missing pitches, and status inconsistencies; (3) Decompose — breaks a chosen pitch into independently-shippable epics per `management/knowledge/epic-decomposition.md`. Hands first epic to LSA. Read-only on everything except roadmap (writes require explicit user approval). Inherits `core/ground-rules` and `core/output`.
+- **Roadmap skill** ([`./skills/roadmap/SKILL.md`](./skills/roadmap/SKILL.md)). Single entry point for project management. Dispatches the project-manager agent; agent handles recommendation, hygiene, decomposition, and LSA handoff internally.
+- **Knowledge file: epic decomposition** ([`./knowledge/epic-decomposition.md`](./knowledge/epic-decomposition.md)). Rules for breaking pitches into epics: 5 quality criteria (independently shippable, one-sentence scope, one LSA cycle, clear definition of done, parent pitch link), 3 boundary-finding signals, 4 anti-patterns.
+- **Knowledge file: sequencing heuristics** ([`./knowledge/sequencing-heuristics.md`](./knowledge/sequencing-heuristics.md)). Three-factor sequencing model grounded in this repo's data sources. Documents the roadmap table format for agent parsing.
+
+### Changed
+
+- **Start-feature skill** ([`./skills/start-feature/SKILL.md`](./skills/start-feature/SKILL.md)). Added Step 3: after pitch approval, optionally adds a roadmap backlog entry (title, user-confirmed priority, status `backlog`, pitch link) to `vision/specs/roadmap.md`. Skippable at user's discretion.
+- **Plugin manifest** ([`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json)). Version 0.1.0 → 0.2.0. Description updated to cover both agents and both skills.
+
 ## [0.1.0] – 2026-05-26
 
 Initial release. Plugin scaffold, knowledge files, product-manager agent, and start-feature skill.
