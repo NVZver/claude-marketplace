@@ -4,11 +4,12 @@
 
 **Proven · Owned · No Fluff · Spec First.**
 
-A Claude Code marketplace shipping three composable plugins (one under construction):
+A Claude Code marketplace shipping four composable plugins:
 
 - **`core`** — three always-on skills that keep the agent honest: `ground-rules` (content discipline), `output` (format discipline), and `flow-selector` (process ceremony — one-pass for a typo, full spec lifecycle for a new module; renamed from `tier-selector` in `core` v0.5.2).
 - **`lsa`** — **L**iving **S**pec **A**rchitecture: spec-first development where every change traces to a requirement, and hand-edits to code are *absorbed* into the spec instead of forbidden.
-- **`helper`** *(under construction — scaffold only)* — friendly fact-grounded assistant: a `/help` slash command + an auto-engaging subagent that activates on user-friction signals (consecutive `lsa:discover` gate rejections, free-form `what is X?` mid-flow). Agent + command bodies land across steps 2–4 of [`vision/specs/features/2026-05-21-helper-agent/`](./vision/specs/features/2026-05-21-helper-agent/).
+- **`helper`** — friendly fact-grounded assistant: a `/help` slash command + an auto-engaging subagent that activates on user-friction signals (consecutive `lsa:discover` gate rejections, free-form `what is X?` mid-flow).
+- **`management`** — shapes vague ideas into structured pitches before the build cycle. The `product-manager` agent adapts its domain-expert role per invocation, drives an interactive shaping conversation, and gates on human approval before handing off to `lsa:discover`.
 
 ---
 
@@ -75,18 +76,20 @@ Specs are the permanent source of truth; every change traces to a spec requireme
 /plugin marketplace add NVZver/claude-marketplace
 /plugin install core@NVZver
 /plugin install lsa@NVZver
-/plugin install helper@NVZver   # optional — scaffold only at the moment; see helper/README.md
+/plugin install helper@NVZver   # optional — /help Q&A assistant
+/plugin install management@NVZver  # optional — pre-build shaping discipline
 /reload-plugins
 ```
 
-Install `core` first — `lsa` cites it for fact-grounding and flow selection. Then merge the [`core/CLAUDE.md`](./core/CLAUDE.md) fragment into your project's `CLAUDE.md` to wire up the always-on rules.
+Install `core` first — `lsa` and `management` both depend on it. Then merge the [`core/CLAUDE.md`](./core/CLAUDE.md) fragment into your project's `CLAUDE.md` to wire up the always-on rules.
 
 ## How it works in 30 seconds
 
 1. Every task fires `ground-rules` + `output` automatically. Sources, no hedging, no padding, verdict-first.
-2. Non-trivial tasks fire the flow selector first. The agent proposes Quick / Standard / Extended with reasoning; you confirm.
-3. Standard and Extended tasks run through LSA: discover → plan → implement → verify. Every line of code traces back to a requirement.
-4. If you hand-edit code, `lsa:reconcile` offers to update the spec — it never blocks the edit.
+2. Got a vague idea? `management:start-feature` shapes it into a pitch with clear scope before you commit to building.
+3. Non-trivial tasks fire the flow selector first. The agent proposes Quick / Standard / Extended with reasoning; you confirm.
+4. Standard and Extended tasks run through LSA: discover → plan → implement → verify. Every line of code traces back to a requirement.
+5. If you hand-edit code, `lsa:reconcile` offers to update the spec — it never blocks the edit.
 
 The single test the whole system answers: **what is the minimum ceremony that still guarantees grounded, spec-anchored output for *this* task?**
 
@@ -100,7 +103,7 @@ Personal-use first; open-sourced for visibility. Claude Code is the v1 substrate
 
 - [`vision/VISION.md`](./vision/VISION.md) — the full design rationale (the constitution).
 - [`CONTRIBUTING.md`](./CONTRIBUTING.md) — how to build, contribute, verify.
-- [`core/README.md`](./core/README.md), [`lsa/README.md`](./lsa/README.md) — per-plugin docs.
+- [`core/README.md`](./core/README.md), [`lsa/README.md`](./lsa/README.md), [`management/README.md`](./management/README.md) — per-plugin docs.
 - [`lsa/ARCHITECTURE.md`](./lsa/ARCHITECTURE.md) — directory layout, `.lsa.yaml` schema, branch management.
 
 Licensed under [`LICENSE`](./LICENSE).

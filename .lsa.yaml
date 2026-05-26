@@ -37,3 +37,11 @@ modules:
       - helper/.claude-plugin/plugin.json
       - helper/README.md
       - helper/VERIFICATION.md
+  management:
+    spec: vision/specs/modules/management/spec.md
+    artifact_paths:
+      - management/agents/**/*.md
+      - management/skills/**/SKILL.md
+      - management/knowledge/**/*.md
+      - management/.claude-plugin/plugin.json
+      - management/README.md
