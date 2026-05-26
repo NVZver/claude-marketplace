@@ -2,9 +2,9 @@
 
 # Module Spec — `lsa`
 
-The Living Spec Architecture plugin. Nine skills + one SessionStart hook + a config schema.
+The Living Spec Architecture plugin. Nine skills + one agent + one SessionStart hook + a config schema.
 
-**Plugin manifest:** [`lsa/.claude-plugin/plugin.json`](../../../../lsa/.claude-plugin/plugin.json) (v0.8.0)
+**Plugin manifest:** [`lsa/.claude-plugin/plugin.json`](../../../../lsa/.claude-plugin/plugin.json) (v0.11.0)
 **Plugin README** (skill table, install, configuration): [`lsa/README.md`](../../../../lsa/README.md)
 **Architecture** (directory structure, `.lsa.yaml` schema, branch management, resolved decisions): [`lsa/ARCHITECTURE.md`](../../../../lsa/ARCHITECTURE.md)
 **Per-skill behavior** (source of truth per skill): [`lsa/skills/*/SKILL.md`](../../../../lsa/skills/)
@@ -29,7 +29,6 @@ Baseline SHA per module (consumed by the SessionStart drift hook and `reconcile`
 
 ## Invariants
 
-- **Versioning.** `lsa` evolves with its own SemVer + CHANGELOG (`vision/VISION.md` §1 *"Distribution + versioning"*). Currently v0.8.0.
 - **Markdown + small JSON / YAML / bash surface.** No `/src/`. Plugin manifest is JSON; config is YAML; hook is bash. Per `vision/specs/standards/code.md`.
 - **Depends on `core` v0.5.2+** for `flow-selector` (added as `tier-selector` v0.2.0; renamed v0.5.2) and `core/output` (added v0.4.0; cited from every LSA skill per `lsa/CHANGELOG.md` [0.4.0]). Documented in `lsa/.claude-plugin/plugin.json: description` and `lsa/README.md` *"Depends on"*.
 - **Spec source-of-truth.** Each skill's behavior is owned by its `SKILL.md`; this module spec carries module-level invariants only — not a per-skill catalog (that's `lsa/README.md`).
@@ -39,3 +38,5 @@ Baseline SHA per module (consumed by the SessionStart drift hook and `reconcile`
 - **Genuine-fork test applied to LSA pickers.** `discover` skips the per-line picker when Step 1 yields a single unambiguous candidate AND no `custom` is requested; `verify`'s verdict-picker prompts name the verdict in the subject. Per `lsa/skills/discover/SKILL.md` Step 2, `lsa/skills/verify/SKILL.md` Step 4–5.
 - **What-and-why preamble on every verdict.** LSA skills that emit verdicts render a one-sentence preamble before the verdict line per `core/output` Rule 6: `init` (PROPOSED), `reconcile` (DRIFT), `revise-constitution` (PROPOSED), `verify` (PASS / FAIL / PASS WITH WARNINGS). Preamble names what the agent is doing in the user's frame and the concrete consequence if the human does not act.
 - **Show changes inline on every write.** LSA skills cite `core/output` Rule 7 and name the quote-back format (full single-change block when ≤10 lines, compressed inspection table when larger). `reconcile` is excluded as the exemplar Rule 7 generalizes from — it carries a one-line forward-link at the top of `## Steps` instead.
+- **`implement` is an orchestrator, `developer` is the executor.** `implement` dispatches each epic to the `developer` agent (`lsa/agents/developer.md`) and manages inter-epic human gates. It never contains implementation, design, or test-strategy logic. The `developer` agent operates in four phases per epic: Design brief → Test plan → TDD (RED→GREEN→REFACTOR) → Self-review (suite + diff-review against brief). Agent flags spec/plan divergence; orchestrator escalates to human.
+- **Versioning.** `lsa` evolves with its own SemVer + CHANGELOG (`vision/VISION.md` §1 *"Distribution + versioning"*). Currently v0.11.0.

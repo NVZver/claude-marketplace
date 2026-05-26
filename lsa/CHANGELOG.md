@@ -4,6 +4,18 @@ All notable changes to the `lsa` plugin are documented here. Format follows [Kee
 
 ## [Unreleased]
 
+## [0.11.0] — 2026-05-26
+
+### Added
+
+- **`lsa/agents/developer.md`** — principal-engineer implementation agent. Dispatched by `lsa:implement` once per epic. Four phases: **(1) Design brief** — produces a single artifact covering conventions (`file:line` cited), user flow, e2e data flow with reuse/extend/new classification, risk assessment (security, performance, observability, edge cases) with mitigations, dependency/migration evaluation, and trade-off articulation; **(2) Test plan** — testing-pyramid selection (unit/integration/e2e) with per-behavior justification; **(3) TDD** — RED→GREEN→REFACTOR per subtask; **(4) Self-review** — run full suite, diff-review against design brief, present structured summary. Spec/plan push-back: stops and reports divergence instead of silently deviating. Judgment-scaled — depth of each section matches the epic's complexity.
+
+### Changed
+
+- **`lsa/skills/implement/SKILL.md`** — refactored from monolithic TDD executor to orchestrator. No longer contains implementation, design, or test-strategy logic — dispatches each epic to the `developer` agent via the `Agent` tool, handles inter-epic human gates, escalates spec/plan divergence reported by the agent. Human gate now shows test counts by type (unit/integration/e2e) and trade-offs made.
+- **`lsa/.claude-plugin/plugin.json`** — version 0.11.0, description updated: adds developer agent, implement described as orchestrator.
+- **`lsa/README.md`** — skill table updated: implement entry notes developer agent dispatch; new "Agents" section documents the developer agent.
+
 ## [0.10.0] — 2026-05-24
 
 ### Added

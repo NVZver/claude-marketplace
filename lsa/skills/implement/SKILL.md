@@ -1,6 +1,6 @@
 ---
 name: implement
-description: Execute TDD implementation of a planned feature. Input: approved tasks.md from lsa:plan. Output: all epics implemented with passing tests, ready for lsa:verify.
+description: Execute TDD implementation of a planned feature. Input: approved tasks.md from lsa:plan (or discovery context from lsa:discover Standard flow). Output: all epics implemented with passing tests, ready for lsa:verify. Dispatches each epic to the developer agent for principal-engineer-level execution.
 allowed-tools: Read, Write, Edit, Bash, Grep, Glob, Agent, AskUserQuestion
 ---
 
@@ -9,64 +9,70 @@ allowed-tools: Read, Write, Edit, Bash, Grep, Glob, Agent, AskUserQuestion
 
 # LSA Implement
 
+Orchestrator skill. Walks epics in order, dispatches each to the `developer` agent for principal-engineer-level implementation, manages inter-epic human gates. Does not contain implementation logic — that lives in `lsa/agents/developer.md`.
+
 ## Goal
 
-Execute the approved `tasks.md` epic-by-epic using strict Test-Driven Development: write a failing test, implement the minimum code to pass it, refactor while green. Every epic's acceptance criteria must be satisfied before moving to the next.
+Execute the approved `tasks.md` (or Standard-flow discovery context) epic-by-epic, dispatching each to the `developer` agent for design-then-test-then-implement execution, with human approval between epics.
 
 ## Input
 
-- Approved `${specs_root}/features/<feature-name>/tasks.md` (from `lsa:plan`).
-- The feature spec at `${specs_root}/features/<feature-name>/` (requirements, test-suites, design, optional contract).
+- Approved `${specs_root}/features/<feature-name>/tasks.md` (from `lsa:plan` — Extended flow).
+- Or: discovery context (module, change, acceptance criterion) from `lsa:discover` (Standard flow). In this case, treat the entire change as a single epic.
+- The feature spec at `${specs_root}/features/<feature-name>/` (requirements, test-suites, design, optional contract) when available.
 - `.lsa.yaml` for `constitution`, `specs_root`, and `mode` (defaults per [`../knowledge/conventions.md`](../knowledge/conventions.md) §"`.lsa.yaml` defaults").
 
 ## Steps
 
 1. **Read sources.** Apply the Read Protocol per [`../knowledge/conventions.md`](../knowledge/conventions.md) §"Read protocol". Skill-specific sources beyond the protocol's standard prefix:
-   - `${specs_root}/features/<feature-name>/tasks.md`
-   - `${specs_root}/features/<feature-name>/requirements.md`
-   - `${specs_root}/features/<feature-name>/test-suites.md`
-   - `${specs_root}/features/<feature-name>/design.md`
+   - `${specs_root}/features/<feature-name>/tasks.md` (if Extended flow)
+   - `${specs_root}/features/<feature-name>/requirements.md` (if exists)
+   - `${specs_root}/features/<feature-name>/test-suites.md` (if exists)
+   - `${specs_root}/features/<feature-name>/design.md` (if exists)
    - `${specs_root}/features/<feature-name>/contract.yaml` (if exists)
    - The project's constitution (for test commands, code standards, project structure)
 
    Detect the project's test, typecheck, and lint commands from the constitution and project config. Observable result: per-source one-liner printed per the protocol; tooling commands recorded.
 
-2. **Execute epics in order.** For each epic in the Epic Overview table from `tasks.md`:
+2. **Execute epics in order.** For each epic in the Epic Overview table from `tasks.md` (or the single-epic derived from Standard-flow discovery):
 
-   Print: *"Starting Epic [N]: [Name] — [1-sentence description from tasks.md]."*
+   Print: *"Starting Epic [N]: [Name] — [1-sentence description]."*
 
-   **TDD cycle — per subtask within the epic:**
+   **Dispatch to developer agent.** Invoke the `developer` agent (`lsa/agents/developer.md`) via the `Agent` tool with:
+   - The epic's name, subtasks, acceptance criteria, and `**Covers:**` line.
+   - The feature spec context (requirements, test-suites, design, contract).
+   - The project's test/lint/typecheck commands.
+   - The `.lsa.yaml` configuration.
 
-   **RED** — Write a failing test that encodes the expected behavior from the epic's acceptance criteria. Run tests → **must FAIL**. If it passes without implementation, the test is wrong.
+   The agent executes all four phases (Design → Test Strategy → TDD → Self-review) and returns a structured summary.
 
-   **GREEN** — Write only enough code to make the failing test pass. Run tests → **must PASS**. Run type checker → **must PASS**.
+   **Handle agent results by status:**
 
-   **REFACTOR** — Clean up while green. Run full test suite → **must STILL PASS**.
+   - **`blocked`**: The agent could not complete — spec/plan divergence, stuck implementation, or unresolvable issue. Present the agent's blocked reason and proposed adjustment to the human via `AskUserQuestion`. Options: `[a]` accept adjustment → re-dispatch with the adjustment; `[b]` override → human provides guidance, re-dispatch; `[c]` stop → pause implementation.
+   - **`complete`**: Proceed to human gate. Review the agent's returned design brief for reasonableness before presenting — if the brief is thin relative to the epic's complexity, re-dispatch with feedback.
 
-   Observable result: test output quoted inline per [`../../../core/skills/output/SKILL.md`](../../../core/skills/output/SKILL.md) Rule 7 at each phase.
+   **Human gate.** Present via `AskUserQuestion` per `core/CLAUDE.md` operational checkpoint #1. Include from the agent's summary: design brief (so the human audits the contract, not just the code), test counts by type, files changed, trade-offs made, pre-existing failures if any.
 
-   After all subtasks in the epic pass, confirm tests + typecheck + lint are green. If any check fails → fix before proceeding.
-
-   **Human gate.** Present via `AskUserQuestion` per `core/CLAUDE.md` operational checkpoint #1. **Prompt:** *"Epic [N]: [Name] — all tests passing. Proceed to Epic [N+1]?"*
+   **Prompt:** *"Epic [N]: [Name] — [test count] tests passing ([unit/integration/e2e breakdown]). Proceed to Epic [N+1]?"*
 
    - `[a]` proceed → start next epic
-   - `[b]` adjust → user provides feedback, fix and re-checkpoint
+   - `[b]` adjust → provide feedback, re-dispatch to developer agent with corrections
    - `[c]` stop → pause implementation
 
    Do not start the next epic until human approves. Observable result: human approval logged.
 
-3. **Done.** After all epics complete, print which epics were completed and their test counts. Hand off to `lsa:verify`.
+3. **Done.** After all epics complete, print which epics were completed, their test counts by type (unit / integration / e2e), and the total suite status. Hand off to `lsa:verify`.
 
 ## Output
 
-All epics from `tasks.md` implemented with passing tests. Ready for `lsa:verify`.
+All epics from `tasks.md` (or the Standard-flow single epic) implemented with passing tests. Each epic was designed before coded, test types were justified via testing-pyramid reasoning, and results were self-reviewed by the developer agent. Ready for `lsa:verify`.
 
 ## Constraints
 
-- **Test first, always.** Never write implementation before a failing test. The RED→GREEN→REFACTOR cycle is non-negotiable.
-- **Minimum code only.** Write only what is needed to pass the test. No speculative features, no premature abstractions.
-- **One epic at a time.** Complete and get approval before starting the next.
-- **Follow the plan.** Implement what `tasks.md` says. If the plan is wrong, pause and discuss — do not silently deviate.
+- **Orchestrator only.** This skill dispatches to the `developer` agent — it does not contain implementation, design, or test-strategy logic. If you find yourself writing code or designing user flows in this skill, stop: that belongs in the agent.
+- **Test first, always.** The developer agent enforces RED→GREEN→REFACTOR. This skill verifies by checking the agent's self-review summary — if the summary indicates tests were not written first, reject and re-dispatch.
+- **One epic at a time.** Complete and get human approval before starting the next.
+- **Follow the plan.** Implement what `tasks.md` says. When the developer agent returns `blocked`, escalate to the human — do not resolve silently.
 - Outputs follow [`core/output`](../../../core/skills/output/SKILL.md) — citation by link, never restated.
 
 ---
