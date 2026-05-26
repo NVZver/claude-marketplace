@@ -27,7 +27,7 @@ Install `core` first — `management` cites `core/ground-rules` for fact-groundi
 
 | Skill | What it does |
 |---|---|
-| `management:start-feature` | Shape a new feature. Accepts a problem description, dispatches the product-manager agent, optionally adds a roadmap backlog entry, hands off to `lsa:new` on approval. |
+| `management:start-feature` | Shape a new feature. Accepts a problem description, dispatches the product-manager agent, optionally adds a roadmap backlog entry, hands off to `management:roadmap` for epic decomposition on approval. |
 | `management:roadmap` | Manage the project roadmap. Dispatches the project-manager agent to recommend what to work on next, decompose pitches into epics, and tidy roadmap hygiene. |
 
 ## Agents
@@ -40,9 +40,9 @@ Install `core` first — `management` cites `core/ground-rules` for fact-groundi
 ## How it fits
 
 ```
-management:start-feature → (human approves pitch) → roadmap entry
-                                                          ↓
-management:roadmap → pick next item → decompose into epics
+management:start-feature → (human approves pitch) → roadmap entry → management:roadmap
+                                                                                          ↓
+                                                          pick next item → decompose into epics
                                                           ↓
                           lsa:discover → lsa:plan → lsa:implement → lsa:verify
 ```

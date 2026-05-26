@@ -2,6 +2,14 @@
 
 All notable changes to the `management` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.2.1] – 2026-05-27
+
+### Fixed
+
+- **Start-feature skill** ([`./skills/start-feature/SKILL.md`](./skills/start-feature/SKILL.md)). Step 4 now hands off to `management:roadmap` (project-manager → epic decomposition) instead of `lsa:new`. Completes the intended flow: product-manager → pitch + roadmap → project-manager → epics → LSA.
+- **README** ([`./README.md`](./README.md)). Skill table and flow diagram updated to reflect the corrected handoff.
+- **Product-manager agent** ([`./agents/product-manager.md`](./agents/product-manager.md)). Completion signal and constraint references updated from `lsa:new` to `management:roadmap`.
+
 ## [0.2.0] – 2026-05-26
 
 Project-manager agent and roadmap skill. Bridges the gap between shaping (product-manager → pitch) and building (LSA cycle) with structured roadmap stewardship.

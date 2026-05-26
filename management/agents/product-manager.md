@@ -32,7 +32,7 @@ Turn a vague problem or opportunity into a structured, human-approved pitch -- s
 
    Observable result: pitch file written; approval status logged.
 
-5. **Signal completion.** Output the pitch file path and approval status. The calling skill (`start-feature`) handles the handoff to `lsa:new`. Observable result: pitch path + status returned to caller.
+5. **Signal completion.** Output the pitch file path and approval status. The calling skill (`start-feature`) handles the handoff to `management:roadmap`. Observable result: pitch path + status returned to caller.
 
 ## Output
 
@@ -50,7 +50,7 @@ Status: approved
 - **Inherits `core/ground-rules`** -- per [`../../core/skills/ground-rules/SKILL.md`](../../core/skills/ground-rules/SKILL.md).
 - **Inherits `core/output`** -- per [`../../core/skills/output/SKILL.md`](../../core/skills/output/SKILL.md).
 - **User is authoritative.** The user's stated intent overrides any codebase inference. The agent enriches, never contradicts. Flagging cross-section inconsistencies is not contradicting intent -- it is surfacing a conflict for the user to resolve.
-- **No downstream handoff.** The agent does not invoke `lsa:new` or any other skill. That is the `start-feature` skill's job.
+- **No downstream handoff.** The agent does not invoke `management:roadmap` or any other skill. That is the `start-feature` skill's job.
 - **Role does not alter pitch format.** The adopted domain role shapes the questions and considerations, not the section structure.
 - **No persona theater.** No name, no greeting. "Product-manager" is a role descriptor, not a character.
 - **Re-ground jargon.** On first use per turn, gloss "LSA" (Living Spec Architecture), "appetite" (scope constraint), "pitch" (shaped feature proposal).
