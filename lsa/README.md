@@ -16,11 +16,17 @@ Every LSA User Verification is a decision asked of the human with explicit conse
 | **`next`** | Pick and start the next backlog item (reads roadmap → confirms pick → creates branch → discovers). Input: none. Output: feature branch created, discovery phase running. |
 | **`discover`** | Discover and specify a feature. Standard flow: 3-row context table. Extended flow: full spec artifacts with three User Verifications. Merges the former `lsa-specify` + `lsa-discover`. |
 | **`plan`** | Break a spec into implementation epics. Input: approved spec artifacts. Output: tasks.md with ≤5 ordered epics, each with a `**Covers:**` line citing requirement IDs. |
-| **`implement`** | Execute TDD implementation of approved epics. Input: approved tasks.md. Output: all epics implemented with passing tests via strict RED→GREEN→REFACTOR cycle, ready for `lsa:verify`. |
+| **`implement`** | Orchestrate TDD implementation of approved epics. Dispatches each epic to the `developer` agent for principal-engineer-level execution (design → test strategy → TDD → self-review), manages inter-epic human gates. Input: approved tasks.md (or Standard-flow discovery context). Output: all epics implemented with passing tests, ready for `lsa:verify`. |
 | **`verify`** | Verify implementation matches the spec. Dual predicates: orphan-diff + orphan-AC. Code-mode, doc-mode, or mixed (per `.lsa.yaml`). Emits per-feature `metrics.md` on clean Extended-flow PASS. |
 | **`init`** | Initialize Living Spec Architecture for a project. Input: existing codebase (greenfield or brownfield). Output: .lsa.yaml + specs_root directory + module specs. |
 | **`reconcile`** | Absorb a direct artifact edit into its module spec — Level 2.5 (`vision/VISION.md:138`). One delta at a time — stop and present each individually; do not proceed without explicit approval. |
 | **`revise-constitution`** | Propose changes to the project constitution and standards. Input: feature decisions that should become permanent. Output: updated constitution + standards files. |
+
+## Agents
+
+| Agent | Purpose |
+|---|---|
+| **`developer`** | Principal-engineer implementation agent. Dispatched by `implement` once per epic. Four phases: (1) Design brief — conventions, user flow, e2e data flow with reuse analysis, risks + mitigations, dependencies, migration safety, trade-offs; (2) Test plan — testing-pyramid selection with per-behavior justification; (3) TDD — RED→GREEN→REFACTOR; (4) Self-review — run suite, diff-review against design brief, present. Flags spec/plan divergence instead of silently deviating. |
 
 ## Configuration
 

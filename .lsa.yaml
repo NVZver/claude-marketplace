@@ -21,6 +21,7 @@ modules:
     spec: vision/specs/modules/lsa/spec.md
     artifact_paths:
       - lsa/skills/**/SKILL.md
+      - lsa/agents/**/*.md
       - lsa/knowledge/**/*.md
       - lsa/hooks/hooks.json
       - lsa/hooks/**/*.sh
