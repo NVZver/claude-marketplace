@@ -47,3 +47,21 @@ When any LSA skill needs to call a library API it is unsure about:
 4. **If nothing found:** state it. Use codebase patterns and types. Never guess API signatures.
 
 Skills that perform discovery (`lsa:discover`) do this proactively; execution skills (`lsa:implement`) do this only when an unknown API is encountered mid-work.
+
+---
+
+## Output discipline
+
+All LSA skill outputs follow [`core/output`](../../core/skills/output/SKILL.md) — citation by link, never restated. No LSA skill restates the seven golden rules inline; it cites `core/output` by section or rule number.
+
+---
+
+## AskUserQuestion convention
+
+When a skill presents a decision to the human inside Claude Code, it uses `AskUserQuestion` per `core/CLAUDE.md` operational checkpoint #1. The decision block is formatted per [`core/output`](../../core/skills/output/SKILL.md) (Rule 5 for picker prompts, Rule 6 for verdicts). Skills cite this convention instead of restating the checkpoint reference and formatting instruction.
+
+---
+
+## Prompt voice convention
+
+Picker prompts follow [`core/output`](../../core/skills/output/SKILL.md) Rule 5. The picker **question** names the feature subject in real-world terms (e.g., *"Approve the requirements for `<feature-name>`?"*), not internal jargon (e.g., not *"Approve F1/F2/F3?"*). Option **labels** name the outcome, not the mechanism. Skills cite this convention instead of inlining the Rule 5 coaching block.

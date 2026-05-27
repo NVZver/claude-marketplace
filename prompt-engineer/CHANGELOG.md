@@ -2,6 +2,24 @@
 
 All notable changes to the `prompt-engineer` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.2.0] – 2026-05-27
+
+Prompt audit remediation — knowledge extraction from agent. The agent file (161→58 lines) no longer inlines rules; six rule categories now live in dedicated knowledge files. All three commands updated to reference knowledge files directly instead of reading the agent.
+
+### Added
+
+- **`knowledge/separation-of-concerns.md`** — classification table (Actor vs Knowledge) and 5 boundary violation rules. Extracted verbatim from the agent.
+- **`knowledge/actor-ground-rules.md`** — 10 actor ground rules + format template. Extracted verbatim from the agent.
+- **`knowledge/quality-checks.md`** — knowledge quality (6 rules), KISS/DRY (5 rules), AI over-engineering (5 rules), context budget (4 rules), severity levels. Extracted verbatim from the agent.
+
+### Changed
+
+- **`agents/prompt-engineer.md`** — 161→58 lines. Extracted six knowledge sections into `knowledge/` files; Steps now reference knowledge files by path. Self-consistency fix: the agent no longer violates its own Separation of Concerns doctrine.
+- **`commands/prompt-review.md`** — Step 1 reads knowledge files instead of agent; steps 3h-3j replaced with knowledge references.
+- **`commands/prompt-optimize.md`** — Step 1 reads knowledge files; steps 4b-4c trimmed to reference knowledge files.
+- **`commands/prompt-create.md`** — Step 3 reads knowledge files instead of agent.
+- **`.claude-plugin/plugin.json`** — description updated to reflect knowledge file structure.
+
 ## [0.1.0] – 2026-05-27
 
 Initial release. Migrated from workspace-local `.claude/` files into a standalone marketplace plugin.

@@ -2,7 +2,22 @@
 
 All notable changes to the `core` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
-## [Unreleased]
+## [0.5.7] — 2026-05-27
+
+Prompt audit remediation — cross-reference fixes, Rule 7 trimming, wording polish.
+
+### Fixed
+
+- **`skills/output/SKILL.md`** — fixed 2 broken `lsa-reconcile` links → `reconcile` (renamed in lsa v0.8.0).
+- **`skills/ground-rules/SKILL.md`** — removed stale rule count ("five format golden rules" → "the format golden rules") per output SKILL.md line 8 prohibition on restating the count.
+- **`knowledge/output-vocabulary.md`** — added missing markdown link to `lsa/knowledge/conventions.md`.
+
+### Changed
+
+- **`skills/output/SKILL.md`** — Rule 7 trimmed from ~93 to ~57 lines: removed 2 of 3 worked examples (kept single-file edit) and inheritance meta-commentary section. Rules 1 and 3 tightened to make their distinct value clear (Rule 1 = explicit skeleton, Rule 3 = pick the right markdown primitive).
+- **`skills/ground-rules/SKILL.md`** — trimmed opening paragraph that restated frontmatter.
+- **`skills/flow-selector/SKILL.md`** — deduplicated rename-history mentions (4→1 canonical in frontmatter).
+- **`CLAUDE.md`** — removed `(was Tn)` tags from flow outcomes list.
 
 ## [0.5.6] — 2026-05-24
 

@@ -30,7 +30,6 @@ Decompose an approved feature spec into ≤5 parallel-safe epics with self-verif
    Observable result: per-source one-liner printed per the protocol.
 
 2. **Decompose into epics.** Rules:
-   - Maximum 5 epics — chosen to keep epic-level human review tractable; if the work cannot be decomposed in five, the feature is too large and should be split at the spec level rather than at the plan level (escalate back to `lsa:discover` for scope reduction).
    - Each epic has zero runtime dependency on another epic
    - Each epic runs on its own branch
    - If a dependency is unavoidable, mark it explicitly in the Epic Overview table
@@ -65,10 +64,7 @@ Decompose an approved feature spec into ≤5 parallel-safe epics with self-verif
    | E2E | [All journeys and paths in test-suites.md] | Must |
 
    ### Definition of Done
-   - [ ] All ACs pass
-   - [ ] Tests written and passing
-   - [ ] No code smells per the constitution
-   - [ ] lsa:verify passed
+   Standard four-gate checklist: all ACs pass, tests written and passing, no code smells per the constitution, `lsa:verify` passed.
    ```
 
    Observable result: a per-epic block written to the working scratch.
@@ -110,13 +106,13 @@ Decompose an approved feature spec into ≤5 parallel-safe epics with self-verif
 
    Observable result: `${specs_root}/features/<feature-name>/tasks.md` quoted back inline per [`../../../core/skills/output/SKILL.md`](../../../core/skills/output/SKILL.md) Rule 7 (add type tag) — Epic Overview table rendered, full single-change block per epic when ≤10 lines, compressed inspection table (one row per epic) when larger.
 
-5. **Human review gate.** Present rendered `tasks.md` + the 5-row self-verification table (Traceability / Accuracy / Consistency / Test coverage / Completeness — PASS / FAIL per row with reason on FAIL) + decision. **Prompt voice (per [`../../../core/skills/output/SKILL.md`](../../../core/skills/output/SKILL.md) Rule 5).** Picker **question**: *"Approve the `<N>` epics for `<feature-name>` and start implementation?"* — not *"Approve tasks.md?"* or *"Approve epic decomposition?"* (`epic decomposition` is project jargon — name the count and the feature). Option **labels**:
+5. **Human review gate.** Present rendered `tasks.md` + the 5-row self-verification table (Traceability / Accuracy / Consistency / Test coverage / Completeness — PASS / FAIL per row with reason on FAIL) + decision. Prompt voice per [conventions.md](../../knowledge/conventions.md) §"Prompt voice convention" — e.g., *"Approve the `<N>` epics for `<feature-name>` and start implementation?"* (not *"Approve tasks.md?"* or *"Approve epic decomposition?"* — name the count and the feature). Options:
 
    - `[a]` approve → hand off to `lsa:implement` for TDD execution
    - `[b]` adjust → I re-decompose with your feedback and re-present
    - `[c]` reject → return to `lsa:discover` to reduce scope
 
-   Format per [`../../../core/skills/output/SKILL.md`](../../../core/skills/output/SKILL.md); `AskUserQuestion` in Claude Code (per `core/CLAUDE.md` operational checkpoint #1). Do not start implementation until human gives explicit approval. Observable result: human approval logged.
+   `AskUserQuestion` per [conventions.md](../../knowledge/conventions.md) §"AskUserQuestion convention". Do not start implementation until human gives explicit approval. Observable result: human approval logged.
 
 6. **Hand off to implement.** On `[a] approve`: invoke `lsa:implement` with the feature name. Observable result: `lsa:implement` executing against the approved `tasks.md`.
 
@@ -130,7 +126,7 @@ Decompose an approved feature spec into ≤5 parallel-safe epics with self-verif
 - **Each epic is independent (or its dependency is explicit).** Implicit ordering is not permitted.
 - **Do not start implementation** until human approves `tasks.md`.
 - **On approval, hand off to `lsa:implement`.** Do not implement inline — invoke the skill.
-- Outputs follow [`core/output`](../../../core/skills/output/SKILL.md) — citation by link, never restated.
+- Outputs follow [conventions.md](../../knowledge/conventions.md) §"Output discipline".
 
 ---
 

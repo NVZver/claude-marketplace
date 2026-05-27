@@ -42,7 +42,7 @@ Feature branch `feature/<slug>` exists. `lsa:discover` is executing with the con
 - **Orchestrator only.** Do not duplicate discovery, flow-selection, or roadmap-editing logic — hand off to owning skills.
 - **Never auto-pick without confirmation.** The human always confirms which item to start.
 - **Read-only on the roadmap.** This skill reads `roadmap.md` but never modifies it. Status updates happen during the cross-reference sweep at ship time.
-- Outputs follow [`core/output`](../../../core/skills/output/SKILL.md) — citation by link, never restated.
+- Outputs follow [conventions.md](../../knowledge/conventions.md) §"Output discipline".
 
 ---
 

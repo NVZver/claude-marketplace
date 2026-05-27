@@ -5,14 +5,14 @@ description: Apply to every human-facing output — agent responses, skill bodie
 
 > **Trace.** On load, print first: `=============== [core/skills/output/SKILL.md] [core] ===============`
 
-> **Canonical source.** This file is the single source-of-truth for output discipline across the NVZver marketplace. Other plugins MAY cite it and MAY add component-specific formats that satisfy these seven rules. They MUST NOT restate the rule count or rule names outside this file (citation by markdown link only). They MUST NOT override or relax any rule. Re-grounded summaries that restate the rules in prose are permitted only when they cite this file by link at the top — see `helper/knowledge/output-discipline.md` for the canonical adherent example. Enforced by `core/tests/repo-anchored.md` probe D2.
+> **Canonical source.** Single source-of-truth for output discipline. Other plugins cite by markdown link only — MUST NOT restate rule count/names or override any rule. Enforced by `core/tests/repo-anchored.md` probe D2.
 
 # Output Discipline
 
 Seven golden rules. Component-specific formats (per-skill) are free choices WITHIN these rules.
 
 ## 1. Structured
-Output has a shape: headings, sections, tables, lists, blocks. No stream-of-consciousness prose.
+Every response has an explicit skeleton — headings, sections, or numbered steps — before prose fills it. No stream-of-consciousness.
 
 ## 2. Minimal
 No fluff, no overexplanation, no padding. Every line earns its place.
@@ -22,7 +22,7 @@ No fluff, no overexplanation, no padding. Every line earns its place.
 - **Pull, don't push.** Surface what the human needs to act on next. Do not pre-emptively render every option, every artifact, every consideration in one shot — that forces scroll-and-skim and buries the decision.
 
 ## 3. Formatted
-Markdown affordances match content: tables, lists, code blocks, headings.
+Pick the markdown primitive that fits the content type: tables for comparisons, lists for sequences, code blocks for literals, headings for navigation. Do not default to prose when a table or list is clearer.
 
 ## 4. Sourced
 Every factual claim carries source + exact quote per [`core/ground-rules`](../ground-rules/SKILL.md) Rule 1.
@@ -52,7 +52,7 @@ fails this rule.
 
 Every write, edit, or mark performed by an agent is **echoed back inline** before any commentary. The order is **write → show → comment** — never *"I added X to file Y; here's why it matters."* without quoting X first.
 
-This rule generalizes the 8-element drift block already in use by [`lsa-reconcile`](../../../lsa/skills/lsa-reconcile/SKILL.md), which the user endorsed as the gold standard: *"Good! Love it!"* (2026-05-22).
+This rule generalizes the 8-element drift block already in use by [`reconcile`](../../../lsa/skills/reconcile/SKILL.md), which the user endorsed as the gold standard: *"Good! Love it!"* (2026-05-22).
 
 ### Single-change template
 
@@ -66,7 +66,7 @@ For one edit to one file, the response contains, in order:
 6. **Source** — a `file:line` (or URL) for the authority that justified the change. Inherits Rule 4 (Sourced).
 7. **Type tag** — one of `add` / `edit` / `replace` / `append` / `mark`, so the human can skim a sequence of changes by type.
 
-Combined, the seven elements line up with the eight-element drift block at [`lsa-reconcile`](../../../lsa/skills/lsa-reconcile/SKILL.md) (the eighth — *bundle-explanation* — collapses into element 5 here when the change is not part of a multi-module batch).
+Combined, the seven elements line up with the eight-element drift block at [`reconcile`](../../../lsa/skills/reconcile/SKILL.md) (the eighth — *bundle-explanation* — collapses into element 5 here when the change is not part of a multi-module batch).
 
 ### Batch template — compressed inspection table
 
@@ -86,9 +86,9 @@ After the table: one cluster of follow-up `file:line` pointers the human can ope
 - *"Observable result: file is edited"* / *"diff shown"* without naming whether the diff is full-quote or compressed-table.
 - *"go check the file"* / *"see file for details"* in any form.
 
-### Worked examples
+### Worked example
 
-**Example 1 — single-file edit (a typo fix).**
+**Single-file edit (a typo fix).** `[illustrative]`
 
 > *Edited `core/skills/output/SKILL.md:32` — single line.*
 >
@@ -105,41 +105,6 @@ After the table: one cluster of follow-up `file:line` pointers the human can ope
 > *Reason: fixing the typo flagged in the 2026-05-22 review pass.*
 > *Source: user 2026-05-22.*
 > *Type: `edit`.*
-
-**Example 2 — multi-file batch write (this feature's own implementation).**
-
-| # | file:line | type | summary | pointer |
-|---|-----------|------|---------|---------|
-| 1 | `core/skills/output/SKILL.md:42-90` | add | Rule 7 *Show changes inline* | new section |
-| 2 | `core/CLAUDE.md:18` | edit | Operational checkpoint #4 cites Rule 7 | inline |
-| 3 | `lsa/skills/lsa-sync/SKILL.md:67` | edit | Observable result names quoted-diff format | step 3 |
-| 4 | `lsa/skills/lsa-sync/SKILL.md:74` | edit | Observable result names quoted-diff format | step 4 |
-| 5 | `lsa/skills/lsa-specify/SKILL.md:99` | edit | Observable result names quoted-section format | step 4 |
-
-*Reason: lands the `core/output` Rule 7 + LSA sweep per `vision/specs/features/2026-05-22-show-changes-inline/tasks.md` step 1-2. Source: `vision/specs/roadmap.md:128-132`. Type: `batch` (`add` + `edit` mix).*
-
-**Example 3 — state mark.**
-
-> *Marked **OQ5** as resolved in `vision/specs/features/2026-05-22-show-changes-inline/design.md:118`.*
->
-> *Previous (line 118):*
-> ```markdown
-> - **OQ5** — Do we backfill archive specs under `vision/specs/archive/`?
-> ```
->
-> *New (line 118):*
-> ```markdown
-> - **OQ5** — Do we backfill archive specs under `vision/specs/archive/`? **Resolved 2026-05-23: no — per archive-files-don't-rewrite rule (`vision/specs/roadmap.md:48`).**
-> ```
->
-> *Reason: human picked `[b] no backfill` at User Verification 3. Source: this session 2026-05-23. Type: `mark`.*
-
-### Inheritance & inheritance gaps
-
-- **Inherits Rule 2 (Minimal).** The batch template is the explicit escape valve when full single-change blocks would blow the budget.
-- **Inherits Rule 4 (Sourced).** Every change carries a `file:line` source per element 6.
-- **Inherits Rule 5 (Concrete).** The reason (element 5) names the subject in the human's frame, not the spec ID.
-- **Composes with Rule 3 (Formatted).** Single-change blocks use fenced code; batch blocks use markdown tables. Match the affordance to the content.
 
 ---
 

@@ -34,7 +34,7 @@ Close the drift between artifact reality and module specs by absorbing each delt
 
    Observable result: a draft "spec delta" block written to the working scratch for each module-with-drift, with the classification noted alongside.
 
-4. **Per-module — stop and present each delta individually; do not proceed without explicit approval.** Verdict carries a preamble per [`../../../core/skills/output/SKILL.md`](../../../core/skills/output/SKILL.md) Rule 6. Present each delta individually with the preamble in the user's frame — e.g., *"The auth spec says sessions expire after 24 hours, but the code now sets 7 days — one needs to win, otherwise the next review will block the merge until you pick one."* — then: DRIFT verdict + module name + file/line counts + classification (a or b) + verbatim spec quote with path:line + verbatim artifact quote with path:line + proposed one-line spec update + decision `[a] apply → spec edited in place (class a) or appended (class b); the commit of this edit is the new baseline SHA on next git log` / `[b] reject → spec untouched; row added to research-backlog.md`. Format per [`core/output`](../../../core/skills/output/SKILL.md); `AskUserQuestion` for the decision. Observable result: the human picks per module. No implicit approvals.
+4. **Per-module — stop and present each delta individually; do not proceed without explicit approval.** Verdict carries a preamble per [`../../../core/skills/output/SKILL.md`](../../../core/skills/output/SKILL.md) Rule 6. Present each delta individually with the preamble in the user's frame — e.g., *"The auth spec says sessions expire after 24 hours, but the code now sets 7 days — one needs to win, otherwise the next review will block the merge until you pick one."* — then: DRIFT verdict + module name + file/line counts + classification (a or b) + verbatim spec quote with path:line + verbatim artifact quote with path:line + proposed one-line spec update + decision `[a] apply → spec edited in place (class a) or appended (class b); the commit of this edit is the new baseline SHA on next git log` / `[b] reject → spec untouched; row added to research-backlog.md`. `AskUserQuestion` per [conventions.md](../../knowledge/conventions.md) §"AskUserQuestion convention". Observable result: the human picks per module. No implicit approvals.
 
 5. **On confirm — reverse-sync** per `vision/VISION.md:143` (*"reverse-sync — the spec absorbs reality"*):
    - **Class (a) — update in place.** Edit the contradicted requirement line(s) so the spec now states the new behavior. **Replace, don't append next to.** Worked example from `vision/VISION.md:141`: the spec said *"sessions expire at 30 days"*; on confirm the spec is edited in-place to *"sessions expire at 7 days"*.
@@ -56,7 +56,7 @@ Close the drift between artifact reality and module specs by absorbing each delt
 - **One module at a time** — never bundle multiple modules into a single confirm gate.
 - **If `git log -1 --format=%H -- <spec-path>` returns empty** (the module's spec file has no commit yet) treat the first commit on `main` as the baseline, print a one-line note, and proceed; do not error.
 - **If the baseline SHA is unreachable** (force-push, history rewrite) treat the failure as "first sync" — proceed with HEAD as the new baseline, print a warning.
-- Outputs follow [`core/output`](../../../core/skills/output/SKILL.md) — citation by link, never restated.
+- Outputs follow [conventions.md](../../knowledge/conventions.md) §"Output discipline".
 
 ---
 

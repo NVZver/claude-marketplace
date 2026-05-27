@@ -54,13 +54,13 @@ Establish context for a task (module, change, acceptance criterion), then — fo
 
 5. **Clarify with human via assume-then-override.** Do not write any files until all answers are received. Draft a `clarification.md` scratch with assumed answers for all 9 prompts (Functional×5, Non-functional×2, Boundaries×2, Acceptance×N); human responds with overrides or `ok`. **Silence on a line = approval.** The discovery answers from Step 2 seed this round — so clarification becomes deeper context, not first contact.
 
-   Present: the assumed-answer scratch + decision. **Prompt voice (per [`core/output`](../../../core/skills/output/SKILL.md) Rule 5).** The picker **question** names the feature in real-world terms — e.g., *"Confirm assumed answers for `<feature-name>`?"* — not "Approve clarification scratch?". Option **labels** name the outcome:
+   Present: the assumed-answer scratch + decision. Prompt voice per [conventions.md](../../knowledge/conventions.md) §"Prompt voice convention" — e.g., *"Confirm assumed answers for `<feature-name>`?"*. Options:
 
    - `[a]` accept all assumed answers → draft requirements
    - `[b]` override some answers → I re-draft with your overrides
    - `[c]` start over with deeper discovery → I re-run Step 2
 
-   Format per [`core/output`](../../../core/skills/output/SKILL.md); `AskUserQuestion` in Claude Code (per `core/CLAUDE.md` operational checkpoint #1). Observable result: answers captured; human approval logged.
+   `AskUserQuestion` per [conventions.md](../../knowledge/conventions.md) §"AskUserQuestion convention". Observable result: answers captured; human approval logged.
 
 6. **Create spec directory + branch (if not already on a feature branch).**
 
@@ -77,101 +77,27 @@ Establish context for a task (module, change, acceptance criterion), then — fo
 
 7. **User Verification 1: Requirements + Contract Trigger → Hard Confirm (bundled).**
 
-   Write `requirements.md`:
-   ```markdown
-   # Feature: [Name]
-
-   ## Summary
-   [What and why — max 1 paragraph]
-
-   ## Functional Requirements
-   | ID | Requirement | Priority |
-   |----|-------------|----------|
-   | F1 | ... | Must / Should / Could / Won't |
-
-   ## Non-Functional Requirements
-   | ID | Requirement |
-   |----|-------------|
-   | NF1 | ... |
-
-   ## Inputs & Outputs
-   - Input: ...
-   - Output: ...
-   - Side effects: ...
-
-   ## Constraints
-   [Applicable rules from the constitution]
-
-   ## Out of Scope
-   [What this feature explicitly does NOT cover]
-
-   ## Acceptance Criteria
-   <!-- Each AC: (a) journey-shaped per vision/VISION.md §2 sub-principle 2a — user-observable behavior at the user/system boundary, not unit-test scope; (b) EARS-form per vision/VISION.md:201 — one of Ubiquitous / Event / State / Optional / Unwanted. -->
-   - [ ] AC1: While <state> / when <event>, the system shall <observable behavior>.
-   - [ ] AC2: ...
-   ```
+   Write `requirements.md` using the template from [`../../knowledge/spec-templates.md`](../../knowledge/spec-templates.md) §"requirements.md template".
 
    Determine contract trigger by inspecting requirements (no separate human prompt). Triggered if any of: an API endpoint, a request/response schema, a DB schema/table change, a shared data type used across modules.
 
-   Present: rendered `requirements.md` + trigger-check result per signal (yes/no with names where yes) + decision. **Prompt voice (per [`core/output`](../../../core/skills/output/SKILL.md) Rule 5).** Picker **question**: *"Approve the requirements for `<feature-name>`?"* — not *"Approve F1/F2/F3?"* (IDs stay in the rendered file, not in the picker). Option **labels** name the outcome:
+   Present: rendered `requirements.md` + trigger-check result per signal (yes/no with names where yes) + decision. Prompt voice per [conventions.md](../../knowledge/conventions.md) §"Prompt voice convention" — e.g., *"Approve the requirements for `<feature-name>`?"* (IDs stay in the rendered file, not in the picker). Options:
 
    - `[a]` approve → I draft test suites + design
    - `[b]` approve with corrections → I edit requirements and re-present
    - `[c]` reject → return to clarification round
 
-   When asking about individual requirements that need clarification, ask one decision per question; resolve each `F<n>` / `NF<n>` / `AC<n>` to its subject phrase ("Add password reset endpoint?"), not the ID. Format per [`core/output`](../../../core/skills/output/SKILL.md); `AskUserQuestion` in Claude Code. Observable result: `requirements.md` exists; contract-trigger logged; human approval logged.
+   When asking about individual requirements that need clarification, ask one decision per question; resolve each `F<n>` / `NF<n>` / `AC<n>` to its subject phrase ("Add password reset endpoint?"), not the ID. `AskUserQuestion` per [conventions.md](../../knowledge/conventions.md) §"AskUserQuestion convention". Observable result: `requirements.md` exists; contract-trigger logged; human approval logged.
 
 8. **User Verification 2: Test Suites + Contract + Design → Hard Confirm (bundled).**
 
    Before writing `test-suites.md`: verify every AC from `requirements.md` is assigned to at least one journey. Do not present until all ACs are covered.
 
-   **`test-suites.md`** shape:
-   ```markdown
-   # Test Suites: [Feature Name]
-
-   ## Journey: [Name]
-
-   **Goal:** [What problem/task the user is trying to solve]
-   **Covers:** AC1, AC2
-
-   **Paths:**
-   | # | Path | Actions |
-   |---|------|---------|
-   | 1 | Happy | action → action → success |
-   | 2 | Alternate | action → action → success (different route) |
-   | 3 | Error | action → system rejects → user sees feedback |
-
-   **Expected outcome:** [What success looks like for happy paths. What feedback the user sees for error paths.]
-   ```
-
-   One journey per distinct user goal. One path per distinct way to achieve that goal. Every AC must appear in at least one journey's **Covers** field.
+   Write **`test-suites.md`** using the template from [`../../knowledge/spec-templates.md`](../../knowledge/spec-templates.md) §"test-suites.md template". One journey per distinct user goal. One path per distinct way to achieve that goal. Every AC must appear in at least one journey's **Covers** field.
 
    **`contract.yaml`** (skip if User Verification 1 trigger = NO): valid OpenAPI 3.x.
 
-   **`design.md`** — derive from `contract.yaml` if it exists; otherwise from `requirements.md`:
-   ```markdown
-   # Design: [Feature Name]
-
-   ## Modules Affected
-   | Module | Change Type |
-   |--------|-------------|
-   | ...    | new / modify / read-only |
-
-   ## Technical Approach
-   [Patterns and structure per the constitution]
-
-   ## Data Model Changes
-   [If none, write "none"]
-
-   ## API / Interface Changes
-   [Reference contract.yaml if applicable, otherwise write "none"]
-
-   ## Cross-Module Contracts
-   [New or modified contracts. If none, write "none"]
-
-   ## Open Questions
-   [Unresolved items requiring human input. If none, write "none"]
-   ```
+   Write **`design.md`** — derive from `contract.yaml` if it exists; otherwise from `requirements.md` — using the template from [`../../knowledge/spec-templates.md`](../../knowledge/spec-templates.md) §"design.md template".
 
    **Diagonal cross-artifact coverage check.** Before presenting User Verification 2, render a 4-row coverage table:
 
@@ -197,7 +123,7 @@ Establish context for a task (module, change, acceptance criterion), then — fo
 
    When multiple rows fail, all decision blocks render in a single multi-question `AskUserQuestion` call. Approval blocked until every `✗` row resolved.
 
-   Present: coverage table + `test-suites.md` + `contract.yaml` (or skip-note) + `design.md` + decision. **Prompt voice.** Picker **question**: *"Approve the test suites + contract + design for `<feature-name>`?"*. Option **labels**:
+   Present: coverage table + `test-suites.md` + `contract.yaml` (or skip-note) + `design.md` + decision. Prompt voice per [conventions.md](../../knowledge/conventions.md) §"Prompt voice convention" — e.g., *"Approve the test suites + contract + design for `<feature-name>`?"*. Options:
 
    - `[a]` approve → final integration check
    - `[b]` approve with corrections → I edit and re-present
@@ -207,7 +133,7 @@ Establish context for a task (module, change, acceptance criterion), then — fo
 
 9. **User Verification 3: Final Integration → Hard Confirm.**
 
-   Present: integrity checks (every AC has a journey? design matches contract? Open Questions resolved or deferred?) + decision. **Prompt voice.** Picker **question**: *"Final approval — start implementation planning for `<feature-name>`?"*. Option **labels**:
+   Present: integrity checks (every AC has a journey? design matches contract? Open Questions resolved or deferred?) + decision. Prompt voice per [conventions.md](../../knowledge/conventions.md) §"Prompt voice convention" — e.g., *"Final approval — start implementation planning for `<feature-name>`?"*. Options:
 
    - `[a]` approve → I invoke `lsa:plan`
    - `[b]` reject → stop; name what to change and which prior step to return to
@@ -226,7 +152,7 @@ Establish context for a task (module, change, acceptance criterion), then — fo
 - **Three bundled User Verifications (Extended only)**: 1 (Requirements + Contract Trigger), 2 (Test Suites + Contract + Design), 3 (Final Integration). Never skip a Verification.
 - **Only proceed on explicit human approval.** Implicit approvals are not accepted.
 - **Never write outside `${specs_root}/features/<feature-name>/`** (Extended). Module specs are written by `lsa:reconcile`; the constitution is edited only by `lsa:revise-constitution`.
-- Outputs follow [`core/output`](../../../core/skills/output/SKILL.md) — citation by link, never restated.
+- Outputs follow [conventions.md](../../knowledge/conventions.md) §"Output discipline".
 
 ## Amending an approved spec
 

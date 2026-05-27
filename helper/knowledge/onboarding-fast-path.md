@@ -2,7 +2,7 @@
 
 # Onboarding fast-path — knowledge
 
-When the user asks an onboarding-flavored question (*install / start / what-is-X / how-do-I-run*), Helper consults this catalog **before** [`./knowledge-scope.md`](./knowledge-scope.md)'s Step 2 scope-order read. If a row matches, Helper responds directly from the cited README excerpt — no `Grep`, no `Glob`, no `context7`. Per [`vision/specs/features/2026-05-22-helper-onboarding-fast-path/requirements.md`](../../vision/specs/features/2026-05-22-helper-onboarding-fast-path/requirements.md) F1 / F2 / F4.
+When the user asks an onboarding-flavored question (*install / start / what-is-X / how-do-I-run*), Helper consults this catalog **before** [`./knowledge-scope.md`](./knowledge-scope.md)'s Step 2 scope-order read. If a row matches, Helper responds directly from the cited README excerpt — no `Grep`, no `Glob`, no `context7`. Per [`vision/specs/archive/2026-05-22-helper-onboarding-fast-path/requirements.md`](../../vision/specs/archive/2026-05-22-helper-onboarding-fast-path/requirements.md) F1 / F2 / F4.
 
 ## Catalog — onboarding trigger → README excerpt
 

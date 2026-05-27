@@ -10,11 +10,11 @@ description: Apply before any non-trivial task — when the work touches behavio
 
 Classify a task into Quick / Standard / Extended by weighing boundary signals, then stop and wait for the human to confirm the flow before any downstream LSA ceremony fires. Per `vision/VISION.md` §4 (`vision/VISION.md:122`): *"the orchestrator picks the flow by chain-of-thought, then states its reasoning and the human confirms or overrides."*
 
-The three flows replace the prior `T1` / `T2` / `T3` tier labels (renamed in `core` v0.5.2). The names describe the *process shape*, not a hierarchy:
+Three flows, named by *process shape*:
 
-- **Quick** (was `T1`) — single pass, no LSA ceremony.
-- **Standard** (was `T2`) — light discovery + agent TDD + verify.
-- **Extended** (was `T3`) — full spec-driven flow: discover → plan → implement → verify.
+- **Quick** — single pass, no LSA ceremony.
+- **Standard** — light discovery + agent TDD + verify.
+- **Extended** — full spec-driven flow: discover → plan → implement → verify.
 
 ## Goal
 
@@ -41,7 +41,7 @@ Produce a flow label (`Quick`, `Standard`, or `Extended`) plus a 2–4-sentence 
    - the proposed flow label (Quick / Standard / Extended)
    - the 5-signal checklist from Step 1 (yes/no per signal)
    - the rationale paragraph from Step 3
-   - decision. **Prompt voice (per [`../output/SKILL.md`](../output/SKILL.md) Rule 5).** Picker **question**: *"Run `<task-subject>` as a Quick / Standard / Extended flow?"* — not *"Confirm tier?"* (`tier` is the prior label; the user sees the new flow name). Option **labels**:
+   - decision. **Prompt voice (per [`../output/SKILL.md`](../output/SKILL.md) Rule 5).** Picker **question**: *"Run `<task-subject>` as a Quick / Standard / Extended flow?"*. Option **labels**:
 
      - `[a]` confirm `<proposed>` flow → hand off to `lsa:discover` (Standard / Extended) or direct response (Quick)
      - `[b]` override to a different flow — I re-route accordingly

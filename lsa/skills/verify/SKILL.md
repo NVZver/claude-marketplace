@@ -100,14 +100,14 @@ Confirm that the implementation on the current feature branch matches the approv
    - **FAIL:** Preamble *"Two code changes in this branch have no matching epic in tasks.md — merging now would ship code that no requirement covers, breaking the trace chain."* (adapt the count + cause to the actual failure). FAIL verdict + 1-sentence headline naming the failed groups + Issues table (BLOCKER rows: Item / Required action) + decision. **Prompt:** *"Verdict: FAIL — block merge? — Yes (fix and re-verify) / Reduce scope (re-run `lsa:discover`) / Escalate (human review)"*. Metadata + full checklist below the fold.
    - **PASS WITH WARNINGS:** Preamble *"All blockers cleared but `<N>` non-blocking issues remain — merging now ships the feature with the warnings logged in the archive; ignoring them means the next contributor inherits the same issues."* PASS WITH WARNINGS verdict + 1-sentence headline + Issues table (WARNING rows: Item / Reason) + decision. **Prompt:** *"Verdict: PASS WITH WARNINGS — accept the warnings? — Yes (warning logged in archive, proceed to PR) / Fix first (re-verify) / Hold (stop)"*. Metadata + full checklist below the fold.
 
-   Format per [`core/output`](../../../core/skills/output/SKILL.md); verdict labels (`PASS` / `FAIL` / `PASS WITH WARNINGS`) cite [`core/knowledge/output-vocabulary.md`](../../../core/knowledge/output-vocabulary.md). `AskUserQuestion` for the decision in Claude Code — the picker prompt names the verdict in the subject (per the three variants above), not a generic *"Approve?"*. Observable result: report printed in the variant matching the verdict; picker prompt names the verdict.
+   Verdict labels (`PASS` / `FAIL` / `PASS WITH WARNINGS`) cite [`core/knowledge/output-vocabulary.md`](../../../core/knowledge/output-vocabulary.md). `AskUserQuestion` per [conventions.md](../../knowledge/conventions.md) §"AskUserQuestion convention" — the picker prompt names the verdict in the subject (per the three variants above), not a generic *"Approve?"*. Observable result: report printed in the variant matching the verdict; picker prompt names the verdict.
 
-5. **Gate.** Decision is part of the report (Step 4) — the report's decision block IS the gate. In Claude Code, use `AskUserQuestion` with the verdict-named prompt from Step 4 (the prompt always starts *"Verdict: <PASS|FAIL|PASS WITH WARNINGS> — …"*). Branch on the verdict:
+   **Post-decision branching:**
    - **FAIL:** no `metrics.md` write; no sync handoff regardless of the decision (only re-verify / scope-reduce / escalate are valid).
    - **PASS WITH WARNINGS:** sync handoff only on `[a] accept and sync`; warning logged in archive.
-   - **PASS:** sync handoff on `[a] proceed`; proceed to Step 6.
+   - **PASS:** sync handoff on `[a] proceed`; proceed to Step 5.
 
-6. **On clean PASS — write `metrics.md`.** Only on clean PASS (not FAIL, not PASS WITH WARNINGS), and only when this is an Extended feature flow (was `T3`; an active feature spec exists). Write `${specs_root}/archive/<feature-name>/metrics.md` with:
+5. **On clean PASS — write `metrics.md`.** Only on clean PASS (not FAIL, not PASS WITH WARNINGS), and only when this is an Extended feature flow (an active feature spec exists). Write `${specs_root}/archive/<feature-name>/metrics.md` with:
 
    ```markdown
    # Metrics — <feature-name>
@@ -135,15 +135,15 @@ Confirm that the implementation on the current feature branch matches the approv
 
 ## Output
 
-A verification report (PASS / FAIL / PASS WITH WARNINGS) with a per-item checklist and a scope diff. On clean PASS in an Extended flow (was `T3`), a `metrics.md` file at `${specs_root}/archive/<feature-name>/metrics.md`.
+A verification report (PASS / FAIL / PASS WITH WARNINGS) with a per-item checklist and a scope diff. On clean PASS in an Extended flow, a `metrics.md` file at `${specs_root}/archive/<feature-name>/metrics.md`.
 
 ## Constraints
 
 - **FAIL on any untraced change.** The orphan-diff predicate above defines "traced"; the mechanical-hunk filter is the only exception.
 - **PASS WITH WARNINGS** is allowed only with explicit warning categories in the report — never as a hand-wave.
 - **No `metrics.md` write on FAIL or PASS WITH WARNINGS.** Metrics fire only on clean PASS.
-- **No `metrics.md` for Standard or non-feature flows.** Standard (was `T2`) has no feature spec and no sync step; Quick (was `T1`) has no LSA ceremony.
-- Outputs follow [`core/output`](../../../core/skills/output/SKILL.md) — citation by link, never restated.
+- **No `metrics.md` for Standard or non-feature flows.** Standard has no feature spec and no sync step; Quick has no LSA ceremony.
+- Outputs follow [conventions.md](../../knowledge/conventions.md) §"Output discipline".
 
 ---
 

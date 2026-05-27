@@ -2,6 +2,16 @@
 
 All notable changes to the `management` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.2.2] – 2026-05-27
+
+Prompt audit remediation — knowledge deduplication and boundary fix.
+
+### Changed
+
+- **`agents/project-manager.md`** — Steps 4 and 9 now reference `knowledge/sequencing-heuristics.md` and `knowledge/epic-decomposition.md` by path instead of restating their rules inline. Removed duplicate "Inherits core/ground-rules and core/output" from frontmatter description (kept in Constraints). Removed "No unexplained jargon" constraint (covered by core/output).
+- **`skills/start-feature/SKILL.md`** — replaced inline roadmap-write logic (Step 3a-e) with clean handoff to `management:roadmap`, making project-manager the single owner of roadmap writes.
+- **`skills/roadmap/SKILL.md`** — removed no-op Step 1 ("Accept invocation"); renumbered remaining steps.
+
 ## [0.2.1] – 2026-05-27
 
 ### Fixed
