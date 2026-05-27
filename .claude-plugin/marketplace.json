@@ -22,6 +22,11 @@
       "name": "management",
       "source": "./management",
       "description": "Product and project management discipline: shapes vague ideas into structured pitches before the build cycle. Ships a product-manager agent with dynamic domain-role adaptation and a start-feature skill that hands off to lsa:new on approval. Depends on `core` (ground-rules, output)."
+    },
+    {
+      "name": "prompt-engineer",
+      "source": "./prompt-engineer",
+      "description": "Prompt engineering discipline: one agent enforcing quality rules (ground rules, SOC, KISS/DRY, AI sweep, context budget) plus three commands (prompt-review, prompt-optimize, prompt-create)."
     }
   ]
 }
