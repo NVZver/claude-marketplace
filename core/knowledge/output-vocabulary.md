@@ -21,4 +21,4 @@ Cited by [`core/output`](../skills/output/SKILL.md). For when to render a verdic
 | `APPLIED` | Change made successfully | ✅ |
 | `REJECTED` | Human said no; state unchanged | (none) |
 
-Each component cites this surface by section name (`§"Verdicts"`) rather than restating the table — per `lsa/knowledge/conventions.md` pattern: *"cite by section name, not by line number"*.
+Each component cites this surface by section name (`§"Verdicts"`) rather than restating the table — per [`lsa/knowledge/conventions.md`](../../lsa/knowledge/conventions.md) pattern: *"cite by section name, not by line number"*.

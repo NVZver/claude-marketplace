@@ -42,7 +42,7 @@ Feature branch `feature/<slug>` exists. `lsa:discover` is executing with the con
 
 - **Orchestrator only.** Do not duplicate discovery or flow-selection logic — hand off to the owning skills.
 - **Respect existing branch state.** If already on a feature branch, ask before switching.
-- Outputs follow [`core/output`](../../../core/skills/output/SKILL.md) — citation by link, never restated.
+- Outputs follow [conventions.md](../../knowledge/conventions.md) §"Output discipline".
 
 ---
 

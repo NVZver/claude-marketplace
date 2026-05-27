@@ -2,7 +2,26 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
-## [Unreleased]
+## [0.12.0] — 2026-05-27
+
+Prompt audit remediation — DRY cleanup, template extraction, cross-reference fixes, and wording polish.
+
+### Added
+
+- **`knowledge/spec-templates.md`** — markdown templates for requirements.md, test-suites.md, and design.md spec artifacts. Extracted verbatim from discover SKILL.md (~74 lines).
+
+### Fixed
+
+- **`skills/init/SKILL.md`** — removed dead reference to `/lsa:specify` (merged into `lsa:discover` in v0.8.0).
+
+### Changed
+
+- **`knowledge/conventions.md`** — expanded with 3 new conventions: output discipline (cite core/output, never restate), AskUserQuestion convention, prompt voice convention. Absorbs boilerplate that was repeated across 9 skill files.
+- **`skills/discover/SKILL.md`** — 237→163 lines. Three inline spec-artifact templates extracted to `knowledge/spec-templates.md`; replaced with section-targeted references. Boilerplate replaced with convention references.
+- **`skills/verify/SKILL.md`** — merged overlapping Steps 4+5 into one step; removed `(was Tn)` rename-history tags.
+- **`skills/plan/SKILL.md`** — removed "Maximum 5 epics" duplication from Steps (kept in Constraints); replaced per-epic DoD checkboxes with convention reference.
+- **`agents/developer.md`** — compressed motivational paragraph to one actionable sentence.
+- **All 9 skills** — replaced repeated "Outputs follow core/output" constraint, "AskUserQuestion in Claude Code" boilerplate, and "Prompt voice" coaching blocks with convention references.
 
 ## [0.11.0] — 2026-05-26
 

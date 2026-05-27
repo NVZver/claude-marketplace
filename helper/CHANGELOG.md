@@ -2,6 +2,25 @@
 
 All notable changes to the `helper` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.3.2] – 2026-05-27
+
+Prompt audit remediation — cross-reference fixes and knowledge deduplication.
+
+### Fixed
+
+- **`agents/helper.md`**, **`knowledge/friction-signals.md`**, **`knowledge/knowledge-scope.md`** — removed 4 dead links to deleted `vision/specs/features/2026-05-21-helper-agent/` spec (replaced with descriptive text).
+- **`knowledge/onboarding-fast-path.md`** — fixed spec path `features/` → `archive/` for `2026-05-22-helper-onboarding-fast-path`.
+- **`knowledge/output-discipline.md`** — fixed spec path `features/` → `archive/` for `2026-05-22-helper-assistant-refactor`.
+- **`README.md`**, **`VERIFICATION.md`** — fixed dead spec links (same pattern).
+
+### Changed
+
+- **`agents/helper.md`** — removed restated knowledge from Steps (cooldown logic, onboarding matching, genuine-fork test) and Constraints (5 duplicated rules → 1 convention reference). Steps now cite knowledge files by path. Removed duplicate "Inherits core/output" from frontmatter description.
+
+### Added
+
+- **`agents/helper.md`** — Example Output section (previously missing, flagged HIGH by audit rule A10).
+
 ## [0.3.1] – 2026-05-24
 
 ### Changed

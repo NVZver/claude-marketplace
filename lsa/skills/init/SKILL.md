@@ -48,13 +48,13 @@ Scaffold the LSA spec tree on a project so the rest of the LSA skills (`discover
    1. Scan the artifact paths configured for each module in `.lsa.yaml: modules.*.artifact_paths` (fall back to scanning `/src/` if `.lsa.yaml` is absent — the v0.1.1 behavior).
    2. For each logical module found, create `${specs_root}/modules/<module-name>/spec.md`.
    3. Infer functional requirements from the artifacts. Mark every inferred item `[assumption: inferred from <source>; verify]`.
-   4. **Stop.** Verdict carries a preamble per [`../../../core/skills/output/SKILL.md`](../../../core/skills/output/SKILL.md) Rule 6. Present: *"I scanned this repo and drafted `<N>` module specs from /src/ so future LSA steps can attach changes to a specific module — without these specs the next /lsa:discover has nothing to pick."* PROPOSED verdict (`<N>` modules inferred) + per-module table (Module / Source path-glob with file count / Confidence with reason) + reminder that each generated spec is tagged `[assumption: inferred from <source>; verify]` + decision. **Prompt voice (per [`../../../core/skills/output/SKILL.md`](../../../core/skills/output/SKILL.md) Rule 5).** Picker **question** names the project subject — *"Write `<N>` inferred module specs for this project?"* — not *"Approve brownfield init?"* (`brownfield` is project jargon). Option **labels**:
+   4. **Stop.** Verdict carries a preamble per [`../../../core/skills/output/SKILL.md`](../../../core/skills/output/SKILL.md) Rule 6. Present: *"I scanned this repo and drafted `<N>` module specs from /src/ so future LSA steps can attach changes to a specific module — without these specs the next /lsa:discover has nothing to pick."* PROPOSED verdict (`<N>` modules inferred) + per-module table (Module / Source path-glob with file count / Confidence with reason) + reminder that each generated spec is tagged `[assumption: inferred from <source>; verify]` + decision. Prompt voice per [conventions.md](../../knowledge/conventions.md) §"Prompt voice convention" — e.g., *"Write `<N>` inferred module specs for this project?"* (not *"Approve brownfield init?"* — `brownfield` is project jargon). Options:
 
    - `[a]` write all `<N>` specs → I create them under `${specs_root}/modules/` and you proceed to `/lsa:discover`
    - `[b]` write only some — I'll ask which → I re-prompt per module
    - `[c]` reject all → no files written; reconsider module boundaries
 
-   Format per [`../../../core/skills/output/SKILL.md`](../../../core/skills/output/SKILL.md); `AskUserQuestion` in Claude Code (per `core/CLAUDE.md` operational checkpoint #1).
+   `AskUserQuestion` per [conventions.md](../../knowledge/conventions.md) §"AskUserQuestion convention".
    5. Wait for explicit human confirmation before writing any spec files.
 
    Observable result: the brownfield spec tree quoted back inline per [`core/output`](../../../core/skills/output/SKILL.md) Rule 7 (add type tag) — compressed inspection table (one row per `${specs_root}/modules/<module-name>/spec.md` written) given multi-file batch size, with file:line pointers and the `[assumption: inferred from <source>; verify]` tag visible per row; the human confirms the skeleton.
@@ -100,7 +100,7 @@ Scaffold the LSA spec tree on a project so the rest of the LSA skills (`discover
 
    Observable result: the three written files quoted back inline per [`core/output`](../../../core/skills/output/SKILL.md) Rule 7 (add type tag) — compressed inspection table (one row per file: `${specs_root}/main.spec.md` / `${specs_root}/roadmap.md` / `${specs_root}/research-backlog.md`) given multi-file batch size, with file:line pointers to the rendered templates above.
 
-4. **Report to human.** List all files created. State: "Run `/lsa:discover` (Standard / Extended entry) or `/lsa:specify` (Extended direct) to start the first feature."
+4. **Report to human.** List all files created. State: "Run `/lsa:discover` to start the first feature."
 
 ## Output
 
@@ -110,7 +110,7 @@ A populated spec tree at `${specs_root}` (greenfield) or skeleton module specs (
 
 - **Never overwrite existing specs.** If `${specs_root}/` already exists with non-empty content, abort with a message naming the conflicting paths and ask the human to relocate or rename before re-running.
 - **Never invent module structure** in brownfield mode that is not derivable from `artifact_paths` (or `/src/` as the documented fallback). Every inferred requirement is tagged `[assumption: inferred from <source>; verify]` per [`../../../core/skills/ground-rules/SKILL.md`](../../../core/skills/ground-rules/SKILL.md) Rule 1.
-- Outputs follow [`core/output`](../../../core/skills/output/SKILL.md) — citation by link, never restated.
+- Outputs follow [conventions.md](../../knowledge/conventions.md) §"Output discipline".
 
 ---
 

@@ -19,22 +19,23 @@ Constraints:
 
 ## Steps
 
-1. Read [`../agents/prompt-engineer.md`](../agents/prompt-engineer.md) → extract Ground Rules 1-10, Knowledge Quality Checks 1-6, KISS/DRY 1-5, AI Sweep 1-5, Context Budget 1-4, and Severity Levels
+1. Read knowledge files: [`../knowledge/actor-ground-rules.md`](../knowledge/actor-ground-rules.md), [`../knowledge/quality-checks.md`](../knowledge/quality-checks.md), [`../knowledge/separation-of-concerns.md`](../knowledge/separation-of-concerns.md) → checklist loaded
 2. Resolve target:
    - File path → single file
    - Directory → find all `.md` files with prompt frontmatter (has `name:` or `description:` in YAML)
    - No target → ask: "(A) all agents, (B) all commands, (C) specific path"
 3. For each file, check:
-   a. Structure (rules 1-4): Goal, Input, Steps, Output, Constraints sections exist → missing = HIGH
-   b. Role (rule 2): agents have Role, commands do not → violation = MEDIUM
-   c. Steps (rule 5): each step has observable result → vague steps = MEDIUM
-   d. Example Output (rule 10): section exists with synthetic example → missing = HIGH
-   e. Output spec (rule 4): format and length defined → missing = MEDIUM
-   f. Wording (rule 9): check for adverbs, hedging, filler, passive voice → each = LOW
-   g. Assumptions (rule 7): check for unverified claims ("probably", "likely", "usually") → each = MEDIUM
-   h. KISS/DRY (rules 1-5): duplicate content across sibling files, format definitions hardcoded where a knowledge file defines them, files with multiple concerns, steps restating LLM defaults → each = MEDIUM
-   i. AI sweep (rules 1-5): rules formalizing natural LLM behavior, custom terminology replacing established frameworks, hardcoded thresholds without grounding → each = MEDIUM; example bloat, missing paradigm provenance → each = LOW
-   j. Context budget (rules 1-4): Goal restating frontmatter description, mergeable constraints, examples over-constraining output, low-density padding → restating/mergeable = MEDIUM, padding = LOW
+   a. Separation of concerns per knowledge/separation-of-concerns.md → boundary violations = HIGH
+   b. Actor ground rules 1-4 per knowledge/actor-ground-rules.md: Goal, Input, Steps, Output, Constraints sections exist → missing = HIGH
+   c. Role (rule 2): agents have Role, commands do not → violation = MEDIUM
+   d. Steps (rule 5): each step has observable result → vague steps = MEDIUM
+   e. Example Output (rule 10): section exists with synthetic example → missing = HIGH
+   f. Output spec (rule 4): format and length defined → missing = MEDIUM
+   g. Wording (rule 9): check for adverbs, hedging, filler, passive voice → each = LOW
+   h. Assumptions (rule 7): check for unverified claims ("probably", "likely", "usually") → each = MEDIUM
+   i. Apply KISS/DRY checks per knowledge/quality-checks.md → each = MEDIUM
+   j. Apply AI Over-Engineering checks per knowledge/quality-checks.md → formalized common sense, reinvented paradigms, arbitrary thresholds = MEDIUM; example bloat, missing paradigm provenance = LOW
+   k. Apply Context Budget checks per knowledge/quality-checks.md → restating/mergeable = MEDIUM, padding = LOW
 4. Compile all findings → output table
 
 ## Output

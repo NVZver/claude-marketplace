@@ -2,7 +2,7 @@
 
 # Knowledge scope — knowledge
 
-What the Helper agent is allowed to read when answering, and in what order. Per [`vision/specs/features/2026-05-21-helper-agent/requirements.md`](../../vision/specs/features/2026-05-21-helper-agent/requirements.md) F4.
+What the Helper agent is allowed to read when answering, and in what order. Per the original helper-agent spec (shipped v0.2.0) F4.
 
 ## Scope order
 

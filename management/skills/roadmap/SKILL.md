@@ -20,11 +20,9 @@ Give the user a single entry point to manage the project roadmap — what to bui
 
 ## Steps
 
-1. **Accept invocation.** No arguments to parse. Observable result: skill activated.
+1. **Dispatch project-manager agent.** Invoke the `project-manager` agent via the `Agent` tool with no additional context — the agent reads ambient state itself per [`../../agents/project-manager.md`](../../agents/project-manager.md) Steps 1-3. Wait for the agent to complete. Observable result: agent running; it handles recommendation, tidy, decomposition, and LSA handoff internally.
 
-2. **Dispatch project-manager agent.** Invoke the `project-manager` agent via the `Agent` tool with no additional context — the agent reads ambient state itself per [`../../agents/project-manager.md`](../../agents/project-manager.md) Steps 1-3. Wait for the agent to complete. Observable result: agent running; it handles recommendation, tidy, decomposition, and LSA handoff internally.
-
-3. **Handle completion.** The agent manages its own LSA handoff (Step 11-12 of `project-manager`). On agent return, exit cleanly. Observable result: clean exit, no post-agent work.
+2. **Handle completion.** The agent manages its own LSA handoff (Step 11-12 of `project-manager`). On agent return, exit cleanly. Observable result: clean exit, no post-agent work.
 
 ## Output
 

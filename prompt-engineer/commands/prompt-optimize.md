@@ -20,16 +20,17 @@ Constraints:
 
 ## Steps
 
-1. Run prompt-review logic on target → issues table
-2. If no issues found → report "No issues found." and stop
-3. Present issues table to user → confirm scope of fixes
-4. For each file with issues, apply fixes by severity:
-   a. HIGH: add missing sections using Prompt Format Template from [`../agents/prompt-engineer.md`](../agents/prompt-engineer.md) → file contains all required sections
-   b. MEDIUM: rewrite vague steps with arrow-notation results, add output format spec, remove assumption language → each step has observable result. Consolidate duplicate content into one source with cross-references. Replace hardcoded formats with references to the knowledge file that defines them. Remove rules that formalize natural LLM behavior. Replace arbitrary thresholds with state-based detection. Merge constraints that can combine without losing meaning. Remove Goal text that restates the frontmatter description.
-   c. LOW: delete adverbs, replace hedging with direct statements, convert passive to active voice, remove filler phrases → no wording violations remain. Add paradigm citations where adapted frameworks lack provenance. Trim example bloat to one per pattern. Remove low-density padding.
-5. Re-run review on modified files → verify fixes resolved issues
-6. If new issues found → repeat steps 4-5 until no new issues remain or the same issue recurs
-7. Compile changes → output table
+1. Read knowledge files: [`../knowledge/actor-ground-rules.md`](../knowledge/actor-ground-rules.md), [`../knowledge/quality-checks.md`](../knowledge/quality-checks.md), [`../knowledge/separation-of-concerns.md`](../knowledge/separation-of-concerns.md) → checklist loaded
+2. Run prompt-review logic on target → issues table
+3. If no issues found → report "No issues found." and stop
+4. Present issues table to user → confirm scope of fixes
+5. For each file with issues, apply fixes by severity:
+   a. HIGH: add missing sections using actor format template from [knowledge/actor-ground-rules.md](../knowledge/actor-ground-rules.md) → file contains all required sections
+   b. MEDIUM: apply fixes per [knowledge/quality-checks.md](../knowledge/quality-checks.md) and [knowledge/actor-ground-rules.md](../knowledge/actor-ground-rules.md) — rewrite vague steps with arrow-notation results, consolidate duplicates, replace hardcoded formats with knowledge references, merge constraints, remove restated descriptions
+   c. LOW: delete adverbs, replace hedging with direct statements, convert passive to active voice, remove filler phrases, add paradigm citations, trim example bloat, remove low-density padding
+6. Re-run review on modified files → verify fixes resolved issues
+7. If new issues found → repeat steps 5-6 until no new issues remain or the same issue recurs
+8. Compile changes → output table
 
 ## Output
 

@@ -42,6 +42,10 @@ Prioritized list of upcoming work, populated from `vision/VISION.md` §6 *"Adjus
 | `management` plugin — `product-manager` agent + `start-feature` skill | **Should** | shipped — management v0.1.0 | User-proposed 2026-05-26. New standalone plugin (`management`). The system has strong *build* discipline but no *what to build* discipline. A `product-manager` agent operates upstream of `lsa:discover`: takes a vague problem/opportunity, shapes it into a buildable pitch (problem, appetite, solution sketch, rabbit holes, no-gos), and hands off to discovery. Detail: §"2026-05-26 backlog detail" #1. |
 | `management` plugin — `project-manager` agent + `roadmap` skill | **Should** | shipped — management v0.2.0 | User-proposed 2026-05-26. Same plugin. Roadmap steward: recommends next item (dependency/risk/value reasoning), decomposes pitches into epics, tidies roadmap hygiene, hands each epic to LSA. Renamed `task-status` → `roadmap` during design. Detail: §"2026-05-26 backlog detail" #2. |
 | Package prompt-engineer as plugin | Should | backlog | Pitch: [prompt-engineer-plugin](vision/specs/pitches/prompt-engineer-plugin.md) |
+| Prompt audit remediation — Epic 1: Fix broken cross-references and rewrite claude-dev | **Must** | not started | P0. 10 broken cross-refs across core/helper/lsa + full rewrite of `.claude/agents/claude-dev.md` via actor-template. Closes 17 HIGH + 4 MEDIUM. Detail: §"2026-05-27 backlog detail" #1. |
+| Prompt audit remediation — Epic 2: Extract knowledge from actors (systemic SoC fix) | **Should** | not started | P1. Separation of concerns: extract inlined knowledge from prompt-engineer, helper, and management agents into knowledge/ files. Closes 6 HIGH + 6 MEDIUM. Detail: §"2026-05-27 backlog detail" #2. |
+| Prompt audit remediation — Epic 3: DRY + context budget cleanup | Should | not started | P2. Absorb repeated boilerplate into conventions, split oversized skill phases, trim examples, resolve skill overlap. Closes 2 HIGH + 9 MEDIUM + 3 LOW. Detail: §"2026-05-27 backlog detail" #3. |
+| Prompt audit remediation — Epic 4: Polish (LOW severity) | Could | not started | P3. Remove formalized common sense, fix wording issues, deduplicate rename-history, remove low-density padding. Closes ~30 LOW. Detail: §"2026-05-27 backlog detail" #4. |
 
 ## Recently merged
 
@@ -204,3 +208,50 @@ Prioritized list of upcoming work, populated from `vision/VISION.md` §6 *"Adjus
   - A **sequencing recommendation**: given N backlog items, recommend an order based on dependencies, risk, and value — grounded in the roadmap and codebase state, not generic prioritization frameworks.
   - Integration with existing `lsa:next` — the `project-manager`'s sequencing recommendation informs which item `lsa:next` proposes.
 - **Future growth.** The `management` plugin is the natural home for a `business-analyst` agent if one is added later — same concern family (understanding the problem domain), same dependency pattern (reads `lsa` artifacts, depends on `core`).
+
+## 2026-05-27 backlog detail
+
+`READY` — four backlog rows added 2026-05-27 from a prompt audit (93 issues across 35 files). The audit report is the specification; each epic groups findings by severity and fix type. Epics are ordered by dependency: Epic 1 fixes broken references that block accurate reading of later files; Epic 2 enforces separation of concerns structurally; Epic 3 reduces duplication and context budget; Epic 4 polishes wording.
+
+### 1. Prompt audit remediation — Epic 1: Fix broken cross-references and rewrite claude-dev
+
+- **Problem.** 10 cross-references across core, helper, and lsa point to paths, skill names, or rule counts that no longer exist — readers (human and agent) following these links hit dead ends. Separately, `.claude/agents/claude-dev.md` is missing all 5 required actor sections (Goal, Input, Steps, Output, Constraints) and inlines knowledge that already lives in `.claude/rules/plugin-development.md` and `CONTRIBUTING.md`.
+- **Priority.** P0 (**Must**). Broken references degrade every downstream prompt that loads these files. The claude-dev rewrite is bundled because it is the single worst-scoring file in the audit.
+- **Subtasks.**
+  1. Fix spec paths `features/` → `archive/` in cross-references that cite archived feature specs (stale since the archive move).
+  2. Fix skill name references: `lsa-reconcile` → `reconcile`, `lsa:specify` → `lsa:discover` (stale since lsa v0.8.0 rename).
+  3. Fix stale rule count "five" → "seven" in `core/CLAUDE.md` or equivalent (core gained Rules 6 + 7 in v0.7.0 / v0.8.0).
+  4. Create or fix missing memory file `feedback_askuserquestion_overuse.md` (referenced but absent).
+  5. Rewrite `.claude/agents/claude-dev.md` from scratch using `core:actor-template`: add Goal, Input, Steps, Output, Constraints sections; remove inlined knowledge that duplicates `.claude/rules/plugin-development.md` and `CONTRIBUTING.md`; reference those files by path instead.
+- **Closes.** 17 HIGH + 4 MEDIUM severity findings.
+
+### 2. Prompt audit remediation — Epic 2: Extract knowledge from actors (systemic SoC fix)
+
+- **Problem.** Three agents inline large blocks of rules and guidance that belong in knowledge files — violating the Knowledge/Actor separation principle (actors describe *how to act*; knowledge files describe *what is true*). This inflates context budget on every invocation and creates drift risk when the same rule is stated in two places.
+- **Priority.** P1 (**Should**). Structural fix that prevents the problem from recurring; enables Epic 3's DRY work.
+- **Subtasks.**
+  1. Extract prompt-engineer agent rules (~100 lines of inline guidance) into `prompt-engineer/knowledge/` files; update the agent and its 3 commands (`prompt-review`, `prompt-optimize`, `prompt-create`) to reference the knowledge files by path.
+  2. Remove restated knowledge from helper agent (`helper/agents/helper.md`); replace with path references to sibling knowledge files already in `helper/knowledge/`.
+  3. Remove inline rule summaries from `management/agents/project-manager.md` Steps 4 and 9 (sequencing heuristics and epic decomposition rules); replace with path references to `management/knowledge/sequencing-heuristics.md` and `management/knowledge/epic-decomposition.md`.
+- **Closes.** 6 HIGH + 6 MEDIUM severity findings.
+
+### 3. Prompt audit remediation — Epic 3: DRY + context budget cleanup
+
+- **Problem.** Several prompt files repeat the same boilerplate patterns (trace-file headers, constraint inheritance blocks, output format instructions), oversized phases bloat context windows, and two management skills overlap in roadmap-write authority.
+- **Priority.** P2 (Should). Reduces total token load across the plugin set; each subtask is independently shippable.
+- **Subtasks.**
+  1. Expand `lsa/knowledge/conventions.md` to absorb 3 repeated boilerplate patterns (trace-file directive, constraint inheritance, output-format block); update all 9 LSA skills to cite the conventions file instead of restating.
+  2. Split `lsa/skills/discover/SKILL.md` Phase 2 (currently inlines template content) into knowledge files or a separate skill for the templates.
+  3. Trim `core/skills/output/SKILL.md` Rule 7 to 1 worked example; extract remaining examples to `core/resources/` or `core/knowledge/`.
+  4. Resolve `management/skills/start-feature/SKILL.md` and `management/agents/project-manager.md` overlap on roadmap-write authority — one file should own the write, the other should delegate.
+- **Closes.** 2 HIGH + 9 MEDIUM + 3 LOW severity findings.
+
+### 4. Prompt audit remediation — Epic 4: Polish (LOW severity)
+
+- **Problem.** ~30 low-severity wording and style issues across all plugins: formalized common sense rules (rules that restate what any competent agent would do), adverbs/hedging/passive voice, duplicated rename-history mentions, and low-density padding paragraphs.
+- **Priority.** P3 (Could). Individually minor; collectively they add ~500 tokens of noise to the prompt set. Deferrable without harm.
+- **Subtasks.**
+  1. Remove formalized common sense rules: `core/output` Rules 1 and 3 (if they merely restate obvious behavior), `lsa/verify` checklist items that restate test-runner behavior, `management/roadmap` no-op step (if it produces no observable result).
+  2. Fix wording issues: remove adverbs, hedging phrases, passive voice, and padding across all plugins (batch edit).
+  3. Deduplicate rename-history mentions: `core/flow-selector` tier-to-flow rename is repeated 4 times across the prompt set; consolidate to 1 authoritative mention + path references.
+  4. Remove low-density padding: `core/output` inheritance section preamble, `core/ground-rules` opening paragraph, and similar blocks where the token cost exceeds the information content.

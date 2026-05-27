@@ -51,7 +51,7 @@ Execute the approved `tasks.md` (or Standard-flow discovery context) epic-by-epi
    - **`blocked`**: The agent could not complete — spec/plan divergence, stuck implementation, or unresolvable issue. Present the agent's blocked reason and proposed adjustment to the human via `AskUserQuestion`. Options: `[a]` accept adjustment → re-dispatch with the adjustment; `[b]` override → human provides guidance, re-dispatch; `[c]` stop → pause implementation.
    - **`complete`**: Proceed to human gate. Review the agent's returned design brief for reasonableness before presenting — if the brief is thin relative to the epic's complexity, re-dispatch with feedback.
 
-   **Human gate.** Present via `AskUserQuestion` per `core/CLAUDE.md` operational checkpoint #1. Include from the agent's summary: design brief (so the human audits the contract, not just the code), test counts by type, files changed, trade-offs made, pre-existing failures if any.
+   **Human gate.** Present via `AskUserQuestion` per [conventions.md](../../knowledge/conventions.md) §"AskUserQuestion convention". Include from the agent's summary: design brief (so the human audits the contract, not just the code), test counts by type, files changed, trade-offs made, pre-existing failures if any.
 
    **Prompt:** *"Epic [N]: [Name] — [test count] tests passing ([unit/integration/e2e breakdown]). Proceed to Epic [N+1]?"*
 
@@ -73,7 +73,7 @@ All epics from `tasks.md` (or the Standard-flow single epic) implemented with pa
 - **Test first, always.** The developer agent enforces RED→GREEN→REFACTOR. This skill verifies by checking the agent's self-review summary — if the summary indicates tests were not written first, reject and re-dispatch.
 - **One epic at a time.** Complete and get human approval before starting the next.
 - **Follow the plan.** Implement what `tasks.md` says. When the developer agent returns `blocked`, escalate to the human — do not resolve silently.
-- Outputs follow [`core/output`](../../../core/skills/output/SKILL.md) — citation by link, never restated.
+- Outputs follow [conventions.md](../../knowledge/conventions.md) §"Output discipline".
 
 ---
 

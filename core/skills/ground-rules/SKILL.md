@@ -8,9 +8,7 @@ description: Apply on every substantive task — answering questions, drafting, 
 
 # Ground Rules
 
-These six rules make output trustworthy at the content layer. They apply together, on every substantive task, regardless of domain. They are the reason to trust the result.
-
-Format discipline (how an output is *shaped* — verdicts, decision blocks, markdown affordances) lives in a separate skill: [`core/output`](../output/SKILL.md). These two skills are peers; this one covers what an output says, the other covers how it's rendered.
+Content layer (what an output says). Format layer (how it's rendered) lives in [`core/output`](../output/SKILL.md). These two skills are peers.
 
 ## 0. Ownership over automation — the human owns the thinking
 
@@ -97,4 +95,4 @@ Applies to all outputs: agent responses, skill bodies, vision docs, READMEs, com
 
 Writing or editing an actor (Skill, slash command, workflow)? See [`actor-template`](../actor-template/SKILL.md).
 
-Producing a human-facing output (response, prompt, report, comment)? See [`core/output`](../output/SKILL.md) for the five format golden rules.
+Producing a human-facing output (response, prompt, report, comment)? See [`core/output`](../output/SKILL.md) for the format golden rules.

@@ -58,7 +58,7 @@ After a feature is merged, propose and apply constitution / standards changes th
 
    Observable result: one proposal block per change written to scratch.
 
-3. **Human review gate.** Verdict carries a preamble per [`../../../core/skills/output/SKILL.md`](../../../core/skills/output/SKILL.md) Rule 6. Present each proposed change individually (one per turn) with a preamble in the user's frame naming the constitution section about to change and the consequence of accepting / rejecting — e.g., *"Last feature surfaced a rule worth making permanent: I'm offering to add a 'no inline secrets' line to CLAUDE.md — accepting makes it enforced on every future change; rejecting means the next contributor can still paste a secret without a warning."* — then: PROPOSED verdict + change-N-of-M + file path + section name + type (add / modify / remove) + verbatim current content (or "none") + proposed content + one-line reason + source (feature name or "manual") + decision `[a] apply → file edited, committed to constitution branch` / `[b] modify → apply your correction, re-present` / `[c] reject → change not applied`. Format per [`core/output`](../../../core/skills/output/SKILL.md); `AskUserQuestion` for the decision. Do not write until approval. Observable result: per-change decision logged.
+3. **Human review gate.** Verdict carries a preamble per [`../../../core/skills/output/SKILL.md`](../../../core/skills/output/SKILL.md) Rule 6. Present each proposed change individually (one per turn) with a preamble in the user's frame naming the constitution section about to change and the consequence of accepting / rejecting — e.g., *"Last feature surfaced a rule worth making permanent: I'm offering to add a 'no inline secrets' line to CLAUDE.md — accepting makes it enforced on every future change; rejecting means the next contributor can still paste a secret without a warning."* — then: PROPOSED verdict + change-N-of-M + file path + section name + type (add / modify / remove) + verbatim current content (or "none") + proposed content + one-line reason + source (feature name or "manual") + decision `[a] apply → file edited, committed to constitution branch` / `[b] modify → apply your correction, re-present` / `[c] reject → change not applied`. `AskUserQuestion` per [conventions.md](../../knowledge/conventions.md) §"AskUserQuestion convention". Do not write until approval. Observable result: per-change decision logged.
 
 4. **Apply approved changes.** For each approved change:
    1. Edit the target file (the configured `${constitution}` or a file under `${specs_root}/standards/`).
@@ -87,7 +87,7 @@ Updated `${constitution}` and/or files under `${specs_root}/standards/`. A `cons
 - **Stop and present each proposed change individually; do not proceed without explicit approval.** No bulk approval; each proposal stands or falls on its own.
 - **Never touch specs, src, or skills** — only the configured constitution and `${specs_root}/standards/`.
 - **Never rewrite surrounding content.** Limit edits to the proposed section.
-- Outputs follow [`core/output`](../../../core/skills/output/SKILL.md) — citation by link, never restated.
+- Outputs follow [conventions.md](../../knowledge/conventions.md) §"Output discipline".
 
 ---
 

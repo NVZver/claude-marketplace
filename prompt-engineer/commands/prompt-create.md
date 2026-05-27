@@ -21,7 +21,7 @@ Constraints:
 
 1. If component type not in input → ask: "(A) Agent, (B) Command"
 2. If name not in input → ask for name (kebab-case)
-3. Read [`../agents/prompt-engineer.md`](../agents/prompt-engineer.md) → extract Prompt Format Template and Ground Rules
+3. Read knowledge files: [`../knowledge/actor-ground-rules.md`](../knowledge/actor-ground-rules.md), [`../knowledge/separation-of-concerns.md`](../knowledge/separation-of-concerns.md) → actor format template and classification rules loaded
 4. Ask user for:
    - Goal (one sentence)
    - Input description
@@ -29,7 +29,7 @@ Constraints:
 5. Determine file path:
    - Agent → `.claude/agents/{name}.md`
    - Command → `.claude/commands/{name}.md`
-6. Generate file:
+6. Generate file using actor format template from [knowledge/actor-ground-rules.md](../knowledge/actor-ground-rules.md):
    - Agent: frontmatter (name, description with examples, tools) + body (Role, Goal, Input, Constraints, Steps, Output, Example Output)
    - Command: frontmatter (name, description, allowed-tools) + body (Goal, Input, Constraints, Steps, Output, Example Output)
 7. Write file → confirm path

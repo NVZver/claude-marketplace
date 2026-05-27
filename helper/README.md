@@ -7,11 +7,11 @@ Friendly fact-grounded assistant for the NVZver marketplace. Two surfaces:
 
 Inherits [`core/output`](../core/skills/output/SKILL.md) discipline: ≤1.5 screens per turn, `AskUserQuestion` for every **genuine fork** — destructive actions, real choices, missing inputs — project jargon re-grounded on first turn-use. Says "I cannot verify this" rather than fabricating, per [`core/ground-rules`](../core/skills/ground-rules/SKILL.md) Rule 2.
 
-Spec: [`vision/specs/features/2026-05-21-helper-agent/`](../vision/specs/features/2026-05-21-helper-agent/). Rationale: [`vision/VISION.md`](../vision/VISION.md).
+Spec: the original helper-agent spec (shipped v0.2.0). Rationale: [`vision/VISION.md`](../vision/VISION.md).
 
 ## Status — v0.2.0 feature-complete
 
-Built in 4 steps per [`tasks.md`](../vision/specs/features/2026-05-21-helper-agent/tasks.md). Steps 1–3 landed as v0.1.0 (the description-matched assistant + `/help` command); step 4 ships as v0.2.0 — the auto-engage path. All three invocation paths are now wired: (c) explicit `/help`, (a) two consecutive `[c] reject` selections at an `lsa:discover` User Verification, (b) free-form `?` / `what is X?` mid-flow. Per-signal-type cooldown prevents nag.
+Built in 4 steps per the original helper-agent spec (shipped v0.2.0) tasks. Steps 1–3 landed as v0.1.0 (the description-matched assistant + `/help` command); step 4 ships as v0.2.0 — the auto-engage path. All three invocation paths are now wired: (c) explicit `/help`, (a) two consecutive `[c] reject` selections at an `lsa:discover` User Verification, (b) free-form `?` / `what is X?` mid-flow. Per-signal-type cooldown prevents nag.
 
 | Step | Adds | In this commit? |
 |---|---|---|
