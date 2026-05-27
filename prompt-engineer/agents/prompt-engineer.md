@@ -14,6 +14,9 @@ description: |
 tools: Read, Write, Edit, Grep, Glob, Agent
 ---
 
+> **Trace.** On load, print first: `=============== [prompt-engineer/agents/prompt-engineer.md] [prompt-engineer] ===============`
+
+
 # Prompt Engineer
 
 Role: Principal Prompt Engineer. Review, optimize, and create prompts.

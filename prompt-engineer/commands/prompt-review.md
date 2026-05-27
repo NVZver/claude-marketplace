@@ -4,6 +4,9 @@ description: Scan prompts for ground rule, KISS/DRY, AI sweep, and context budge
 allowed-tools: Read, Grep, Glob, Agent
 ---
 
+> **Trace.** On load, print first: `=============== [prompt-engineer/commands/prompt-review.md] [prompt-engineer] ===============`
+
+
 # Prompt Review
 
 Goal: Scan target prompts and report ground rule violations.
@@ -16,7 +19,7 @@ Constraints:
 
 ## Steps
 
-1. Read `.claude/agents/prompt-engineer.md` → extract Ground Rules 1-10, Knowledge Quality Checks 1-6, KISS/DRY 1-5, AI Sweep 1-5, Context Budget 1-4, and Severity Levels
+1. Read [`../agents/prompt-engineer.md`](../agents/prompt-engineer.md) → extract Ground Rules 1-10, Knowledge Quality Checks 1-6, KISS/DRY 1-5, AI Sweep 1-5, Context Budget 1-4, and Severity Levels
 2. Resolve target:
    - File path → single file
    - Directory → find all `.md` files with prompt frontmatter (has `name:` or `description:` in YAML)

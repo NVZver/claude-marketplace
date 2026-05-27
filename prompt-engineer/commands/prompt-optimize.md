@@ -4,6 +4,9 @@ description: Apply fixes for issues found by prompt-review
 allowed-tools: Read, Write, Edit, Grep, Glob, Agent
 ---
 
+> **Trace.** On load, print first: `=============== [prompt-engineer/commands/prompt-optimize.md] [prompt-engineer] ===============`
+
+
 # Prompt Optimize
 
 Goal: Fix ground rule violations in target prompts.
@@ -21,7 +24,7 @@ Constraints:
 2. If no issues found → report "No issues found." and stop
 3. Present issues table to user → confirm scope of fixes
 4. For each file with issues, apply fixes by severity:
-   a. HIGH: add missing sections using Prompt Format Template from `.claude/agents/prompt-engineer.md` → file contains all required sections
+   a. HIGH: add missing sections using Prompt Format Template from [`../agents/prompt-engineer.md`](../agents/prompt-engineer.md) → file contains all required sections
    b. MEDIUM: rewrite vague steps with arrow-notation results, add output format spec, remove assumption language → each step has observable result. Consolidate duplicate content into one source with cross-references. Replace hardcoded formats with references to the knowledge file that defines them. Remove rules that formalize natural LLM behavior. Replace arbitrary thresholds with state-based detection. Merge constraints that can combine without losing meaning. Remove Goal text that restates the frontmatter description.
    c. LOW: delete adverbs, replace hedging with direct statements, convert passive to active voice, remove filler phrases → no wording violations remain. Add paradigm citations where adapted frameworks lack provenance. Trim example bloat to one per pattern. Remove low-density padding.
 5. Re-run review on modified files → verify fixes resolved issues

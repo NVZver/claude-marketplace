@@ -1,0 +1,6 @@
+{
+  "name": "prompt-engineer",
+  "description": "Prompt engineering discipline for Claude Code plugins. One agent (prompt-engineer) enforces quality rules across actors and knowledge files — ground rules, separation of concerns, KISS/DRY audit, AI over-engineering checks, and context budget checks. Three commands: prompt-review (scan for violations), prompt-optimize (fix violations), prompt-create (scaffold new prompts).",
+  "version": "0.1.0",
+  "author": { "name": "Nikita Zverev" }
+}

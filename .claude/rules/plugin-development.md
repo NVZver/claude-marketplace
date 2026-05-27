@@ -3,6 +3,7 @@ paths:
   - "core/**/*"
   - "lsa/**/*"
   - "helper/**/*"
+  - "prompt-engineer/**/*"
 ---
 
 # Plugin Development Rules
