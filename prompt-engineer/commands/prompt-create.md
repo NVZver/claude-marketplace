@@ -4,6 +4,9 @@ description: Create a new prompt following ground rules
 allowed-tools: Read, Write, Grep, Glob, AskUserQuestion
 ---
 
+> **Trace.** On load, print first: `=============== [prompt-engineer/commands/prompt-create.md] [prompt-engineer] ===============`
+
+
 # Prompt Create
 
 Goal: Create a new prompt file with all required sections filled.
@@ -18,7 +21,7 @@ Constraints:
 
 1. If component type not in input → ask: "(A) Agent, (B) Command"
 2. If name not in input → ask for name (kebab-case)
-3. Read `.claude/agents/prompt-engineer.md` → extract Prompt Format Template and Ground Rules
+3. Read [`../agents/prompt-engineer.md`](../agents/prompt-engineer.md) → extract Prompt Format Template and Ground Rules
 4. Ask user for:
    - Goal (one sentence)
    - Input description

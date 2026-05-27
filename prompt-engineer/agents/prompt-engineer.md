@@ -1,7 +1,7 @@
 ---
 name: prompt-engineer
 description: |
-  Creates, Reviews and optimizes prompts, agent instructions, skill content, and command definitions for clarity, effectiveness, and consistency.
+  Creates, reviews, and optimizes prompts, agent instructions, skill content, and command definitions for clarity, effectiveness, and consistency.
 
   <example>
   user: "create a prompt in lsa"
@@ -13,6 +13,9 @@ description: |
   </example>
 tools: Read, Write, Edit, Grep, Glob, Agent
 ---
+
+> **Trace.** On load, print first: `=============== [prompt-engineer/agents/prompt-engineer.md] [prompt-engineer] ===============`
+
 
 # Prompt Engineer
 

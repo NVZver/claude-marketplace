@@ -1,6 +1,6 @@
 ---
 name: start-feature
-description: "Shape a new feature from a vague idea into a structured pitch. Input: problem or opportunity description (argument or interactive prompt). Output: approved pitch file at vision/specs/pitches/<slug>.md, then handoff to lsa:new for branch creation and discovery."
+description: "Shape a new feature from a vague idea into a structured pitch. Input: problem or opportunity description (argument or interactive prompt). Output: approved pitch file at vision/specs/pitches/<slug>.md, then handoff to management:roadmap for epic decomposition."
 ---
 
 > **Trace.** On load, print first: `=============== [management/skills/start-feature/SKILL.md] [management] ===============`
@@ -8,11 +8,11 @@ description: "Shape a new feature from a vague idea into a structured pitch. Inp
 
 # Start Feature
 
-Orchestrator skill. Accepts a vague idea, dispatches the `product-manager` agent for interactive shaping and approval, then hands off to `lsa:new` on approval. Does not contain shaping logic or branch-creation logic — those live in the agent and `lsa:new` respectively.
+Orchestrator skill. Accepts a vague idea, dispatches the `product-manager` agent for interactive shaping and approval, then hands off to `management:roadmap` for epic decomposition. Does not contain shaping logic or decomposition logic — those live in the agents.
 
 ## Goal
 
-Go from a vague idea to a human-approved pitch and a running LSA discovery — without the user manually shaping the pitch or invoking `lsa:new`.
+Go from a vague idea to a human-approved pitch with epics ready for the LSA build cycle — without the user manually shaping the pitch or invoking agents directly.
 
 ## Input
 
@@ -32,12 +32,12 @@ Go from a vague idea to a human-approved pitch and a running LSA discovery — w
    e. On skip (at either prompt): proceed to Step 4 without writing to the roadmap. Observable result: no roadmap change.
 
 4. **Handle outcome.**
-   - **Approved:** invoke `lsa:new` via the `Skill` tool with the pitch file path as the feature description argument. The pitch context seeds the discovery phase. Observable result: `lsa:new` executing.
+   - **Approved:** invoke `management:roadmap` via the `Skill` tool. The project-manager agent reads the roadmap, picks the newly added pitch, and decomposes it into epics for the LSA build cycle. Observable result: `management:roadmap` executing.
    - **Rejected:** exit cleanly. No branch created, no downstream work. Observable result: clean exit, no side effects.
 
 ## Output
 
-Either `lsa:new` is executing (approved path) or clean exit (rejected path). The pitch file exists at `vision/specs/pitches/<slug>.md` regardless of outcome (with `approved` or `rejected` status in its metadata). If the user opted in, a backlog row exists in `vision/specs/roadmap.md`.
+Either `management:roadmap` is executing (approved path) or clean exit (rejected path). The pitch file exists at `vision/specs/pitches/<slug>.md` regardless of outcome (with `approved` or `rejected` status in its metadata). If the user opted in, a backlog row exists in `vision/specs/roadmap.md`.
 
 ### Example Output
 
@@ -56,14 +56,14 @@ Append to roadmap? [Approve — append to roadmap] / [Skip — proceed without w
 > Approve — append to roadmap
 
 Row appended to vision/specs/roadmap.md Feature Backlog table.
-Handing off to lsa:new…
+Handing off to management:roadmap for epic decomposition…
 ```
 
 ## Constraints
 
-- **Orchestrator only.** Do not duplicate agent logic (shaping, role adaptation, pitch assembly) — dispatch and wait. Do not duplicate `lsa:new` logic (branch creation, flow-selector) — invoke and hand off.
+- **Orchestrator only.** Do not duplicate agent logic (shaping, role adaptation, pitch assembly, decomposition) — dispatch and wait.
 - **No silent handoff.** The agent's approval gate (`AskUserQuestion`) is the human decision point. This skill does not add a second approval step.
-- **Clean exit on reject.** If the agent returns `rejected` status, exit with no side effects — no branch, no `lsa:new` invocation.
+- **Clean exit on reject.** If the agent returns `rejected` status, exit with no side effects — no branch, no downstream invocation.
 - Outputs follow [`core/output`](../../../core/skills/output/SKILL.md) — citation by link, never restated.
 
 ---

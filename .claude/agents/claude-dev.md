@@ -64,7 +64,7 @@ Use the Explore agent or read official docs via WebFetch.
 Follow TDD discipline. Write failing test → implement → refactor.
 
 ### For Plugin Review
-Run `/prompt-review` on target files.
+Run `/prompt-engineer:prompt-review` on target files.
 
 ## Plugin Development Rules
 
