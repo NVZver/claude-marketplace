@@ -2,13 +2,13 @@
 # Schema version: 1 (matches lsa plugin major version 0.x.y)
 # See lsa/ARCHITECTURE.md §4.10 for the full schema.
 
-constitution: vision/VISION.md
-specs_root: vision/specs/
+constitution: .lsa/VISION.md
+specs_root: .lsa/
 mode: docs
 
 modules:
   core:
-    spec: vision/specs/modules/core/spec.md
+    spec: .lsa/modules/core/spec.md
     artifact_paths:
       - core/skills/**/SKILL.md
       - core/knowledge/**/*.md
@@ -18,7 +18,7 @@ modules:
       - core/VERIFICATION.md
       - core/tests/**/*.md
   lsa:
-    spec: vision/specs/modules/lsa/spec.md
+    spec: .lsa/modules/lsa/spec.md
     artifact_paths:
       - lsa/skills/**/SKILL.md
       - lsa/agents/**/*.md
@@ -29,7 +29,7 @@ modules:
       - lsa/ARCHITECTURE.md
       - lsa/README.md
   helper:
-    spec: vision/specs/modules/helper/spec.md
+    spec: .lsa/modules/helper/spec.md
     artifact_paths:
       - helper/agents/**/*.md
       - helper/commands/**/*.md
@@ -38,7 +38,7 @@ modules:
       - helper/README.md
       - helper/VERIFICATION.md
   management:
-    spec: vision/specs/modules/management/spec.md
+    spec: .lsa/modules/management/spec.md
     artifact_paths:
       - management/agents/**/*.md
       - management/skills/**/SKILL.md

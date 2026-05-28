@@ -10,7 +10,7 @@ Rules for breaking a shaped pitch into epics, adapted from Shape Up's "scoping" 
 2. **One-sentence scope.** The scope fits a single sentence. If the sentence contains "and" joining two unrelated outcomes, split.
 3. **One LSA cycle.** The epic completes in one pass through `lsa:discover` → `lsa:plan` → `lsa:implement` → `lsa:verify`. If discovery alone requires multiple user-verification rounds for different subsystems, the epic is too wide.
 4. **Clear definition of done.** State the observable result a human can verify — a passing test, a new file, a changed behavior. "Refactored internally" is not done; "X test passes with Y input" is done.
-5. **Parent pitch link.** Every epic references the pitch it was decomposed from: `Parent: [<pitch-title>](../../vision/specs/pitches/<slug>.md)`.
+5. **Parent pitch link.** Every epic references the pitch it was decomposed from: `Parent: [<pitch-title>](../../pitches/<slug>.md)` (path is relative to the feature file at `${specs_root}/features/<slug>/`).
 
 ## Finding decomposition boundaries
 
@@ -31,7 +31,7 @@ When in doubt, prefer the boundary that produces the smaller, more testable epic
 ### Epic <N>: <one-sentence scope>
 
 **Definition of done:** <observable result a human can verify>
-**Parent:** [<pitch-title>](../../vision/specs/pitches/<slug>.md)
+**Parent:** [<pitch-title>](../../pitches/<slug>.md)
 ```
 
 ## Worked example [illustrative]
@@ -42,12 +42,12 @@ Given a pitch "Onboarding checklist for new marketplace plugins" with a Solution
 ### Epic 1: Onboarding checklist knowledge file
 
 **Definition of done:** `core/knowledge/new-plugin-checklist.md` exists with numbered items; each item names a file path to create. Manual walkthrough produces a scaffold that passes `lsa:verify`.
-**Parent:** [onboarding-checklist](../../vision/specs/pitches/onboarding-checklist.md)
+**Parent:** [onboarding-checklist](../../pitches/onboarding-checklist.md)
 
 ### Epic 2: Verify integration for checklist drift
 
 **Definition of done:** `lsa:verify` reads the checklist file and reports a finding when a listed file path does not exist in the plugin directory. Test: delete one expected file, run verify, observe the finding.
-**Parent:** [onboarding-checklist](../../vision/specs/pitches/onboarding-checklist.md)
+**Parent:** [onboarding-checklist](../../pitches/onboarding-checklist.md)
 ```
 
 Epic 1 is shippable alone (the checklist works manually). Epic 2 adds automation but is not required for the checklist to deliver value.

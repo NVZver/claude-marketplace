@@ -20,5 +20,5 @@ Invoke `Skill(helper)` with an empty (or `"general"`) argument. The Helper agent
 ## Constraints
 
 - **Always dispatch to `Skill(helper)`.** Do not answer the user's question yourself from this command body — the Helper agent owns the full discipline (citations, jargon re-grounding, scope rules, cannot-verify fallback). This command is a thin shell.
-- **Never render a text `[a] / [b] / [c]` block** — always use `AskUserQuestion`. Per `vision/VISION.md:63` Principle 9.
+- **Never render a text `[a] / [b] / [c]` block** — always use `AskUserQuestion`. Per `.lsa/VISION.md:63` Principle 9.
 - **No filler.** No `"Sure!"`, no `"I'd be happy to help!"`, no preamble. Just dispatch or open the picker.

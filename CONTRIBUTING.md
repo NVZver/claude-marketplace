@@ -1,6 +1,6 @@
 # Contributing to claude-marketplace
 
-How to build and contribute. Operating rules live in [`vision/VISION.md`](./vision/VISION.md). Design rationale lives in [`lsa/ARCHITECTURE.md`](./lsa/ARCHITECTURE.md). This file is only the contributor workflow.
+How to build and contribute. Operating rules live in [`.lsa/VISION.md`](./.lsa/VISION.md). Design rationale lives in [`lsa/ARCHITECTURE.md`](./lsa/ARCHITECTURE.md). This file is only the contributor workflow.
 
 **This file (and every contribution) follows the discipline established by the 2026-05-20 simplification refactor:**
 
@@ -27,7 +27,7 @@ After editing any `SKILL.md`, hook, or plugin manifest: `/reload-plugins` picks 
 
 ## Classify the work first
 
-Every non-trivial change invokes [`core/flow-selector`](./core/skills/flow-selector/SKILL.md) (renamed from `core/tier-selector` in `core` v0.5.2) before touching code or specs. Boundary signals + worked examples at [`vision/VISION.md`](./vision/VISION.md) §4.
+Every non-trivial change invokes [`core/flow-selector`](./core/skills/flow-selector/SKILL.md) (renamed from `core/tier-selector` in `core` v0.5.2) before touching code or specs. Boundary signals + worked examples at [`.lsa/VISION.md`](./.lsa/VISION.md) §4.
 
 | Flow | When | Loop |
 |---|---|---|
@@ -35,7 +35,7 @@ Every non-trivial change invokes [`core/flow-selector`](./core/skills/flow-selec
 | **Standard** (was `T2`) | Bug in a spec'd module, refactor | `lsa:discover` (light) → `lsa:implement` → `lsa:verify` |
 | **Extended** (was `T3`) | New feature, new contract, new module | `lsa:discover` → `lsa:plan` → `lsa:implement` → `lsa:verify` |
 
-For doc-only refactors that span many files, a plan file at `vision/plans/YYYY-MM-DD-<name>.md` may serve as the feature spec — **declare that judgment upfront** and reflect every change against the plan in your verification report.
+For doc-only refactors that span many files, a plan file at `.lsa/plans/YYYY-MM-DD-<name>.md` may serve as the feature spec — **declare that judgment upfront** and reflect every change against the plan in your verification report.
 
 ---
 
@@ -67,14 +67,14 @@ Knowledge files capture cross-cutting reference content (defaults, protocols, de
 
 1. Classify (Quick / Standard / Extended — was `T1` / `T2` / `T3`).
 2. Preserve the five-section Actor shape — Goal / Input / Steps / Output / Constraints.
-3. If you find Knowledge content in an Actor body, **move it** to a Knowledge surface and cite from the skill (per [`vision/VISION.md:40`](./vision/VISION.md) — *"Knowledge is not Actor; boundary violations are the highest-severity defect."*).
+3. If you find Knowledge content in an Actor body, **move it** to a Knowledge surface and cite from the skill (per [`.lsa/VISION.md:40`](./.lsa/VISION.md) — *"Knowledge is not Actor; boundary violations are the highest-severity defect."*).
 4. Bump version + add CHANGELOG entry.
 
 ---
 
 ## Versioning + CHANGELOG
 
-Per [`vision/specs/standards/code.md`](./vision/specs/standards/code.md) *"Per-plugin SemVer + CHANGELOG"*:
+Per [`.lsa/standards/code.md`](./.lsa/standards/code.md) *"Per-plugin SemVer + CHANGELOG"*:
 
 - Each plugin has its own SemVer in `<plugin>/.claude-plugin/plugin.json`.
 - Each plugin has its own `<plugin>/CHANGELOG.md` (Keep a Changelog format).
@@ -88,27 +88,27 @@ SemVer mapping for this repo:
 | Minor (`0.X.0`) | New skill, new Knowledge surface, or material change to a skill body. |
 | Major (`X.0.0`) | Breaking change to a skill's contract or to `.lsa.yaml` schema. |
 
-Repo-level files (root `CLAUDE.md`, `CONTRIBUTING.md`, plan files under `vision/plans/`) live outside per-plugin `artifact_paths` and do not trigger plugin version bumps.
+Repo-level files (root `CLAUDE.md`, `CONTRIBUTING.md`, plan files under `.lsa/plans/`) live outside per-plugin `artifact_paths` and do not trigger plugin version bumps.
 
 ---
 
 ## Verifying before merge
 
-Per [`vision/specs/standards/testing.md`](./vision/specs/standards/testing.md):
+Per [`.lsa/standards/testing.md`](./.lsa/standards/testing.md):
 
 - **V1 — installs cleanly.** `/plugin install <plugin>@NVZver`; `/help` lists every skill in the plugin.
 - **V2 — description-match triggers reliably.** One probe per affected skill in a fresh session. Target ~90% trigger rate.
 - **V3 — behavior changes observably.** Run the same small task with and without the plugin; compare on the three Vision §5 metrics: accuracy / facts-with-sources / only-required-changes.
 
-For LSA-tracked changes (anything under `artifact_paths`): run `lsa:verify` against the feature spec. If the change wasn't preceded by `lsa:discover`/`lsa:plan`, **declare what's serving as the spec** (e.g., a plan file at `vision/plans/`) and walk every change against it in your verification report.
+For LSA-tracked changes (anything under `artifact_paths`): run `lsa:verify` against the feature spec. If the change wasn't preceded by `lsa:discover`/`lsa:plan`, **declare what's serving as the spec** (e.g., a plan file at `.lsa/plans/`) and walk every change against it in your verification report.
 
 ---
 
 ## Multi-step refactors
 
-Pattern established by the 2026-05-20 simplification refactor at [`vision/plans/2026-05-20-simplification-refactor-plan.md`](./vision/plans/2026-05-20-simplification-refactor-plan.md):
+Pattern established by the 2026-05-20 simplification refactor at [`.lsa/plans/2026-05-20-simplification-refactor-plan.md`](./.lsa/plans/2026-05-20-simplification-refactor-plan.md):
 
-1. **Write a plan** at `vision/plans/YYYY-MM-DD-<name>.md` listing every file change per PR with explicit deltas.
+1. **Write a plan** at `.lsa/plans/YYYY-MM-DD-<name>.md` listing every file change per PR with explicit deltas.
 2. **Get explicit human sign-off** on the plan (and any open decisions) before executing.
 3. **Execute one PR at a time.** After each PR, write a verification report that walks every plan item against file state (`grep`/`wc`/`ls`) — not memory.
 4. **Mark `[todo] → [in_progress] → [done]`** in the plan file as PRs land.
@@ -121,8 +121,8 @@ Pattern established by the 2026-05-20 simplification refactor at [`vision/plans/
 Every contribution obeys:
 
 - The four discipline rules at [`core/skills/ground-rules/SKILL.md`](./core/skills/ground-rules/SKILL.md) — fact-grounding, no fake-confidence hedging, read before write, deliver only what was asked.
-- The Knowledge vs Actor separation at [`vision/VISION.md:40`](./vision/VISION.md) and [`core/skills/actor-template/SKILL.md`](./core/skills/actor-template/SKILL.md). Boundary violations are the highest-severity defect.
-- The eight first principles at [`vision/VISION.md`](./vision/VISION.md) §2.
+- The Knowledge vs Actor separation at [`.lsa/VISION.md:40`](./.lsa/VISION.md) and [`core/skills/actor-template/SKILL.md`](./core/skills/actor-template/SKILL.md). Boundary violations are the highest-severity defect.
+- The eight first principles at [`.lsa/VISION.md`](./.lsa/VISION.md) §2.
 
 ---
 

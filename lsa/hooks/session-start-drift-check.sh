@@ -35,7 +35,7 @@ cd "${repo_root}" || exit 0
 
 # Parse .lsa.yaml.  Prefer yq; fall back to a constrained awk parser that
 # understands the documented modules.<name>.{spec,artifact_paths} schema from
-# vision/specs/2026-05-20-lsa-v0.2.0-design.md §6.
+# .lsa/2026-05-20-lsa-v0.2.0-design.md §6.
 #
 # Emits "name<TAB>path" rows on stdout, one row per (module, artifact_path) pair.
 emit_module_paths() {

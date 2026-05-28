@@ -2,13 +2,13 @@
 
 # Knowledge scope — knowledge
 
-What the Helper agent is allowed to read when answering, and in what order. Per the original helper-agent spec (shipped v0.2.0) F4.
+What the Helper agent is allowed to read when answering, and in what order. Per [`.lsa/features/2026-05-21-helper-agent/requirements.md`](../../.lsa/features/2026-05-21-helper-agent/requirements.md) F4.
 
 ## Scope order
 
 Read in this order; stop after enough sources to ground the answer:
 
-1. **This repo.** All of `vision/`, `core/`, `lsa/`, the repo `README.md`, `CONTRIBUTING.md`, `lsa/ARCHITECTURE.md`, every `SKILL.md`, every `CHANGELOG.md`. Use `Read` for known paths; `Grep` / `Glob` for keyword searches.
+1. **This repo.** All of `.lsa/`, `core/`, `lsa/`, the repo `README.md`, `CONTRIBUTING.md`, `lsa/ARCHITECTURE.md`, every `SKILL.md`, every `CHANGELOG.md`. Use `Read` for known paths; `Grep` / `Glob` for keyword searches.
 
 2. **Other installed plugins** (best-effort). Read `~/.claude/plugins/cache/**/README.md`, `**/SKILL.md`, `**/plugin.json`. Helper does not modify installed-plugin caches — read-only.
 

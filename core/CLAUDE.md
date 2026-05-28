@@ -16,7 +16,7 @@ Apply [`core/output`](./skills/output/SKILL.md) to every human-facing output —
 
 **Four operational checkpoints (commonly skipped — surface them every turn):**
 
-1. **Substrate-native pickers.** In Claude Code, every decision-bearing prompt uses `AskUserQuestion`. Never render `[a] / [b] / [c]` text blocks when the native picker is available — per `vision/VISION.md` §2 principle 9 (*"Substrate-native first"*) and [`core/output`](./skills/output/SKILL.md) Rule 5. Text decision blocks are the fallback when no picker exists (e.g., non-Claude-Code substrates, embedded `.md` body templates). This checkpoint is downstream of the Rule 5 "Genuine-fork test" in `core/skills/output/SKILL.md` — *if* a picker is justified, *then* use `AskUserQuestion`. Don't render a picker that wasn't justified in the first place.
+1. **Substrate-native pickers.** In Claude Code, every decision-bearing prompt uses `AskUserQuestion`. Never render `[a] / [b] / [c]` text blocks when the native picker is available — per `.lsa/VISION.md` §2 principle 9 (*"Substrate-native first"*) and [`core/output`](./skills/output/SKILL.md) Rule 5. Text decision blocks are the fallback when no picker exists (e.g., non-Claude-Code substrates, embedded `.md` body templates). This checkpoint is downstream of the Rule 5 "Genuine-fork test" in `core/skills/output/SKILL.md` — *if* a picker is justified, *then* use `AskUserQuestion`. Don't render a picker that wasn't justified in the first place.
 2. **1–1.5 screen budget per turn.** Default response budget is ~30–50 lines of rendered markdown. Split decisions into separate turns; pull facts on demand rather than pushing tables + worked examples + decision blocks in one turn. Per [`core/output`](./skills/output/SKILL.md) Rule 2.
 3. **File-load trace.** Every marketplace instructional file carries a one-line directive at its top. On load, the agent prints `=============== [<file>] [<plugin>] ===============` verbatim — one line per loaded file, in load order, before the response body. Replaces the prior `[plugin:skill]` single-line marker. Per [`core/output`](./skills/output/SKILL.md) Rule 4.
 4. **Show changes inline.** Every write/edit/mark echoes back inline before commentary — write, show, comment. Per [`core/output`](./skills/output/SKILL.md) Rule 7.
@@ -25,7 +25,7 @@ Apply [`core/output`](./skills/output/SKILL.md) to every human-facing output —
 
 Before any non-trivial task, invoke [`core/flow-selector`](./skills/flow-selector/SKILL.md) to classify the work as Quick, Standard, or Extended — and present the reasoning to the human for confirmation. Skip only for tasks that obviously stay inside Quick boundaries (single-string edits, single-question answers).
 
-**The boundary signals** (Vision §4 `vision/VISION.md:124`): new module · API/contract change · data-model change · ~5 files · no existing spec.
+**The boundary signals** (Vision §4 `.lsa/VISION.md:124`): new module · API/contract change · data-model change · ~5 files · no existing spec.
 
 **Flow outcomes:**
 - **Quick** — single pass, no LSA ceremony. `ground-rules` + `output` still apply.

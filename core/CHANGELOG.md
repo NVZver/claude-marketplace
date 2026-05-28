@@ -33,7 +33,7 @@ Cross-reference update for LSA v0.8.0 command rename. Updated `core/CLAUDE.md` f
 
 ## [0.8.0] — 2026-05-24
 
-Adds **Rule 7 — Show changes inline (write, show, comment)** to `core/output`. Every write, edit, or mark performed by an agent must be echoed back inline before commentary — single-change block (path:line + verbatim previous + verbatim new + reason + source + type tag) for one edit; compressed inspection table (`#` / `file:line` / `type` / `summary` / `pointer`) when the turn produces more than ~5 file changes or more than ~10 lines of new content. Generalizes the 8-element drift block from `lsa-reconcile` (user-endorsed gold standard, 2026-05-22). Adds operational checkpoint #4 in `core/CLAUDE.md`. Per `vision/specs/features/2026-05-22-show-changes-inline/`. Standard flow.
+Adds **Rule 7 — Show changes inline (write, show, comment)** to `core/output`. Every write, edit, or mark performed by an agent must be echoed back inline before commentary — single-change block (path:line + verbatim previous + verbatim new + reason + source + type tag) for one edit; compressed inspection table (`#` / `file:line` / `type` / `summary` / `pointer`) when the turn produces more than ~5 file changes or more than ~10 lines of new content. Generalizes the 8-element drift block from `lsa-reconcile` (user-endorsed gold standard, 2026-05-22). Adds operational checkpoint #4 in `core/CLAUDE.md`. Per `.lsa/features/2026-05-22-show-changes-inline/`. Standard flow.
 
 ### Added
 - **`core/skills/output/SKILL.md` Rule 7 "Show changes inline — write, show, comment"** — new top-level rule appended after Rule 6. Body carries: 7-element single-change template (what / where / previous / new / reason / source / type tag), batch compressed-inspection-table template, the "what this rule forbids" list, three worked examples (single-file edit / multi-file batch / state mark), and an inheritance-and-gaps clause naming Rules 2/3/4/5. Cites `lsa-reconcile` 8-element drift block as the in-repo exemplar by markdown link.
@@ -50,16 +50,16 @@ Adds **Rule 7 — Show changes inline (write, show, comment)** to `core/output`.
 ### Notes
 - **Minor bump rationale.** New rule with marketplace-wide reach — every plugin that writes/edits/marks anything inherits the obligation by virtue of citing `core/output`. User-visible discipline change driven by 2026-05-22 user feedback (*"they say 'I put something in a file...' and make the user to go and search"*); not a refactor.
 - **Sibling LSA bump.** `lsa` v0.8.1 in the same feature sweeps the 16 `Observable result:` lines across 7 LSA skill bodies (`lsa-sync`, `lsa-specify`, `lsa-init`, `lsa-plan`, `lsa-revise-constitution`, `lsa-verify`, `lsa-discover`) to cite Rule 7 and name the quote-back format (full single-change block vs. compressed inspection table). Optional Epic 4 adds a one-line forward-link from `lsa-reconcile` to Rule 7.
-- **Rule-numbering coordination resolved.** Rule 6 = *What-and-why preamble* (row #4, shipped v0.7.0); Rule 7 = *Show changes inline* (this feature, row #5). Spec drafts mention "Rule 6" because they were written before row #4 locked the slot; implementation renumbers per the explicit coordination note in `vision/specs/features/2026-05-22-lsa-what-why-preamble/` archived tasks.md.
-- **Spec source.** `vision/specs/features/2026-05-22-show-changes-inline/design.md` §"The new core/output Rule 6 — drafted in full" carries the verbatim Rule body used here; `requirements.md` AC1–AC7 + F1–F8.
+- **Rule-numbering coordination resolved.** Rule 6 = *What-and-why preamble* (row #4, shipped v0.7.0); Rule 7 = *Show changes inline* (this feature, row #5). Spec drafts mention "Rule 6" because they were written before row #4 locked the slot; implementation renumbers per the explicit coordination note in `.lsa/features/2026-05-22-lsa-what-why-preamble/` archived tasks.md.
+- **Spec source.** `.lsa/features/2026-05-22-show-changes-inline/design.md` §"The new core/output Rule 6 — drafted in full" carries the verbatim Rule body used here; `requirements.md` AC1–AC7 + F1–F8.
 - **Helper Constraint deferred.** Epic 3 (Helper `## Constraints` bullet citing Rule 7) ships in a separate follow-up PR after PR #19's helper changes merge, to avoid conflicts.
 
 ## [0.7.0] — 2026-05-24
 
-Adds **Rule 6 — What-and-why preamble** to `core/output`. Every emission of a verdict label from `core/knowledge/output-vocabulary.md` §"Verdicts" must be preceded in the same paragraph by a one-sentence preamble naming (a) the action in plain English in the user's frame, and (b) the concrete consequence if the human does not act. Canonical format: `<context sentence>. <VERDICT> verdict + <details>.` A bare verdict line fails the rule. Per `vision/specs/features/2026-05-22-lsa-what-why-preamble/`. Standard flow.
+Adds **Rule 6 — What-and-why preamble** to `core/output`. Every emission of a verdict label from `core/knowledge/output-vocabulary.md` §"Verdicts" must be preceded in the same paragraph by a one-sentence preamble naming (a) the action in plain English in the user's frame, and (b) the concrete consequence if the human does not act. Canonical format: `<context sentence>. <VERDICT> verdict + <details>.` A bare verdict line fails the rule. Per `.lsa/features/2026-05-22-lsa-what-why-preamble/`. Standard flow.
 
 ### Added
-- **`core/skills/output/SKILL.md` Rule 6 "What-and-why preamble — verdicts carry a one-sentence frame"** — new top-level rule appended after Rule 5. Cites `core/knowledge/output-vocabulary.md` §"Verdicts" by link. Body kept short (≤6 wrapped lines per NF1). Not a sub-bullet under Rule 5 — Rule 5 governs picker-prompt voice (decision prompts), Rule 6 governs action-framing (verdict emissions). Different categories. See `vision/specs/features/2026-05-22-lsa-what-why-preamble/design.md` §"Where the rule lives".
+- **`core/skills/output/SKILL.md` Rule 6 "What-and-why preamble — verdicts carry a one-sentence frame"** — new top-level rule appended after Rule 5. Cites `core/knowledge/output-vocabulary.md` §"Verdicts" by link. Body kept short (≤6 wrapped lines per NF1). Not a sub-bullet under Rule 5 — Rule 5 governs picker-prompt voice (decision prompts), Rule 6 governs action-framing (verdict emissions). Different categories. See `.lsa/features/2026-05-22-lsa-what-why-preamble/design.md` §"Where the rule lives".
 
 ### Changed
 - **`core/skills/output/SKILL.md` frontmatter `description:`** — "five golden rules" → "six golden rules"; rule list extended with *"what-and-why preamble"*.
@@ -72,21 +72,21 @@ Adds **Rule 6 — What-and-why preamble** to `core/output`. Every emission of a 
 ### Notes
 - **Minor bump rationale.** New rule with marketplace-wide reach — every plugin that emits verdict labels inherits the obligation by virtue of citing `core/output`. User-visible discipline change; not a refactor.
 - **Sibling LSA bump.** `lsa` v0.8.0 in the same feature sweeps the 5 LSA skill bodies that currently emit verdict labels (`lsa-init`, `lsa-reconcile`, `lsa-sync`, `lsa-revise-constitution`, `lsa-verify`) to render preamble-first verdicts citing Rule 6 by link.
-- **Spec source.** `vision/specs/features/2026-05-22-lsa-what-why-preamble/requirements.md` F5 fixes the rule's location at `core/output`; `design.md` §"Where the rule lives" resolves OQ1 to *new Rule 6, not a sub-bullet under Rule 5*.
+- **Spec source.** `.lsa/features/2026-05-22-lsa-what-why-preamble/requirements.md` F5 fixes the rule's location at `core/output`; `design.md` §"Where the rule lives" resolves OQ1 to *new Rule 6, not a sub-bullet under Rule 5*.
 - **Roadmap coordination.** Rule 6 = *What-and-why preamble* (this feature, row #4). Rule 7 = *Show changes inline (write-show-comment)* will be claimed by roadmap row #5 when it lands.
 
 ## [0.6.0] — 2026-05-24
 
-Rule 5 expansion — **Genuine-fork test** as a new operational sub-rule under "Must-decide only". Replaces the prior one-line "Must-decide only" bullet at `core/skills/output/SKILL.md:39` with a checklist that makes "meaningfully change the outcome" testable: a picker is justified only when at least one of four conditions holds (destructive write / two named designs in scope / fact absent from context / per-row triage). Orthogonal to `vision/VISION.md:66` Principle 9 — Principle 9 governs *which* substrate (`AskUserQuestion` vs `[a]/[b]/[c]`); the Genuine-fork test governs *whether to ask at all*. Per `vision/specs/features/2026-05-22-askuserquestion-audit/`. Standard flow.
+Rule 5 expansion — **Genuine-fork test** as a new operational sub-rule under "Must-decide only". Replaces the prior one-line "Must-decide only" bullet at `core/skills/output/SKILL.md:39` with a checklist that makes "meaningfully change the outcome" testable: a picker is justified only when at least one of four conditions holds (destructive write / two named designs in scope / fact absent from context / per-row triage). Orthogonal to `.lsa/VISION.md:66` Principle 9 — Principle 9 governs *which* substrate (`AskUserQuestion` vs `[a]/[b]/[c]`); the Genuine-fork test governs *whether to ask at all*. Per `.lsa/features/2026-05-22-askuserquestion-audit/`. Standard flow.
 
 ### Changed
-- **`core/skills/output/SKILL.md` Rule 5 "Must-decide only"** — bullet replaced (in place, not appended) with the expanded "Must-decide only — Genuine-fork test" version. Names the four real-fork categories with operational criteria; closes with "deliver the cited answer directly and offer at most ONE closing picker for the user to override". Cites `vision/VISION.md:63` Principle 6 (in-scope source ranking) and `vision/VISION.md:66` Principle 9 (substrate selection). Body ≤6 wrapped markdown lines per NF2 in the feature requirements.
+- **`core/skills/output/SKILL.md` Rule 5 "Must-decide only"** — bullet replaced (in place, not appended) with the expanded "Must-decide only — Genuine-fork test" version. Names the four real-fork categories with operational criteria; closes with "deliver the cited answer directly and offer at most ONE closing picker for the user to override". Cites `.lsa/VISION.md:63` Principle 6 (in-scope source ranking) and `.lsa/VISION.md:66` Principle 9 (substrate selection). Body ≤6 wrapped markdown lines per NF2 in the feature requirements.
 - **`core/CLAUDE.md` operational checkpoint #1 ("Substrate-native pickers")** — one clarifying line appended: *"This checkpoint is downstream of the Rule 5 'Genuine-fork test' in `core/skills/output/SKILL.md` — if a picker is justified, then use `AskUserQuestion`. Don't render a picker that wasn't justified in the first place."* Makes the orthogonality explicit at the checkpoint surface so reviewers don't conflate fork-existence with primitive choice.
 
 ### Notes
 - **Minor bump rationale.** New operational sub-rule with user-visible enforcement — Helper and LSA call-site sweeps in sibling PRs cite this rule. No existing behavior breaks; every prior caller that already passed the old "must-decide" filter passes the new checklist (which is strictly more permissive at the upstream gate but more demanding inside it).
 - **Sibling LSA patch.** `lsa` v0.7.1 in the same feature sweeps the 2 LSA call sites the rule reclassifies (L2 `lsa-discover` per-line tighten, L12 `lsa-sync` closing-offer) plus the L9 `lsa-verify` verdict-picker prompt voice. Helper call-site sweep (Epic C) ships in a separate later PR — blocks on `helper` v0.3.0.
-- **Spec source.** `vision/specs/features/2026-05-22-askuserquestion-audit/design.md` §"Proposed `core/output` Rule 5 expansion of 'Must-decide only'" carries the exact bullet text used here; `tasks.md` Epic A enumerates A1–A4.
+- **Spec source.** `.lsa/features/2026-05-22-askuserquestion-audit/design.md` §"Proposed `core/output` Rule 5 expansion of 'Must-decide only'" carries the exact bullet text used here; `tasks.md` Epic A enumerates A1–A4.
 
 ## [0.5.5] — 2026-05-22
 
@@ -100,11 +100,11 @@ Declare `core/output` as the marketplace-wide canonical source-of-truth for outp
 - **`core/skills/flow-selector/SKILL.md:68`** — Stale 4-name list (was missing *concrete*) → citation-only.
 
 ### Changed
-- **`vision/specs/modules/core/spec.md`** — Skill list reflects four skills (was three; `core/output` was missing); fixed stale version pin v0.5.2 → v0.5.5; added **Output discipline canonical** Invariant bullet citing D2.
-- **`vision/VISION.md:267`** — v0.5 changelog entry rewritten to be drift-resistant (count + rule names → version-anchored note pointing at canonical).
+- **`.lsa/modules/core/spec.md`** — Skill list reflects four skills (was three; `core/output` was missing); fixed stale version pin v0.5.2 → v0.5.5; added **Output discipline canonical** Invariant bullet citing D2.
+- **`.lsa/VISION.md:267`** — v0.5 changelog entry rewritten to be drift-resistant (count + rule names → version-anchored note pointing at canonical).
 
 ### Notes
-- **Rationale.** Discipline alone produced 11 drift sites (8 LSA-skill footers missing *concrete*; `lsa/ARCHITECTURE.md:30` saying "(4 golden rules)"; `core/skills/flow-selector/SKILL.md:68` missing *concrete*; `vision/VISION.md:267` historical changelog 4-name list). The canonical declaration + D2 probe convert a verbal convention into a checkable invariant.
+- **Rationale.** Discipline alone produced 11 drift sites (8 LSA-skill footers missing *concrete*; `lsa/ARCHITECTURE.md:30` saying "(4 golden rules)"; `core/skills/flow-selector/SKILL.md:68` missing *concrete*; `.lsa/VISION.md:267` historical changelog 4-name list). The canonical declaration + D2 probe convert a verbal convention into a checkable invariant.
 - **Minor bump rationale.** Adds a new marketplace-wide contract (canonical-source declaration). No existing behavior breaks: every prior caller satisfies the new contract once the citation footers are updated (sibling `lsa` v0.6.5).
 - **Adherent example preserved.** `helper/knowledge/output-discipline.md` is untouched — it already cites canonical at line 5 and adds plugin-specific extensions, which is precisely the legitimate pattern the new probe D2 condition (c) permits.
 - **Sibling LSA patch.** `lsa` v0.6.5 sweeps the 9 known LSA drift sites in the same PR.
@@ -127,7 +127,7 @@ File-load trace patch. Replaces the v0.5.3 single-line `[plugin:skill]` marker �
 
 ## [0.5.3] — 2026-05-22
 
-Output-marker patch. Adds a source-attribution marker (`[plugin:skill]`) to every substantive agent response so the human can see at-a-glance which marketplace skill is shaping the current turn vs. background model output. Per `vision/specs/roadmap.md` row *"Output marker — source-attribution prefix"* (user request 2026-05-22). Quick flow.
+Output-marker patch. Adds a source-attribution marker (`[plugin:skill]`) to every substantive agent response so the human can see at-a-glance which marketplace skill is shaping the current turn vs. background model output. Per `.lsa/roadmap.md` row *"Output marker — source-attribution prefix"* (user request 2026-05-22). Quick flow.
 
 ### Added
 - `core/skills/output/SKILL.md` Rule 4 (Sourced) — new sub-section **Output marker**. Form: `[plugin:skill]`, never bare `[skill]` (e.g., `[core:output]`, `[lsa:lsa-specify]`). Placement: first line of the response, treated as a label. Pick: the most-specific *currently-active* skill — defaults to `[core:output]` when no explicit skill is invoked. Skip only for trivial one-line replies (Rule 2 wins).
@@ -139,7 +139,7 @@ Output-marker patch. Adds a source-attribution marker (`[plugin:skill]`) to ever
 
 ## [0.5.2] — 2026-05-22
 
-Naming clarity patch — renames the `core/tier-selector` skill to `core/flow-selector` and replaces the `T1` / `T2` / `T3` tier labels with `Quick` / `Standard` / `Extended` across `core/CLAUDE.md`, `core/README.md`, `core/VERIFICATION.md`, the skill body, and the plugin description. Per `vision/specs/roadmap.md` row *"Rename `T1` / `T2` / `T3` → `Flow: Quick` / `Flow: Standard` / `Flow: Extended`"*. Bundle B (Naming clarity) of the 2026-05-22 fixing session.
+Naming clarity patch — renames the `core/tier-selector` skill to `core/flow-selector` and replaces the `T1` / `T2` / `T3` tier labels with `Quick` / `Standard` / `Extended` across `core/CLAUDE.md`, `core/README.md`, `core/VERIFICATION.md`, the skill body, and the plugin description. Per `.lsa/roadmap.md` row *"Rename `T1` / `T2` / `T3` → `Flow: Quick` / `Flow: Standard` / `Flow: Extended`"*. Bundle B (Naming clarity) of the 2026-05-22 fixing session.
 
 ### Changed
 - **Skill rename: `core/skills/tier-selector/` → `core/skills/flow-selector/`.** Directory + frontmatter `name:` + slash-command slug (`/core:tier-selector` → `/core:flow-selector`). The skill body adopts the new vocabulary (Quick / Standard / Extended) and notes the rename at the top so existing-user lookups still resolve.
@@ -155,7 +155,7 @@ Naming clarity patch — renames the `core/tier-selector` skill to `core/flow-se
 
 ## [0.5.1] — 2026-05-22
 
-Output-discipline enforcement patch. Elevates the two `core/output` rules that the user observed as routinely skipped in practice (substrate-native pickers and the response screen-budget) to always-on operational checkpoints in `core/CLAUDE.md`, and tightens `core/output` Rule 2 (Minimal) with concrete budget shape. Per `vision/specs/roadmap.md` row *"core/output discipline enforcement (AskUserQuestion + output length)"*.
+Output-discipline enforcement patch. Elevates the two `core/output` rules that the user observed as routinely skipped in practice (substrate-native pickers and the response screen-budget) to always-on operational checkpoints in `core/CLAUDE.md`, and tightens `core/output` Rule 2 (Minimal) with concrete budget shape. Per `.lsa/roadmap.md` row *"core/output discipline enforcement (AskUserQuestion + output length)"*.
 
 ### Added
 - `core/CLAUDE.md` § Output discipline — two new always-on operational checkpoints under the existing pointer to `core/output`: (1) **Substrate-native pickers** — every decision-bearing prompt uses `AskUserQuestion` in Claude Code; never render `[a]/[b]/[c]` text blocks when the picker is available; (2) **1–1.5 screen budget per turn** — default ~30–50 rendered markdown lines, split decisions into separate turns, pull don't push.
@@ -165,28 +165,28 @@ Output-discipline enforcement patch. Elevates the two `core/output` rules that t
 - `core/skills/output/SKILL.md` Rule 5 heading — now reads *"Concrete (decision prompts) — prompt voice"* for memorability. The sub-bullets (subject-first, no project jargon, must-decide only, one decision per question) are unchanged.
 
 ### Notes
-- **No new rules.** Both checkpoints derive from existing material — Substrate-native first is `vision/VISION.md` §2 principle 9 (already cited in `core/ground-rules` Rule 0); the screen budget is implicit in Rule 2's *"every line earns its place"*. This patch lifts both from "implicit" to "always-on" because the user observed them routinely skipped.
+- **No new rules.** Both checkpoints derive from existing material — Substrate-native first is `.lsa/VISION.md` §2 principle 9 (already cited in `core/ground-rules` Rule 0); the screen budget is implicit in Rule 2's *"every line earns its place"*. This patch lifts both from "implicit" to "always-on" because the user observed them routinely skipped.
 - **Sibling LSA patch.** `lsa` v0.6.1 ships in the same Bundle A PR — applies the prompt-voice scaffolding inside `lsa-specify` / `lsa-plan` / `lsa-init` gate prompts so the user-facing pickers stop using `Gate N` / `F<n>` / `epic decomposition` jargon.
 - Sibling rename PRs (Gate N → User Verification; T1/T2/T3 → Flow) land in Bundle B.
 
 ## [0.5.0] — 2026-05-21
 
-Adds **Rule 5 (Concrete)** to `core/output` — decision-prompt voice discipline. Surfaced during Help-agent-persona refinement (2026-05-21) when the user flagged LSA gates as unusable: *"I have no IDEA what it means…wording is too…i don't know, it just means nothing to me…I want concrete questions to make decisions with clear problem to solve. I do not give a fuck about minor things."* Per `vision/specs/roadmap.md` row *"LSA gate prompts must be concrete"* (Must priority).
+Adds **Rule 5 (Concrete)** to `core/output` — decision-prompt voice discipline. Surfaced during Help-agent-persona refinement (2026-05-21) when the user flagged LSA gates as unusable: *"I have no IDEA what it means…wording is too…i don't know, it just means nothing to me…I want concrete questions to make decisions with clear problem to solve. I do not give a fuck about minor things."* Per `.lsa/roadmap.md` row *"LSA gate prompts must be concrete"* (Must priority).
 
 ### Added
 - `core/skills/output/SKILL.md` **Rule 5 — Concrete (decision prompts)** with four sub-bullets: subject-first (resolve `F3`/`AC2`/`OQ5` to the real-world subject in prompts; IDs stay in files), no project jargon (`contract-trigger`, `Hard Confirm`, `diagonal coverage` stay in skill bodies, not prompts), must-decide only (bundle consistency checks; surface only outcome-changing choices), one decision per question.
 
 ### Changed
 - `core/.claude-plugin/plugin.json` `description` — `output (4 format golden rules — structured, minimal, formatted, sourced)` → `output (5 format golden rules — structured, minimal, formatted, sourced, concrete)`.
-- Live citations of "four golden rules" updated to "five golden rules" across `core/CLAUDE.md`, `core/skills/ground-rules/SKILL.md`, `core/tests/repo-anchored.md`, repo `README.md`, `vision/VISION.md`, `lsa/README.md`, `lsa/ARCHITECTURE.md`. Historical references (older CHANGELOG entries, archived plans) left as-is — they describe past state.
+- Live citations of "four golden rules" updated to "five golden rules" across `core/CLAUDE.md`, `core/skills/ground-rules/SKILL.md`, `core/tests/repo-anchored.md`, repo `README.md`, `.lsa/VISION.md`, `lsa/README.md`, `lsa/ARCHITECTURE.md`. Historical references (older CHANGELOG entries, archived plans) left as-is — they describe past state.
 
 ### Notes
-- **Behavior change, not a refactor.** Existing `AskUserQuestion` calls across `lsa/skills/*/SKILL.md` do not yet conform to Rule 5 (they reference `F1` / `Hard Confirm` / etc.). The new rule will surface their non-conformance immediately. Follow-up sweep tracked in `vision/specs/roadmap.md` row *"LSA gate prompts must be concrete"*.
-- Sibling LSA work is queued, not blocking: the "Gate N → User Verification" rename (`vision/specs/roadmap.md`) and "T1/T2/T3 → Flow: Quick/Standard/Extended" rename land together with the prompt-voice sweep.
+- **Behavior change, not a refactor.** Existing `AskUserQuestion` calls across `lsa/skills/*/SKILL.md` do not yet conform to Rule 5 (they reference `F1` / `Hard Confirm` / etc.). The new rule will surface their non-conformance immediately. Follow-up sweep tracked in `.lsa/roadmap.md` row *"LSA gate prompts must be concrete"*.
+- Sibling LSA work is queued, not blocking: the "Gate N → User Verification" rename (`.lsa/roadmap.md`) and "T1/T2/T3 → Flow: Quick/Standard/Extended" rename land together with the prompt-voice sweep.
 
 ## [0.4.1] — 2026-05-21
 
-Credo rollout PR 2 — `core/tier-selector` adopts its component-specific output format that satisfies `core/output` golden rules. Patch bump: skill contract unchanged (still proposes tier + waits for human confirm); only the render format updates. Per [`vision/plans/2026-05-20-credo-rollout-plan.md`](../vision/plans/2026-05-20-credo-rollout-plan.md) Layer 2.
+Credo rollout PR 2 — `core/tier-selector` adopts its component-specific output format that satisfies `core/output` golden rules. Patch bump: skill contract unchanged (still proposes tier + waits for human confirm); only the render format updates. Per [`.lsa/plans/2026-05-20-credo-rollout-plan.md`](../.lsa/plans/2026-05-20-credo-rollout-plan.md) Layer 2.
 
 ### Changed
 - `core/skills/tier-selector/SKILL.md` Step 4 — confirm prompt describes data + decision options + outcomes inline; defers format to `core/output` (no embedded template). `AskUserQuestion` is the canonical decision primitive in Claude Code.
@@ -199,12 +199,12 @@ Credo rollout PR 2 — `core/tier-selector` adopts its component-specific output
 
 ## [0.4.0] — 2026-05-21
 
-Codifies the user-authored credo *"LSA doesn't automate your thinking — it makes you own it."* with a DRY/KISS/SRP-clean structure. Extends `ground-rules` 4 → 6 content rules; extracts output discipline to a new dedicated skill; lifts the verdict vocabulary to a new Knowledge surface. Per [`vision/plans/2026-05-20-credo-rollout-plan.md`](../vision/plans/2026-05-20-credo-rollout-plan.md) PR 1 (audit-C restructure). Corresponds to Vision v0.5 (`vision/VISION.md` changelog).
+Codifies the user-authored credo *"LSA doesn't automate your thinking — it makes you own it."* with a DRY/KISS/SRP-clean structure. Extends `ground-rules` 4 → 6 content rules; extracts output discipline to a new dedicated skill; lifts the verdict vocabulary to a new Knowledge surface. Per [`.lsa/plans/2026-05-20-credo-rollout-plan.md`](../.lsa/plans/2026-05-20-credo-rollout-plan.md) PR 1 (audit-C restructure). Corresponds to Vision v0.5 (`.lsa/VISION.md` changelog).
 
 ### Added
 - **NEW skill `core/skills/output/SKILL.md`** — single source of truth for output discipline. Four golden rules: (1) Structured, (2) Minimal, (3) Formatted, (4) Sourced (cites `core/ground-rules` Rule 1). Every other skill / agent / artifact cites this; nothing restates it. Body ≤30 lines.
 - **NEW Knowledge surface `core/knowledge/output-vocabulary.md`** — 10-row verdict label table (`PROPOSED` / `READY` / `PASS` / `PASS WITH WARNINGS` / `FAIL` / `BLOCKED` / `DRIFT` / `CLEAN` / `APPLIED` / `REJECTED`) lifted out of any Actor body (SRP). Components whose chosen format uses a verdict line cite this surface by section name.
-- `core/skills/ground-rules/SKILL.md` Rule 0 — *Ownership over automation* (the human owns the thinking; surfaces facts, lays out options, demands a choice). Per `vision/VISION.md:60`.
+- `core/skills/ground-rules/SKILL.md` Rule 0 — *Ownership over automation* (the human owns the thinking; surfaces facts, lays out options, demands a choice). Per `.lsa/VISION.md:60`.
 - `core/skills/ground-rules/SKILL.md` Rule 5 — *No filler* (every sentence carries a fact, an owned opinion, or an action).
 - `core/skills/ground-rules/SKILL.md` Rule 1 amendments — *Scope* (every artifact, no draft exception) + *Illustrative content* (placeholder references tagged `[illustrative]`).
 - `core/skills/ground-rules/SKILL.md` footer — back-reference to `core/output` (makes the cross-link bidirectional alongside output's existing cite to ground-rules Rule 1).
@@ -222,26 +222,26 @@ Codifies the user-authored credo *"LSA doesn't automate your thinking — it mak
 
 ### Notes
 - The *"What this skill never does"* section is deliberately NOT re-added to `ground-rules` — the 0.3.0 refactor removed it as a Knowledge-vs-Actor violation; re-adding would reverse that refactor.
-- This is an audit-C restructure of an earlier PR-1 attempt (commits `3dc1828` + `53d7c58`) that violated `CONTRIBUTING.md` DRY/KISS/SRP by adding format rules (Rules 6/7) into `ground-rules` and restating the 8 rules in `core/CLAUDE.md`. Those commits were discarded by `git reset --hard 01126d1` on `feature/credo-core` before this rebuild. Full rationale: `vision/plans/2026-05-20-credo-rollout-plan.md` §"Audit-C resolutions" (C1–C7).
+- This is an audit-C restructure of an earlier PR-1 attempt (commits `3dc1828` + `53d7c58`) that violated `CONTRIBUTING.md` DRY/KISS/SRP by adding format rules (Rules 6/7) into `ground-rules` and restating the 8 rules in `core/CLAUDE.md`. Those commits were discarded by `git reset --hard 01126d1` on `feature/credo-core` before this rebuild. Full rationale: `.lsa/plans/2026-05-20-credo-rollout-plan.md` §"Audit-C resolutions" (C1–C7).
 - The LSA-skill refit (per-component formats from the plan's Layer 1.5 applied to all LSA skills + `tier-selector` confirm; each skill's Constraints adds one citation to `core/output`) lands in `lsa` v0.4.0 (PR 2 of the credo rollout, `feature/credo-lsa`). PR 1 is the core constitutional change; PR 2 is the propagation across LSA skills.
 
 ## [0.3.0] — 2026-05-20
 
-Knowledge-vs-Actor boundary tightening across all three core skills. Per [`vision/plans/2026-05-20-simplification-refactor-plan.md`](../vision/plans/2026-05-20-simplification-refactor-plan.md) PR 2.
+Knowledge-vs-Actor boundary tightening across all three core skills. Per [`.lsa/plans/2026-05-20-simplification-refactor-plan.md`](../.lsa/plans/2026-05-20-simplification-refactor-plan.md) PR 2.
 
 ### Changed
-- `core/skills/tier-selector/SKILL.md` — Step 1 and Step 2 no longer inline the boundary-signal checklist or the four-row classification table. Both now cite `vision/VISION.md` §4 as the single source of truth. Resolves the self-flagged debt at the prior `lsa/ARCHITECTURE.md:459` ("revisit if a second skill restates them"). Body shrunk by ~16 lines.
+- `core/skills/tier-selector/SKILL.md` — Step 1 and Step 2 no longer inline the boundary-signal checklist or the four-row classification table. Both now cite `.lsa/VISION.md` §4 as the single source of truth. Resolves the self-flagged debt at the prior `lsa/ARCHITECTURE.md:459` ("revisit if a second skill restates them"). Body shrunk by ~16 lines.
 - `core/skills/actor-template/SKILL.md` — removed the duplicate "Rules" section (which restated the three rules already embedded in the "Five required sections" descriptions) and the trailing "What this skill never does" block (which restated those rules negatively). The five-section spec + worked example + copy-paste template remain authoritative.
 - `core/skills/ground-rules/SKILL.md` — removed the trailing "What this skill never does" block. The four numbered rules + their examples remain authoritative.
 - `core/skills/tier-selector/SKILL.md` — frontmatter `description:` trimmed by one sentence (removed implementation-detail tail; trigger phrases preserved).
 
 ### Notes
 - No skill behavior changes. The Goal / Input / Steps / Output / Constraints shape and the tier-selector chain-of-thought protocol are preserved; only restatements removed. `core/skills/ground-rules/SKILL.md` and `core/skills/actor-template/SKILL.md` frontmatter `description:` fields left as-is — already at ≤2 sentences with trigger phrases intact.
-- Per `vision/VISION.md` §4 (*"ceremony scales to the weight of the task"*): citing the canonical table at VISION §4 means a future change to the tier classification rules is a single-edit operation, not a multi-file sweep.
+- Per `.lsa/VISION.md` §4 (*"ceremony scales to the weight of the task"*): citing the canonical table at VISION §4 means a future change to the tier classification rules is a single-edit operation, not a multi-file sweep.
 
 ## [0.2.1] — 2026-05-20
 
-Docs-only patch — marks `core/CLAUDE.md` as the canonical source for the always-on rules block. Part of the repo-wide DRY / SRP prune in [`vision/plans/2026-05-20-simplification-refactor-plan.md`](../vision/plans/2026-05-20-simplification-refactor-plan.md) PR 1.
+Docs-only patch — marks `core/CLAUDE.md` as the canonical source for the always-on rules block. Part of the repo-wide DRY / SRP prune in [`.lsa/plans/2026-05-20-simplification-refactor-plan.md`](../.lsa/plans/2026-05-20-simplification-refactor-plan.md) PR 1.
 
 ### Changed
 - `core/CLAUDE.md` — added a header blockquote declaring the file as *"the single source-of-truth for the always-on rules block. Other locations (repo `CLAUDE.md`, READMEs, module specs) point here rather than restating the rules."* No change to the Ground rules or Tier selection sections.
@@ -252,8 +252,8 @@ Docs-only patch — marks `core/CLAUDE.md` as the canonical source for the alway
 ## [0.2.0] — 2026-05-20
 
 ### Added
-- `core/skills/tier-selector/SKILL.md` — Actor skill that classifies a task into T1/T2/T3 by applying Vision §4 boundary signals, then waits for human confirmation. Per `vision/specs/2026-05-20-lsa-v0.2.0-design.md` §4.1.
-- `core/CLAUDE.md` — opt-in always-on fragment declaring both `ground-rules` and `tier-selector` as required pre-task invocations. Mirrors the always-on/on-demand split from `vision/VISION.md:106`.
+- `core/skills/tier-selector/SKILL.md` — Actor skill that classifies a task into T1/T2/T3 by applying Vision §4 boundary signals, then waits for human confirmation. Per `.lsa/2026-05-20-lsa-v0.2.0-design.md` §4.1.
+- `core/CLAUDE.md` — opt-in always-on fragment declaring both `ground-rules` and `tier-selector` as required pre-task invocations. Mirrors the always-on/on-demand split from `.lsa/VISION.md:106`.
 - `core/tests/repo-anchored.md` — dogfood self-tests (4 `ground-rules` probes, 2 `actor-template` probes, 1 V3 behavior-comparison task) anchored in this repo as the source of truth. Complements `VERIFICATION.md` (generic, portable) with repo-specific probes whose expected answers can be checked against actual file content. (Previously listed under `[Unreleased]`; rolled into 0.2.0 release.)
 
 ### Changed
@@ -262,7 +262,7 @@ Docs-only patch — marks `core/CLAUDE.md` as the canonical source for the alway
 - Plugin description in `core/.claude-plugin/plugin.json` extended to mention `tier-selector` (T1/T2/T3) chain-of-thought.
 
 ### Notes
-- `core/registry` (the lazy-load map-not-territory skill) remains deferred to v0.3.0. `vision/VISION.md:177` notes Claude Code's per-component plugin discovery partially subsumes its role.
+- `core/registry` (the lazy-load map-not-territory skill) remains deferred to v0.3.0. `.lsa/VISION.md:177` notes Claude Code's per-component plugin discovery partially subsumes its role.
 
 ## [0.1.0] — 2026-05-20
 

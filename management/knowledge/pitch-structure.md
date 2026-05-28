@@ -2,7 +2,7 @@
 
 # Pitch structure — knowledge
 
-The canonical format for a shaped pitch. Every pitch lives at `vision/specs/pitches/<slug>.md`. Inspiration: Basecamp Shape Up shaping phase [unverified -- cited from training knowledge].
+The canonical format for a shaped pitch. Every pitch lives at `${specs_root}/pitches/<slug>.md` (where `specs_root` is resolved from `.lsa.yaml` — see [`../../lsa/knowledge/conventions.md`](../../lsa/knowledge/conventions.md) §"`.lsa.yaml` defaults"). Inspiration: Basecamp Shape Up shaping phase [unverified -- cited from training knowledge].
 
 ## Metadata header
 

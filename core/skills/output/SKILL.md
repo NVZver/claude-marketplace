@@ -5,14 +5,14 @@ description: Apply to every human-facing output — agent responses, skill bodie
 
 > **Trace.** On load, print first: `=============== [core/skills/output/SKILL.md] [core] ===============`
 
-> **Canonical source.** Single source-of-truth for output discipline. Other plugins cite by markdown link only — MUST NOT restate rule count/names or override any rule. Enforced by `core/tests/repo-anchored.md` probe D2.
+> **Canonical source.** This file is the single source-of-truth for output discipline across the NVZver marketplace. Other plugins MAY cite it and MAY add component-specific formats that satisfy these seven rules. They MUST NOT restate the rule count or rule names outside this file (citation by markdown link only). They MUST NOT override or relax any rule. Re-grounded summaries that restate the rules in prose are permitted only when they cite this file by link at the top — see `helper/knowledge/output-discipline.md` for the canonical adherent example. Enforced by `core/tests/repo-anchored.md` probe D2.
 
 # Output Discipline
 
 Seven golden rules. Component-specific formats (per-skill) are free choices WITHIN these rules.
 
 ## 1. Structured
-Every response has an explicit skeleton — headings, sections, or numbered steps — before prose fills it. No stream-of-consciousness.
+Output has a shape: headings, sections, tables, lists, blocks. No stream-of-consciousness prose.
 
 ## 2. Minimal
 No fluff, no overexplanation, no padding. Every line earns its place.
@@ -22,7 +22,7 @@ No fluff, no overexplanation, no padding. Every line earns its place.
 - **Pull, don't push.** Surface what the human needs to act on next. Do not pre-emptively render every option, every artifact, every consideration in one shot — that forces scroll-and-skim and buries the decision.
 
 ## 3. Formatted
-Pick the markdown primitive that fits the content type: tables for comparisons, lists for sequences, code blocks for literals, headings for navigation. Do not default to prose when a table or list is clearer.
+Markdown affordances match content: tables, lists, code blocks, headings.
 
 ## 4. Sourced
 Every factual claim carries source + exact quote per [`core/ground-rules`](../ground-rules/SKILL.md) Rule 1.
@@ -36,7 +36,7 @@ Questions and options name the real-world subject — not spec IDs, not project 
   - ✗ *"Approve F3 in requirements.md §Functional Requirements?"*
   - ✓ *"Add password reset endpoint?"*
 - **No project jargon.** Strip terms a first-time user can't decode (`contract-trigger`, `Hard Confirm`, `diagonal coverage`). Reserve jargon for skill bodies, not user-facing prompts.
-- **Must-decide only — Genuine-fork test.** Surface as picker questions only choices that meaningfully change the outcome. Before opening a picker, the agent answers: *is there a real fork I cannot resolve from in-scope sources?* A fork is real when **at least one** holds: (a) **destructive** — the next action edits a file, deletes a row, calls an external service, or starts a multi-turn skill flow; (b) **two named designs in scope and neither overrides the other** — the agent has identified ≥2 reasonable continuations from in-scope sources (`vision/VISION.md:63` Principle 6) and no source ranks one above the other; (c) **a fact required by the next step is absent from working context and cannot be derived** — spec, repo, and prior turns do not supply it; (d) **per-row triage** — N items each need an independent decision (batched into one multi-question picker). If none apply, deliver the cited answer directly and offer at most ONE closing picker for the user to override. Substrate selection (which primitive) is governed by `vision/VISION.md:66` Principle 9.
+- **Must-decide only — Genuine-fork test.** Surface as picker questions only choices that meaningfully change the outcome. Before opening a picker, the agent answers: *is there a real fork I cannot resolve from in-scope sources?* A fork is real when **at least one** holds: (a) **destructive** — the next action edits a file, deletes a row, calls an external service, or starts a multi-turn skill flow; (b) **two named designs in scope and neither overrides the other** — the agent has identified ≥2 reasonable continuations from in-scope sources (`.lsa/VISION.md:63` Principle 6) and no source ranks one above the other; (c) **a fact required by the next step is absent from working context and cannot be derived** — spec, repo, and prior turns do not supply it; (d) **per-row triage** — N items each need an independent decision (batched into one multi-question picker). If none apply, deliver the cited answer directly and offer at most ONE closing picker for the user to override. Substrate selection (which primitive) is governed by `.lsa/VISION.md:66` Principle 9.
 - **One decision per question.** Don't bundle "approve A and B and C?" — split into separate questions.
 
 ## 6. What-and-why preamble — verdicts carry a one-sentence frame
@@ -52,7 +52,7 @@ fails this rule.
 
 Every write, edit, or mark performed by an agent is **echoed back inline** before any commentary. The order is **write → show → comment** — never *"I added X to file Y; here's why it matters."* without quoting X first.
 
-This rule generalizes the 8-element drift block already in use by [`reconcile`](../../../lsa/skills/reconcile/SKILL.md), which the user endorsed as the gold standard: *"Good! Love it!"* (2026-05-22).
+This rule generalizes the 8-element drift block already in use by [`lsa-reconcile`](../../../lsa/skills/lsa-reconcile/SKILL.md), which the user endorsed as the gold standard: *"Good! Love it!"* (2026-05-22).
 
 ### Single-change template
 
@@ -66,7 +66,7 @@ For one edit to one file, the response contains, in order:
 6. **Source** — a `file:line` (or URL) for the authority that justified the change. Inherits Rule 4 (Sourced).
 7. **Type tag** — one of `add` / `edit` / `replace` / `append` / `mark`, so the human can skim a sequence of changes by type.
 
-Combined, the seven elements line up with the eight-element drift block at [`reconcile`](../../../lsa/skills/reconcile/SKILL.md) (the eighth — *bundle-explanation* — collapses into element 5 here when the change is not part of a multi-module batch).
+Combined, the seven elements line up with the eight-element drift block at [`lsa-reconcile`](../../../lsa/skills/lsa-reconcile/SKILL.md) (the eighth — *bundle-explanation* — collapses into element 5 here when the change is not part of a multi-module batch).
 
 ### Batch template — compressed inspection table
 
@@ -86,9 +86,9 @@ After the table: one cluster of follow-up `file:line` pointers the human can ope
 - *"Observable result: file is edited"* / *"diff shown"* without naming whether the diff is full-quote or compressed-table.
 - *"go check the file"* / *"see file for details"* in any form.
 
-### Worked example
+### Worked examples
 
-**Single-file edit (a typo fix).** `[illustrative]`
+**Example 1 — single-file edit (a typo fix).**
 
 > *Edited `core/skills/output/SKILL.md:32` — single line.*
 >
@@ -106,8 +106,43 @@ After the table: one cluster of follow-up `file:line` pointers the human can ope
 > *Source: user 2026-05-22.*
 > *Type: `edit`.*
 
+**Example 2 — multi-file batch write (this feature's own implementation).**
+
+| # | file:line | type | summary | pointer |
+|---|-----------|------|---------|---------|
+| 1 | `core/skills/output/SKILL.md:42-90` | add | Rule 7 *Show changes inline* | new section |
+| 2 | `core/CLAUDE.md:18` | edit | Operational checkpoint #4 cites Rule 7 | inline |
+| 3 | `lsa/skills/lsa-sync/SKILL.md:67` | edit | Observable result names quoted-diff format | step 3 |
+| 4 | `lsa/skills/lsa-sync/SKILL.md:74` | edit | Observable result names quoted-diff format | step 4 |
+| 5 | `lsa/skills/lsa-specify/SKILL.md:99` | edit | Observable result names quoted-section format | step 4 |
+
+*Reason: lands the `core/output` Rule 7 + LSA sweep per `.lsa/features/2026-05-22-show-changes-inline/tasks.md` step 1-2. Source: `.lsa/roadmap.md:128-132`. Type: `batch` (`add` + `edit` mix).*
+
+**Example 3 — state mark.**
+
+> *Marked **OQ5** as resolved in `.lsa/features/2026-05-22-show-changes-inline/design.md:118`.*
+>
+> *Previous (line 118):*
+> ```markdown
+> - **OQ5** — Do we backfill archive specs under `.lsa/archive/`?
+> ```
+>
+> *New (line 118):*
+> ```markdown
+> - **OQ5** — Do we backfill archive specs under `.lsa/archive/`? **Resolved 2026-05-23: no — per archive-files-don't-rewrite rule (`.lsa/roadmap.md:48`).**
+> ```
+>
+> *Reason: human picked `[b] no backfill` at User Verification 3. Source: this session 2026-05-23. Type: `mark`.*
+
+### Inheritance & inheritance gaps
+
+- **Inherits Rule 2 (Minimal).** The batch template is the explicit escape valve when full single-change blocks would blow the budget.
+- **Inherits Rule 4 (Sourced).** Every change carries a `file:line` source per element 6.
+- **Inherits Rule 5 (Concrete).** The reason (element 5) names the subject in the human's frame, not the spec ID.
+- **Composes with Rule 3 (Formatted).** Single-change blocks use fenced code; batch blocks use markdown tables. Match the affordance to the content.
+
 ---
 
-Substrate selection — see `vision/VISION.md` §2 principle 9 (*"Substrate-native first"*).
+Substrate selection — see `.lsa/VISION.md` §2 principle 9 (*"Substrate-native first"*).
 
 Verdict labels — see [`core/knowledge/output-vocabulary.md`](../../knowledge/output-vocabulary.md).

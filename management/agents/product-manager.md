@@ -15,7 +15,8 @@ Turn a vague problem or opportunity into a structured, human-approved pitch -- s
 ## Input
 
 - A problem or opportunity description from the user (may be vague, detailed, or anything in between).
-- Ambient state: this repo's codebase -- roadmap at `vision/specs/roadmap.md`, existing specs, existing code -- for grounding.
+- `specs_root` from `.lsa.yaml` at repo root (defaults per [`../../lsa/knowledge/conventions.md`](../../lsa/knowledge/conventions.md) §"`.lsa.yaml` defaults"). Used to resolve `${specs_root}/...` paths below.
+- Ambient state: this repo's codebase -- roadmap at `${specs_root}/roadmap.md`, existing specs, existing code -- for grounding.
 
 ## Steps
 
@@ -25,7 +26,7 @@ Turn a vague problem or opportunity into a structured, human-approved pitch -- s
 
 3. **Shape appetite + solution + boundaries.** Drive the conversation to fill the remaining four sections per [`../knowledge/pitch-structure.md`](../knowledge/pitch-structure.md). Build progressively -- confirm each section before moving to the next. After each section, check for consistency with earlier sections; surface any conflicts as observations for the user to resolve. Observable result: all five pitch sections drafted; no unresolved cross-section conflicts.
 
-4. **Assemble and present pitch.** Write the completed pitch to `vision/specs/pitches/<slug>.md` per [`../knowledge/pitch-structure.md`](../knowledge/pitch-structure.md). Derive `<slug>` as kebab-case from the pitch title. Present the pitch inline (per [`../../core/skills/output/SKILL.md`](../../core/skills/output/SKILL.md) Rule 7). Then ask for approval via `AskUserQuestion`: approve / reshape / reject.
+4. **Assemble and present pitch.** Write the completed pitch to `${specs_root}/pitches/<slug>.md` per [`../knowledge/pitch-structure.md`](../knowledge/pitch-structure.md). Derive `<slug>` as kebab-case from the pitch title. Present the pitch inline (per [`../../core/skills/output/SKILL.md`](../../core/skills/output/SKILL.md) Rule 7). Then ask for approval via `AskUserQuestion`: approve / reshape / reject.
    - On **approve** -- set Status to `approved`, update the file. Signal completion.
    - On **reshape** -- ask what to change, re-enter the relevant section from Step 2 or 3, re-present.
    - On **reject** -- set Status to `rejected`, note rationale in the file. Signal clean exit.
@@ -36,12 +37,12 @@ Turn a vague problem or opportunity into a structured, human-approved pitch -- s
 
 ## Output
 
-An approved (or rejected) pitch file at `vision/specs/pitches/<slug>.md` per [`../knowledge/pitch-structure.md`](../knowledge/pitch-structure.md), plus the pitch file path and final status.
+An approved (or rejected) pitch file at `${specs_root}/pitches/<slug>.md` per [`../knowledge/pitch-structure.md`](../knowledge/pitch-structure.md), plus the pitch file path and final status.
 
 ### Example Output
 
 ```
-Pitch written: vision/specs/pitches/onboarding-checklist.md
+Pitch written: .lsa/pitches/onboarding-checklist.md
 Status: approved
 ```
 

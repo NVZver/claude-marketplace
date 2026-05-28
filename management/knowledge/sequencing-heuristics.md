@@ -6,7 +6,7 @@ Three factors for ordering backlog items, adapted from Weighted Shortest Job Fir
 
 ## Roadmap table format
 
-The agent reads the Feature Backlog table at `vision/specs/roadmap.md`. Expected format (per `vision/specs/roadmap.md:9`):
+The agent reads the Feature Backlog table at `${specs_root}/roadmap.md`. Expected format (per `${specs_root}/roadmap.md:9`):
 
 ```markdown
 | Feature | Priority | Status | Notes |
@@ -30,7 +30,7 @@ Apply in order. Factor 1 (dependency) produces hard constraints. Factors 2 and 3
 **Rule.** If item B's pitch references work from item A (in Solution sketch, Rabbit holes, or No-gos), A ships first.
 
 **Detection:**
-1. Read each backlog item's linked pitch file (found in the Notes column or at `vision/specs/pitches/<slug>.md`).
+1. Read each backlog item's linked pitch file (found in the Notes column or at `${specs_root}/pitches/<slug>.md`).
 2. Scan the pitch's Solution sketch and Rabbit holes for cross-references to other pitches or feature branches.
 3. Check if the referenced feature branch exists and is merged (`git branch -a`, `git log --oneline`). If merged, the dependency is satisfied — ignore it.
 4. Unmerged dependencies create a hard ordering constraint: the dependency ships first.
@@ -63,9 +63,9 @@ Given three backlog items:
 
 | Feature | Priority | Status | Notes |
 |---|---|---|---|
-| Plugin scaffolding command | Could | backlog | Pitch: [plugin-scaffold](vision/specs/pitches/plugin-scaffold.md) |
-| Onboarding checklist | Should | backlog | Pitch: [onboarding-checklist](vision/specs/pitches/onboarding-checklist.md) |
-| Verify coverage expansion | Must | backlog | Pitch: [verify-coverage](vision/specs/pitches/verify-coverage.md) |
+| Plugin scaffolding command | Could | backlog | Pitch: [plugin-scaffold](pitches/plugin-scaffold.md) |
+| Onboarding checklist | Should | backlog | Pitch: [onboarding-checklist](pitches/onboarding-checklist.md) |
+| Verify coverage expansion | Must | backlog | Pitch: [verify-coverage](pitches/verify-coverage.md) |
 
 **Factor 1 (dependency):** The plugin-scaffold pitch's Solution sketch references the onboarding checklist ("scaffolding command auto-applies checklist items"). Onboarding-checklist has no unmerged dependency. Verify-coverage has no dependency on either. Result: plugin-scaffold is blocked by onboarding-checklist.
 

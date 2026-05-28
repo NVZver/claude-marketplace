@@ -2,7 +2,7 @@
 
 # Onboarding fast-path — knowledge
 
-When the user asks an onboarding-flavored question (*install / start / what-is-X / how-do-I-run*), Helper consults this catalog **before** [`./knowledge-scope.md`](./knowledge-scope.md)'s Step 2 scope-order read. If a row matches, Helper responds directly from the cited README excerpt — no `Grep`, no `Glob`, no `context7`. Per [`vision/specs/archive/2026-05-22-helper-onboarding-fast-path/requirements.md`](../../vision/specs/archive/2026-05-22-helper-onboarding-fast-path/requirements.md) F1 / F2 / F4.
+When the user asks an onboarding-flavored question (*install / start / what-is-X / how-do-I-run*), Helper consults this catalog **before** [`./knowledge-scope.md`](./knowledge-scope.md)'s Step 2 scope-order read. If a row matches, Helper responds directly from the cited README excerpt — no `Grep`, no `Glob`, no `context7`. Per [`.lsa/features/2026-05-22-helper-onboarding-fast-path/requirements.md`](../../.lsa/features/2026-05-22-helper-onboarding-fast-path/requirements.md) F1 / F2 / F4.
 
 ## Catalog — onboarding trigger → README excerpt
 
@@ -12,7 +12,7 @@ Each row maps a plain-English intent to a concrete `file:line-range` excerpt. Th
 |---|---|---|---|---|
 | 1 | Install the marketplace | "how do I install", "install marketplace", "/plugin install commands", "set me up" | `README.md:73-83` | The four-line install block + the "install `core` first" caveat. |
 | 2 | Get started with LSA | "how do I get started with LSA", "where do I start with LSA", "first steps LSA" | `README.md:73-83` (install) + `lsa/README.md:49-60` (Depends on / install order) | Install both plugins, then invoke `/lsa:init`. |
-| 3 | What is the marketplace | "what is this marketplace", "what is `claude-marketplace`", "what is NVZver" | `README.md:1-12` + `vision/VISION.md:13-15` | One-sentence frame + the three-plugin list. |
+| 3 | What is the marketplace | "what is this marketplace", "what is `claude-marketplace`", "what is NVZver" | `README.md:1-12` + `.lsa/VISION.md:13-15` | One-sentence frame + the three-plugin list. |
 | 4 | What is `core` | "what is core", "what does core do", "what is `core/ground-rules`" | `README.md:25-49` | Three always-on skills + four supporting bullets. Glosses each. |
 | 5 | What is `lsa` | "what is LSA", "what does lsa do", "what is Living Spec Architecture" | `README.md:51-68` + `lsa/README.md:1-9` | Definition + 8-skill table + credo quote. |
 | 6 | What is `helper` | "what is helper", "what does helper do", "what is `/help`" | `helper/README.md:1-10` | Two surfaces + invocation paths. |
@@ -30,10 +30,10 @@ Catalog size v1: **6 rows**. Floor named in `requirements.md` NF2 (install / sta
 
 - *"how do I configure `.lsa.yaml`"* — answer lives in `lsa/ARCHITECTURE.md` §4.10, not a top-level README. Fall through to Step 2.
 - *"what does `lsa-verify`'s orphan-AC predicate do"* — mechanism question; answer lives in `lsa/skills/lsa-verify/SKILL.md`, not a README. Fall through.
-- *"why was `flow-selector` renamed from `tier-selector`"* — history question; lives in `core/CHANGELOG.md` + `vision/specs/roadmap.md`. Fall through.
+- *"why was `flow-selector` renamed from `tier-selector`"* — history question; lives in `core/CHANGELOG.md` + `.lsa/roadmap.md`. Fall through.
 - *"how do I install `context7`"* — `context7` is an external MCP, not a marketplace plugin. No catalog row maps the trigger to a `file:line` excerpt. Fall through (and Step 2 will likely declare cannot-verify or route to scope 3).
 - *"what is `dev-plugin`"* — not a canonical marketplace subject (canonical = `marketplace` / `core` / `lsa` / `helper`). Fall through to scope-order read.
-- *"how do I write an EARS acceptance criterion"* — methodology question; answer lives in `vision/VISION.md` §3 + `lsa/skills/lsa-specify/SKILL.md`. Fall through.
+- *"how do I write an EARS acceptance criterion"* — methodology question; answer lives in `.lsa/VISION.md` §3 + `lsa/skills/lsa-specify/SKILL.md`. Fall through.
 
 ## Fall-through rules — when to defer to Step 2
 

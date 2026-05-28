@@ -1,6 +1,6 @@
 ---
 name: start-feature
-description: "Shape a new feature from a vague idea into a structured pitch. Input: problem or opportunity description (argument or interactive prompt). Output: approved pitch file at vision/specs/pitches/<slug>.md, then handoff to management:roadmap for epic decomposition."
+description: "Shape a new feature from a vague idea into a structured pitch. Input: problem or opportunity description (argument or interactive prompt). Output: approved pitch file at ${specs_root}/pitches/<slug>.md, then handoff to management:roadmap for epic decomposition."
 ---
 
 > **Trace.** On load, print first: `=============== [management/skills/start-feature/SKILL.md] [management] ===============`
@@ -17,6 +17,7 @@ Go from a vague idea to a human-approved pitch with epics ready for the LSA buil
 ## Input
 
 - Problem or opportunity description (argument to the skill, or interactive prompt if no argument given).
+- `specs_root` from `.lsa.yaml` at repo root (defaults per [`../../../lsa/knowledge/conventions.md`](../../../lsa/knowledge/conventions.md) §"`.lsa.yaml` defaults"). Used to resolve `${specs_root}/...` paths below.
 
 ## Steps
 
@@ -25,19 +26,19 @@ Go from a vague idea to a human-approved pitch with epics ready for the LSA buil
 2. **Dispatch product-manager agent.** Invoke the `product-manager` agent via the `Agent` tool with the problem description. Wait for the agent to complete. Observable result: agent returns pitch file path + approval status.
 
 3. **Hand off to roadmap.** Handle outcome based on agent approval status:
-   - **Approved:** invoke `management:roadmap` via the `Skill` tool. The project-manager agent handles the roadmap entry (backlog row, priority, sequencing) and epic decomposition — this skill does not write to `vision/specs/roadmap.md` directly. Observable result: `management:roadmap` executing; pitch added to roadmap by project-manager.
+   - **Approved:** invoke `management:roadmap` via the `Skill` tool. The project-manager agent handles the roadmap entry (backlog row, priority, sequencing) and epic decomposition — this skill does not write to `${specs_root}/roadmap.md` directly. Observable result: `management:roadmap` executing; pitch added to roadmap by project-manager.
    - **Rejected:** exit cleanly. No branch created, no downstream work. Observable result: clean exit, no side effects.
 
 ## Output
 
-Either `management:roadmap` is executing (approved path) or clean exit (rejected path). The pitch file exists at `vision/specs/pitches/<slug>.md` regardless of outcome (with `approved` or `rejected` status in its metadata). Roadmap writes (backlog row, priority, sequencing) are handled by the project-manager agent via `management:roadmap` -- this skill never writes to `vision/specs/roadmap.md` directly.
+Either `management:roadmap` is executing (approved path) or clean exit (rejected path). The pitch file exists at `${specs_root}/pitches/<slug>.md` regardless of outcome (with `approved` or `rejected` status in its metadata). Roadmap writes (backlog row, priority, sequencing) are handled by the project-manager agent via `management:roadmap` — this skill never writes to `${specs_root}/roadmap.md` directly.
 
 ### Example Output
 
 [illustrative]
 
 ```
-Pitch approved: vision/specs/pitches/onboarding-checklist.md
+Pitch approved: .lsa/pitches/onboarding-checklist.md
 Handing off to management:roadmap for backlog entry and epic decomposition…
 ```
 

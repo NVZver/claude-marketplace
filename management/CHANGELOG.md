@@ -2,6 +2,22 @@
 
 All notable changes to the `management` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.3.0] – 2026-05-28
+
+Paths parametrized on `${specs_root}`. Management now interoperates with LSA's configurable spec tree instead of hardcoding `vision/specs/`.
+
+### Changed
+
+- **`management/agents/product-manager.md`**, **`management/agents/project-manager.md`** — Input sections declare `specs_root` (read from `.lsa.yaml`, defaults per `lsa/knowledge/conventions.md`). Steps, Output, and Constraints reference `${specs_root}/pitches/<slug>.md`, `${specs_root}/roadmap.md`, and `${specs_root}/features/*/` instead of hardcoded `vision/specs/...`.
+- **`management/skills/start-feature/SKILL.md`** — Same parametrization. Description updated to use `${specs_root}/pitches/<slug>.md`. Note: v0.2.1 had already refactored the hand-off to `management:roadmap`; v0.3.0 retains that structure and only parametrizes path strings.
+- **`management/knowledge/sequencing-heuristics.md`**, **`management/knowledge/pitch-structure.md`** — `vision/specs/roadmap.md` and `vision/specs/pitches/<slug>.md` → `${specs_root}/roadmap.md` and `${specs_root}/pitches/<slug>.md`. Worked-example tables use repo-root-relative `pitches/<slug>.md` links.
+- **`management/knowledge/epic-decomposition.md`** — epic-format template uses `../../pitches/<slug>.md` (relative to a feature file at `${specs_root}/features/<slug>/`) instead of `../../vision/specs/pitches/<slug>.md`. The previous template included a redundant `vision/specs/` segment that produced an incorrect path when resolved.
+- **`management/.claude-plugin/plugin.json`** — version 0.2.2 → 0.3.0.
+
+### Why
+
+Before this change, management hardcoded `vision/specs/...` in six files. Any project whose `.lsa.yaml` set `specs_root` to something else — e.g., the new LSA default of `.lsa/` — would have management writing pitches and roadmap entries to a directory LSA didn't read from. Parametrization aligns management with the `specs_root` contract.
+
 ## [0.2.2] – 2026-05-27
 
 Prompt audit remediation — knowledge deduplication and boundary fix.
@@ -33,7 +49,7 @@ Project-manager agent and roadmap skill. Bridges the gap between shaping (produc
 
 ### Changed
 
-- **Start-feature skill** ([`./skills/start-feature/SKILL.md`](./skills/start-feature/SKILL.md)). Added Step 3: after pitch approval, optionally adds a roadmap backlog entry (title, user-confirmed priority, status `backlog`, pitch link) to `vision/specs/roadmap.md`. Skippable at user's discretion.
+- **Start-feature skill** ([`./skills/start-feature/SKILL.md`](./skills/start-feature/SKILL.md)). Added Step 3: after pitch approval, optionally adds a roadmap backlog entry (title, user-confirmed priority, status `backlog`, pitch link) to `.lsa/roadmap.md`. Skippable at user's discretion.
 - **Plugin manifest** ([`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json)). Version 0.1.0 → 0.2.0. Description updated to cover both agents and both skills.
 
 ## [0.1.0] – 2026-05-26
@@ -47,7 +63,7 @@ Initial release. Plugin scaffold, knowledge files, product-manager agent, and st
 - **Knowledge file: role adaptation** ([`./knowledge/role-adaptation.md`](./knowledge/role-adaptation.md)). Defines how the product-manager agent self-selects a `<domain> product manager` role per invocation via visible chain-of-thought reasoning, with override via `AskUserQuestion`.
 - **Product-manager agent** ([`./agents/product-manager.md`](./agents/product-manager.md)). Interactive shaping agent: adapts domain-expert role per invocation, drives multi-turn conversation to extract requirements, produces structured pitches per pitch-structure knowledge, gates on human approval. Inherits `core/ground-rules` and `core/output`.
 - **Start-feature skill** ([`./skills/start-feature/SKILL.md`](./skills/start-feature/SKILL.md)). User-facing entry point. Accepts a problem description, dispatches the product-manager agent, hands off to `lsa:new` on approval. Orchestrator only — no shaping logic, no branch-creation logic.
-- **Module spec** ([`vision/specs/modules/management/spec.md`](../vision/specs/modules/management/spec.md)). Module-level invariants and artifact paths.
-- **Registrations** (`.lsa.yaml`, `vision/specs/main.spec.md`). Management module registered with artifact paths and cross-module contracts.
+- **Module spec** ([`.lsa/modules/management/spec.md`](../.lsa/modules/management/spec.md)). Module-level invariants and artifact paths.
+- **Registrations** (`.lsa.yaml`, `.lsa/main.spec.md`). Management module registered with artifact paths and cross-module contracts.
 - **README** ([`./README.md`](./README.md)). Install instructions, dependency on `core`, skill and agent tables, flow diagram.
-- **Pitches directory** ([`vision/specs/pitches/`](../vision/specs/pitches/)). Empty directory (`.gitkeep`) for pitch output files.
+- **Pitches directory** ([`.lsa/pitches/`](../.lsa/pitches/)). Empty directory (`.gitkeep`) for pitch output files.

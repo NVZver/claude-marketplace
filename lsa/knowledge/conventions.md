@@ -4,7 +4,7 @@
 
 Cross-cutting conventions every LSA skill applies. This file is **Knowledge**, not an Actor — it has no Goal / Input / Steps / Output / Constraints. LSA skills reference these conventions by section name rather than restating them.
 
-For the operating constitution see [`../../vision/VISION.md`](../../vision/VISION.md). For fact-grounding rules see [`../../core/skills/ground-rules/SKILL.md`](../../core/skills/ground-rules/SKILL.md). For the `.lsa.yaml` schema see [`../ARCHITECTURE.md`](../ARCHITECTURE.md) §3.
+For the operating constitution see [`../../.lsa/VISION.md`](../../.lsa/VISION.md). For fact-grounding rules see [`../../core/skills/ground-rules/SKILL.md`](../../core/skills/ground-rules/SKILL.md). For the `.lsa.yaml` schema see [`../ARCHITECTURE.md`](../ARCHITECTURE.md) §3.
 
 ---
 
@@ -13,11 +13,13 @@ For the operating constitution see [`../../vision/VISION.md`](../../vision/VISIO
 When `.lsa.yaml` is absent at the repo root, LSA applies these defaults:
 
 ```yaml
-constitution: /CLAUDE.md
-specs_root: /specs/
+constitution: .lsa/VISION.md
+specs_root: .lsa/
 mode: code
 modules: {}
 ```
+
+The default workspace lives entirely under `.lsa/` so a user can `rm -rf .lsa/` to fully detach from LSA. The constitution sits inside that workspace as `.lsa/VISION.md`. Projects with a pre-existing `/CLAUDE.md` constitution or a `/specs/` spec tree should set `constitution` and `specs_root` explicitly in `.lsa.yaml`.
 
 LSA skills cite this section instead of restating the defaults inline.
 

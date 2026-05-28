@@ -2,7 +2,7 @@
 
 Manual probes for the friendly fact-grounded assistant. Run on a fresh Claude Code session. No automated harness — Helper's substrate is `AskUserQuestion` + `Skill` + `Read`, none of which currently have programmatic probes. Eyeball it.
 
-Probes are scoped to the v0.2.0 surface: the `helper` subagent + the `/help` slash command + the cooldown rule from [`./knowledge/friction-signals.md`](./knowledge/friction-signals.md). Cited acceptance criteria reference the original helper-agent spec (shipped v0.2.0) requirements (AC1-AC8) and test-suites (Journeys 1-3).
+Probes are scoped to the v0.2.0 surface: the `helper` subagent + the `/help` slash command + the cooldown rule from [`./knowledge/friction-signals.md`](./knowledge/friction-signals.md). Cited acceptance criteria reference [`../.lsa/features/2026-05-21-helper-agent/requirements.md`](../.lsa/features/2026-05-21-helper-agent/requirements.md) (AC1–AC8) and [`../.lsa/features/2026-05-21-helper-agent/test-suites.md`](../.lsa/features/2026-05-21-helper-agent/test-suites.md) (Journeys 1–3).
 
 ## V1 — Installs cleanly
 
@@ -23,7 +23,7 @@ Four probes covering each invocation path.
 ```
 /help what is the Standard flow?
 ```
-Expected: Helper response in ≤1.5 screens with `Standard — moderate-effort flow` re-gloss on first use, a `file:line` (or section) citation to `vision/VISION.md` and/or `core/skills/flow-selector/SKILL.md`, and a closing `AskUserQuestion` offering 2–3 next steps. **Covers:** AC1, AC7, AC8 (Journey 1 / Happy path).
+Expected: Helper response in ≤1.5 screens with `Standard — moderate-effort flow` re-gloss on first use, a `file:line` (or section) citation to `.lsa/VISION.md` and/or `core/skills/flow-selector/SKILL.md`, and a closing `AskUserQuestion` offering 2–3 next steps. **Covers:** AC1, AC7, AC8 (Journey 1 / Happy path).
 
 **Probe B (signal c — slash command, external library subject).** Run:
 ```
@@ -69,6 +69,6 @@ Expected: Helper engages — signal (c) always bypasses cooldown. **Covers:** [`
 
 ## Falsifiable threshold
 
-Across two weeks of regular use, log every session where Helper *should* have auto-engaged (any signal a/b fired). If it engages on fewer than **~90% of intended signals**, that is a description-match failure — rewrite the `description:` in [`./agents/helper.md`](./agents/helper.md), do not tighten the agent body. Per [`../vision/specs/standards/testing.md`](../vision/specs/standards/testing.md) V2 threshold.
+Across two weeks of regular use, log every session where Helper *should* have auto-engaged (any signal a/b fired). If it engages on fewer than **~90% of intended signals**, that is a description-match failure — rewrite the `description:` in [`./agents/helper.md`](./agents/helper.md), do not tighten the agent body. Per [`../.lsa/standards/testing.md`](../.lsa/standards/testing.md) V2 threshold.
 
 If Helper engages on the *wrong* turns (false-positive auto-engage on a `?` that wasn't a question for Helper), the patterns in [`./knowledge/friction-signals.md`](./knowledge/friction-signals.md) § *Trigger patterns — quick reference* need tightening, not the agent body.

@@ -6,7 +6,7 @@ Product and project management discipline for the NVZver marketplace. Two roles:
 
 2. **Project manager** — stewards the roadmap after pitches are approved. Recommends what to build next using dependency/risk/value reasoning, decomposes chosen pitches into focused epics, and hands each epic to LSA for technical refinement. The project-manager agent reads the roadmap, pitches, branches, and spec state to ground every recommendation.
 
-Spec: [`vision/specs/modules/management/spec.md`](../vision/specs/modules/management/spec.md).
+Spec: [`.lsa/modules/management/spec.md`](../.lsa/modules/management/spec.md).
 
 ## Install
 

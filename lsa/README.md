@@ -19,7 +19,7 @@ Every LSA User Verification is a decision asked of the human with explicit conse
 | **`implement`** | Orchestrate TDD implementation of approved epics. Dispatches each epic to the `developer` agent for principal-engineer-level execution (design → test strategy → TDD → self-review), manages inter-epic human gates. Input: approved tasks.md (or Standard-flow discovery context). Output: all epics implemented with passing tests, ready for `lsa:verify`. |
 | **`verify`** | Verify implementation matches the spec. Dual predicates: orphan-diff + orphan-AC. Code-mode, doc-mode, or mixed (per `.lsa.yaml`). Emits per-feature `metrics.md` on clean Extended-flow PASS. |
 | **`init`** | Initialize Living Spec Architecture for a project. Input: existing codebase (greenfield or brownfield). Output: .lsa.yaml + specs_root directory + module specs. |
-| **`reconcile`** | Absorb a direct artifact edit into its module spec — Level 2.5 (`vision/VISION.md:138`). One delta at a time — stop and present each individually; do not proceed without explicit approval. |
+| **`reconcile`** | Absorb a direct artifact edit into its module spec — Level 2.5 (`.lsa/VISION.md:138`). One delta at a time — stop and present each individually; do not proceed without explicit approval. |
 | **`revise-constitution`** | Propose changes to the project constitution and standards. Input: feature decisions that should become permanent. Output: updated constitution + standards files. |
 
 ## Agents
@@ -33,23 +33,23 @@ Every LSA User Verification is a decision asked of the human with explicit conse
 LSA is path-configurable via an optional `.lsa.yaml` at the repo root. Minimal default-overriding example:
 
 ```yaml
-constitution: vision/VISION.md       # default: /CLAUDE.md
-specs_root: vision/specs/            # default: /specs/
+constitution: .lsa/VISION.md         # default: .lsa/VISION.md
+specs_root: .lsa/                    # default: .lsa/
 mode: docs                           # docs | code | mixed. default: code
 
 modules:
   core:
-    spec: vision/specs/modules/core/spec.md
+    spec: .lsa/modules/core/spec.md
     artifact_paths:
       - core/skills/**/SKILL.md
   lsa:
-    spec: vision/specs/modules/lsa/spec.md
+    spec: .lsa/modules/lsa/spec.md
     artifact_paths:
       - lsa/skills/**/SKILL.md
       - lsa/hooks/**/*
 ```
 
-When `.lsa.yaml` is absent, LSA falls back to v0.1.1 behavior (`/CLAUDE.md`, `/specs/`, code-mode). See [`ARCHITECTURE.md`](./ARCHITECTURE.md) §4.10 for the full schema.
+When `.lsa.yaml` is absent, LSA applies the defaults documented in [`knowledge/conventions.md`](./knowledge/conventions.md) §"`.lsa.yaml` defaults" — `constitution: .lsa/VISION.md`, `specs_root: .lsa/`, `mode: code`, `modules: {}`. The default workspace lives entirely under `.lsa/` so a user can `rm -rf .lsa/` to fully detach from LSA. Projects with a pre-existing `/CLAUDE.md` constitution or `/specs/` tree should set both keys explicitly. See [`ARCHITECTURE.md`](./ARCHITECTURE.md) §3 for the full schema.
 
 A SessionStart drift hook (`lsa/hooks/hooks.json`) compares each module's `artifact_paths` against the baseline SHA — the last commit that modified the module's spec file, resolved at hook runtime via `git log -1 --format=%H -- <spec-path>` — and surfaces a one-line notice when there's drift, pointing the user at `/lsa:reconcile`.
 
@@ -83,4 +83,4 @@ LSA writes spec files to disk and reads `/CLAUDE.md` — it depends on a filesys
 
 ## Naming note
 
-LSA's `/specs/standards/` directory holds technical standards (`code.md`, `testing.md`) extracted from the project's `/CLAUDE.md`. It is **not** the same as the [`core/ground-rules`](../core/skills/ground-rules/) skill — Core's `ground-rules` enforces six content discipline rules (ownership, fact-grounding, no fake-confidence hedging, read-the-source, only-required-output, no-filler); Core's `output` skill enforces five format golden rules (structured, minimal, formatted, sourced, concrete). The two coexist in the marketplace and are independently installable.
+LSA's `${specs_root}/standards/` directory (default: `.lsa/standards/`) holds technical standards (`code.md`, `testing.md`) extracted from the project's constitution. It is **not** the same as the [`core/ground-rules`](../core/skills/ground-rules/) skill — Core's `ground-rules` enforces six content discipline rules (ownership, fact-grounding, no fake-confidence hedging, read-the-source, only-required-output, no-filler); Core's `output` skill enforces five format golden rules (structured, minimal, formatted, sourced, concrete). The two coexist in the marketplace and are independently installable.

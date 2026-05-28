@@ -14,18 +14,19 @@ Recommend the next backlog item to build, decompose the chosen pitch into indepe
 
 ## Input
 
-- Ambient state: roadmap at `vision/specs/roadmap.md`, pitch files at `vision/specs/pitches/*.md`, active `feature/*` branches via git, spec artifacts under `vision/specs/features/*/`.
+- `specs_root` from `.lsa.yaml` at repo root (defaults per [`../../lsa/knowledge/conventions.md`](../../lsa/knowledge/conventions.md) §"`.lsa.yaml` defaults"). Used to resolve `${specs_root}/...` paths below.
+- Ambient state: roadmap at `${specs_root}/roadmap.md`, pitch files at `${specs_root}/pitches/*.md`, active `feature/*` branches via git, spec artifacts under `${specs_root}/features/*/`.
 - Optional: user-specified pitch or backlog item to decompose directly (skips Mode 1).
 
 ## Steps
 
 ### Mode 1: Recommend next
 
-1. **Read roadmap.** Parse the Feature Backlog table at `vision/specs/roadmap.md`. Filter for rows with `backlog` or `not started` status. Observable result: list of candidate backlog items with their Priority, Status, and Notes columns.
+1. **Read roadmap.** Parse the Feature Backlog table at `${specs_root}/roadmap.md`. Filter for rows with `backlog` or `not started` status. Observable result: list of candidate backlog items with their Priority, Status, and Notes columns.
 
-2. **Read pitches.** For each candidate item, read its linked pitch file (from Notes column or at `vision/specs/pitches/<slug>.md`). Observable result: pitch content loaded for each candidate; items with no linked pitch flagged for Mode 3 (Tidy).
+2. **Read pitches.** For each candidate item, read its linked pitch file (from Notes column or at `${specs_root}/pitches/<slug>.md`). Observable result: pitch content loaded for each candidate; items with no linked pitch flagged for Mode 3 (Tidy).
 
-3. **Read active branches and spec state.** Run `git branch -a` to list active `feature/*` branches. Read spec artifacts under `vision/specs/features/*/` for in-flight work. Observable result: active-branch list and spec-state snapshot.
+3. **Read active branches and spec state.** Run `git branch -a` to list active `feature/*` branches. Read spec artifacts under `${specs_root}/features/*/` for in-flight work. Observable result: active-branch list and spec-state snapshot.
 
 4. **Apply sequencing heuristics.** Apply sequencing per [`../knowledge/sequencing-heuristics.md`](../knowledge/sequencing-heuristics.md). Observable result: numbered recommendation list; each item has a one-sentence rationale citing the factor(s) that determined its position.
 
@@ -41,7 +42,7 @@ Recommend the next backlog item to build, decompose the chosen pitch into indepe
 
    Observable result: list of hygiene findings, or confirmation that the roadmap is clean.
 
-7. **Propose hygiene updates.** For each finding, present the proposed change as an inline diff via `AskUserQuestion`. Apply only changes the user explicitly approves. Observable result: approved changes written to `vision/specs/roadmap.md`; rejected changes discarded.
+7. **Propose hygiene updates.** For each finding, present the proposed change as an inline diff via `AskUserQuestion`. Apply only changes the user explicitly approves. Observable result: approved changes written to `${specs_root}/roadmap.md`; rejected changes discarded.
 
 ### Mode 2: Decompose
 
@@ -88,7 +89,7 @@ Remaining: Epic 2 (re-invoke management:roadmap after Epic 1 ships).
 
 - **Inherits `core/ground-rules`** -- per [`../../core/skills/ground-rules/SKILL.md`](../../core/skills/ground-rules/SKILL.md).
 - **Inherits `core/output`** -- per [`../../core/skills/output/SKILL.md`](../../core/skills/output/SKILL.md).
-- **Read-only on everything except roadmap.** Pitches, specs, feature branches, git state -- read but never modify. The only file this agent writes to is `vision/specs/roadmap.md`, and only after explicit user approval per Step 7.
+- **Read-only on everything except roadmap.** Pitches, specs, feature branches, git state -- read but never modify. The only file this agent writes to is `${specs_root}/roadmap.md`, and only after explicit user approval per Step 7.
 - **No persona theater.** No name, no greeting. "Project-manager" is a role descriptor, not a character.
-- **Ownership over automation** -- per [`../../vision/VISION.md`](../../vision/VISION.md) section 0: *"the system does not think for the human; it makes the human think."* The agent recommends; the human decides. All roadmap writes require explicit approval.
+- **Ownership over automation** -- per [`../../.lsa/VISION.md`](../../.lsa/VISION.md) section 0: *"the system does not think for the human; it makes the human think."* The agent recommends; the human decides. All roadmap writes require explicit approval.
 - **No downstream handoff for skills.** The agent invokes `lsa:discover` or `lsa:new` via the `Skill` tool internally for handoff. The dispatching skill (`management:roadmap`) does not handle handoff.

@@ -2,6 +2,22 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.13.0] — 2026-05-28
+
+Default workspace moves to `.lsa/`. `lsa:init`'s tail message now points at the management plugin instead of `/lsa:discover`.
+
+### Changed
+
+- **`lsa/knowledge/conventions.md`** — default `specs_root: /specs/` → `.lsa/`; default `constitution: /CLAUDE.md` → `.lsa/VISION.md`. The entire LSA workspace (constitution + specs + roadmap + pitches + standards + archive) now lives under a single directory the user can `rm -rf` to fully detach. Projects with a pre-existing `/CLAUDE.md` or `/specs/` should set both keys explicitly in `.lsa.yaml`.
+- **`lsa/skills/init/SKILL.md`** — final "Report to human" step now suggests `/management:roadmap` as the next entry point (with `/lsa:new` as fallback when management isn't installed). The brownfield `[a]` option's tail updated to match. Drops the stale `/lsa:specify` reference already removed in v0.12.0.
+- **`lsa/ARCHITECTURE.md` §2 + §3** — directory-structure tree, `.lsa.yaml` example, and "When absent" paragraph reflect the new defaults; defers to `conventions.md` for the literal default values.
+- **`lsa/README.md`** — Configuration block uses the new defaults; Naming note rewrites `LSA's /specs/standards/` to `${specs_root}/standards/ (default: .lsa/standards/)`.
+- **`lsa/.claude-plugin/plugin.json`** — version 0.12.0 → 0.13.0.
+
+### Migration
+
+Existing repos with `.lsa.yaml` set are unaffected — `.lsa.yaml` is canonical when present. This repo's own migration from `vision/` → `.lsa/` (flat: no `specs/` subdir, constitution and spec tree share the workspace root) is documented in commit history.
+
 ## [0.12.0] — 2026-05-27
 
 Prompt audit remediation — DRY cleanup, template extraction, cross-reference fixes, and wording polish.
@@ -52,7 +68,7 @@ Prompt audit remediation — DRY cleanup, template extraction, cross-reference f
 
 ### Removed
 
-- `.lsa-sync-state.json` baseline-SHA file deleted. The per-module last-sync SHA + ISO timestamp the file held is recoverable from `git log -1 --format=%H -- <module-spec-path>`; switched `reconcile` (Inputs, Step 1 prose, Step 5 substep + Observable, Output, Constraints) and `lsa/hooks/session-start-drift-check.sh` (full rewrite — consolidated YAML parsing into one awk pattern mirroring `emit_module_paths`, dropped JSON parser and cache layer) to derive the SHA from git history instead. Documentation refs cleared in `lsa/ARCHITECTURE.md` (directory diagram, SessionStart paragraph, OQ8 row), `lsa/README.md` (SessionStart paragraph), `vision/specs/main.spec.md` (out-of-scope-files table), and `vision/specs/modules/lsa/spec.md` (State files table). Closes the orphan introduced by v0.8.0's `lsa-sync` removal. Per the custom-inventions sweep at `vision/specs/features/2026-05-22-custom-inventions-sweep/design.md` inventory row #1.
+- `.lsa-sync-state.json` baseline-SHA file deleted. The per-module last-sync SHA + ISO timestamp the file held is recoverable from `git log -1 --format=%H -- <module-spec-path>`; switched `reconcile` (Inputs, Step 1 prose, Step 5 substep + Observable, Output, Constraints) and `lsa/hooks/session-start-drift-check.sh` (full rewrite — consolidated YAML parsing into one awk pattern mirroring `emit_module_paths`, dropped JSON parser and cache layer) to derive the SHA from git history instead. Documentation refs cleared in `lsa/ARCHITECTURE.md` (directory diagram, SessionStart paragraph, OQ8 row), `lsa/README.md` (SessionStart paragraph), `.lsa/main.spec.md` (out-of-scope-files table), and `.lsa/modules/lsa/spec.md` (State files table). Closes the orphan introduced by v0.8.0's `lsa-sync` removal. Per the custom-inventions sweep at `.lsa/features/2026-05-22-custom-inventions-sweep/design.md` inventory row #1.
 
 ### Behavior — baseline-SHA semantics
 
@@ -82,7 +98,7 @@ Command rename + flow simplification. All LSA skills drop the `lsa-` directory p
 
 ## [0.9.0] — 2026-05-24
 
-Remove the LSA-internal "Hard Confirm" / "Soft Confirm" vocabulary. The named distinction was custom LSA invention with no upstream mandate; substituted plain-English phrasing inline at each cite site. Minor bump — the documented convention section in `lsa/knowledge/conventions.md` and its inline references across 4 skill bodies are user-visible. Matches the `c226623` (v0.7.0) precedent for documented-convention removal. Per `vision/specs/features/2026-05-22-custom-inventions-sweep/` Task T1 (inventory row #3). T2 (`.lsa-sync-state.json` removal) ships in a separate follow-up PR.
+Remove the LSA-internal "Hard Confirm" / "Soft Confirm" vocabulary. The named distinction was custom LSA invention with no upstream mandate; substituted plain-English phrasing inline at each cite site. Minor bump — the documented convention section in `lsa/knowledge/conventions.md` and its inline references across 4 skill bodies are user-visible. Matches the `c226623` (v0.7.0) precedent for documented-convention removal. Per `.lsa/features/2026-05-22-custom-inventions-sweep/` Task T1 (inventory row #3). T2 (`.lsa-sync-state.json` removal) ships in a separate follow-up PR.
 
 ### Removed
 - **`lsa/knowledge/conventions.md` §"Confirm gate types"** — section deleted (was lines 40-50). Defined `Hard Confirm` (stop, present, wait for explicit approval) and `Soft Confirm` (present, allow inline corrections). No upstream standard mandated the two-shape distinction; plain-English phrasing is clearer at each cite site.
@@ -98,11 +114,11 @@ Remove the LSA-internal "Hard Confirm" / "Soft Confirm" vocabulary. The named di
 - **`lsa-sync` carries no Hard / Soft Confirm references.** Verified via `grep -n "Hard\|Soft" lsa/skills/lsa-sync/SKILL.md` (only matches were in unrelated words like "Verdict" — no vocabulary site). No edit needed in `lsa-sync` for this sweep.
 - **`grep -rn "Hard Confirm\|Soft Confirm" lsa/`** returns zero hits in active files after this sweep. Historical CHANGELOG entries (pre-v0.9.0) keep their original wording — they are frozen records of how the convention existed at the time, and nothing parses them.
 - **T2 deferred.** `.lsa-sync-state.json` removal (inventory row #1) ships as a separate PR — medium blast radius (7 files + 1 hook script) plus adjacent-line-citation conflicts with PR #22 (Show actual changes inline) warrant the split.
-- **Spec source.** `vision/specs/features/2026-05-22-custom-inventions-sweep/design.md` §"Invention inventory" row #3; `tasks.md` §"T1 — PR: Remove 'Hard Confirm' / 'Soft Confirm' vocabulary".
+- **Spec source.** `.lsa/features/2026-05-22-custom-inventions-sweep/design.md` §"Invention inventory" row #3; `tasks.md` §"T1 — PR: Remove 'Hard Confirm' / 'Soft Confirm' vocabulary".
 
 ## [0.8.1] — 2026-05-24
 
-Apply the new `core` v0.8.0 **Rule 7 — Show changes inline (write, show, comment)** to every LSA skill body whose `Observable result:` line currently names a file write/edit/append/mark without naming what is quoted back. 16 lines edited across 7 LSA skills (`lsa-sync` ×6, `lsa-specify` ×3, `lsa-init` ×2, `lsa-revise-constitution` ×2, `lsa-plan` ×1, `lsa-verify` ×1, `lsa-discover` ×1). Each touch is a one-line replacement — no surrounding-content rewrite, no behavior change; the clause now names the quote-back format (full single-change block when ≤10 lines, compressed inspection table when larger) and the type tag (add / edit / replace / append / mark). One-line forward-link added to `lsa-reconcile` naming its 8-element drift block as the in-repo exemplar Rule 7 generalizes from. Per `vision/specs/features/2026-05-22-show-changes-inline/`. Standard flow.
+Apply the new `core` v0.8.0 **Rule 7 — Show changes inline (write, show, comment)** to every LSA skill body whose `Observable result:` line currently names a file write/edit/append/mark without naming what is quoted back. 16 lines edited across 7 LSA skills (`lsa-sync` ×6, `lsa-specify` ×3, `lsa-init` ×2, `lsa-revise-constitution` ×2, `lsa-plan` ×1, `lsa-verify` ×1, `lsa-discover` ×1). Each touch is a one-line replacement — no surrounding-content rewrite, no behavior change; the clause now names the quote-back format (full single-change block when ≤10 lines, compressed inspection table when larger) and the type tag (add / edit / replace / append / mark). One-line forward-link added to `lsa-reconcile` naming its 8-element drift block as the in-repo exemplar Rule 7 generalizes from. Per `.lsa/features/2026-05-22-show-changes-inline/`. Standard flow.
 
 ### Changed
 - **`lsa/skills/lsa-sync/SKILL.md`** (6 lines — Steps 2 / 3 / 4 / 5 / 6 / 7) — `Observable result:` lines for the delta scratch, per-module diff, `main.spec.md` diff, archive `mv`, `.lsa-sync-state.json` write, and `metrics.md` row append now cite [`core/output`](../skills/output/SKILL.md) Rule 7 and name the quote-back format. Verdict-emission step at line 131 (closing-offer) untouched — already cites Rule 6 for the preamble.
@@ -122,11 +138,11 @@ Apply the new `core` v0.8.0 **Rule 7 — Show changes inline (write, show, comme
 - **`lsa-reconcile` is excluded from the sweep.** It is the exemplar Rule 7 generalizes from; touching its `Observable result:` lines would risk circular drift (per `requirements.md` Constraint *"Do not edit `lsa-reconcile`. It is the exemplar"*). The one-line forward-link added to `lsa-reconcile` `## Steps` is the only edit — additive, not a rewrite.
 - **Helper Constraint deferred.** Epic 3 (Helper `## Constraints` bullet citing Rule 7) ships in a separate follow-up PR after PR #19's helper changes merge, to avoid conflicts. The 16-line sweep + `lsa-reconcile` cross-cite ship together in this LSA patch.
 - **42 `Observable result:` lines total in `lsa/skills/` after sweep.** 16 cite Rule 7 (the violation set); 26 are read-only (read-protocol prints, in-memory captures, verdict reports already covered by Rule 6, exemplar `lsa-reconcile`) and require no Rule 7 citation per the audit framing in `design.md` §"Inventory".
-- **Spec source.** `vision/specs/features/2026-05-22-show-changes-inline/design.md` §"Inventory — current Observable result: violations" enumerates the 16 lines; §"Step B — LSA skill sweep" carries the before/after template; `tasks.md` Epics 1–2 + 4.
+- **Spec source.** `.lsa/features/2026-05-22-show-changes-inline/design.md` §"Inventory — current Observable result: violations" enumerates the 16 lines; §"Step B — LSA skill sweep" carries the before/after template; `tasks.md` Epics 1–2 + 4.
 
 ## [0.8.0-main] — 2026-05-24
 
-Apply the new `core` v0.7.0 **Rule 6 — What-and-why preamble** to every LSA skill body that currently emits a verdict label from `core/knowledge/output-vocabulary.md` §"Verdicts". 5 skill bodies updated; 7 emission sites gain a one-sentence preamble in the user's frame, naming (a) what the verdict means and (b) the concrete consequence if the user does not act. PR #20 work (verdict-named picker prompts in `lsa-verify`, closing-offer reframe in `lsa-sync`) preserved intact — preambles land BEFORE the verdict line without disturbing the existing prompt voice. Per `vision/specs/features/2026-05-22-lsa-what-why-preamble/`. Standard flow.
+Apply the new `core` v0.7.0 **Rule 6 — What-and-why preamble** to every LSA skill body that currently emits a verdict label from `core/knowledge/output-vocabulary.md` §"Verdicts". 5 skill bodies updated; 7 emission sites gain a one-sentence preamble in the user's frame, naming (a) what the verdict means and (b) the concrete consequence if the user does not act. PR #20 work (verdict-named picker prompts in `lsa-verify`, closing-offer reframe in `lsa-sync`) preserved intact — preambles land BEFORE the verdict line without disturbing the existing prompt voice. Per `.lsa/features/2026-05-22-lsa-what-why-preamble/`. Standard flow.
 
 ### Changed
 - **`lsa/skills/lsa-init/SKILL.md` Step 2 brownfield** — `PROPOSED` verdict at the "Stop" sub-step now carries a preamble in the user's frame: *"I scanned this repo and drafted `<N>` module specs from /src/ so future LSA steps can attach changes to a specific module — without these specs the next /lsa:discover has nothing to pick."* Citation line added: *"Verdict carries a preamble per `core/output` Rule 6."* PR #20's prompt-voice scaffold (Rule 5 picker question naming the project subject) preserved unchanged. Maps to AC1.
@@ -136,14 +152,14 @@ Apply the new `core` v0.7.0 **Rule 6 — What-and-why preamble** to every LSA sk
 - **`lsa/skills/lsa-verify/SKILL.md` Step 4** — all three variant verdicts (`PASS` / `FAIL` / `PASS WITH WARNINGS`) now carry a one-sentence preamble before the verdict line, naming what the verdict means and the consequence in the user's frame. Single citation line added at the top of Step 4 covering all three variants. PR #20's verdict-named `AskUserQuestion` prompts (*"Verdict: PASS — sync now? …"* etc.) preserved unchanged. Maps to AC3.
 
 ### Notes
-- **Minor bump rationale.** 5 skill bodies' user-visible output shape changes — every verdict emission now leads with a plain-English preamble instead of a bare label. Per `vision/VISION.md` *"Distribution + versioning"* — observable behavior change across multiple skills is minor-bump territory.
+- **Minor bump rationale.** 5 skill bodies' user-visible output shape changes — every verdict emission now leads with a plain-English preamble instead of a bare label. Per `.lsa/VISION.md` *"Distribution + versioning"* — observable behavior change across multiple skills is minor-bump territory.
 - **Sibling core minor bump.** `core` v0.7.0 in the same feature ships the canonical Rule 6 these LSA edits cite (`core/skills/output/SKILL.md` Rule 6 *"What-and-why preamble — verdicts carry a one-sentence frame"*). The rule lives at the marketplace layer alongside the verdict vocabulary itself (`core/knowledge/output-vocabulary.md`); LSA cites by link, never restates.
-- **Three LSA skills with zero verdict emissions stay untouched.** `lsa-discover`, `lsa-specify`, `lsa-plan` emit no verdict label per the inventory in `vision/specs/features/2026-05-22-lsa-what-why-preamble/design.md` §"Verb-headline inventory". The rule still ships in `core/output`, so the moment any of them adds a verdict emission the preamble obligation attaches automatically. (`lsa-plan` uses `PASS / FAIL` as in-table cell values, not verdict headlines — Open Question 2 resolution.)
-- **Spec source.** `vision/specs/features/2026-05-22-lsa-what-why-preamble/requirements.md` AC1–AC8 + F1–F7; `design.md` §"Worked examples" carries the verbatim preamble strings used at each emission site; `tasks.md` Epics 0–5 enumerate the edits.
+- **Three LSA skills with zero verdict emissions stay untouched.** `lsa-discover`, `lsa-specify`, `lsa-plan` emit no verdict label per the inventory in `.lsa/features/2026-05-22-lsa-what-why-preamble/design.md` §"Verb-headline inventory". The rule still ships in `core/output`, so the moment any of them adds a verdict emission the preamble obligation attaches automatically. (`lsa-plan` uses `PASS / FAIL` as in-table cell values, not verdict headlines — Open Question 2 resolution.)
+- **Spec source.** `.lsa/features/2026-05-22-lsa-what-why-preamble/requirements.md` AC1–AC8 + F1–F7; `design.md` §"Worked examples" carries the verbatim preamble strings used at each emission site; `tasks.md` Epics 0–5 enumerate the edits.
 
 ## [0.7.2] — 2026-05-24
 
-Apply the `core` v0.6.0 *Genuine-fork test* to 3 LSA call sites — tightening `lsa-discover`'s per-line picker (composes with v0.7.1 infer-then-confirm), softening `lsa-sync`'s post-completion picker, and renaming `lsa-verify`'s verdict-picker prompt. Per `vision/specs/features/2026-05-22-askuserquestion-audit/` Epic B (rows L2 / L9 / L12 in the design inventory). Standard flow. Renumbered from v0.7.1 → v0.7.2 to coexist with the v0.7.1 infer-then-confirm release that landed independently.
+Apply the `core` v0.6.0 *Genuine-fork test* to 3 LSA call sites — tightening `lsa-discover`'s per-line picker (composes with v0.7.1 infer-then-confirm), softening `lsa-sync`'s post-completion picker, and renaming `lsa-verify`'s verdict-picker prompt. Per `.lsa/features/2026-05-22-askuserquestion-audit/` Epic B (rows L2 / L9 / L12 in the design inventory). Standard flow. Renumbered from v0.7.1 → v0.7.2 to coexist with the v0.7.1 infer-then-confirm release that landed independently.
 
 ### Changed
 - **`lsa/skills/lsa-discover/SKILL.md` Step 2 (L2 — `keep + tighten`)** — added "Skip per-line picker when N=1 candidate AND no `custom`" semantics on top of v0.7.1's infer-then-confirm reshape. When Step 1 yields a single unambiguous candidate for a line and the human hasn't asked for `custom`, the skill accepts the candidate silently. Remaining picks batch into ONE multi-question `AskUserQuestion`.
@@ -154,7 +170,7 @@ Apply the `core` v0.6.0 *Genuine-fork test* to 3 LSA call sites — tightening `
 - **Patch bump rationale.** L2 (skip when N=1) + L12 (closing-offer) change observable behavior; L9 (verdict prompt) is prompt-text only. Cumulative effect is on the patch/minor boundary; chose patch — no rule/skill added or removed, only existing pickers' wording and conditional rendering changed.
 - **Sibling `core` minor bump.** `core` v0.6.0 in the same feature ships the canonical rule this changelog cites (`core/skills/output/SKILL.md` Rule 5 *Genuine-fork test*). LSA edits are downstream of the rule.
 - **Out of scope for this PR.** Helper-side call-site sweep (Epic C — H1, H2, H3, H4, H5m in the inventory) ships in a later PR; it folds with feature 5's Epic 3 since most Epic C work was substantially done by helper v0.3.0 (PR #19).
-- **Spec source.** `vision/specs/features/2026-05-22-askuserquestion-audit/design.md` §"Call-site Inventory" rows L2, L9, L12 carry the verdict + reason; `tasks.md` Epic B enumerates B1–B6.
+- **Spec source.** `.lsa/features/2026-05-22-askuserquestion-audit/design.md` §"Call-site Inventory" rows L2, L9, L12 carry the verdict + reason; `tasks.md` Epic B enumerates B1–B6.
 
 ## [0.7.1] — 2026-05-23
 
@@ -172,7 +188,7 @@ Apply the `core` v0.6.0 *Genuine-fork test* to 3 LSA call sites — tightening `
 
 ## [0.7.0] — 2026-05-22
 
-Remove the trace-tag convention and stop emitting `<!-- added/reconciled/revised: ... -->` HTML comments. The format was opaque to non-LSA collaborators and not required by EARS (`vision/VISION.md:187-206`) or any other adopted 3rd-party standard. Minor bump — three skills' observable output changes.
+Remove the trace-tag convention and stop emitting `<!-- added/reconciled/revised: ... -->` HTML comments. The format was opaque to non-LSA collaborators and not required by EARS (`.lsa/VISION.md:187-206`) or any other adopted 3rd-party standard. Minor bump — three skills' observable output changes.
 
 ### Removed
 - **`lsa/knowledge/conventions.md` §"Trace-tag format"** — section deleted (was lines 53-75).
@@ -181,12 +197,12 @@ Remove the trace-tag convention and stop emitting `<!-- added/reconciled/revised
 - **`lsa/skills/lsa-revise-constitution/SKILL.md`** — 3 trace-tag references removed: the "tagged" mention in Step 3's decision block, the `Tag the change` substep in Step 4, and the "each tagged" qualifier in Output.
 
 ### Changed
-- **`vision/VISION.md`** (2 sites — `:59`, `:206`), **`vision/specs/main.spec.md:18`**, **`vision/specs/modules/lsa/spec.md`** (2 sites — `:36`, `:37`) — stripped the 5 HTML comment tags from living specs. Archive files (`vision/plans/2026-05-20-*`, `vision/specs/2026-05-20-lsa-v0.2.0-design.md`) intentionally untouched per user choice — they remain as frozen historical records.
+- **`.lsa/VISION.md`** (2 sites — `:59`, `:206`), **`.lsa/main.spec.md:18`**, **`.lsa/modules/lsa/spec.md`** (2 sites — `:36`, `:37`) — stripped the 5 HTML comment tags from living specs. Archive files (`.lsa/plans/2026-05-20-*`, `.lsa/2026-05-20-lsa-v0.2.0-design.md`) intentionally untouched per user choice — they remain as frozen historical records.
 
 ### Notes
-- **Minor bump rationale.** Three skills change observable output (no more tagged HTML comments in their edits) — that's user-visible behavior change, not a patch-class fix. Per `vision/VISION.md` "Distribution + versioning".
+- **Minor bump rationale.** Three skills change observable output (no more tagged HTML comments in their edits) — that's user-visible behavior change, not a patch-class fix. Per `.lsa/VISION.md` "Distribution + versioning".
 - **No migration step needed.** Existing tags in archive files are valid Markdown comments; nothing parses them and nothing breaks.
-- **User trigger.** Working with a collaborator on a downstream project (TripAnchor), the user flagged that `<!-- revised: manual 2026-05-22 -->` is unintelligible to anyone without LSA context. "If it's not a requirement from EARS or other 3rdparty we adopted - get rid of it." Confirmed not required by EARS (which is purely AC-phrasing per `vision/VISION.md:187-206`); no other adopted standard mandated provenance HTML comments.
+- **User trigger.** Working with a collaborator on a downstream project (TripAnchor), the user flagged that `<!-- revised: manual 2026-05-22 -->` is unintelligible to anyone without LSA context. "If it's not a requirement from EARS or other 3rdparty we adopted - get rid of it." Confirmed not required by EARS (which is purely AC-phrasing per `.lsa/VISION.md:187-206`); no other adopted standard mandated provenance HTML comments.
 
 ## [0.6.5] — 2026-05-22
 
@@ -212,7 +228,7 @@ File-load trace adoption. All 8 `lsa/skills/*/SKILL.md` and `lsa/knowledge/conve
 
 ## [0.6.3] — 2026-05-22
 
-Adopt the now-supported `dependencies` field in the Claude Code plugin manifest. Clears the "Marketplace dependency field" row from `vision/specs/roadmap.md` (status was `blocked` per `vision/specs/2026-05-20-lsa-v0.2.0-design.md` §14). Verified field availability against [code.claude.com/docs/en/plugin-dependencies](https://code.claude.com/docs/en/plugin-dependencies) and [code.claude.com/docs/en/plugins-reference](https://code.claude.com/docs/en/plugins-reference) on 2026-05-22 — `dependencies` is a top-level array (entries are bare strings or `{ name, version?, marketplace? }` objects) and ships in current Claude Code.
+Adopt the now-supported `dependencies` field in the Claude Code plugin manifest. Clears the "Marketplace dependency field" row from `.lsa/roadmap.md` (status was `blocked` per `.lsa/2026-05-20-lsa-v0.2.0-design.md` §14). Verified field availability against [code.claude.com/docs/en/plugin-dependencies](https://code.claude.com/docs/en/plugin-dependencies) and [code.claude.com/docs/en/plugins-reference](https://code.claude.com/docs/en/plugins-reference) on 2026-05-22 — `dependencies` is a top-level array (entries are bare strings or `{ name, version?, marketplace? }` objects) and ships in current Claude Code.
 
 ### Added
 - **`lsa/.claude-plugin/plugin.json` `dependencies`** — bare-string declaration `"dependencies": ["core"]`. Claude Code now auto-resolves and installs `core` when a user installs `lsa`, and refuses to disable `core` while `lsa` is enabled (per the same-marketplace cascade rules in the docs above). No version constraint this cycle — `core` and `lsa` ship from the same repo on the same release cadence, so versions move in lockstep. A future row in the roadmap can add a `>=` floor + tagged-release flow if a downstream consumer outside this repo materializes.
@@ -232,7 +248,7 @@ Naming clarity patch — two sibling renames:
 1. **`lsa-specify` "Gate N" → "User Verification N: <name>"** — the prior `Gate 1` / `Gate 2` / `Gate 3` carried position but no meaning to a first-time user. New names: `User Verification 1: Requirements + Contract Trigger`, `User Verification 2: Test Suites + Contract + Design`, `User Verification 3: Final Integration`.
 2. **Tier flow `T1` / `T2` / `T3` → `Quick` / `Standard` / `Extended`** — sibling to `core` v0.5.2's `tier-selector` → `flow-selector` rename. The new names describe the *process shape*, not a hierarchy.
 
-Per `vision/specs/roadmap.md` rows *"Rename `lsa-specify` 'Gate N' → 'User Verification: <name>'"* and *"Rename `T1` / `T2` / `T3` → `Flow: Quick` / `Flow: Standard` / `Flow: Extended`"*. Bundle B (Naming clarity) of the 2026-05-22 fixing session.
+Per `.lsa/roadmap.md` rows *"Rename `lsa-specify` 'Gate N' → 'User Verification: <name>'"* and *"Rename `T1` / `T2` / `T3` → `Flow: Quick` / `Flow: Standard` / `Flow: Extended`"*. Bundle B (Naming clarity) of the 2026-05-22 fixing session.
 
 ### Changed
 - **`lsa/skills/lsa-specify/SKILL.md`** — Goal sentence + Steps 4/5/6 section headers + cross-references updated to `User Verification N: <name>`; Constraints "Three bundled gates" → "Three bundled User Verifications"; "(determined at Gate 1)" comment + "re-run Gate 3" amend rule updated; "tier" / "T3" annotations in description + Input + Step 1.
@@ -245,23 +261,23 @@ Per `vision/specs/roadmap.md` rows *"Rename `lsa-specify` 'Gate N' → 'User Ver
 - **`lsa/.claude-plugin/plugin.json` `description`** — "human gates" → "human User Verifications"; "Tier-aware (T1/T2/T3) via core/tier-selector" → "Flow-aware (Quick/Standard/Extended — renamed from T1/T2/T3 in lsa v0.6.2) via core/flow-selector".
 
 ### Cross-spec updates (active files only)
-- **`vision/VISION.md`** — §3 directory diagram (`tier-selector` → `flow-selector` slot); §3 prose ("Core rules are always-on; flows govern workflow"); §3 always-on-vs-on-demand resolution; §4 tier-table + worked-examples table renamed; §7 open-decisions "Tier boundaries" → "Flow boundaries"; §2 sub-principle 2a + §6 Adjust #1 RESOLVED cross-cite Gate 2 → User Verification 2; Changelog gains v0.7 + v0.8 entries.
-- **`vision/specs/main.spec.md`** — module index version bumps + cross-module-contract `tier-selector` → `flow-selector`.
-- **`vision/specs/modules/core/spec.md`** — `core/tier-selector` row + `core/CLAUDE.md` invariants citation updated.
-- **`vision/specs/modules/lsa/spec.md`** — `core/tier-selector` dependency + `lsa-specify Gate 2` invariants → `lsa-specify User Verification 2`; metrics-table T3 annotations + lsa v0.6.2 version bump.
-- **`vision/specs/standards/testing.md`** — `core/tier-selector` reference + T3 annotation.
-- **`vision/specs/metrics.md`** — header line: `archived T3 feature` → `archived Extended-flow feature (was T3)`.
-- **`vision/specs/roadmap.md`** — both rename rows marked `shipped — lsa v0.6.2`; Recently merged gains the Bundle B entry; row 11 (Diagonal cross-artifact analysis row) + Tech Picture §3 updated to use `User Verification 2` with back-link to the old `Gate 2` name.
+- **`.lsa/VISION.md`** — §3 directory diagram (`tier-selector` → `flow-selector` slot); §3 prose ("Core rules are always-on; flows govern workflow"); §3 always-on-vs-on-demand resolution; §4 tier-table + worked-examples table renamed; §7 open-decisions "Tier boundaries" → "Flow boundaries"; §2 sub-principle 2a + §6 Adjust #1 RESOLVED cross-cite Gate 2 → User Verification 2; Changelog gains v0.7 + v0.8 entries.
+- **`.lsa/main.spec.md`** — module index version bumps + cross-module-contract `tier-selector` → `flow-selector`.
+- **`.lsa/modules/core/spec.md`** — `core/tier-selector` row + `core/CLAUDE.md` invariants citation updated.
+- **`.lsa/modules/lsa/spec.md`** — `core/tier-selector` dependency + `lsa-specify Gate 2` invariants → `lsa-specify User Verification 2`; metrics-table T3 annotations + lsa v0.6.2 version bump.
+- **`.lsa/standards/testing.md`** — `core/tier-selector` reference + T3 annotation.
+- **`.lsa/metrics.md`** — header line: `archived T3 feature` → `archived Extended-flow feature (was T3)`.
+- **`.lsa/roadmap.md`** — both rename rows marked `shipped — lsa v0.6.2`; Recently merged gains the Bundle B entry; row 11 (Diagonal cross-artifact analysis row) + Tech Picture §3 updated to use `User Verification 2` with back-link to the old `Gate 2` name.
 - **Repo root** — `CLAUDE.md` + `README.md` + `CONTRIBUTING.md` reference `core/flow-selector` and `Quick / Standard / Extended`.
 
 ### Notes
 - **Breaking surface change, treated as patch** — same rationale as `core` v0.5.2 (sibling patch): pre-1.0 SemVer leaves this to maintainer discretion, and there are no external consumers of `/lsa:specify`'s `Gate N` literals.
-- **Historical files left as-is.** Past entries in `core/CHANGELOG.md` / `lsa/CHANGELOG.md` (entries before 0.5.2 / 0.6.2) and every file under `vision/specs/archive/**/` keep their original `Gate N` / `T1/T2/T3` / `tier-selector` wording. The new entries (and the renamed surface) note the rename so historical lookup still resolves. `vision/plans/2026-05-20-*.md` files are pre-merge plans — also untouched.
+- **Historical files left as-is.** Past entries in `core/CHANGELOG.md` / `lsa/CHANGELOG.md` (entries before 0.5.2 / 0.6.2) and every file under `.lsa/archive/**/` keep their original `Gate N` / `T1/T2/T3` / `tier-selector` wording. The new entries (and the renamed surface) note the rename so historical lookup still resolves. `.lsa/plans/2026-05-20-*.md` files are pre-merge plans — also untouched.
 - **Sibling core patch** — `core` v0.5.2 in the same Bundle B PR renames the `tier-selector` skill directory + slug.
 
 ## [0.6.1] — 2026-05-22
 
-Gate-prompt voice patch. Applies `core/output` Rule 5 (Concrete — *prompt voice*) inside the user-facing pickers of `lsa-specify` / `lsa-plan` / `lsa-init` so the picker question names the feature subject (e.g., *"Approve the requirements for `<feature-name>`?"*) instead of meta-jargon (*"Approve Gate 1?"*, *"Approve F3?"*, *"Approve epic decomposition?"*). Per `vision/specs/roadmap.md` row *"LSA gate prompts must be concrete (no IDs, no jargon, must-decide only)"* (Must priority).
+Gate-prompt voice patch. Applies `core/output` Rule 5 (Concrete — *prompt voice*) inside the user-facing pickers of `lsa-specify` / `lsa-plan` / `lsa-init` so the picker question names the feature subject (e.g., *"Approve the requirements for `<feature-name>`?"*) instead of meta-jargon (*"Approve Gate 1?"*, *"Approve F3?"*, *"Approve epic decomposition?"*). Per `.lsa/roadmap.md` row *"LSA gate prompts must be concrete (no IDs, no jargon, must-decide only)"* (Must priority).
 
 ### Changed
 - `lsa/skills/lsa-specify/SKILL.md` Step 2 (clarification) — Present block adds an explicit **Prompt voice** scaffold citing `core/output` Rule 5: picker question names the feature; option labels name the next outcome; never render `[a]/[b]/[c]` text blocks when the picker is available (per `core/CLAUDE.md` operational checkpoint #1).
@@ -278,48 +294,48 @@ Gate-prompt voice patch. Applies `core/output` Rule 5 (Concrete — *prompt voic
 
 ## [0.6.0] — 2026-05-21
 
-EARS + journey-shape AC discipline. Tightens `lsa-specify` Gate 2 along two axes (EARS pattern conformance + journey-shape) and extends `lsa-verify` with dual trace predicates sourced from a new `**Covers:**` line in `lsa-plan`'s epic template. Per `vision/specs/archive/2026-05-21-ears-journey-shape-ac/`.
+EARS + journey-shape AC discipline. Tightens `lsa-specify` Gate 2 along two axes (EARS pattern conformance + journey-shape) and extends `lsa-verify` with dual trace predicates sourced from a new `**Covers:**` line in `lsa-plan`'s epic template. Per `.lsa/archive/2026-05-21-ears-journey-shape-ac/`.
 
 ### Added
-- **`lsa-specify` Gate 2 — two new diagonal rows.** Row **1a** (EARS-pattern) checks each AC matches one of the five EARS patterns per `vision/VISION.md:201`. Row **1b** (Journey-shape) checks each AC describes a user-observable behavior at the user/system boundary per `vision/VISION.md` §2 sub-principle 2a. `✗` rows surface as Rule 6 decision blocks via the existing failing-row render at `lsa/skills/lsa-specify/SKILL.md:165-180`.
-- **`lsa-specify` Gate 1 template — AC sub-block in EARS form.** Template at `lsa/skills/lsa-specify/SKILL.md:48-80` cites `vision/VISION.md` §2 sub-principle 2a (journey-shape) and `:201` (EARS patterns) inline so the agent reads the rule before authoring.
+- **`lsa-specify` Gate 2 — two new diagonal rows.** Row **1a** (EARS-pattern) checks each AC matches one of the five EARS patterns per `.lsa/VISION.md:201`. Row **1b** (Journey-shape) checks each AC describes a user-observable behavior at the user/system boundary per `.lsa/VISION.md` §2 sub-principle 2a. `✗` rows surface as Rule 6 decision blocks via the existing failing-row render at `lsa/skills/lsa-specify/SKILL.md:165-180`.
+- **`lsa-specify` Gate 1 template — AC sub-block in EARS form.** Template at `lsa/skills/lsa-specify/SKILL.md:48-80` cites `.lsa/VISION.md` §2 sub-principle 2a (journey-shape) and `:201` (EARS patterns) inline so the agent reads the rule before authoring.
 - **`lsa-plan` epic template — `**Covers:**` line.** New line under each epic's `### Scope` citing requirement IDs (`F<n>`, `NF<n>`, `AC<n>`) the epic implements. Parallel to the existing `**Covers:**` on `test-suites.md` Journeys. Sourced by `lsa-verify` trace predicates.
 - **`lsa-plan` self-verification — AC-coverage row.** New row checking every AC in `requirements.md` appears in at least one epic's `**Covers:**`.
 - **`lsa-verify` — orphan-diff predicate (broad).** Every non-trivial diff hunk must have an epic in `tasks.md` whose `### Scope` covers the hunk and whose `**Covers:**` cites ≥1 requirement ID. FAIL: `<artifact-file>:<line> has no requirement trace`. Mechanical hunks (whitespace, rename, formatting) are filtered before this check. Replaces the prior loose trace rule.
 - **`lsa-verify` — orphan-AC predicate (narrow).** Every AC ID in feature `requirements.md` § Acceptance Criteria must be cited by ≥1 epic's `**Covers:**`. FAIL: `requirements.md:<AC-line> has no covering implementation`. Enforces behavior-coverage strictness.
-- **`vision/VISION.md` §2 sub-principle 2a.** *"Acceptance criteria are journey-shaped"* — the standing principle that operationalizes principle 2's *"code traces to specs"* clause at the AC level. Authored via `lsa-revise-constitution`.
-- **`vision/VISION.md` §6 Adjust #1 RESOLVED marker.** Records the EARS adjust as adopted, parallel to the §6 Adjust #4 RESOLVED marker at `vision/VISION.md:237`. Authored via `lsa-revise-constitution`.
-- **`vision/specs/modules/lsa/spec.md` § Invariants** — new bullet documenting the Gate 2 EARS + journey-shape rows, the epic `**Covers:**` line, and the `lsa-verify` dual trace predicates. Parallel to the diagonal-coverage invariant at line 34.
+- **`.lsa/VISION.md` §2 sub-principle 2a.** *"Acceptance criteria are journey-shaped"* — the standing principle that operationalizes principle 2's *"code traces to specs"* clause at the AC level. Authored via `lsa-revise-constitution`.
+- **`.lsa/VISION.md` §6 Adjust #1 RESOLVED marker.** Records the EARS adjust as adopted, parallel to the §6 Adjust #4 RESOLVED marker at `.lsa/VISION.md:237`. Authored via `lsa-revise-constitution`.
+- **`.lsa/modules/lsa/spec.md` § Invariants** — new bullet documenting the Gate 2 EARS + journey-shape rows, the epic `**Covers:**` line, and the `lsa-verify` dual trace predicates. Parallel to the diagonal-coverage invariant at line 34.
 
 ### Changed
 - **`lsa-verify` Scope checklist** — replaced the prior loose "Every change traces to a requirement in `requirements.md`" rule (which checked file-name presence in an AC) with the dual orphan-diff + orphan-AC predicates above. Mechanical-hunk exemption preserved. The Constraint *"FAIL on any untraced change"* updated to cite the orphan-diff predicate.
-- **`vision/specs/main.spec.md`** — module index `lsa` row v0.5.0 → v0.6.0.
-- **`vision/specs/modules/lsa/spec.md`** — plugin manifest tag v0.5.0 → v0.6.0; *"Currently v0.5.0"* → *"Currently v0.6.0"*.
-- **`vision/specs/roadmap.md`** — row "EARS notation in AC block" status → `shipped — lsa v0.6.0`. Row "Diagonal cross-artifact analysis at `lsa-specify` Gate 2" status → `shipped — lsa v0.5.0` (reconciles stale row from prior merge). Recently merged gains rows for v0.6.0 and v0.5.0.
+- **`.lsa/main.spec.md`** — module index `lsa` row v0.5.0 → v0.6.0.
+- **`.lsa/modules/lsa/spec.md`** — plugin manifest tag v0.5.0 → v0.6.0; *"Currently v0.5.0"* → *"Currently v0.6.0"*.
+- **`.lsa/roadmap.md`** — row "EARS notation in AC block" status → `shipped — lsa v0.6.0`. Row "Diagonal cross-artifact analysis at `lsa-specify` Gate 2" status → `shipped — lsa v0.5.0` (reconciles stale row from prior merge). Recently merged gains rows for v0.6.0 and v0.5.0.
 - **`lsa/README.md` skill table** — `lsa-specify` row updated from "4-row" → "6-row" diagonal table (5 with contract skipped); `lsa-plan` row mentions the epic `**Covers:**` field; `lsa-verify` row mentions the dual orphan-diff + orphan-AC predicates.
 
 ### Notes
-- **Forward-only.** No `requirements.md` under `vision/specs/archive/**/` is modified. Existing archived specs keep their GWT-style ACs; the rule applies only to new specs authored after merge.
-- **Broadened `**Covers:**` from AC-only to any requirement ID.** F4 + F8 of the feature `requirements.md` were originally AC-only; broadened during planning to align with `vision/specs/main.spec.md` NFR2 *"every artifact change traces to a spec requirement"* (constitution / CHANGELOG / version edits trace to F/NF requirements, not behavioral ACs). The dual predicate split (broad orphan-diff per AC3, narrow orphan-AC per AC4) keeps behavior coverage strict.
-- **Vision-edit routing.** Per the feature's Gate 3 decision, the `vision/VISION.md` edits (§2 sub-principle 2a + §6 Adjust #1 RESOLVED marker) were authored via `lsa-revise-constitution`, then bundled into this feature commit per the precedent set by `feature/diagonal-cross-artifact-analysis` (commit `7235e17`).
+- **Forward-only.** No `requirements.md` under `.lsa/archive/**/` is modified. Existing archived specs keep their GWT-style ACs; the rule applies only to new specs authored after merge.
+- **Broadened `**Covers:**` from AC-only to any requirement ID.** F4 + F8 of the feature `requirements.md` were originally AC-only; broadened during planning to align with `.lsa/main.spec.md` NFR2 *"every artifact change traces to a spec requirement"* (constitution / CHANGELOG / version edits trace to F/NF requirements, not behavioral ACs). The dual predicate split (broad orphan-diff per AC3, narrow orphan-AC per AC4) keeps behavior coverage strict.
+- **Vision-edit routing.** Per the feature's Gate 3 decision, the `.lsa/VISION.md` edits (§2 sub-principle 2a + §6 Adjust #1 RESOLVED marker) were authored via `lsa-revise-constitution`, then bundled into this feature commit per the precedent set by `feature/diagonal-cross-artifact-analysis` (commit `7235e17`).
 - Corresponds to Vision v0.7.
 
 ## [0.5.0] — 2026-05-21
 
-Diagonal cross-artifact analysis at `lsa-specify` Gate 2 — extends the existing AC→Journey coverage check to a 4-row diagonal coverage table (AC→Journey, Journey→Design, Design→Contract, Contract→test-suites). Failing rows surface as Rule 6 decision blocks. Per the 2026-05-20 Tech Picture adoption (`vision/specs/roadmap.md:64-75`).
+Diagonal cross-artifact analysis at `lsa-specify` Gate 2 — extends the existing AC→Journey coverage check to a 4-row diagonal coverage table (AC→Journey, Journey→Design, Design→Contract, Contract→test-suites). Failing rows surface as Rule 6 decision blocks. Per the 2026-05-20 Tech Picture adoption (`.lsa/roadmap.md:64-75`).
 
 ### Added
-- **`lsa-specify` Gate 2 — diagonal coverage.** Step 5 of `lsa/skills/lsa-specify/SKILL.md` now renders a 4-row coverage table after the AC-coverage check, citing every compared artifact pair in `<file>:<line> ↔ <file>:<line>` format. Failing rows surface as Rule 6 decision blocks; when multiple rows fail, all surface together in a single multi-question `AskUserQuestion` (batched). Approval blocks until every `✗` row resolves. When Gate 1 contract-trigger = NO, the two contract-touching rows render as `N/A — contract skipped`. Source: `vision/specs/archive/2026-05-21-diagonal-cross-artifact-analysis/`.
-- **`vision/specs/modules/lsa/spec.md` § Invariants** — new bullet documenting the Gate 2 diagonal coverage discipline. Cites SKILL.md:154 + the archived feature spec.
+- **`lsa-specify` Gate 2 — diagonal coverage.** Step 5 of `lsa/skills/lsa-specify/SKILL.md` now renders a 4-row coverage table after the AC-coverage check, citing every compared artifact pair in `<file>:<line> ↔ <file>:<line>` format. Failing rows surface as Rule 6 decision blocks; when multiple rows fail, all surface together in a single multi-question `AskUserQuestion` (batched). Approval blocks until every `✗` row resolves. When Gate 1 contract-trigger = NO, the two contract-touching rows render as `N/A — contract skipped`. Source: `.lsa/archive/2026-05-21-diagonal-cross-artifact-analysis/`.
+- **`.lsa/modules/lsa/spec.md` § Invariants** — new bullet documenting the Gate 2 diagonal coverage discipline. Cites SKILL.md:154 + the archived feature spec.
 
 ### Changed
 - **`lsa/README.md` skill table** — `lsa-specify` row description corrected from stale "hard/soft confirm gates per file" to "three bundled hard-confirm gates; Gate 2 renders a 4-row diagonal cross-artifact coverage check". Aligns with the audit-C gate collapse landed in v0.4.0.
-- **`vision/specs/modules/lsa/spec.md`** — version references refreshed: plugin manifest tag v0.2.1 → v0.5.0; "Currently v0.2.1" → "Currently v0.5.0"; core dependency floor v0.2.0 → v0.4.0 (when `core/output` was added and cited from every LSA skill).
-- **`vision/specs/main.spec.md`** — module index `lsa` row v0.2.0 → v0.5.0. Closes the version-drift gap that opened during the credo rollout (PRs that bumped lsa to v0.4.0 did not update main.spec.md).
+- **`.lsa/modules/lsa/spec.md`** — version references refreshed: plugin manifest tag v0.2.1 → v0.5.0; "Currently v0.2.1" → "Currently v0.5.0"; core dependency floor v0.2.0 → v0.4.0 (when `core/output` was added and cited from every LSA skill).
+- **`.lsa/main.spec.md`** — module index `lsa` row v0.2.0 → v0.5.0. Closes the version-drift gap that opened during the credo rollout (PRs that bumped lsa to v0.4.0 did not update main.spec.md).
 
 ## [0.4.0] — 2026-05-21
 
-Credo rollout PR 2 — every LSA skill (+ `core/tier-selector`) adopts a component-specific output format that satisfies the four golden rules in `core/output` (structured, minimal, formatted, sourced). Builds on `core` v0.4.0 (PR 1). Per [`vision/plans/2026-05-20-credo-rollout-plan.md`](../vision/plans/2026-05-20-credo-rollout-plan.md).
+Credo rollout PR 2 — every LSA skill (+ `core/tier-selector`) adopts a component-specific output format that satisfies the four golden rules in `core/output` (structured, minimal, formatted, sourced). Builds on `core` v0.4.0 (PR 1). Per [`.lsa/plans/2026-05-20-credo-rollout-plan.md`](../.lsa/plans/2026-05-20-credo-rollout-plan.md).
 
 ### Added
 - `lsa/README.md` — *"LSA's expression of the credo"* section right after the H1 with the user's verbatim line *"LSA doesn't automate your thinking — it makes you own it."* and links to `core/CLAUDE.md` + Rule 0.
@@ -330,7 +346,7 @@ Credo rollout PR 2 — every LSA skill (+ `core/tier-selector`) adopts a compone
 - **`lsa-discover` Output is a 3-row table** (Module / Change / Acceptance) instead of a single-paragraph context summary. Step 2 questions (b) and (c) shift to assume-then-override (agent proposes 2 candidate framings; human picks).
 - **`lsa-verify` report is verdict-first** with three explicit variants (PASS / FAIL / PASS WITH WARNINGS). Metadata (date / branch / mode) moves below the verdict. Issues table is failures only.
 - **All 8 LSA skills + `core/tier-selector`** — Constraints sections gain one citation line: *"Outputs follow [`core/output`](path) golden rules."* No restatement of format mechanics inside any skill.
-- **Every decision-bearing prompt** in every skill describes data + decision options + outcomes; format defers to `core/output`; in Claude Code, `AskUserQuestion` is the canonical primitive (per `vision/VISION.md` §2 principle 9). The text decision-block is the fallback for plain-text rendering.
+- **Every decision-bearing prompt** in every skill describes data + decision options + outcomes; format defers to `core/output`; in Claude Code, `AskUserQuestion` is the canonical primitive (per `.lsa/VISION.md` §2 principle 9). The text decision-block is the fallback for plain-text rendering.
 - `lsa/README.md` "Naming note" — `ground-rules` description updated 4 → 6 content rules; adds `core/output` as the format-discipline peer skill.
 - `lsa/ARCHITECTURE.md` Version bumped from 0.2.1 to 0.4.0; Status line updated.
 
@@ -343,7 +359,7 @@ Credo rollout PR 2 — every LSA skill (+ `core/tier-selector`) adopts a compone
 
 ## [0.3.1] — 2026-05-20
 
-KISS surgical edits. Per [`vision/plans/2026-05-20-simplification-refactor-plan.md`](../vision/plans/2026-05-20-simplification-refactor-plan.md) PR 3.
+KISS surgical edits. Per [`.lsa/plans/2026-05-20-simplification-refactor-plan.md`](../.lsa/plans/2026-05-20-simplification-refactor-plan.md) PR 3.
 
 ### Changed
 - `lsa-init/SKILL.md` Step 2 — replaced the redundant human question *"Greenfield or brownfield?"* with mechanical detection: *"If `${specs_root}/modules/` is empty AND `.lsa.yaml: modules.*` contains no `artifact_paths`, the mode is greenfield; otherwise brownfield. Print the determination and ask the human to confirm."* The gate is preserved; the question is no longer wasted on something derivable from repo state.
@@ -359,7 +375,7 @@ KISS surgical edits. Per [`vision/plans/2026-05-20-simplification-refactor-plan.
 
 ## [0.3.0] — 2026-05-20
 
-Knowledge-vs-Actor boundary tightening across all eight LSA skills. New `lsa/knowledge/conventions.md` Knowledge surface owns cross-skill conventions formerly duplicated in skill bodies. Per [`vision/plans/2026-05-20-simplification-refactor-plan.md`](../vision/plans/2026-05-20-simplification-refactor-plan.md) PR 2.
+Knowledge-vs-Actor boundary tightening across all eight LSA skills. New `lsa/knowledge/conventions.md` Knowledge surface owns cross-skill conventions formerly duplicated in skill bodies. Per [`.lsa/plans/2026-05-20-simplification-refactor-plan.md`](../.lsa/plans/2026-05-20-simplification-refactor-plan.md) PR 2.
 
 ### Added
 - `lsa/knowledge/conventions.md` — single Knowledge file holding (1) `.lsa.yaml` defaults, (2) the Read Protocol, (3) Hard / Soft Confirm gate type definitions, (4) the unified trace-tag format `<!-- <action>: <source> YYYY-MM-DD -->`. Each section was formerly restated in 6–7 skill bodies.
@@ -381,29 +397,29 @@ Knowledge-vs-Actor boundary tightening across all eight LSA skills. New `lsa/kno
 
 ## [0.2.1] — 2026-05-20
 
-Pure DRY / SRP / KISS docs prune. No skill behavior change. Per [`vision/plans/2026-05-20-simplification-refactor-plan.md`](../vision/plans/2026-05-20-simplification-refactor-plan.md) PR 1.
+Pure DRY / SRP / KISS docs prune. No skill behavior change. Per [`.lsa/plans/2026-05-20-simplification-refactor-plan.md`](../.lsa/plans/2026-05-20-simplification-refactor-plan.md) PR 1.
 
 ### Changed
-- `ARCHITECTURE.md` — shrunk ~540 → ~145 lines. Kept §1 Purpose, §2 Directory Structure, §3 `.lsa.yaml` configuration, §4 Branch Management, §5 Resolved Decisions. Deleted §2 (8 first principles — duplicated `vision/VISION.md` §2), §4.1–§4.9 component definitions (duplicated each `SKILL.md`), §5 Workflow Phases (duplicated each `SKILL.md`), §6 Testing Policy (duplicated `vision/specs/standards/testing.md`), §7 Fact-Check Policy (duplicated `core/skills/ground-rules/SKILL.md`), §8 Constitution Revision (duplicated `lsa-revise-constitution/SKILL.md`), §10 Skills Index (duplicated `README.md`). Each deleted section's content survives at its canonical source.
+- `ARCHITECTURE.md` — shrunk ~540 → ~145 lines. Kept §1 Purpose, §2 Directory Structure, §3 `.lsa.yaml` configuration, §4 Branch Management, §5 Resolved Decisions. Deleted §2 (8 first principles — duplicated `.lsa/VISION.md` §2), §4.1–§4.9 component definitions (duplicated each `SKILL.md`), §5 Workflow Phases (duplicated each `SKILL.md`), §6 Testing Policy (duplicated `.lsa/standards/testing.md`), §7 Fact-Check Policy (duplicated `core/skills/ground-rules/SKILL.md`), §8 Constitution Revision (duplicated `lsa-revise-constitution/SKILL.md`), §10 Skills Index (duplicated `README.md`). Each deleted section's content survives at its canonical source.
 - `README.md` — "Naming note" no longer lists `agents.md` (file deleted).
 - `lsa/skills/lsa-init/SKILL.md` — greenfield template no longer includes `standards/agents.md` (mechanical sweep; file deleted).
 - `lsa/skills/lsa-revise-constitution/SKILL.md` — Step 1 read list no longer includes `${specs_root}/standards/agents.md` (mechanical sweep; file deleted).
 
 ### Removed
-- *(repo-level, not plugin-level, but listed here for traceability)* `vision/specs/standards/agents.md` deleted. The file self-declared as a digest of upstream sources; every section now lives at its canonical home (`vision/VISION.md` §2 for the eight first principles; `core/skills/ground-rules/SKILL.md` for the marker convention; `lsa/skills/lsa-specify/SKILL.md` for the gate types; `vision/VISION.md:124` for the boundary signals).
+- *(repo-level, not plugin-level, but listed here for traceability)* `.lsa/standards/agents.md` deleted. The file self-declared as a digest of upstream sources; every section now lives at its canonical home (`.lsa/VISION.md` §2 for the eight first principles; `core/skills/ground-rules/SKILL.md` for the marker convention; `lsa/skills/lsa-specify/SKILL.md` for the gate types; `.lsa/VISION.md:124` for the boundary signals).
 
 ### Notes
 - Out of scope for this patch: skill body deduplication (PR 2), KISS surgical edits (PR 3).
-- Module specs at `vision/specs/modules/{core,lsa}/spec.md` were shrunk in the same change-set (not part of this plugin's CHANGELOG; tracked in the repo-level refactor plan).
+- Module specs at `.lsa/modules/{core,lsa}/spec.md` were shrunk in the same change-set (not part of this plugin's CHANGELOG; tracked in the repo-level refactor plan).
 - Repo `/CLAUDE.md` was shrunk in the same change-set; the always-on rules block now points to `core/CLAUDE.md` as the canonical source instead of restating it.
 
 ## [0.2.0] — 2026-05-20
 
-Closes the seven Vision-alignment gaps between v0.1.1 and `vision/VISION.md` v0.4. Per `vision/specs/2026-05-20-lsa-v0.2.0-design.md`.
+Closes the seven Vision-alignment gaps between v0.1.1 and `.lsa/VISION.md` v0.4. Per `.lsa/2026-05-20-lsa-v0.2.0-design.md`.
 
 ### Added
 - `lsa/skills/lsa-discover/SKILL.md` — light three-question discovery probe at the start of every T2 and T3 task (Phase 0). T2 oral; T3 emits scratch `discovery.md` consumed by `lsa-specify`. Design §4.3.
-- `lsa/skills/lsa-reconcile/SKILL.md` — absorbs direct artifact edits into module specs (Level 2.5, `vision/VISION.md:138`). Per-module hard confirm; reverse-sync in-place (class a) or append (class b); both tagged `<!-- reconciled: YYYY-MM-DD -->`. Updates `.lsa-sync-state.json` on confirm. Design §4.4.
+- `lsa/skills/lsa-reconcile/SKILL.md` — absorbs direct artifact edits into module specs (Level 2.5, `.lsa/VISION.md:138`). Per-module hard confirm; reverse-sync in-place (class a) or append (class b); both tagged `<!-- reconciled: YYYY-MM-DD -->`. Updates `.lsa-sync-state.json` on confirm. Design §4.4.
 - `lsa/hooks/hooks.json` + `lsa/hooks/session-start-drift-check.sh` — SessionStart drift-warning hook (matcher `startup`, type `command`, timeout 10s). Diffs `artifact_paths` against `.lsa-sync-state.json`'s recorded SHA per module; surfaces a one-line notice when drift is detected. Design §7.
 - `.lsa.yaml` loader across every reshaped skill — `constitution`, `specs_root`, `mode` (code / docs / mixed), and per-module `{spec, artifact_paths}`. Defaults preserve v0.1.1 behavior when the file is absent. Design §6.
 - Doc-mode in `lsa-verify` — when `.lsa.yaml: mode` is `docs` or `mixed`, verify diffs each module's `artifact_paths` against `main`. Tracing satisfied by (a) feature spec naming the file/dir in an AC, or (b) the diff being wholly mechanical. Design §8.
@@ -424,12 +440,12 @@ Closes the seven Vision-alignment gaps between v0.1.1 and `vision/VISION.md` v0.
 ### Notes
 - `.lsa.yaml` schema version is informational (`# Schema version: 1`); a future LSA major (1.x.y) will introduce a hard `schema_version: N` key if a breaking schema change is needed. v0.2.0 additions remain non-breaking.
 - Claude Code's plugin manifest still does not expose a `dependencies` field. The LSA→Core dependency stays prose-only in `README.md` and `plugin.json` description (`lsa/CHANGELOG.md:21` carries forward).
-- `core/registry` (the lazy-load map-not-territory skill) stays deferred — now to core v0.3.0 — per `vision/VISION.md:177`.
+- `core/registry` (the lazy-load map-not-territory skill) stays deferred — now to core v0.3.0 — per `.lsa/VISION.md:177`.
 
 ## [0.1.1] — 2026-05-20
 
 ### Changed
-- `ARCHITECTURE.md` §2 P4 and §7 Fact-Check Policy now defer to [`core/ground-rules`](../core/skills/ground-rules/SKILL.md) rather than restating its content. Eliminates a DRY violation against the marketplace's "core + packs" architecture (`vision/VISION.md` §3).
+- `ARCHITECTURE.md` §2 P4 and §7 Fact-Check Policy now defer to [`core/ground-rules`](../core/skills/ground-rules/SKILL.md) rather than restating its content. Eliminates a DRY violation against the marketplace's "core + packs" architecture (`.lsa/VISION.md` §3).
 - `README.md` adds a **Depends on** section: install `core` before `lsa`.
 - Plugin manifest `description` notes the dependency on `core`.
 
@@ -446,7 +462,7 @@ First release. Migrates the six pre-vision LSA skill drafts into a proper Claude
 - Plugin manifest at v0.1.0.
 
 ### Changed
-- Migrated from `LSA/` (flat layout, repo root) to `lsa/` (plugin layout) per the marketplace's "core + packs" architecture (`vision/VISION.md` §3).
+- Migrated from `LSA/` (flat layout, repo root) to `lsa/` (plugin layout) per the marketplace's "core + packs" architecture (`.lsa/VISION.md` §3).
 - Renamed LSA-internal `/specs/ground-rules/` → `/specs/standards/` (across 4 files) to remove name collision with Core's `ground-rules` discipline skill.
 - `ARCHITECTURE.md` status updated from "Draft — Pending stress test" to "0.1.0 — Installable; pending stress test on actual project use".
 

@@ -50,7 +50,7 @@ Scaffold the LSA spec tree on a project so the rest of the LSA skills (`discover
    3. Infer functional requirements from the artifacts. Mark every inferred item `[assumption: inferred from <source>; verify]`.
    4. **Stop.** Verdict carries a preamble per [`../../../core/skills/output/SKILL.md`](../../../core/skills/output/SKILL.md) Rule 6. Present: *"I scanned this repo and drafted `<N>` module specs from /src/ so future LSA steps can attach changes to a specific module — without these specs the next /lsa:discover has nothing to pick."* PROPOSED verdict (`<N>` modules inferred) + per-module table (Module / Source path-glob with file count / Confidence with reason) + reminder that each generated spec is tagged `[assumption: inferred from <source>; verify]` + decision. Prompt voice per [conventions.md](../../knowledge/conventions.md) §"Prompt voice convention" — e.g., *"Write `<N>` inferred module specs for this project?"* (not *"Approve brownfield init?"* — `brownfield` is project jargon). Options:
 
-   - `[a]` write all `<N>` specs → I create them under `${specs_root}/modules/` and you proceed to `/lsa:discover`
+   - `[a]` write all `<N>` specs → I create them under `${specs_root}/modules/` and you proceed to `/management:roadmap`
    - `[b]` write only some — I'll ask which → I re-prompt per module
    - `[c]` reject all → no files written; reconsider module boundaries
 
@@ -100,7 +100,7 @@ Scaffold the LSA spec tree on a project so the rest of the LSA skills (`discover
 
    Observable result: the three written files quoted back inline per [`core/output`](../../../core/skills/output/SKILL.md) Rule 7 (add type tag) — compressed inspection table (one row per file: `${specs_root}/main.spec.md` / `${specs_root}/roadmap.md` / `${specs_root}/research-backlog.md`) given multi-file batch size, with file:line pointers to the rendered templates above.
 
-4. **Report to human.** List all files created. State: "Run `/lsa:discover` to start the first feature."
+4. **Report to human.** List all files created. State: "Run `/management:roadmap` to manage the backlog (it can shape a new feature via `/management:start-feature`, sequence existing pitches, or hand off to LSA). If the `management` plugin is not installed, run `/lsa:new <feature description>` instead."
 
 ## Output
 

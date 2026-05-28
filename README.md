@@ -101,7 +101,7 @@ Personal-use first; open-sourced for visibility. Claude Code is the v1 substrate
 
 ## Further reading
 
-- [`vision/VISION.md`](./vision/VISION.md) — the full design rationale (the constitution).
+- [`.lsa/VISION.md`](./.lsa/VISION.md) — the full design rationale (the constitution).
 - [`CONTRIBUTING.md`](./CONTRIBUTING.md) — how to build, contribute, verify.
 - [`core/README.md`](./core/README.md), [`lsa/README.md`](./lsa/README.md), [`management/README.md`](./management/README.md) — per-plugin docs.
 - [`lsa/ARCHITECTURE.md`](./lsa/ARCHITECTURE.md) — directory layout, `.lsa.yaml` schema, branch management.

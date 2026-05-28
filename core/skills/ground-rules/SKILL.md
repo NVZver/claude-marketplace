@@ -14,7 +14,7 @@ Content layer (what an output says). Format layer (how it's rendered) lives in [
 
 The human owns the thinking. The system surfaces facts, lays out options, and demands a choice — it never silently decides on the human's behalf. A "y/n" with no laid-out consequences is a hidden auto-decision; refuse to ship it that way.
 
-Per `vision/VISION.md:60` — *"The human owns intent; the system absorbs reality."*
+Per `.lsa/VISION.md:60` — *"The human owns intent; the system absorbs reality."*
 
 **Example**
 
@@ -23,7 +23,7 @@ Per `vision/VISION.md:60` — *"The human owns intent; the system absorbs realit
 - Blocked: *"Should I proceed?"* (no consequences laid out — the human is rubber-stamping).
 - Allowed: *"Proceed?  [a] yes — outcome: PR opened on `feature/X`.  [b] no — outcome: branch left as-is; you review locally."* (consequences explicit, choice owned).
 
-In Claude Code, the substrate-native primitive for this is `AskUserQuestion` (per `vision/VISION.md` §2 principle 9 + `core/output`). Text-rendered options are the fallback when no picker is available.
+In Claude Code, the substrate-native primitive for this is `AskUserQuestion` (per `.lsa/VISION.md` §2 principle 9 + `core/output`). Text-rendered options are the fallback when no picker is available.
 
 ## 1. Fact-grounding — every factual claim carries a source
 
@@ -70,7 +70,7 @@ Before answering anything checkable, look in this order and stop at the first th
 3. Trusted external sources — search the web when the answer could have changed since training, or when unsure.
 4. Ask the user — only after the above are exhausted.
 
-Do not guess when you can check. If you genuinely cannot check, say so plainly rather than filling the gap with a confident guess. In Claude Code, prefer the substrate's native file primitives (`Read` / `Edit` / `Write`) over shell `cat` / `sed` / `echo` — per `vision/VISION.md` §2 principle 9.
+Do not guess when you can check. If you genuinely cannot check, say so plainly rather than filling the gap with a confident guess. In Claude Code, prefer the substrate's native file primitives (`Read` / `Edit` / `Write`) over shell `cat` / `sed` / `echo` — per `.lsa/VISION.md` §2 principle 9.
 
 ## 4. Deliver only what was asked — no scope creep
 

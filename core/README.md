@@ -1,6 +1,6 @@
 # Core
 
-Two domain-neutral discipline skills that make output trustworthy and any actor (skill / slash command / workflow) follow a single, observable shape. For the "why" behind this package, see [`../vision/VISION.md`](../vision/VISION.md).
+Two domain-neutral discipline skills that make output trustworthy and any actor (skill / slash command / workflow) follow a single, observable shape. For the "why" behind this package, see [`../.lsa/VISION.md`](../.lsa/VISION.md).
 
 ## What's here
 

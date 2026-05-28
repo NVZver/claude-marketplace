@@ -8,7 +8,7 @@ description: Apply before any non-trivial task — when the work touches behavio
 
 # Flow Selector
 
-Classify a task into Quick / Standard / Extended by weighing boundary signals, then stop and wait for the human to confirm the flow before any downstream LSA ceremony fires. Per `vision/VISION.md` §4 (`vision/VISION.md:122`): *"the orchestrator picks the flow by chain-of-thought, then states its reasoning and the human confirms or overrides."*
+Classify a task into Quick / Standard / Extended by weighing boundary signals, then stop and wait for the human to confirm the flow before any downstream LSA ceremony fires. Per `.lsa/VISION.md` §4 (`.lsa/VISION.md:122`): *"the orchestrator picks the flow by chain-of-thought, then states its reasoning and the human confirms or overrides."*
 
 Three flows, named by *process shape*:
 
@@ -27,11 +27,11 @@ Produce a flow label (`Quick`, `Standard`, or `Extended`) plus a 2–4-sentence 
 
 ## Steps
 
-1. **List the boundary signals present in the task.** Apply the five-item checklist at [`../../../vision/VISION.md`](../../../vision/VISION.md) §4 — new module · API/contract change · data-model change · ~5 files · no existing spec.
+1. **List the boundary signals present in the task.** Apply the five-item checklist at [`../../../.lsa/VISION.md`](../../../.lsa/VISION.md) §4 — new module · API/contract change · data-model change · ~5 files · no existing spec.
 
    Observable result: a five-item bulleted checklist with `yes` / `no` next to each signal, derived only from the task description (and a minimal repo read if needed for the spec-exists question).
 
-2. **Apply the classification table** at [`../../../vision/VISION.md`](../../../vision/VISION.md) §4 — four worked-example rows mapping pattern → flow.
+2. **Apply the classification table** at [`../../../.lsa/VISION.md`](../../../.lsa/VISION.md) §4 — four worked-example rows mapping pattern → flow.
 
    Observable result: the matched row (or the closest analogue) named in the chain-of-thought.
 

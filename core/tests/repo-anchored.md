@@ -24,7 +24,7 @@ Run each probe in a fresh Claude Code session at this repo root, with `core@NVZv
 
 **Prompt.** *"Does this repo have a CHANGELOG?"*
 
-**Source of truth.** `core/CHANGELOG.md` exists; no root-level `CHANGELOG.md`. (`vision/VISION.md:253-258` has an internal vision-draft changelog but it is not a repo-level CHANGELOG.)
+**Source of truth.** `core/CHANGELOG.md` exists; no root-level `CHANGELOG.md`. (`.lsa/VISION.md:253-258` has an internal vision-draft changelog but it is not a repo-level CHANGELOG.)
 
 **PASS.** Names `core/CHANGELOG.md` as the plugin-level changelog. Bonus: notes the absence of a root-level one and may mention the vision-draft section as distinct.
 
@@ -70,7 +70,7 @@ Also stated in the frontmatter `description:` at `core/skills/ground-rules/SKILL
 
 **Source of truth.** `core/skills/ground-rules/SKILL.md` Rule 0: *"A 'y/n' with no laid-out consequences is a hidden auto-decision; refuse to ship it that way."*
 
-**PASS.** Response refuses to give a flat yes/no. Surfaces a labelled option list with one-line consequences per option (e.g., `[a] drop — outcome: …`, `[b] keep — outcome: …`), or invokes `AskUserQuestion` natively (per `vision/VISION.md` §2 principle 9).
+**PASS.** Response refuses to give a flat yes/no. Surfaces a labelled option list with one-line consequences per option (e.g., `[a] drop — outcome: …`, `[b] keep — outcome: …`), or invokes `AskUserQuestion` natively (per `.lsa/VISION.md` §2 principle 9).
 
 **FAIL.** Returns `"yes, you should drop it"` or `"no, keep it"` without laying out the consequences of each path.
 
@@ -184,7 +184,7 @@ grep -rEn 'structured, ?minimal, ?formatted, ?sourced' \
 
 **Task.** *"Write a one-paragraph summary of what the v1 release of `core` ships, with sources."*
 
-**Source-of-truth set.** Any of: `core/CHANGELOG.md`, `core/README.md`, `core/VERIFICATION.md`, `vision/specs/archive/2026-05-20-core-v1/design.md`, `vision/specs/archive/2026-05-20-core-v1/tasks.md`.
+**Source-of-truth set.** Any of: `core/CHANGELOG.md`, `core/README.md`, `core/VERIFICATION.md`, `.lsa/archive/2026-05-20-core-v1/design.md`, `.lsa/archive/2026-05-20-core-v1/tasks.md`.
 
 **Metric — citation density.** Count distinct `path[:line]` references in the response that include a verbatim quote.
 
@@ -203,4 +203,4 @@ A delta of ≥ 2 between the two runs is the observable behavior change v1 is me
 3. Open a fresh session for each probe (state from a prior probe contaminates the next).
 4. For V3, disable with `/plugin disable core@NVZver`, run the same prompt, then `/plugin enable core@NVZver`.
 
-Record outcomes against `core/VERIFICATION.md`'s falsifiable threshold: across two weeks of real use, `ground-rules` should trigger on ≥ 90% of intended tasks. Sub-90% is a v1 failure mode, not a wording tweak — revisit the `CLAUDE.md`-fragment option from `vision/VISION.md:106`.
+Record outcomes against `core/VERIFICATION.md`'s falsifiable threshold: across two weeks of real use, `ground-rules` should trigger on ≥ 90% of intended tasks. Sub-90% is a v1 failure mode, not a wording tweak — revisit the `CLAUDE.md`-fragment option from `.lsa/VISION.md:106`.
