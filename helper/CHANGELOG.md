@@ -2,6 +2,25 @@
 
 All notable changes to the `helper` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.4.0] – 2026-05-28
+
+Onboarding fast-path catalog expansion + heading-anchor citation migration. Stage 1 / Epic 2 of the `readme-and-knowledge-base` pitch (see [`.lsa/pitches/readme-and-knowledge-base.md`](../.lsa/pitches/readme-and-knowledge-base.md)).
+
+### Added
+
+- **`knowledge/onboarding-fast-path.md`** — two new catalog rows: row 7 *what is `management`* and row 8 *what is `prompt-engineer`*. Catalog grows from v1's 6 rows to v2's 8 rows; *what-is* coverage now spans all five shipped plugins. Fast-path resolves these subjects in seconds instead of falling through to deep-read.
+
+### Changed
+
+- **`knowledge/onboarding-fast-path.md`** — citation format migrated from `file:line-range` (e.g., `README.md:73-83`) to `file#heading-anchor` (e.g., `README.md#install`). Heading anchors survive line shifts; line-range citations broke silently every time the target file was edited. The new repo-root [`knowledge/index.md`](../knowledge/index.md) becomes the single source of truth for heading names — any rename in `README.md` must update both files in the same commit.
+- **`knowledge/onboarding-fast-path.md`** — canonical-subjects list expanded from {`marketplace`, `core`, `lsa`, `helper`} to {`marketplace`, `core`, `lsa`, `helper`, `management`, `prompt-engineer`}, reflecting the five shipped plugins.
+- **`.claude-plugin/plugin.json`** — description tightened: "`file:line` (or URL) citations" → "file citations (line range, heading anchor, or URL)" to reflect the post-migration mix.
+
+### Fixed
+
+- **`knowledge/onboarding-fast-path.md`** — stale path references corrected: `lsa/ARCHITECTURE.md §4.10` → `§3` (the `.lsa.yaml` config section is §3); `lsa/skills/lsa-verify/SKILL.md` → `lsa/skills/verify/SKILL.md` and `lsa/skills/lsa-specify/SKILL.md` → `lsa/skills/discover/SKILL.md` (renames from `lsa` v0.8.0 prefix drop + `specify`-into-`discover` merge).
+- **`knowledge/onboarding-fast-path.md`** — `./knowledge-scope.md:13` line-anchored citation replaced with bare-path citation (line number was stale).
+
 ## [0.3.2] – 2026-05-27
 
 Prompt audit remediation — cross-reference fixes and knowledge deduplication.
