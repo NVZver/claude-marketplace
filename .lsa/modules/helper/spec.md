@@ -4,7 +4,7 @@
 
 The fact-grounded assistant plugin. One subagent + one slash command + three knowledge files.
 
-**Plugin manifest:** [`helper/.claude-plugin/plugin.json`](../../../helper/.claude-plugin/plugin.json) (v0.3.2)
+**Plugin manifest:** [`helper/.claude-plugin/plugin.json`](../../../helper/.claude-plugin/plugin.json) (v0.4.0)
 **Plugin README** (install, default flow, status): [`helper/README.md`](../../../helper/README.md)
 **Per-agent behavior** (source of truth): [`helper/agents/helper.md`](../../../helper/agents/helper.md)
 **Per-command behavior** (source of truth): [`helper/commands/help.md`](../../../helper/commands/help.md)
@@ -12,7 +12,7 @@ The fact-grounded assistant plugin. One subagent + one slash command + three kno
 
 ## Role in the marketplace
 
-`helper` is the user-facing assistance surface — answers free-form questions about the marketplace with `file:line` (or URL) citations and hands off to other skills under explicit confirmation. Depends on `core` ([`helper/README.md`](../../../helper/README.md) *"Depends on"*) for:
+`helper` is the user-facing assistance surface — answers free-form questions about the marketplace with file citations (line range, heading anchor, or URL) and hands off to other skills under explicit confirmation. Depends on `core` ([`helper/README.md`](../../../helper/README.md) *"Depends on"*) for:
 
 - `core/ground-rules` — fact-grounding policy (every claim cited; cannot-verify fallback rather than fabrication).
 - `core/output` — five golden rules every response inherits (`core/skills/output/SKILL.md` is the canonical source; `helper/knowledge/output-discipline.md` re-grounds + extends with Helper-specific rules).
@@ -22,7 +22,7 @@ Observes `lsa:discover` User Verification rejects in main-agent context (auto-en
 
 ## Invariants
 
-- **Versioning.** `helper` evolves with its own SemVer + CHANGELOG (`.lsa/VISION.md` §1 *"Distribution + versioning"*). Currently v0.3.2.
+- **Versioning.** `helper` evolves with its own SemVer + CHANGELOG (`.lsa/VISION.md` §1 *"Distribution + versioning"*). Currently v0.4.0.
 - **Markdown-only.** No `/src/`; the plugin is pure Markdown plus the JSON manifest. Per `.lsa/standards/code.md`.
 - **Depends on `core` v0.5.2+** for `output`, `ground-rules`, `actor-template`. Documented in `helper/.claude-plugin/plugin.json: description` and `helper/README.md` *"Depends on"*.
 - **Spec source-of-truth.** Behavior is owned by `helper/agents/helper.md` (Actor) and `helper/knowledge/*.md` (rules and scope); this module spec carries module-level invariants only — not a per-step catalog (that's the agent body).
