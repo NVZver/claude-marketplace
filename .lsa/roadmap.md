@@ -37,7 +37,7 @@ Prioritized list of upcoming work, populated from `.lsa/VISION.md` §6 *"Adjust"
 | LSA: what-and-why preamble on every verb-headline | Should | shipped — core v0.7.0 + lsa v0.8.0 | Detail: §"2026-05-22 backlog detail" #4. Touches 5 LSA skill bodies (the verdict-emitting ones). Feature: `.lsa/archive/2026-05-22-lsa-what-why-preamble/`. |
 | Show actual changes inline (LSA / Core / Helper) | **Must** | shipped (partial) — core v0.8.0 + lsa v0.8.1 (Epic 1 + 2 + 4); Epic 3 (helper) deferred until helper v0.3.0 lands | Detail: §"2026-05-22 backlog detail" #5. New `core/output` Rule 7 + LSA 16-line sweep + lsa-reconcile cross-cite. Spec at `.lsa/features/2026-05-22-show-changes-inline/` (NOT yet archived — Epic 3 still pending; archive after Epic 3 merges). |
 | Sweep custom inventions; remove the unjustified | Should | shipped (partial) — lsa v0.7.0 (trace-tag) + lsa v0.9.0 (Hard/Soft Confirm vocabulary); T2 (`.lsa-sync-state.json` removal) deferred | Detail: §"2026-05-22 backlog detail" #6. Opportunistic audit. T2 deferred due to medium blast radius + line-citation conflicts with show-changes-inline (PR #22). Spec at `.lsa/features/2026-05-22-custom-inventions-sweep/` (NOT yet archived — T2 still pending). |
-| Planning quality: `lsa-plan` must enforce TDD in every epic | **Must** | shipped — lsa v0.10.0 | User-reported 2026-05-24 — planning entirely skipped TDD; this is a critical bug. Fixed by adding `lsa:implement` skill that enforces RED→GREEN→REFACTOR per epic; `lsa:plan` approval gate now hands off to `lsa:implement`. Detail: §"2026-05-24 backlog detail" #2. |
+| Planning quality: `lsa-plan` must enforce TDD in every epic | **Must** | shipped — lsa v0.10.0 | User-reported 2026-05-24 — planning entirely skipped TDD; this is a critical bug. Fixed by adding `lsa:implement` skill that enforces RED→GREEN→REFACTOR per subtask, per-epic human checkpoint, auto-detected project tooling, flow interruption handling. Detail: §"2026-05-24 backlog detail" #2. |
 | Remove `.lsa/archive/` (rely on CHANGELOG + git + permanent module specs) | Could | backlog | User-proposed 2026-05-23. Archive is a custom invention not mandated by any 3rd-party standard; CHANGELOG entries + git history + absorbed module specs cover traceability. Touches `lsa/ARCHITECTURE.md`, `.lsa/VISION.md:206` reference, removal of existing `.lsa/archive/2026-05-21-ears-journey-shape-ac/`. Spec TBD. |
 | `management` plugin — `product-manager` agent + `start-feature` skill | **Should** | shipped — management v0.1.0 | User-proposed 2026-05-26. New standalone plugin (`management`). The system has strong *build* discipline but no *what to build* discipline. A `product-manager` agent operates upstream of `lsa:discover`: takes a vague problem/opportunity, shapes it into a buildable pitch (problem, appetite, solution sketch, rabbit holes, no-gos), and hands off to discovery. Detail: §"2026-05-26 backlog detail" #1. |
 | `management` plugin — `project-manager` agent + `roadmap` skill | **Should** | shipped — management v0.2.0 | User-proposed 2026-05-26. Same plugin. Roadmap steward: recommends next item (dependency/risk/value reasoning), decomposes pitches into epics, tidies roadmap hygiene, hands each epic to LSA. Renamed `task-status` → `roadmap` during design. Detail: §"2026-05-26 backlog detail" #2. |
@@ -47,6 +47,10 @@ Prioritized list of upcoming work, populated from `.lsa/VISION.md` §6 *"Adjust"
 | Prompt audit remediation — Epic 3: DRY + context budget cleanup | Should | shipped — PR #32 (commit f39ec4a, 2026-05-27) | P2. Absorb repeated boilerplate into conventions, split oversized skill phases, trim examples, resolve skill overlap. Closes 2 HIGH + 9 MEDIUM + 3 LOW. Detail: §"2026-05-27 backlog detail" #3. |
 | Prompt audit remediation — Epic 4: Polish (LOW severity) | Could | shipped — PR #32 (commit f39ec4a, 2026-05-27) | P3. Remove formalized common sense, fix wording issues, deduplicate rename-history, remove low-density padding. Closes ~30 LOW. Detail: §"2026-05-27 backlog detail" #4. |
 | README redesign and internal knowledge base | Should | shipped (partial) — Stage 1 Epic 1 in PR #33 (commit 246ffbe, 2026-05-27, main.spec.md Module Index fix); Stage 1 Epic 2 in feature/readme-and-knowledge-base-epic-2 (README rewrite + new `knowledge/index.md` + onboarding-fast-path heading-anchor migration + helper v0.4.0); Stages 2 + 3 backlog | Pitch: [readme-and-knowledge-base](.lsa/pitches/readme-and-knowledge-base.md) |
+| Fast path for simple-navigation questions | **Must** | backlog | User-reported 2026-05-28 — *"Performance - Terrible, sometimes a simple question like 'what's next' took 3 min to answer."* Scope: `lsa:next`, `management:roadmap`, Helper onboarding — direct read + cited quote in seconds for source-of-truth questions; no deep grep / context7 / sub-agent dispatch. Same root cause as `feedback_helper_latency.md`. Pitch: [fast-path-navigation-questions](.lsa/pitches/fast-path-navigation-questions.md). |
+| Relax `core/output` to advisory; keep Sources+Quotes as hard rule | **Must** | backlog | **Sequence: after "Enforce show-changes-inline" row below** — that row hardens the per-skill discipline first; this row then relaxes the cross-cutting rule layout. User-reported 2026-05-28 — *"Output format is a great idea, but it feels like we restriced Claude too much. I would try to keep the hard requirements to provide Sources + Quotes but in a free format so Claude OR any other tool can shine."* Re-classify Rules 1-3, 5-7 as guidance; only fact-grounding stays hard. Prerequisite task: 5-min grep for verdict-tag usages (`PROPOSED`, `DRIFT`, `PASS`, `FAIL`, `RESOLVED`) across the marketplace before relaxation. Does NOT contradict prior length / show-changes feedback. Pitch: [relax-core-output-to-advisory](.lsa/pitches/relax-core-output-to-advisory.md). |
+| Enforce show-changes-inline across LSA / Core / Helper / Management | **Must** | backlog | **Sequence: ships first** (before "Relax `core/output` to advisory" row above) — user-visible critical fix lands at the skill level before the cross-cutting rule is relaxed. User-reported 2026-05-28 (second time) — *"Sometimes steps are unclear because only files changed, and the agent asks to go and verify them. I'd rather see what actually was changed without jumping through files and picking changes."* Per-skill enforcement of `core/output` Rule 7 + regression checks on BOTH surfaces (`prompt-engineer:prompt-review` for prompt sources; `lsa:verify` for runtime artifacts). Cites `feedback_show_actual_changes.md` and `feedback_lsa_reconcile_gold_standard.md`. Pitch: [enforce-show-changes-inline](.lsa/pitches/enforce-show-changes-inline.md). |
+| Strip process narration from generated code | Should | backlog | User-reported 2026-05-28 — *"Too much comments in the code, especially about Epics and other stuff. I want to see only code related comments like inline doc for functions and classes."* Scope: `lsa:implement` + `lsa/agents/developer.md` + `lsa:verify` (LSA-only; `dev-plugin:implement` is not in this repo) — no Epic IDs, AC IDs, TDD phase tags, or spec-artifact references in source comments. Traceability lives in commits/PR. Pitch: [strip-process-narration-from-code](.lsa/pitches/strip-process-narration-from-code.md). |
 
 ## Recently merged
 
@@ -256,3 +260,53 @@ Prioritized list of upcoming work, populated from `.lsa/VISION.md` §6 *"Adjust"
   2. Fix wording issues: remove adverbs, hedging phrases, passive voice, and padding across all plugins (batch edit).
   3. Deduplicate rename-history mentions: `core/flow-selector` tier-to-flow rename is repeated 4 times across the prompt set; consolidate to 1 authoritative mention + path references.
   4. Remove low-density padding: `core/output` inheritance section preamble, `core/ground-rules` opening paragraph, and similar blocks where the token cost exceeds the information content.
+
+## 2026-05-28 backlog detail — Pitch 3: enforce-show-changes-inline
+
+`READY` — four epics added 2026-05-28 from Pitch 3 (`.lsa/pitches/enforce-show-changes-inline.md`). The pitch is the specification; each epic delivers one component. Epics are ordered by dependency: Epic 1 installs the canonical pointer that Epics 2-4 cite back to; Epic 2 ships the user-visible critical fix (per-skill sweep); Epics 3 and 4 add author-time and PR-time regression checks respectively (both surfaces preserved per Q4 decision recorded in the pitch).
+
+### 1. Enforce show-changes-inline — Epic 1: `core/output` Rule 7 "How this gets enforced" sub-section
+
+- **Problem.** `core/output` Rule 7 (show-changes-inline) is documented as canonical but carries no enforcement pointer — skills citing Rule 7 have nowhere to look for (a) where the rule applies per-step, (b) the regression checks shipping in Epics 3 and 4, or (c) a gold-standard exemplar. Without this anchor, Epic 2's per-skill sweep has no canonical reference to cite back to.
+- **Priority.** P0 (**Must**). Installs the canonical pointer that Epics 2-4 cite back to; blocks them.
+- **Subtasks.**
+  1. Add "How this gets enforced" sub-section to `core/skills/output/SKILL.md` Rule 7 pointing to (a) per-skill cite locations, (b) the two regression checks shipping in Epics 3 and 4 (prompt-review for prompt sources; lsa:verify for runtime artifacts), and (c) `lsa/skills/reconcile/SKILL.md` 8-element drift block as the gold-standard exemplar (user-endorsed 2026-05-22, per memory `feedback_lsa_reconcile_gold_standard.md`).
+  2. Update `core/CLAUDE.md` operational checkpoint to reference the new sub-section.
+  3. Quote the changes inline per Rule 7's own format (dogfooding).
+  4. Bump `core` SemVer + CHANGELOG entry.
+- **Covers.** Pitch task #1.
+
+### 2. Enforce show-changes-inline — Epic 2: Per-skill show-changes sweep across LSA / Management / Helper / Core / prompt-engineer
+
+- **Problem.** Skills across LSA / Management / Helper / Core / prompt-engineer describe write/edit/mark actions in their step bodies without an explicit "quote the change inline" directive — relying on `core/output` Rule 7 to be enforced ambiently. In practice, agents miss the rule, and the user has flagged this complaint twice (memory: `feedback_show_actual_changes.md`). Per-skill enforcement at the step-body level is needed.
+- **Priority.** P0 (**Must**). The user-visible critical fix; ships the actual behavior change.
+- **Subtasks.**
+  1. LSA sweep: every step in `lsa/skills/**` that writes/edits/marks gets an explicit "quote the change inline" directive in the step body (not only in `Observable result`).
+  2. Management sweep: same treatment for `management/skills/**` + `management/agents/**`.
+  3. Helper sweep: same for `helper/agents/helper.md` (folds in deferred Helper-side work from v0.8.0 per pitch §"Open questions" #1).
+  4. Core sweep: same for any step in `core/skills/**` that writes/marks.
+  5. prompt-engineer sweep: same for `prompt-engineer/**`.
+  6. Bump per-plugin SemVer + CHANGELOG. Chunked into independent per-plugin PRs per pitch §"Rabbit holes" #3.
+- **Covers.** Pitch task #2.
+
+### 3. Enforce show-changes-inline — Epic 3: Author-time regression check in `prompt-engineer:prompt-review`
+
+- **Problem.** Even after Epic 2's sweep, newly authored skill/agent prompts can be written that violate the show-changes rule. Without an author-time scan, the rule will drift over time. Per Q4, the right home for source-level checking is `prompt-engineer:prompt-review` (catches violations in prompt sources before they ship).
+- **Priority.** P1 (Should). Prevents regression; not a user-visible behavior change.
+- **Subtasks.**
+  1. Add a scan to `prompt-engineer/skills/prompt-review/SKILL.md` over `**/SKILL.md` + `**/agents/*.md` for steps describing write/edit/mark actions without a show-changes-inline directive.
+  2. Warning-only output (not blocking) — author decides per case.
+  3. Validate against one positive baseline (a post-v0.8.0 compliant skill source) and one negative baseline (a pre-v0.8.0 prompt-source diff) per pitch §"Open questions" #2.
+  4. Bump `prompt-engineer` SemVer + CHANGELOG.
+- **Covers.** Pitch task #3 (+ pitch task #5 baseline validation folded in).
+
+### 4. Enforce show-changes-inline — Epic 4: PR-time regression check in `lsa:verify`
+
+- **Problem.** Skill bodies may comply post-Epic 2, but runtime outputs (verification reports, PR descriptions) can still contain "go check the file" patterns generated at execution time. Per Q4, the right home for runtime checking is `lsa:verify` (catches violations in runtime artifacts at PR time).
+- **Priority.** P1 (Should). Prevents regression at the output side; complements Epic 3.
+- **Subtasks.**
+  1. Add a scan to `lsa/skills/verify/SKILL.md` over the feature's runtime outputs / PR diff for banned phrasings without inline quote: "go check the file", "I added X to Y" without quote, "marked X", "updated Z" without quote.
+  2. Warning-only output.
+  3. Validate against one positive baseline (a recent post-v0.8.0 compliant PR) and one negative baseline per pitch §"Open questions" #2.
+  4. Bump `lsa` SemVer + CHANGELOG.
+- **Covers.** Pitch task #4 (+ pitch task #5 baseline validation folded in).
