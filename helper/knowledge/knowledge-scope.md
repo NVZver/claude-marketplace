@@ -2,7 +2,7 @@
 
 # Knowledge scope — knowledge
 
-What the Helper agent is allowed to read when answering, and in what order. Per [`.lsa/features/2026-05-21-helper-agent/requirements.md`](../../.lsa/features/2026-05-21-helper-agent/requirements.md) F4.
+What the Helper agent is allowed to read when answering, and in what order. Per the absorbed helper module spec [`.lsa/modules/helper/spec.md`](../../.lsa/modules/helper/spec.md).
 
 ## Scope order
 

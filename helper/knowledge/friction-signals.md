@@ -2,7 +2,7 @@
 
 # Friction signals — knowledge
 
-When the Helper agent auto-engages and when it stays out of the way. Per [`.lsa/features/2026-05-21-helper-agent/requirements.md`](../../.lsa/features/2026-05-21-helper-agent/requirements.md) F2 and [`.lsa/features/2026-05-21-helper-agent/design.md`](../../.lsa/features/2026-05-21-helper-agent/design.md) § *Friction-signal detection*.
+When the Helper agent auto-engages and when it stays out of the way. Per the absorbed helper module spec [`.lsa/modules/helper/spec.md`](../../.lsa/modules/helper/spec.md) (friction-signal behavior).
 
 Detection runs in the main Claude Code agent's own context — not as a separate detector subagent. The main agent matches Helper's `description` (frontmatter of [`../agents/helper.md`](../agents/helper.md)) against the live conversation and invokes Helper on signal-match. This file is the canonical spec for which patterns count.
 

@@ -2,7 +2,7 @@
 
 Manual probes for the friendly fact-grounded assistant. Run on a fresh Claude Code session. No automated harness — Helper's substrate is `AskUserQuestion` + `Skill` + `Read`, none of which currently have programmatic probes. Eyeball it.
 
-Probes are scoped to the v0.2.0 surface: the `helper` subagent + the `/help` slash command + the cooldown rule from [`./knowledge/friction-signals.md`](./knowledge/friction-signals.md). Cited acceptance criteria reference [`../.lsa/features/2026-05-21-helper-agent/requirements.md`](../.lsa/features/2026-05-21-helper-agent/requirements.md) (AC1–AC8) and [`../.lsa/features/2026-05-21-helper-agent/test-suites.md`](../.lsa/features/2026-05-21-helper-agent/test-suites.md) (Journeys 1–3).
+Probes are scoped to the v0.2.0 surface: the `helper` subagent + the `/help` slash command + the cooldown rule from [`./knowledge/friction-signals.md`](./knowledge/friction-signals.md). Cited acceptance criteria reference the original helper-agent spec (AC1–AC8) and its test-suites (Journeys 1–3), since absorbed into [`../.lsa/modules/helper/spec.md`](../.lsa/modules/helper/spec.md).
 
 ## V1 — Installs cleanly
 
