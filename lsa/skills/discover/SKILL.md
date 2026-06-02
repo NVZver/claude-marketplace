@@ -75,7 +75,7 @@ Establish context for a task (module, change, acceptance criterion), then — fo
 
    Feature name: kebab-case. Create git branch `feature/<feature-name>` if not already on one (skip if invoked from `lsa:new` or `lsa:next` which already created the branch). Observable result: directory and branch both exist.
 
-7. **User Verification 1: Requirements + Contract Trigger → Hard Confirm (bundled).**
+7. **User Verification 1: Requirements + Contract Trigger → Hard Confirm (bundled).** When you write `requirements.md`, quote the written content inline (the rendered file below) before the verdict — write, show, comment per [`../../../core/skills/output/SKILL.md`](../../../core/skills/output/SKILL.md) Rule 7. Never say "requirements written" without rendering them.
 
    Write `requirements.md`:
    ```markdown
@@ -121,7 +121,7 @@ Establish context for a task (module, change, acceptance criterion), then — fo
 
    When asking about individual requirements that need clarification, ask one decision per question; resolve each `F<n>` / `NF<n>` / `AC<n>` to its subject phrase ("Add password reset endpoint?"), not the ID. Format per [`core/output`](../../../core/skills/output/SKILL.md); `AskUserQuestion` in Claude Code. Observable result: `requirements.md` exists; contract-trigger logged; human approval logged.
 
-8. **User Verification 2: Test Suites + Contract + Design → Hard Confirm (bundled).**
+8. **User Verification 2: Test Suites + Contract + Design → Hard Confirm (bundled).** When you write `test-suites.md`, `contract.yaml`, and `design.md`, quote the written content inline before the verdict — write, show, comment per [`../../../core/skills/output/SKILL.md`](../../../core/skills/output/SKILL.md) Rule 7. The "Present:" line below already lists each file to render; do not collapse it to "files written".
 
    Before writing `test-suites.md`: verify every AC from `requirements.md` is assigned to at least one journey. Do not present until all ACs are covered.
 

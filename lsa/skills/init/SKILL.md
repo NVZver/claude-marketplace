@@ -55,11 +55,11 @@ Scaffold the LSA spec tree on a project so the rest of the LSA skills (`discover
    - `[c]` reject all → no files written; reconsider module boundaries
 
    `AskUserQuestion` per [conventions.md](../../knowledge/conventions.md) §"AskUserQuestion convention".
-   5. Wait for explicit human confirmation before writing any spec files.
+   5. Wait for explicit human confirmation before writing any spec files. On confirm, when you write the specs, quote them inline (compressed inspection table for the batch) before the verdict — write, show, comment per [`../../../core/skills/output/SKILL.md`](../../../core/skills/output/SKILL.md) Rule 7.
 
    Observable result: the brownfield spec tree quoted back inline per [`core/output`](../../../core/skills/output/SKILL.md) Rule 7 (add type tag) — compressed inspection table (one row per `${specs_root}/modules/<module-name>/spec.md` written) given multi-file batch size, with file:line pointers and the `[assumption: inferred from <source>; verify]` tag visible per row; the human confirms the skeleton.
 
-3. **Write spec files.** Write `${specs_root}/main.spec.md`:
+3. **Write spec files.** When you write these files, quote the written content inline (compressed inspection table for the batch) before any verdict or summary — write, show, comment per [`../../../core/skills/output/SKILL.md`](../../../core/skills/output/SKILL.md) Rule 7. Never list filenames alone. Write `${specs_root}/main.spec.md`:
 
    ```markdown
    # [Project Name] — Main Spec

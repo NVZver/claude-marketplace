@@ -32,7 +32,7 @@ Constraints:
 6. Generate file using actor format template from [knowledge/actor-ground-rules.md](../knowledge/actor-ground-rules.md):
    - Agent: frontmatter (name, description with examples, tools) + body (Role, Goal, Input, Constraints, Steps, Output, Example Output)
    - Command: frontmatter (name, description, allowed-tools) + body (Goal, Input, Constraints, Steps, Output, Example Output)
-7. Write file → confirm path
+7. Write file → quote the generated file content inline before any verdict (write, show, comment) per [`../../core/skills/output/SKILL.md`](../../core/skills/output/SKILL.md) Rule 7; then confirm path
 8. Run prompt-review logic on new file → verify compliance
 
 ## Output

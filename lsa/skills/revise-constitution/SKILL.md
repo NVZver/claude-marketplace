@@ -60,7 +60,7 @@ After a feature is merged, propose and apply constitution / standards changes th
 
 3. **Human review gate.** Verdict carries a preamble per [`../../../core/skills/output/SKILL.md`](../../../core/skills/output/SKILL.md) Rule 6. Present each proposed change individually (one per turn) with a preamble in the user's frame naming the constitution section about to change and the consequence of accepting / rejecting — e.g., *"Last feature surfaced a rule worth making permanent: I'm offering to add a 'no inline secrets' line to CLAUDE.md — accepting makes it enforced on every future change; rejecting means the next contributor can still paste a secret without a warning."* — then: PROPOSED verdict + change-N-of-M + file path + section name + type (add / modify / remove) + verbatim current content (or "none") + proposed content + one-line reason + source (feature name or "manual") + decision `[a] apply → file edited, committed to constitution branch` / `[b] modify → apply your correction, re-present` / `[c] reject → change not applied`. `AskUserQuestion` per [conventions.md](../../knowledge/conventions.md) §"AskUserQuestion convention". Do not write until approval. Observable result: per-change decision logged.
 
-4. **Apply approved changes.** For each approved change:
+4. **Apply approved changes.** For each approved change, after the edit, quote the change inline before any verdict or summary — write, show, comment per [`../../../core/skills/output/SKILL.md`](../../../core/skills/output/SKILL.md) Rule 7. Never say "constitution updated" without showing the previous and new content. For each approved change:
    1. Edit the target file (the configured `${constitution}` or a file under `${specs_root}/standards/`).
    2. Do not rewrite surrounding content.
 

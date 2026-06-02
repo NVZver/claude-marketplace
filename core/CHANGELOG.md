@@ -2,6 +2,18 @@
 
 All notable changes to the `core` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.7.0] — 2026-06-02
+
+Show-changes-inline enforcement. Rule 7 gains a *How this gets enforced* sub-section; the operational checkpoint spells out the write → show → comment order; two warning-only regression checks (prompt-review for prompt sources, lsa:verify for runtime artifacts) now hold the discipline.
+
+### Added
+
+- **`skills/output/SKILL.md`** — Rule 7 *How this gets enforced* sub-section: names the per-skill cite locations, the two regression checks (`prompt-engineer:prompt-review` author-time over prompt sources; `lsa:verify` PR-time over runtime artifacts, both warning-only), and the `lsa:reconcile` 8-element drift block as the gold-standard exemplar. Rule 7's content and template are unchanged.
+
+### Changed
+
+- **`CLAUDE.md`** — operational checkpoint #4 now spells out the fixed write → show → comment order, the compressed-inspection-table threshold, the `lsa:reconcile` Step 4 reference, and both regression-check surfaces.
+
 ## [0.6.0] — 2026-06-02
 
 Fast-path navigation contract. New shared knowledge file establishing the single-source-of-truth fast-path pattern cited by `lsa:next`, `management:roadmap`, the `project-manager` agent, and Helper's onboarding catalog.

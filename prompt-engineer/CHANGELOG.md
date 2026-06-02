@@ -2,6 +2,18 @@
 
 All notable changes to the `prompt-engineer` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.3.0] – 2026-06-02
+
+Author-time show-changes-inline regression check + self-compliance.
+
+### Added
+
+- **`prompt-engineer/commands/prompt-review.md`** — new warning-only check (Step 3 item `l`): in prompt SOURCE files (`**/SKILL.md`, `**/agents/*.md`), flags any step body describing a write/edit/mark action without an accompanying show-changes-inline directive. Read/dispatch/present-only steps are exempt. Author-time half of `core/output` Rule 7 enforcement; the PR-time half lives in `lsa:verify`. README + Example Output table updated.
+
+### Changed
+
+- **`prompt-engineer/commands/prompt-create.md`**, **`prompt-optimize.md`** — generated / fixed content is now quoted inline before the verdict (self-compliance with the new check).
+
 ## [0.2.0] – 2026-05-27
 
 Prompt audit remediation — knowledge extraction from agent. The agent file (161→58 lines) no longer inlines rules; six rule categories now live in dedicated knowledge files. All three commands updated to reference knowledge files directly instead of reading the agent.

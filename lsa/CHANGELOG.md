@@ -2,6 +2,18 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.15.0] — 2026-06-02
+
+Show-changes-inline enforcement — PR-time regression check + skill-body sweep. The v0.8.0 sweep touched only `Observable result:` lines; this adds the instruction to the step bodies and a verify-time check.
+
+### Added
+
+- **`lsa/skills/verify/SKILL.md`** — new warning-only show-changes-inline scan over the feature's runtime artifacts / PR diff: flags banned "go check the file" phrasing and bare change-claims ("I added X to Y", "marked X", "updated Z") with no inline quote of the changed content. Mechanical/templated phrasings inside spec scaffolds are filtered first. PR-time half of Rule 7 enforcement; the author-time half lives in `prompt-engineer:prompt-review`. README skill-table row updated.
+
+### Changed
+
+- **`lsa/skills/plan/SKILL.md`**, **`discover/SKILL.md`**, **`init/SKILL.md`**, **`revise-constitution/SKILL.md`**, **`implement/SKILL.md`** — every step that writes / edits / marks now carries an explicit "quote the changed content inline before the verdict" instruction in the step body (the `Observable result:` line keeps the verdict; the body carries the instruction — no duplication). `lsa:reconcile`'s gold-standard drift block is unchanged.
+
 ## [0.14.0] — 2026-06-02
 
 `lsa:next` fast-path for "what's next". Generalizes the Helper onboarding fast-path (helper v0.3.0) to the roadmap-navigation surface.

@@ -126,7 +126,7 @@ Approve to hand off to /management:roadmap for epic decomposition, or reshape.
 
 ### prompt-engineer
 
-Audit your own plugin prompts against the marketplace's quality rules. The agent enforces actor structure (Goal / Input / Steps / Output / Constraints), Knowledge-vs-Actor separation, KISS/DRY hygiene, an AI-over-engineering sweep, and a context-budget ceiling.
+Audit your own plugin prompts against the marketplace's quality rules. The agent enforces actor structure (Goal / Input / Steps / Output / Constraints), Knowledge-vs-Actor separation, KISS/DRY hygiene, an AI-over-engineering sweep, a context-budget ceiling, and a warning-only show-changes-inline check that flags any step writing/editing/marking an artifact without a directive to quote the change.
 
 ```text
 > /prompt-engineer:prompt-review helper/agents/helper.md

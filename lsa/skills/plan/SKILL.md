@@ -82,7 +82,7 @@ Decompose an approved feature spec into ≤5 parallel-safe epics with self-verif
 
    Observable result: each row marked PASS / FAIL with a one-line reason.
 
-4. **Write `tasks.md`.**
+4. **Write `tasks.md`.** When you write the file, quote the new content inline before any verdict or summary — write, show, comment per [`../../../core/skills/output/SKILL.md`](../../../core/skills/output/SKILL.md) Rule 7. Never say "tasks.md written" or "Epic N added" without rendering the Epic Overview table and the new epic blocks (or a compressed inspection table when the write exceeds the budget).
 
    ```markdown
    # Tasks: [Feature Name]

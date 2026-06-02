@@ -90,7 +90,13 @@ Confirm that the implementation on the current feature branch matches the approv
    - [ ] No commented-out code.
    - [ ] File structure matches the constitution.
 
-   Observable result: checklist printed with PASS/FAIL/WARN per row.
+   **Show-changes discipline (runtime artifacts — WARNING-ONLY)**
+   This group is the PR-time half of the show-changes-inline enforcement (`core/output` Rule 7). It scans the feature's RUNTIME artifacts — the PR description, the feature's spec/output files in the diff, and any agent-authored narration captured in the feature directory — for descriptions of a change that are NOT accompanied by an inline quote of the changed content. Complements the author-time check in [`prompt-engineer:prompt-review`](../../../prompt-engineer/commands/prompt-review.md), which scans prompt SOURCES; this one scans the produced ARTIFACTS. Emit `⚠️ WARNING` (signal, not gate) — never FAIL — for each hit:
+   - [ ] No banned "go check it yourself" phrasing without an inline quote: *"go check the file"*, *"see the file for details"*, *"see the diff"*.
+   - [ ] No bare change-claim without the changed content quoted: *"I added X to Y"*, *"added X"*, *"marked X (as resolved)"*, *"updated Z"*, *"edited Z"* where the artifact does not then quote the new (and, for a replace, the previous) content with a `file:line`.
+   - [ ] Each WARNING row names `<artifact-file>:<line>` + the offending phrase + the missing quote, so the author can fix it before promoting the rule to a hard gate. Mechanical/templated phrasings inside spec scaffolds (e.g. a literal *"[exact proposed content]"* placeholder) are filtered before this check, judged by the agent.
+
+   Observable result: checklist printed with PASS/FAIL/WARN per row; every show-changes hit rendered as a `⚠️ WARNING` row with `<artifact-file>:<line>` + the offending phrase quoted inline.
 
    **Iterative re-check.** If any checklist item is FAIL or WARN, re-read the cited files to confirm the finding is real (not a stale read or misattribution). Remove any unverified claims. Maximum 3 iterations — if issues persist after 3 passes, they are real. Observable result: iteration count noted.
 
@@ -107,7 +113,7 @@ Confirm that the implementation on the current feature branch matches the approv
    - **PASS WITH WARNINGS:** sync handoff only on `[a] accept and sync`; warning logged in archive.
    - **PASS:** sync handoff on `[a] proceed`; proceed to Step 5.
 
-5. **On clean PASS — write `metrics.md`.** Only on clean PASS (not FAIL, not PASS WITH WARNINGS), and only when this is an Extended feature flow (an active feature spec exists). Write `${specs_root}/archive/<feature-name>/metrics.md` with:
+5. **On clean PASS — write `metrics.md`.** Only on clean PASS (not FAIL, not PASS WITH WARNINGS), and only when this is an Extended feature flow (an active feature spec exists). When you write the file, quote its content inline before any summary — write, show, comment per [`core/output`](../../../core/skills/output/SKILL.md) Rule 7. Write `${specs_root}/archive/<feature-name>/metrics.md` with:
 
    ```markdown
    # Metrics — <feature-name>
