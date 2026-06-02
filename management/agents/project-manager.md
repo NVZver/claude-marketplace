@@ -17,8 +17,13 @@ Recommend the next backlog item to build, decompose the chosen pitch into indepe
 - `specs_root` from `.lsa.yaml` at repo root (defaults per [`../../lsa/knowledge/conventions.md`](../../lsa/knowledge/conventions.md) §"`.lsa.yaml` defaults"). Used to resolve `${specs_root}/...` paths below.
 - Ambient state: roadmap at `${specs_root}/roadmap.md`, pitch files at `${specs_root}/pitches/*.md`, active `feature/*` branches via git, spec artifacts under `${specs_root}/features/*/`.
 - Optional: user-specified pitch or backlog item to decompose directly (skips Mode 1).
+- The fast-path contract at [`../../core/knowledge/fast-path-source-of-truth.md`](../../core/knowledge/fast-path-source-of-truth.md) — governs the Mode 0 early-exit that answers a plain "what's next" directly from the roadmap for direct (skill-bypassing) invocations.
 
 ## Steps
+
+### Mode 0: Fast-path "what's next" (early exit)
+
+0. **Fast-path early exit for a plain "what's next".** Applies when the agent is invoked directly (bypassing the `management:roadmap` skill wrapper) with a plain "what's next" / "what's the next backlog item" question shape, per [`../../core/knowledge/fast-path-source-of-truth.md`](../../core/knowledge/fast-path-source-of-truth.md) §"Question-shape detection". `Read` `${specs_root}/roadmap.md`, locate the `## Feature Backlog` heading anchor, find the first row whose Status is `backlog` or `not started`, quote it back inline with a `file:line` citation per the shared knowledge file's §"Citation format", and exit — no pitch reads, no `git branch`, no sequencing, no sub-task. **Fall through to Mode 1** — with an observable note — if the `## Feature Backlog` anchor is missing, the table is empty, or the question carries ordering/sequencing/"why" intent ("recommend an order", "what should I pick", "sequence the backlog"), which needs the dependency/risk/value reasoning in Steps 1-5. Observable result: either the first backlog row is quoted with its `file:line` citation and the agent exits, or an observable fall-through note and Mode 1 runs as today.
 
 ### Mode 1: Recommend next
 

@@ -4,6 +4,8 @@
 
 When the user asks an onboarding-flavored question (*install / start / what-is-X / how-do-I-run*), Helper consults this catalog **before** [`./knowledge-scope.md`](./knowledge-scope.md)'s Step 2 scope-order read. If a row matches, Helper responds directly from the cited README excerpt — no `Grep`, no `Glob`, no `context7`. Per [`.lsa/archive/2026-05-22-helper-onboarding-fast-path/requirements.md`](../../.lsa/archive/2026-05-22-helper-onboarding-fast-path/requirements.md) F1 / F2 / F4.
 
+This catalog is the first shipped instance of the marketplace's single-source-of-truth fast-path pattern; the pattern's general statement (direct read + cited quote, exact-phrase detection, fall-through-on-failure, `file:line` quote-back) is canonical at [`../../core/knowledge/fast-path-source-of-truth.md`](../../core/knowledge/fast-path-source-of-truth.md), and this file is its onboarding-trigger data.
+
 ## Catalog — onboarding trigger → README excerpt
 
 Each row maps a plain-English intent to a concrete heading-anchor excerpt (e.g., `README.md#install`). Heading anchors survive line shifts; line-range citations did not. The agent reads the excerpt, quotes it inline with citation, and closes the turn (Step 5 of [`../agents/helper.md`](../agents/helper.md)).
@@ -36,6 +38,7 @@ Catalog size v2: **8 rows**. Floor named in `requirements.md` NF2 (install / sta
 - *"how do I install `context7`"* — `context7` is an external MCP, not a marketplace plugin. No catalog row maps the trigger to a heading-anchor excerpt. Fall through (and Step 2 will likely declare cannot-verify or route to scope 3).
 - *"what is `dev-plugin`"* — not a canonical marketplace subject (canonical = `marketplace` / `core` / `lsa` / `helper` / `management` / `prompt-engineer`). Fall through to scope-order read.
 - *"how do I write an EARS acceptance criterion"* — methodology question; answer lives in `.lsa/VISION.md` §3 + `lsa/skills/discover/SKILL.md` (`lsa:specify` was merged into `lsa:discover` in lsa v0.8.0). Fall through.
+- *"what's next"* / *"what should I work on next"* — roadmap-navigation question, NOT an onboarding question. Its answer lives in `.lsa/roadmap.md` §`## Feature Backlog`, which is outside this catalog's README-excerpt scope. This is its own fast-path, owned by `lsa:next` and `management:roadmap` per [`../../core/knowledge/fast-path-source-of-truth.md`](../../core/knowledge/fast-path-source-of-truth.md); Helper does not duplicate it. Fall through to Step 2; if the user wants the next backlog item, the closing picker MAY offer to run `lsa:next` (a skill handoff per [`../agents/helper.md`](../agents/helper.md) Step 4), not a roadmap deep-read. Resolves the pitch's Open Question #1: the catalog had no navigation-class gap to fill — "what's next" is a deliberately separate fast-path, not a missing onboarding row.
 
 ## Fall-through rules — when to defer to Step 2
 

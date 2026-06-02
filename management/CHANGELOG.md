@@ -2,6 +2,17 @@
 
 All notable changes to the `management` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.4.0] – 2026-06-02
+
+Fast-path "what's next" for `management:roadmap` and the `project-manager` agent — answer in seconds without the full agent dispatch.
+
+### Added
+
+- **`management/skills/roadmap/SKILL.md`** — new Step 0 branch before the unconditional agent dispatch: a plain "what's next" returns the first `backlog`/`not started` roadmap row quoted with a `file:line` citation and exits, no agent spawned. The full `project-manager` dispatch (dependency/risk/value sequencing, decomposition, hygiene) is reserved for "recommend an order" / "what should I pick" / "sequence the backlog" questions.
+- **`management/agents/project-manager.md`** — new Mode 0 early-exit so direct agent invocation (bypassing the skill) also short-circuits a plain "what's next" to the cited roadmap row.
+
+Both cite `core/knowledge/fast-path-source-of-truth.md`. README skill-table + "`management:roadmap` vs `lsa:next`" section updated.
+
 ## [0.3.0] – 2026-05-28
 
 Paths parametrized on `${specs_root}`. Management now interoperates with LSA's configurable spec tree instead of hardcoding `vision/specs/`.

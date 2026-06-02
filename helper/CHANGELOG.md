@@ -2,6 +2,14 @@
 
 All notable changes to the `helper` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.4.1] – 2026-06-02
+
+Fast-path catalog back-cite + roadmap-navigation routing.
+
+### Changed
+
+- **`knowledge/onboarding-fast-path.md`** — added a back-cite to the new `core/knowledge/fast-path-source-of-truth.md` (Helper's catalog is the first shipped instance of that pattern), plus a "what's next" negative example that routes roadmap-navigation questions to `lsa:next` rather than a deep read. Resolves the fast-path pitch's Open Question #1: the catalog had no missing navigation-class onboarding row — "what's next" is a deliberately separate fast-path owned by `lsa:next` / `management:roadmap`. Catalog stays at 8 rows; no agent-behavior change.
+
 ## [0.4.0] – 2026-05-28
 
 Onboarding fast-path catalog expansion + heading-anchor citation migration. Stage 1 / Epic 2 of the `readme-and-knowledge-base` pitch (see [`.lsa/pitches/readme-and-knowledge-base.md`](../.lsa/pitches/readme-and-knowledge-base.md)).

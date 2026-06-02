@@ -9,6 +9,11 @@ Two domain-neutral discipline skills that make output trustworthy and any actor 
 - **`actor-template`** — Apply when authoring or editing a Skill, slash command, or workflow. Enforces the Goal / Input / Steps / Output / Constraints shape and demands every Step produce an observable result.
 - **`flow-selector`** — Apply before any non-trivial task. Classifies the work as Quick / Standard / Extended by chain-of-thought reasoning over Vision §4 boundary signals, then waits for human confirmation before any LSA ceremony fires. Renamed from `tier-selector` (T1 / T2 / T3) in `core` v0.5.2.
 
+## Knowledge
+
+- **[`knowledge/output-vocabulary.md`](./knowledge/output-vocabulary.md)** — The canonical marketplace verdict labels (PROPOSED, DRIFT, APPLIED, PASS, FAIL, etc.) cited by `core/output`.
+- **[`knowledge/fast-path-source-of-truth.md`](./knowledge/fast-path-source-of-truth.md)** — The shared single-source-of-truth navigation fast-path contract: a navigation-class question ("what's next", "how do I get started") maps to one source-of-truth file at a known path → direct `Read` + cited `file:line` quote-back, no sub-agent / `context7` / multi-round `Grep`. Exact-phrase detection (not semantic similarity); any failure falls through to the deep-research path unchanged. Cited by `lsa:next`, `management:roadmap`, the `project-manager` agent, and Helper's onboarding catalog.
+
 ## Install on Claude Code
 
 ```

@@ -6,10 +6,11 @@ Flat table of every knowledge file across the five marketplace plugins. Agents c
 
 Maintained manually. When a knowledge file is added, moved, or removed, update this index in the same commit. Per [`.lsa/pitches/readme-and-knowledge-base.md`](../.lsa/pitches/readme-and-knowledge-base.md) "Solution sketch".
 
-## Catalog — 14 knowledge files
+## Catalog — 15 knowledge files
 
 | Topic | Plugin | Path | One-sentence description |
 |---|---|---|---|
+| Fast-path source of truth | `core` | [`core/knowledge/fast-path-source-of-truth.md`](../core/knowledge/fast-path-source-of-truth.md) | The shared single-source-of-truth navigation fast-path contract — direct read + cited quote, exact-phrase detection, fall-through-on-failure — cited by `lsa:next`, `management:roadmap`, and Helper's onboarding catalog. |
 | Output vocabulary | `core` | [`core/knowledge/output-vocabulary.md`](../core/knowledge/output-vocabulary.md) | The canonical marketplace verdict labels (PROPOSED, DRIFT, APPLIED, PASS, FAIL, etc.) cited by `core/output`. |
 | Friction signals | `helper` | [`helper/knowledge/friction-signals.md`](../helper/knowledge/friction-signals.md) | When Helper auto-engages and when it stays out of the way; canonical spec for friction patterns the main agent matches against. |
 | Knowledge scope | `helper` | [`helper/knowledge/knowledge-scope.md`](../helper/knowledge/knowledge-scope.md) | What Helper is allowed to read when answering, and in what scope order (in-repo → installed plugins → external via `context7`). |

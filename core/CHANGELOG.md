@@ -2,6 +2,14 @@
 
 All notable changes to the `core` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.6.0] — 2026-06-02
+
+Fast-path navigation contract. New shared knowledge file establishing the single-source-of-truth fast-path pattern cited by `lsa:next`, `management:roadmap`, the `project-manager` agent, and Helper's onboarding catalog.
+
+### Added
+
+- **`knowledge/fast-path-source-of-truth.md`** — the shared single-source-of-truth navigation fast-path contract: a navigation-class question ("what's next", "how do I get started") maps to one source-of-truth file at a known path → direct `Read` + cited `file:line` quote-back, no sub-agent / `context7` / multi-round `Grep`. Documents the pattern shape, exact-phrase detection (not semantic similarity), the fall-through-on-failure rule (no regression to the deep-research path), and the `file:line` citation format. `core/README.md` gains a Knowledge section; root `knowledge/index.md` count 14 → 15.
+
 ## [0.5.7] — 2026-05-27
 
 Prompt audit remediation — cross-reference fixes, Rule 7 trimming, wording polish.

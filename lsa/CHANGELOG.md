@@ -2,6 +2,14 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.14.0] — 2026-06-02
+
+`lsa:next` fast-path for "what's next". Generalizes the Helper onboarding fast-path (helper v0.3.0) to the roadmap-navigation surface.
+
+### Added
+
+- **`lsa/skills/next/SKILL.md`** — new Step 0 fast-path: a "what's next" invocation reads `.lsa/roadmap.md` §`## Feature Backlog` directly and quotes the first `backlog`/`not started` row with a `file:line` citation in seconds — no sub-agent, no `context7`, no multi-round grep. Cites `core/knowledge/fast-path-source-of-truth.md`. Falls through to the existing flow (with an observable note) if the `## Feature Backlog` anchor is missing, the table is empty, or the question carries selection intent. README skill-table row updated.
+
 ## [0.13.0] — 2026-05-28
 
 Default workspace moves to `.lsa/`. `lsa:init`'s tail message now points at the management plugin instead of `/lsa:discover`.

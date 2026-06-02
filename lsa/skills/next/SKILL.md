@@ -18,8 +18,11 @@ Pick the next backlog item by priority and start working on it in one command, w
 
 - `.lsa.yaml` at repo root for `specs_root` (defaults per [`../knowledge/conventions.md`](../knowledge/conventions.md) §"`.lsa.yaml` defaults").
 - `${specs_root}/roadmap.md` §"Feature Backlog" table.
+- The fast-path contract at [`../../core/knowledge/fast-path-source-of-truth.md`](../../core/knowledge/fast-path-source-of-truth.md) — governs the Step 0 direct-read-and-quote shortcut and its fall-through.
 
 ## Steps
+
+0. **Fast-path: "what's next" → cited roadmap row.** When the invocation is a bare `/lsa:next` or a "what's next" question shape (per [`../../core/knowledge/fast-path-source-of-truth.md`](../../core/knowledge/fast-path-source-of-truth.md) §"Question-shape detection"), answer in seconds without a sub-agent, `context7`, or multi-round `Grep`. `Read` `${specs_root}/roadmap.md`, locate the `## Feature Backlog` heading anchor, find the first table row whose Status is `backlog` or `not started`, and quote that row back inline with a `file:line` citation per the shared knowledge file's §"Citation format". Then proceed to Step 2 to offer the confirmation picker (the fast-path supplies the cited candidate; it does not auto-start). **Fall through** to Step 1 unchanged — with an observable note — if the `## Feature Backlog` heading anchor is missing, the table is empty, or the question carries extra intent the row cannot answer (e.g., "what should I pick and why"). Observable result: either the first backlog row is quoted with its `file:line` citation, or an observable fall-through note ("`## Feature Backlog` not found — falling through to Step 1") and Step 1 runs as today.
 
 1. **Read roadmap.** Read `${specs_root}/roadmap.md` and parse the Feature Backlog table. Filter rows where Status = "backlog". Sort by Priority: Must > Should > Could. Observable result: candidate list built.
 
