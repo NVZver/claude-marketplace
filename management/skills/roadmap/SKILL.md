@@ -56,6 +56,7 @@ Handing off Epic 1 to lsa:discover...
 
 - **Orchestrator only.** Do not duplicate agent logic (sequencing, decomposition, roadmap writing) — dispatch and wait. The agent handles all modes and handoff internally.
 - **No silent handoff.** The agent's `AskUserQuestion` prompts are the human decision points. This skill does not add approval steps.
+- **Show changes inline.** The dispatched `project-manager` agent writes roadmap rows; it must quote each written/changed row inline before its verdict (write, show, comment) per [`../../../core/skills/output/SKILL.md`](../../../core/skills/output/SKILL.md) Rule 7 and `project-manager.md` Step 7. This skill surfaces the agent's output verbatim and does not summarize the changes as "roadmap updated".
 - Outputs follow [`core/output`](../../../core/skills/output/SKILL.md) — citation by link, never restated.
 
 ---

@@ -141,6 +141,16 @@ After the table: one cluster of follow-up `file:line` pointers the human can ope
 - **Inherits Rule 5 (Concrete).** The reason (element 5) names the subject in the human's frame, not the spec ID.
 - **Composes with Rule 3 (Formatted).** Single-change blocks use fenced code; batch blocks use markdown tables. Match the affordance to the content.
 
+### How this gets enforced
+
+This rule is held in three places — content here, scaffolding elsewhere:
+
+1. **Per-skill cites.** Every skill / agent step that writes / edits / marks an artifact carries an explicit "quote the change inline before your verdict" instruction in the step body, plus an `Observable result:` that names the quoted-diff format. The gold-standard exemplar is the 8-element drift block at [`lsa:reconcile`](../../../lsa/skills/reconcile/SKILL.md) Step 4 — *"verbatim spec quote with path:line + verbatim artifact quote with path:line + proposed one-line spec update"* — which this rule generalizes.
+2. **Author-time regression check (prompt sources).** [`prompt-engineer:prompt-review`](../../../prompt-engineer/commands/prompt-review.md) scans prompt SOURCE files (`**/SKILL.md`, `**/agents/*.md`) for a step that writes / edits / marks without an accompanying show-changes-inline directive. Catches a structural omission in the prompt before the skill ships. Warning-only initially (signal, not gate).
+3. **PR-time regression check (runtime artifacts).** [`lsa:verify`](../../../lsa/skills/verify/SKILL.md) scans the feature's runtime outputs / PR diff for banned phrasings (*"go check the file"*, *"I added X to Y"*, *"marked X"*, *"updated Z"*) with no inline quote of the change. Catches the violation as a runtime symptom. Warning-only initially.
+
+The two checks are complementary, not redundant: prompt-review catches violations in prompt **sources**; lsa:verify catches violations in runtime **artifacts**. A correctly-prompted skill can still mis-execute (caught only by lsa:verify); a structural prompt-source omission stays invisible until a feature ships (caught only by prompt-review). Neither alone suffices.
+
 ---
 
 Substrate selection — see `.lsa/VISION.md` §2 principle 9 (*"Substrate-native first"*).

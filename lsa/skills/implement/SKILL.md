@@ -51,7 +51,7 @@ Execute the approved `tasks.md` (or Standard-flow discovery context) epic-by-epi
    - **`blocked`**: The agent could not complete — spec/plan divergence, stuck implementation, or unresolvable issue. Present the agent's blocked reason and proposed adjustment to the human via `AskUserQuestion`. Options: `[a]` accept adjustment → re-dispatch with the adjustment; `[b]` override → human provides guidance, re-dispatch; `[c]` stop → pause implementation.
    - **`complete`**: Proceed to human gate. Review the agent's returned design brief for reasonableness before presenting — if the brief is thin relative to the epic's complexity, re-dispatch with feedback.
 
-   **Human gate.** Present via `AskUserQuestion` per [conventions.md](../../knowledge/conventions.md) §"AskUserQuestion convention". Include from the agent's summary: design brief (so the human audits the contract, not just the code), test counts by type, files changed, trade-offs made, pre-existing failures if any.
+   **Human gate.** Present via `AskUserQuestion` per [conventions.md](../../knowledge/conventions.md) §"AskUserQuestion convention". Include from the agent's summary: design brief (so the human audits the contract, not just the code), test counts by type, files changed, trade-offs made, pre-existing failures if any. Quote the agent's changes inline — a compressed inspection table (`file:line` / type / summary per changed file) before the verdict, not a bare "files changed" list — write, show, comment per [`../../../core/skills/output/SKILL.md`](../../../core/skills/output/SKILL.md) Rule 7. Never tell the human to "go check the diff".
 
    **Prompt:** *"Epic [N]: [Name] — [test count] tests passing ([unit/integration/e2e breakdown]). Proceed to Epic [N+1]?"*
 

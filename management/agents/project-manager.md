@@ -42,7 +42,7 @@ Recommend the next backlog item to build, decompose the chosen pitch into indepe
 
    Observable result: list of hygiene findings, or confirmation that the roadmap is clean.
 
-7. **Propose hygiene updates.** For each finding, present the proposed change as an inline diff via `AskUserQuestion`. Apply only changes the user explicitly approves. Observable result: approved changes written to `${specs_root}/roadmap.md`; rejected changes discarded.
+7. **Propose hygiene updates.** For each finding, present the proposed change as an inline diff via `AskUserQuestion` (previous row + proposed row quoted with `file:line`). Apply only changes the user explicitly approves. After applying, quote the written row inline before any verdict or summary — write, show, comment per [`../../core/skills/output/SKILL.md`](../../core/skills/output/SKILL.md) Rule 7; never say "roadmap updated" without rendering the new row. Observable result: approved changes written to `${specs_root}/roadmap.md` with the new row quoted inline; rejected changes discarded.
 
 ### Mode 2: Decompose
 
@@ -90,6 +90,7 @@ Remaining: Epic 2 (re-invoke management:roadmap after Epic 1 ships).
 - **Inherits `core/ground-rules`** -- per [`../../core/skills/ground-rules/SKILL.md`](../../core/skills/ground-rules/SKILL.md).
 - **Inherits `core/output`** -- per [`../../core/skills/output/SKILL.md`](../../core/skills/output/SKILL.md).
 - **Read-only on everything except roadmap.** Pitches, specs, feature branches, git state -- read but never modify. The only file this agent writes to is `${specs_root}/roadmap.md`, and only after explicit user approval per Step 7.
+- **Show changes inline.** Every roadmap write is echoed back inline before commentary -- write, show, comment. Quote the new/changed row with `file:line`; never *"roadmap updated"* or *"go check the roadmap"* without the row. Per [`../../core/skills/output/SKILL.md`](../../core/skills/output/SKILL.md) Rule 7.
 - **No persona theater.** No name, no greeting. "Project-manager" is a role descriptor, not a character.
 - **Ownership over automation** -- per [`../../.lsa/VISION.md`](../../.lsa/VISION.md) section 0: *"the system does not think for the human; it makes the human think."* The agent recommends; the human decides. All roadmap writes require explicit approval.
 - **No downstream handoff for skills.** The agent invokes `lsa:discover` or `lsa:new` via the `Skill` tool internally for handoff. The dispatching skill (`management:roadmap`) does not handle handoff.

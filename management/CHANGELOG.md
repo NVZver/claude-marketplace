@@ -2,6 +2,15 @@
 
 All notable changes to the `management` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.4.1] – 2026-06-02
+
+Show-changes-inline cites on roadmap/pitch writes.
+
+### Changed
+
+- **`management/agents/project-manager.md`** — Step 7 and a new Constraints bullet require each written roadmap row to be quoted inline before the verdict, per `core/output` Rule 7; never "roadmap updated" without the row.
+- **`management/skills/roadmap/SKILL.md`**, **`start-feature/SKILL.md`** — new Constraints bullets: the dispatched agent's quoted-inline roadmap/pitch writes are surfaced verbatim by the orchestrator, never reduced to "roadmap updated" / "pitch created".
+
 ## [0.3.0] – 2026-05-28
 
 Paths parametrized on `${specs_root}`. Management now interoperates with LSA's configurable spec tree instead of hardcoding `vision/specs/`.
