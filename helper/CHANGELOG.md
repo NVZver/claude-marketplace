@@ -8,7 +8,7 @@ Re-ground the output-discipline adherent to the new `core/output` posture.
 
 ### Changed
 
-- **`knowledge/output-discipline.md`** — heading "The seven golden rules" → "Output rules (`core/output`) — one hard, six guidance"; the ≤1.5-screen budget note no longer re-promotes the guidance Rule 2 to "hard" (Helper holds it firm as its own convention, but flags it as guidance at the marketplace layer). Tracks the `core` v0.8.0 hard-vs-guidance split.
+- **`knowledge/output-discipline.md`** — heading "The seven golden rules" → "Output rules (`core/output`) — one hard, six guidance"; the ≤1.5-screen budget note no longer re-promotes the guidance Rule 2 to "hard" (Helper holds it firm as its own convention, but flags it as guidance at the marketplace layer). Tracks the `core` v0.11.0 hard-vs-guidance split.
 
 ## [0.4.2] – 2026-06-02
 
