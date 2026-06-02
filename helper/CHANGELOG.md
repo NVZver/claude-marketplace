@@ -2,6 +2,14 @@
 
 All notable changes to the `helper` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.4.3] – 2026-06-02
+
+Re-ground the output-discipline adherent to the new `core/output` posture.
+
+### Changed
+
+- **`knowledge/output-discipline.md`** — heading "The seven golden rules" → "Output rules (`core/output`) — one hard, six guidance"; the ≤1.5-screen budget note no longer re-promotes the guidance Rule 2 to "hard" (Helper holds it firm as its own convention, but flags it as guidance at the marketplace layer). Tracks the `core` v0.8.0 hard-vs-guidance split.
+
 ## [0.4.2] – 2026-06-02
 
 Show-changes / actions-inline cite for Helper.

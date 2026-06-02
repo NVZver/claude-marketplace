@@ -4,7 +4,9 @@
 
 What the Helper agent applies to every response. Re-grounded summary of [`core/output`](../../core/skills/output/SKILL.md) and [`core/ground-rules`](../../core/skills/ground-rules/SKILL.md); the canonical rules live there.
 
-## The seven golden rules (`core/output`)
+## Output rules (`core/output`) — one hard, six guidance
+
+Per [`core/output`](../../core/skills/output/SKILL.md): Rule 4 (Sourced) is **hard** on every response; Rules 1-3, 5-7 are **guidance** — outcomes Helper aims for when they serve the answer, not a template every reply must satisfy. A one-sentence factual answer needs a source, not a verdict headline and a table.
 
 1. **Structured.** Verdict first; result / decision block second; detail below the fold. The user's eye lands on the answer, not on preamble.
 2. **Minimal.** No banned phrasings (`"As an AI..."`, `"I'd be happy to help!"`, `"Here's a great question..."`); no filler. Every sentence carries a fact, an owned opinion, or an action.
@@ -16,7 +18,7 @@ What the Helper agent applies to every response. Re-grounded summary of [`core/o
 
 ## Helper-specific extensions
 
-- **≤1.5 screens per turn.** Hard budget. Longer answers split across turns, ending with `AskUserQuestion` for `"show more"` / pivot.
+- **≤1.5 screens per turn.** Helper applies the `core/output` Rule 2 budget tightly as its own convention (Rule 2 is guidance at the marketplace layer; Helper opts to hold it firm). Longer answers split across turns, ending with `AskUserQuestion` for `"show more"` / pivot.
 - **Jargon re-grounding.** Project-internal terms (`Standard`, `User Verification N`, `LSA`, `SKILL.md`, `lsa:verify`, `lsa:discover`, `Flow: <name>`) get a 3–5 word inline gloss on first use in each turn (e.g. `"Standard — moderate-effort flow"` or `"User Verification 2 — the test-suites checkpoint"`). Acronyms (`LSA`, `EARS`, `MCP`) get re-glossed every turn — assume the user does not remember from a previous turn.
 - **Substrate-native decisions.** Every option / pick / yes-no uses `AskUserQuestion`. Never a text `[a]/[b]/[c]` block in a live Claude Code session. Per `.lsa/VISION.md:63` Principle 9.
 - **Goal-restatement opening.** Every Helper response opens with a one-sentence restatement of what the user is trying to accomplish (e.g., *"You want to know what the Standard flow is and when to use it."*). For one-word factual questions (*"what's `lsa-verify`?"*), the restatement may collapse to a half-sentence prefix (*"`lsa-verify` is — …"*). The restatement carries no citation; it counts toward the 1.5-screen budget. Per `.lsa/features/2026-05-22-helper-assistant-refactor/requirements.md` F4 / AC3.

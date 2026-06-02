@@ -2,6 +2,21 @@
 
 All notable changes to the `core` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.8.0] — 2026-06-02
+
+Relax `core/output` to advisory — one hard rule, six guidance. Fact-grounding stays mandatory; the six shape rules become outcomes to aim for, not a per-response checklist. Frees simple answers to be short prose instead of a six-block template, and lets non-Claude substrates use their own voice.
+
+### Changed
+
+- **`skills/output/SKILL.md`** — split the seven golden rules into ONE hard rule (Rule 4, Sourced — fact-grounding + file-load trace + citation format) and SIX guidance rules (1-3, 5-7, applied when they serve the answer). Rule numbering preserved verbatim (other files cite by number); no rule content removed — only the enforcement posture changed. The canonical-source clause now hard-protects only Rule 4 and forbids re-promoting a guidance rule to a marketplace-wide hard requirement.
+- **`CLAUDE.md`** — always-on output block reframed to "one hard rule + six pieces of guidance". The four operational checkpoints are re-tagged: file-load trace (#3) stays hard (part of Rule 4); substrate-native pickers (#1), 1–1.5 screen budget (#2), and show-changes-inline (#4) become strongly-recommended guidance. The show-changes-inline note clarifies the discipline is still held at the skill / verify level (per v0.7.0), independent of the `core/output` posture.
+- **`core/tests/repo-anchored.md`** — probe D1 reworded from "satisfies all seven golden rules = PASS" to "hard rule (Sourced) holds + guidance applied where it serves"; the FAIL bar is now a missing source / unquoted claim (hard), with prose-first / padding demoted to guidance weaknesses.
+- **`core/README.md`** — output bullet describes the new hard-vs-guidance posture.
+
+### Why
+
+Per `.lsa/pitches/relax-core-output-to-advisory.md` (user, 2026-05-28: *"it feels like we restriced Claude too much … keep the hard requirements to provide Sources + Quotes but in a free format so Claude OR any other tool can shine"*). Safe to relax because show-changes-inline enforcement now lives at the skill / verify level (core v0.7.0), not the `core/output` posture. The prerequisite verdict-tag grep ran first: no automated tooling parses the verdict labels as data (no test harness this release), so reclassifying them as guidance breaks nothing.
+
 ## [0.7.0] — 2026-06-02
 
 Show-changes-inline enforcement. Rule 7 gains a *How this gets enforced* sub-section; the operational checkpoint spells out the write → show → comment order; two warning-only regression checks (prompt-review for prompt sources, lsa:verify for runtime artifacts) now hold the discipline.

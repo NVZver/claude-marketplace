@@ -150,7 +150,7 @@ The solution is discipline, not magic. `core` constrains output to grounded, sou
 
 ## How it works in 30 seconds
 
-1. **`core` is always-on.** Every task fires `ground-rules` + `output` automatically: sources, no hedging, no padding, verdict-first.
+1. **`core` is always-on.** Every task fires `ground-rules` + `output` automatically. The one hard output rule is *sourced* — every claim carries a source + quote; the rest (structured, minimal, verdict-first, …) is guidance the agent applies when it serves the answer, so simple questions get short prose instead of a six-block template.
 2. **Got a vague idea?** `/management:start-feature` shapes it into a pitch with clear scope before you commit to building.
 3. **Non-trivial tasks classify first.** `core/flow-selector` proposes Quick / Standard / Extended with chain-of-thought reasoning; you confirm.
 4. **Standard and Extended run through LSA.** `lsa:discover` → (Extended adds `lsa:plan` →) `lsa:implement` → `lsa:verify`. Every line of code traces back to a requirement.

@@ -1,15 +1,35 @@
 ---
 name: output
-description: Apply to every human-facing output — agent responses, skill bodies, plan files, READMEs, commit messages, PR descriptions, comments. Enforces seven golden rules — structured, minimal, formatted, sourced, concrete, what-and-why preamble, show-changes-inline (cites ground-rules Rule 1).
+description: Apply to every human-facing output — agent responses, skill bodies, plan files, READMEs, commit messages, PR descriptions, comments. One HARD rule — fact-grounding / sourced (Rule 4, cites ground-rules Rule 1) plus its file-load trace and citation format. Six GUIDANCE outcomes to aim for when they serve the answer — structured, minimal, formatted, concrete, what-and-why preamble, show-changes-inline.
 ---
 
 > **Trace.** On load, print first: `=============== [core/skills/output/SKILL.md] [core] ===============`
 
-> **Canonical source.** This file is the single source-of-truth for output discipline across the NVZver marketplace. Other plugins MAY cite it and MAY add component-specific formats that satisfy these seven rules. They MUST NOT restate the rule count or rule names outside this file (citation by markdown link only). They MUST NOT override or relax any rule. Re-grounded summaries that restate the rules in prose are permitted only when they cite this file by link at the top — see `helper/knowledge/output-discipline.md` for the canonical adherent example. Enforced by `core/tests/repo-anchored.md` probe D2.
+> **Canonical source.** This file is the single source-of-truth for output discipline across the NVZver marketplace. Other plugins MAY cite it and MAY add component-specific formats. They MUST NOT restate the rule count or rule names outside this file (citation by markdown link only). They MUST NOT override or relax the **hard** rule (Rule 4, Sourced — and its file-load trace + citation format). The **guidance** rules (1-3, 5-7) MAY be applied as outcomes; a plugin MAY cite a specific guidance rule as load-bearing for its own output where the shape genuinely matters, but MUST NOT re-promote a guidance rule to a marketplace-wide hard requirement. Re-grounded summaries that restate the rules in prose are permitted only when they cite this file by link at the top — see `helper/knowledge/output-discipline.md` for the canonical adherent example. Enforced by `core/tests/repo-anchored.md` probe D2.
 
 # Output Discipline
 
-Seven golden rules. Component-specific formats (per-skill) are free choices WITHIN these rules.
+Seven rules, two postures. **One is hard, six are guidance.**
+
+- **HARD — must hold on every human-facing output:** Rule 4 (Sourced), including its file-load trace directive and citation format. Fact-grounding is non-negotiable: every factual claim carries a source + verbatim quote (inherits [`core/ground-rules`](../ground-rules/SKILL.md) Rule 1).
+- **GUIDANCE — outcomes to aim for, not a checklist every response must satisfy:** Rules 1, 2, 3, 5, 6, 7. Apply them when they serve the answer. A one-sentence factual reply does not need a verdict headline, a preamble, a table, and a decision block to be correct — it needs a source. Reach for a guidance rule when the situation calls for it (a real decision → Rule 5; an artifact write → Rule 7; a verdict emission → Rule 6); skip it when it would only pad the response. Some skills cite a specific guidance rule as load-bearing for their own output (e.g. `lsa:reconcile`'s drift block leans on Rule 7) — that is the rule working as designed.
+
+The rule numbering below is preserved verbatim — other files cite these rules by number. Only the enforcement posture changed, not the content.
+
+---
+
+## HARD RULE
+
+## 4. Sourced
+Every factual claim carries source + exact quote per [`core/ground-rules`](../ground-rules/SKILL.md) Rule 1. **This rule is hard — it holds on every human-facing output, no exceptions.**
+
+**File-load trace.** Every NVZver-marketplace instructional file carries a one-line trace directive at its top. On load, the agent prints that line verbatim — `=============== [<file>] [<plugin>] ===============` — before the response body. One line per loaded file, in load order. Gives the human a step-by-step path of which marketplace files shaped the turn. **Hard — print it.**
+
+---
+
+## GUIDANCE
+
+These are outcomes to aim for, applied when they serve the answer — not a template every response must satisfy.
 
 ## 1. Structured
 Output has a shape: headings, sections, tables, lists, blocks. No stream-of-consciousness prose.
@@ -23,11 +43,6 @@ No fluff, no overexplanation, no padding. Every line earns its place.
 
 ## 3. Formatted
 Markdown affordances match content: tables, lists, code blocks, headings.
-
-## 4. Sourced
-Every factual claim carries source + exact quote per [`core/ground-rules`](../ground-rules/SKILL.md) Rule 1.
-
-**File-load trace.** Every NVZver-marketplace instructional file carries a one-line trace directive at its top. On load, the agent prints that line verbatim — `=============== [<file>] [<plugin>] ===============` — before the response body. One line per loaded file, in load order. Gives the human a step-by-step path of which marketplace files shaped the turn.
 
 ## 5. Concrete (decision prompts) — *prompt voice*
 Questions and options name the real-world subject — not spec IDs, not project jargon. Pickers surface only choices that change the outcome.
