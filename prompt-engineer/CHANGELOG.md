@@ -2,6 +2,23 @@
 
 All notable changes to the `prompt-engineer` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.5.0] – 2026-06-08
+
+Review scope — defer to leaner actor contracts.
+
+### Changed
+
+- **`prompt-engineer/knowledge/actor-ground-rules.md`** — new "Scope" note: rules 4 and 10 (Output spec + Example Output) defer to a leaner documented contract when the actor follows one — `core/actor-template` (Goal/Input/Steps/Output/Constraints) or `lsa/CORE.md` §4 (Role/Goal/Inputs/Steps/Output). `prompt-review` no longer flags LSA skills/agents or `core/actor-template`-shaped actors for a missing Example Output. Resolves the false positives surfaced by the cross-plugin review (8 LSA actors + helper.md).
+
+## [0.4.0] – 2026-06-08
+
+Testability — repo-anchored self-tests + portable verification, matching the harness `core` ships with.
+
+### Added
+
+- **`tests/repo-anchored.md`** — 10 dogfood probes pinned to repo files, each citing a `file:line` source of truth. Sets: agent self-consistency (references-not-inlines, a grep invariant that the ground-rules list lives only in `knowledge/`, self-review-clean), `prompt-review` (every finding cites a rule, the show-changes-inline check is present, a behavioral catch of HIGH/MEDIUM/LOW on a command sample, a behavioral WARNING on a `**/SKILL.md` sample), `prompt-optimize` (fixes quoted inline, re-review confirms resolution), `prompt-create` (all sections quoted inline before the verdict, asks on missing input). The B3/B4 behavioral probes were calibrated against a fresh reviewer — findings matched exactly.
+- **`VERIFICATION.md`** — portable probes (installs cleanly, description-match triggers, behavior change observable) + a falsifiable trigger threshold mirroring [`../core/VERIFICATION.md`](../core/VERIFICATION.md).
+
 ## [0.3.0] – 2026-06-02
 
 Author-time show-changes-inline regression check + self-compliance.

@@ -44,7 +44,7 @@ management:start-feature → (human approves pitch) → roadmap entry → manage
                                                                                           ↓
                                                           pick next item → decompose into epics
                                                           ↓
-                          lsa:discover → lsa:plan → lsa:implement → lsa:verify
+              lsa:discover → lsa:specify → lsa:verify → lsa:delegate → lsa:reconcile
 ```
 
 The management plugin owns both the pre-build shaping phase (product-manager) and the project coordination phase (project-manager). The product-manager produces pitches; the project-manager converts them into roadmap items and decomposes them into epics for LSA. Human approval gates exist at every handoff — pitch approval, roadmap entry, epic approval, and LSA handoff.

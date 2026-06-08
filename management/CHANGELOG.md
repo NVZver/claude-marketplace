@@ -2,6 +2,19 @@
 
 All notable changes to the `management` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.4.2] – 2026-06-08
+
+Wording, citation, and LSA-loop reference cleanup surfaced by the cross-plugin prompt review.
+
+### Fixed
+
+- **`management/README.md`**, **`management/knowledge/epic-decomposition.md`** — the LSA build-cycle reference named the removed `lsa:plan` / `lsa:implement` skills; now `lsa:discover → lsa:specify → lsa:verify → lsa:delegate → lsa:reconcile`.
+
+### Changed
+
+- **`management/agents/product-manager.md`**, **`management/knowledge/sequencing-heuristics.md`**, **`management/knowledge/role-adaptation.md`** — removed filler adverbs ("progressively", "naturally", "fresh").
+- **`management/knowledge/role-adaptation.md`** — `.lsa/VISION.md:127` citation → `§4` (drift-proof).
+
 ## [0.4.1] – 2026-06-02
 
 Show-changes-inline cites on roadmap/pitch writes.

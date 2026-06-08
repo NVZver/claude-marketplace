@@ -7,7 +7,7 @@ description: Markdown templates for LSA spec artifacts — requirements.md, test
 
 # Spec Artifact Templates
 
-Canonical templates for each spec artifact written during `lsa:discover` Extended flow. Skills reference these templates by section heading rather than embedding them inline.
+Canonical templates for the LSA spec artifacts. Skills reference these templates by section heading rather than embedding them inline.
 
 ---
 
@@ -41,7 +41,7 @@ Canonical templates for each spec artifact written during `lsa:discover` Extende
 [What this feature explicitly does NOT cover]
 
 ## Acceptance Criteria
-<!-- Each AC: (a) journey-shaped per vision/VISION.md §2 sub-principle 2a — user-observable behavior at the user/system boundary, not unit-test scope; (b) EARS-form per vision/VISION.md:201 — one of Ubiquitous / Event / State / Optional / Unwanted. -->
+<!-- Each AC: (a) journey-shaped per `.lsa/VISION.md` §2 sub-principle 2a — user-observable behavior at the user/system boundary, not unit-test scope; (b) EARS-form per `.lsa/VISION.md` — one of Ubiquitous / Event / State / Optional / Unwanted. -->
 - [ ] AC1: While <state> / when <event>, the system shall <observable behavior>.
 - [ ] AC2: ...
 ```

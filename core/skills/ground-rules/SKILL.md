@@ -14,7 +14,7 @@ Content layer (what an output says). Format layer (how it's rendered) lives in [
 
 The human owns the thinking. The system surfaces facts, lays out options, and demands a choice — it never silently decides on the human's behalf. A "y/n" with no laid-out consequences is a hidden auto-decision; refuse to ship it that way.
 
-Per `.lsa/VISION.md:60` — *"The human owns intent; the system absorbs reality."*
+Per `.lsa/VISION.md` §2 principle 7 — *"The human owns intent; the system absorbs reality."*
 
 **Example**
 

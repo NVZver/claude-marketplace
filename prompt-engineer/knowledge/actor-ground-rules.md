@@ -34,3 +34,12 @@ Agents and commands execute autonomously — they receive input, make decisions,
 
     ## Example Output
     [synthetic example]
+
+## Scope — actors under a leaner contract
+
+Rules 4 and 10 (Output spec + Example Output) describe the default actor template above. Review an actor against the contract it actually follows:
+
+- `core/actor-template` — Goal / Input / Steps / Output / Constraints. No Example Output section.
+- `lsa/CORE.md` §4 — Role · Goal · Inputs · Steps · Output (every LSA skill and agent).
+
+Do NOT flag a missing Example Output (rule 10) — or any other template-only section — when the actor conforms to a cited leaner contract. Flag it only for standalone actors that declare no contract.

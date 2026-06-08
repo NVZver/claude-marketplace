@@ -25,9 +25,9 @@ Apply [`core/output`](./skills/output/SKILL.md) to every human-facing output. **
 
 Before any non-trivial task, invoke [`core/flow-selector`](./skills/flow-selector/SKILL.md) to classify the work as Quick, Standard, or Extended — and present the reasoning to the human for confirmation. Skip only for tasks that obviously stay inside Quick boundaries (single-string edits, single-question answers).
 
-**The boundary signals** (Vision §4 `.lsa/VISION.md:124`): new module · API/contract change · data-model change · ~5 files · no existing spec.
+**The boundary signals** (Vision §4): new module · API/contract change · data-model change · ~5 files · no existing spec.
 
 **Flow outcomes:**
 - **Quick** — single pass, no LSA ceremony. `ground-rules` + `output` still apply.
 - **Standard** — `lsa:discover` (light) → agent TDD → `lsa:verify`.
-- **Extended** — `lsa:discover` → `lsa:plan` → implement → `lsa:verify`.
+- **Extended** — `lsa:discover` → `lsa:specify` → `lsa:verify` → `lsa:delegate` → `lsa:reconcile`.

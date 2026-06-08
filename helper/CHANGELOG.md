@@ -2,6 +2,14 @@
 
 All notable changes to the `helper` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.4.4] – 2026-06-08
+
+Reference fixes surfaced by the cross-plugin prompt review.
+
+### Fixed
+
+- **`helper/knowledge/output-discipline.md`** — stale `.lsa/features/2026-05-22-helper-assistant-refactor/` citations repointed to `.lsa/archive/…` (the feature was archived); two `core/output` line-number citations (`:39`, `:33`) replaced with `Rule 5` references (drift-proof); stale `lsa-specify` (pre-rename hyphen form) → `lsa:specify` in the genuine-fork examples.
+
 ## [0.4.3] – 2026-06-02
 
 Re-ground the output-discipline adherent to the new `core/output` posture.

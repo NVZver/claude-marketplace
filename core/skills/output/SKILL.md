@@ -67,7 +67,7 @@ fails this rule.
 
 Every write, edit, or mark performed by an agent is **echoed back inline** before any commentary. The order is **write → show → comment** — never *"I added X to file Y; here's why it matters."* without quoting X first.
 
-This rule generalizes the 8-element drift block already in use by [`lsa-reconcile`](../../../lsa/skills/lsa-reconcile/SKILL.md), which the user endorsed as the gold standard: *"Good! Love it!"* (2026-05-22).
+This rule generalizes the 8-element drift block already in use by [`reconcile`](../../../lsa/skills/reconcile/SKILL.md), which the user endorsed as the gold standard: *"Good! Love it!"* (2026-05-22).
 
 ### Single-change template
 
@@ -81,7 +81,7 @@ For one edit to one file, the response contains, in order:
 6. **Source** — a `file:line` (or URL) for the authority that justified the change. Inherits Rule 4 (Sourced).
 7. **Type tag** — one of `add` / `edit` / `replace` / `append` / `mark`, so the human can skim a sequence of changes by type.
 
-Combined, the seven elements line up with the eight-element drift block at [`lsa-reconcile`](../../../lsa/skills/lsa-reconcile/SKILL.md) (the eighth — *bundle-explanation* — collapses into element 5 here when the change is not part of a multi-module batch).
+Combined, the seven elements line up with the eight-element drift block at [`reconcile`](../../../lsa/skills/reconcile/SKILL.md) (the eighth — *bundle-explanation* — collapses into element 5 here when the change is not part of a multi-module batch).
 
 ### Batch template — compressed inspection table
 
@@ -89,8 +89,8 @@ When a single turn produces more than ~5 file changes or more than ~10 lines of 
 
 | # | file:line | type | summary (≤8 words) | pointer |
 |---|-----------|------|--------------------|---------|
-| 1 | `lsa/skills/lsa-sync/SKILL.md:67` | edit | Observable result names quoted-diff format | step 3 |
-| 2 | `lsa/skills/lsa-sync/SKILL.md:74` | edit | Observable result names quoted-diff format | step 4 |
+| 1 | `lsa/skills/verify/SKILL.md:67` | edit | Observable result names quoted-diff format | step 3 |
+| 2 | `lsa/skills/verify/SKILL.md:74` | edit | Observable result names quoted-diff format | step 4 |
 
 After the table: one cluster of follow-up `file:line` pointers the human can open. **Never** *"see the files for the rest."* The table itself *is* the quote-back.
 
@@ -127,9 +127,9 @@ After the table: one cluster of follow-up `file:line` pointers the human can ope
 |---|-----------|------|---------|---------|
 | 1 | `core/skills/output/SKILL.md:42-90` | add | Rule 7 *Show changes inline* | new section |
 | 2 | `core/CLAUDE.md:18` | edit | Operational checkpoint #4 cites Rule 7 | inline |
-| 3 | `lsa/skills/lsa-sync/SKILL.md:67` | edit | Observable result names quoted-diff format | step 3 |
-| 4 | `lsa/skills/lsa-sync/SKILL.md:74` | edit | Observable result names quoted-diff format | step 4 |
-| 5 | `lsa/skills/lsa-specify/SKILL.md:99` | edit | Observable result names quoted-section format | step 4 |
+| 3 | `lsa/skills/verify/SKILL.md:67` | edit | Observable result names quoted-diff format | step 3 |
+| 4 | `lsa/skills/verify/SKILL.md:74` | edit | Observable result names quoted-diff format | step 4 |
+| 5 | `lsa/skills/specify/SKILL.md:99` | edit | Observable result names quoted-section format | step 4 |
 
 *Reason: lands the `core/output` Rule 7 + LSA sweep per `.lsa/features/2026-05-22-show-changes-inline/tasks.md` step 1-2. Source: `.lsa/roadmap.md:128-132`. Type: `batch` (`add` + `edit` mix).*
 
