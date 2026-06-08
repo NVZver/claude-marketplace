@@ -19,6 +19,30 @@ The agent in the middle is yours: **Claude Code, Cursor, Copilot, or a human.** 
 `discover → specify → verify → delegate → reconcile`, driven by the `orchestrator`. Ceremony scales to weight — a typo skips the spec; a new feature runs the full spine.
 
 ```text
+                       you ─▶ orchestrator ─ drives ─▶
+┌─────────────── LSA owns this · technology-agnostic ────────────────┐
+│  ① discover ─▶ ② specify ─▶ ③ verify   ✓ GROUNDED                  │
+│  intent +      EARS +        BEFORE — does every ref resolve in     │
+│  codebase      Gherkin       code? is the flow buildable?           │
+│  facts         .feature                     │                       │
+└─────────────────────────────────────────────│──────────────────────┘
+                                  ④ delegate   │  (spec + .feature)
+                                               ▼
+                                  ┌─────────────────────────┐
+                                  │   YOUR coding agent      │
+                                  │  Claude · Cursor ·       │
+                                  │  Copilot · a human       │
+                                  └────────────┬────────────┘
+                                               │ returns a diff
+┌──────────────────────────────────────────────│──────────────────────┐
+│  ⑤ reconcile   ✓ PASS   AFTER — does · only · all → conformance.md   │
+│                         drift → the spec absorbs reality             │
+└──────────────────────────────────────────────────────────────────────┘
+```
+
+**A run, end to end:**
+
+```text
 > /lsa:discover "add a /status command that lists in-flight features"
 [discover] intent + facts — roadmap.md exists @ .lsa/roadmap.md; one read-only flow.
 

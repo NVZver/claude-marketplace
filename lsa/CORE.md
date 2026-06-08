@@ -13,6 +13,13 @@ The spec is living documentation: as reliable as code, the source of truth. Stat
 
 ## 2. The loop
 
+```text
+      │←──────────── LSA owns ────────────→│   external   │←─ LSA ─→│
+you ▶ discover ▶ specify ▶ verify ──────▶ delegate ▶ [ agent ] ▶ reconcile
+      intent+    EARS+     ground          hand off    writes      does · only ·
+      facts      Gherkin   (BEFORE)                    the code    all (AFTER)
+```
+
 1. **Discover** — extract intent from the user; gather the codebase facts the spec will rest on.
 2. **Specify** — write the spec: EARS requirements · user flows · Gherkin acceptance scenarios.
 3. **Verify (before)** — ground the spec: every reference resolves to real code; every flow is buildable. ← *differentiator 1*
