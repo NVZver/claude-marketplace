@@ -30,6 +30,7 @@ The Living Spec Architecture plugin — a technology-agnostic spec layer. Seven 
 | `${specs_root}/features/<name>/requirements.md` | `specify` | EARS requirements + user flows. |
 | `${specs_root}/features/<name>/<flow>.feature` | `specify` | Gherkin acceptance scenarios. |
 | `${specs_root}/features/<name>/grounding.md` | `verify` | Per-reference grounding result (`exists @ file:line` / `new` / `[ASSUMPTION]`). |
+| `${specs_root}/features/<name>/conformance.md` | `reconcile` | Requirement → satisfying change/test (does · only · all). |
 
 Baseline SHA per module (consumed by the SessionStart drift hook and `reconcile`'s diff base) is recovered on demand from `git log -1 --format=%H -- <spec-path>`; no separate state file is written.
 
@@ -39,7 +40,7 @@ Baseline SHA per module (consumed by the SessionStart drift hook and `reconcile`
 - **Technology-agnostic; not the implementer.** LSA authors EARS + Gherkin specs and runs the two checks; code-writing is delegated to any implementer (`.lsa/VISION.md` §4 *"The implementer is external"*). Standards adopted: EARS + Gherkin (Specification by Example) — interoperable with Spec Kit / Kiro / Cursor.
 - **One uniform instruction pattern.** Every skill and agent body is Role / Goal / Inputs (each sourced `user` / `discover` / `self`) / Steps (1:1 input → CoT → output) / Output. Per `CORE.md` §4.
 - **`discover` is the universal input-resolver.** Context inputs for any skill are gathered by `discover`; only free text comes from the user (`CORE.md` §4).
-- **The two checks are the product.** `verify` grounds the spec against the codebase before delegation and blocks an ungrounded spec; `reconcile` runs the Gherkin scenarios against the returned diff N times after (≥95% pass) and absorbs drift. Per `CORE.md` §6.
+- **The two checks are the product.** `verify` grounds the spec against the codebase before delegation and blocks an ungrounded spec; `reconcile` checks the returned diff **does · only · all** (scenarios pass ×N ≥95%; every hunk traces; every requirement covered), emits `conformance.md`, and absorbs drift. Per `CORE.md` §6.
 - **Reconcile is absorptive, not blocking** (`.lsa/VISION.md:144`). The `reconcile` skill never blocks, reverts, or reformats the code; it edits the spec to match reality.
 - **`orchestrator` routes; it never implements.** It reads each sub-agent's `## Inputs`, resolves them via `discover`, delegates, and collects output. Per `lsa/agents/orchestrator.md`.
 - **Depends on `core`** for `flow-selector`, `ground-rules`, `output`, `actor-template`. Documented in `lsa/.claude-plugin/plugin.json: description` and `lsa/README.md` *"Depends on"*.

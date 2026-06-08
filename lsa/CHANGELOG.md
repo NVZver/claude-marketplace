@@ -2,6 +2,15 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.16.1] — 2026-06-08
+
+`reconcile` completeness check + conformance report. Closes the gap left when the re-base dropped the orphan-AC predicate: a diff could pass every Gherkin scenario yet silently skip a non-scenario requirement.
+
+### Changed
+
+- **`lsa/skills/reconcile/SKILL.md`** — the after-delegation check is now three questions, **does · only · all**: (1) scenarios pass ×N, (2) every hunk traces to a requirement (no over-delivery), (3) every requirement maps to a change or covering test (no under-delivery). Emits `conformance.md` (requirement → satisfying change/test) — the durable "changes vs plan" record. No new step — folded into the existing after-check (same inputs, same time).
+- **`lsa/CORE.md`** §6 + §9 and **`.lsa/modules/lsa/spec.md`** — updated to the does/only/all framing + `conformance.md` state file.
+
 ## [0.16.0] — 2026-06-08
 
 Re-base to the technology-agnostic two-verb model. LSA is no longer the implementer: it authors a grounded spec (EARS + Gherkin) and runs two checks — `verify` (ground the spec against the codebase, *before*) and `reconcile` (run the Gherkin scenarios against the diff N times, *after*) — then delegates code-writing to any implementer. Aligns the plugin with `.lsa/VISION.md` v0.10.

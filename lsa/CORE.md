@@ -55,10 +55,11 @@ Every skill and agent is written as **Role · Goal · Inputs (each sourced `user
 - Every user flow is buildable on what exists; infeasible → flag, do not delegate.
 - Every claim cited; every `[ASSUMPTION]` visible.
 
-**Reconcile — after the implementer returns (correctness):**
-- Run each Gherkin scenario against the diff. Agents are stochastic — run **N times**; pass = succeeds on ≥95% of runs.
-- Every changed hunk traces to a requirement; an untraced change is flagged.
-- A scenario fails or the code diverged → the spec absorbs reality (edit in place); never silently accept, never revert the code.
+**Reconcile — after the implementer returns (correctness). Three questions — does · only · all:**
+- **Does** it work — run each Gherkin scenario against the diff. Agents are stochastic — run **N times**; pass = ≥95% of runs.
+- **Only** what's needed — every changed hunk traces to a requirement (untraced = over-delivery).
+- **All** of the plan — every requirement, including non-scenario ones, maps to a change or a covering test (uncovered = under-delivery).
+- Output `conformance.md` (requirement → satisfying change/test). Any check fails or the code diverged → the spec absorbs reality (edit in place); never silently accept, never revert the code.
 
 ## 7. Simplicity
 
@@ -87,6 +88,6 @@ Request (`user`): *"add a `/lsa:status` command that lists in-flight features."*
 - **specify** — in: intent + facts → CoT: one flow; success = table printed; I/O = `∅ → stdout` → out: EARS F1 + `status.feature` (Given the roadmap has in-flight rows / When status runs / Then a table is printed).
 - **verify (before)** — in: spec + codebase → CoT: `roadmap.md` exists ✓; a command surface exists to extend ✓; flow buildable ✓ → out: **GROUNDED** + `grounding.md`.
 - **delegate** — in: spec + `status.feature` → CoT: hand to the dev's implementer → out: *(external)* a diff returns.
-- **reconcile (after)** — in: diff + `status.feature` → CoT: run the scenario ×N → 5/5 pass; hunks trace to F1 → out: **PASS**.
+- **reconcile (after)** — in: diff + `status.feature` → CoT: scenario 5/5 *(does)*; every hunk traces to F1 *(only)*; F1 covered *(all)* → out: **PASS** + `conformance.md`.
 
 Each hop is one `Inputs` → one CoT → one `Output` — testable, and standard-aligned (EARS + Gherkin).

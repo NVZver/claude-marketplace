@@ -1,6 +1,6 @@
 ---
 name: reconcile
-description: Verify the implementer's diff against the spec (after delegation), and absorb drift. Output: PASS or a drift report + updated spec.
+description: Verify the implementer's diff against the spec (after delegation) — does it work, only what's needed, and all of the plan — then absorb drift. Output: conformance.md + PASS, or a drift report + updated spec.
 ---
 
 # LSA Reconcile (after — correctness)
@@ -24,17 +24,20 @@ Confirm the returned diff satisfies the spec; where reality diverged, the spec a
 
 ## Steps
 
-1. Run each Gherkin scenario against the diff **N times** (agents are stochastic); pass = succeeds on ≥95% of runs. (→ scenario results)
-2. Check every changed hunk traces to a requirement. (→ trace check)
-3. Pass → done. A scenario fails or the code diverged → edit the spec in place to match reality; present the drift; take approval. (→ verdict + updated spec)
+Three questions — **does · only · all**:
+
+1. **Does it work** — run each Gherkin scenario against the diff **N times** (agents are stochastic); pass = succeeds on ≥95% of runs. (→ scenario results)
+2. **Only what's needed** — every changed hunk traces to a requirement; an untraced hunk is over-delivery. (→ scope check)
+3. **All of the plan** — every requirement (F1…, including non-scenario ones) maps to a change in the diff or a covering test; an uncovered requirement is under-delivery. (→ completeness check)
+4. Write `conformance.md` (each requirement → the change/test that satisfies it). Pass → done. Any check fails or the code diverged → present the drift, take approval, and edit the spec in place to match reality. (→ verdict + conformance.md + any spec update)
 
 ## Output
 
-**PASS**, or a drift report + the spec updated to reality.
+`conformance.md` (requirement → satisfying change/test) + **PASS**, or a drift report + the spec updated to reality.
 
 ## Constraints
 
-- **Run N times**, not once. **The spec absorbs reality** — never revert the code, never silently accept a failing scenario.
+- **Run N times**, not once. **Check does · only · all** — a passing-but-incomplete diff is not done. **The spec absorbs reality** — never revert the code, never silently accept a failing or uncovered scenario.
 
 ---
 
