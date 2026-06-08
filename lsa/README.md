@@ -18,26 +18,19 @@ The agent in the middle is yours: **Claude Code, Cursor, Copilot, or a human.** 
 
 `discover → specify → verify → delegate → reconcile`, driven by the `orchestrator`. Ceremony scales to weight — a typo skips the spec; a new feature runs the full spine.
 
-```text
-                       you ─▶ orchestrator ─ drives ─▶
-┌─────────────── LSA owns this · technology-agnostic ────────────────┐
-│  ① discover ─▶ ② specify ─▶ ③ verify   ✓ GROUNDED                  │
-│  intent +      EARS +        BEFORE — does every ref resolve in     │
-│  codebase      Gherkin       code? is the flow buildable?           │
-│  facts         .feature                     │                       │
-└─────────────────────────────────────────────│──────────────────────┘
-                                  ④ delegate   │  (spec + .feature)
-                                               ▼
-                                  ┌─────────────────────────┐
-                                  │   YOUR coding agent      │
-                                  │  Claude · Cursor ·       │
-                                  │  Copilot · a human       │
-                                  └────────────┬────────────┘
-                                               │ returns a diff
-┌──────────────────────────────────────────────│──────────────────────┐
-│  ⑤ reconcile   ✓ PASS   AFTER — does · only · all → conformance.md   │
-│                         drift → the spec absorbs reality             │
-└──────────────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TD
+    you([you]) --> orch[orchestrator<br/>drives the loop]
+    subgraph lsa["LSA — you own this · technology-agnostic"]
+        direction LR
+        d["① discover<br/>intent + facts"] --> s["② specify<br/>EARS + Gherkin"]
+        s --> v["③ verify ✓ GROUNDED<br/>BEFORE — refs resolve? buildable?"]
+        rec["⑤ reconcile ✓ PASS<br/>AFTER — does · only · all<br/>→ conformance.md"]
+    end
+    orch -.-> d
+    v -->|"④ delegate — spec + .feature"| agent[["YOUR coding agent<br/>Claude · Cursor · Copilot · human"]]
+    agent -->|returns a diff| rec
+    rec -.->|"drift → spec absorbs reality"| s
 ```
 
 **A run, end to end:**
