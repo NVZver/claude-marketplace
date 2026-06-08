@@ -1,5 +1,5 @@
 # Living Spec Architecture (LSA)
-**Version:** 0.12.0 (plugin)
+**Version:** 0.16.0 (plugin)
 **Author:** Nikita Zverev
 **Status:** 0.4.0 — Vision-aligned; dogfooded on `claude-marketplace`; each skill cites `core/output` for output discipline. See [`../.lsa/2026-05-20-lsa-v0.2.0-design.md`](../.lsa/2026-05-20-lsa-v0.2.0-design.md) for the earlier baseline and [`../.lsa/plans/2026-05-20-credo-rollout-plan.md`](../.lsa/plans/2026-05-20-credo-rollout-plan.md) for the credo-rollout restructure.
 
@@ -9,7 +9,7 @@
 
 LSA is a spec-first development methodology where specs are the permanent source of truth and code (or any other behavior-bearing artifact) is always agent-generated to match them.
 
-Humans write and own specs. Agents write and own artifacts. Direct artifact edits are absorbed into the spec via the **reconcile loop** rather than blocked (`.lsa/VISION.md:135`).
+Humans write and own specs; an **external implementer** (any coding agent, or a human) writes the code. LSA is **technology-agnostic** and is **not** the implementer — it runs two grounding checks using EARS + Gherkin: `verify` before delegation (ground the spec against the codebase) and `reconcile` after (run the scenarios against the diff). Direct code edits are absorbed into the spec via the **reconcile loop** rather than blocked (`.lsa/VISION.md:135`).
 
 ### How `core/output` constrains LSA
 
@@ -48,7 +48,9 @@ This document is the design-rationale narrative for `lsa`. For other concerns, s
 │   ├── hooks/
 │   │   ├── hooks.json
 │   │   └── session-start-drift-check.sh
-│   └── skills/                        (nine skills — see README.md for the table)
+│   ├── CORE.md                        ← the one-page contract every skill follows
+│   ├── agents/orchestrator.md         ← entry-point conductor
+│   └── skills/                        (seven skills — see README.md for the table)
 └── ${specs_root}/                     (defaults to .lsa/ — also holds constitution at .lsa/VISION.md)
     ├── main.spec.md                   ← App-level behavior, module index, global contracts
     ├── roadmap.md                     ← Prioritized feature backlog
@@ -62,15 +64,12 @@ This document is the design-rationale narrative for `lsa`. For other concerns, s
     │       └── spec.md                ← Permanent module spec
     ├── features/
     │   └── <feature-name>/
-    │       ├── requirements.md
-    │       ├── test-suites.md
-    │       ├── contract.yaml          (only when contract trigger fires)
-    │       ├── design.md
-    │       └── tasks.md
+    │       ├── requirements.md        ← EARS requirements + user flows (specify)
+    │       ├── <flow>.feature         ← Gherkin acceptance scenarios (specify)
+    │       └── grounding.md           ← per-reference grounding result (verify)
     └── archive/
         └── YYYY-MM-DD-<feature-name>/
-            ├── (the archived feature spec files)
-            └── metrics.md             (written by verify on clean Extended-flow PASS)
+            └── (the archived feature spec files)
 ```
 
 `${specs_root}` is configurable via `.lsa.yaml` (see §3). Default is `.lsa/` — chosen so the entire LSA workspace (constitution + specs + roadmap + pitches + standards + archive) lives under a single directory the user can `rm -rf` to fully detach.
@@ -118,16 +117,13 @@ The SessionStart hook (`hooks/hooks.json` declares `matcher: "startup"`) invokes
 
 | Branch Type | Pattern | Example |
 |---|---|---|
-| Feature (parent) | `feature/<feature-name>` | `feature/user-auth` |
-| Epic | `feature/<feature-name>-e<N>` | `feature/user-auth-e1` |
+| Feature | `feature/<feature-name>` | `feature/user-auth` |
 | Constitution | `constitution/<change-description>` | `constitution/add-testing-rules` |
-| Replanning | `replan/<description>` | `replan/roadmap-q2-update` |
 
 ### Merge Strategy
 
 ```
-epic branches → feature branch (after verify per epic)
-feature branch → main (after lsa:verify + human PR review)
+feature branch → main (after lsa:reconcile passes + human PR review)
 constitution branch → main (after human approval, independent of features)
 ```
 
@@ -135,9 +131,8 @@ constitution branch → main (after human approval, independent of features)
 
 - `main` is always stable and spec-synced
 - No direct commits to `main`
-- Feature branch is created during `lsa:new`, `lsa:next`, or `lsa:discover` (Extended flow)
-- Epic branches are created during `lsa:plan`
-- Feature branch is deleted after merge. Epic branches are deleted after merging into feature branch
+- Feature branch is created when a feature enters the loop (the `orchestrator`, or `lsa:discover` in Extended flow)
+- Feature branch is deleted after merge
 
 ---
 
@@ -145,11 +140,11 @@ constitution branch → main (after human approval, independent of features)
 
 | # | Question | Decision |
 |---|----------|----------|
-| OQ1 | Sub-agent source of truth | `tasks.md` is the single source. Each agent reads and writes only its own epic section |
-| OQ2 | Epic agent context | All agents inherit the configured constitution. No scoped overrides |
+| OQ1 | Sub-agent source of truth | *(superseded v0.16 — epic/implement model removed; code-writing delegated to an external implementer)* |
+| OQ2 | Epic agent context | *(superseded v0.16 — no epic agents; the external implementer owns execution)* |
 | OQ3 | Constitution revision | Separate skill `revise-constitution`. Single Responsibility — one skill, one job |
 | OQ4 | Research backlog mid-feature | Kept. Updated by human or agent to a known file without branching. Reviewed during replan |
 | OQ5 | Path configuration | `.lsa.yaml` at repo root. Falls back to v0.1.1 defaults when absent |
-| OQ6 | Standard-flow path (was T2) | `discover` (three-question probe) → implement (TDD) → `verify`. No plan, no per-feature metrics |
+| OQ6 | Standard-flow path (was T2) | `discover` → `specify` (light, 1 scenario) → `verify` → `delegate` → `reconcile`. Code-writing is the external implementer's. |
 | OQ7 | Reconcile placement | Skill `reconcile` (SRP, mirrors LSA's one-skill-per-phase pattern) |
 | OQ8 | Drift detection | Baseline SHA per module is resolved on demand from `git log -1 --format=%H -- <spec-path>` (the last commit that touched the module's spec file). SessionStart hook diffs current ↔ baseline; surfaces a one-line notice if non-empty. |

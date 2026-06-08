@@ -2,6 +2,29 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.16.0] — 2026-06-08
+
+Re-base to the technology-agnostic two-verb model. LSA is no longer the implementer: it authors a grounded spec (EARS + Gherkin) and runs two checks — `verify` (ground the spec against the codebase, *before*) and `reconcile` (run the Gherkin scenarios against the diff N times, *after*) — then delegates code-writing to any implementer. Aligns the plugin with `.lsa/VISION.md` v0.10.
+
+### Added
+
+- **`lsa/CORE.md`** — the one-page contract every skill and agent follows (principle, loop, user flows, instruction pattern, standards, the two checks, templates, worked example).
+- **`lsa/skills/specify/SKILL.md`** — authors EARS requirements + user flows + Gherkin `.feature` scenarios.
+- **`lsa/skills/delegate/SKILL.md`** — hands the grounded spec to any external implementer; collects the returned diff.
+- **`lsa/agents/orchestrator.md`** — entry-point conductor; drives `discover → specify → verify → delegate → reconcile`, reading each sub-agent's `## Inputs` and resolving them via `discover`.
+
+### Changed
+
+- **`verify`** — refocused to the *before*-delegation grounding check (every spec reference resolves to real code; every flow is buildable). Removed the orphan-AC / `metrics.md` machinery.
+- **`reconcile`** — refocused to the *after*-delegation correctness check: run each Gherkin scenario against the diff N times (≥95% pass); absorb drift.
+- **`discover`** — refocused to intent extraction + codebase-fact gathering; the universal input-resolver.
+- Every skill + agent rewritten to the uniform Role / Goal / Inputs / Steps / Output pattern (`CORE.md` §4).
+- `plugin.json` description updated to "Seven skills + one agent".
+
+### Removed
+
+- **`lsa/skills/plan/`**, **`lsa/skills/implement/`**, **`lsa/skills/new/`**, **`lsa/skills/next/`**, and the **`developer`** agent — epic decomposition and TDD execution are the external implementer's job (Spec Kit / the coding agent), not LSA's.
+
 ## [0.15.0] — 2026-06-02
 
 Show-changes-inline enforcement — PR-time regression check + skill-body sweep. The v0.8.0 sweep touched only `Observable result:` lines; this adds the instruction to the step bodies and a verify-time check.

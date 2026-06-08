@@ -1,7 +1,7 @@
 {
   "name": "lsa",
-  "description": "Living Spec Architecture — spec-first development methodology where specs are the permanent source of truth and every code/artifact change traces to a spec requirement. Ten skills + one agent: new (start feature), next (pick backlog item), discover (specify + discover), plan, implement (orchestrator — dispatches to developer agent), verify, init, reconcile, revise-constitution. Developer agent: principal-engineer-level TDD with design-first phases (user flow, data flow, quality/security/performance/observability, testing-pyramid reasoning). Main flow: discover → plan → implement → verify. Flow-aware (Quick/Standard/Extended) via core/flow-selector. Path-configurable via .lsa.yaml.",
-  "version": "0.15.0",
+  "description": "Living Spec Architecture — a technology-agnostic spec layer that authors a grounded spec and verifies it before and after an external implementer builds it. LSA is NOT the implementer: any coding agent (Claude Code, Cursor, Copilot) or human writes the code. Seven skills + one agent. Skills: discover (extract intent + gather codebase facts; also the universal input-resolver), specify (EARS requirements + user flows + Gherkin .feature scenarios), verify (ground the spec against the codebase BEFORE delegating), delegate (hand the grounded spec to any implementer), reconcile (run the Gherkin scenarios against the returned diff N times; absorb drift), init, revise-constitution. Agent: orchestrator (entry point — drives discover → specify → verify → delegate → reconcile; reads each sub-agent's Inputs, resolves them via discover, delegates, collects output). Standards: EARS + Gherkin (Specification by Example) — interoperable with Spec Kit / Kiro / Cursor. Every instruction follows one pattern (Role/Goal/Inputs/Steps/Output) — see lsa/CORE.md. Path-configurable via .lsa.yaml.",
+  "version": "0.16.0",
   "author": { "name": "Nikita Zverev" },
   "dependencies": ["core"]
 }
