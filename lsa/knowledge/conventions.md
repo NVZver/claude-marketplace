@@ -48,7 +48,7 @@ When any LSA skill needs to call a library API it is unsure about:
 3. **If no context7:** use `WebSearch` for official docs (prefer `.md` over `.html`). Cite as `lib:<name>:<api> via <url>`.
 4. **If nothing found:** state it. Use codebase patterns and types. Never guess API signatures.
 
-Skills that perform discovery (`lsa:discover`) do this proactively; execution skills (`lsa:implement`) do this only when an unknown API is encountered mid-work.
+Skills that perform discovery (`lsa:discover`) do this proactively; any unknown API is resolved this way before it is relied on.
 
 ---
 

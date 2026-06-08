@@ -2,6 +2,15 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.16.2] — 2026-06-08
+
+Knowledge-file reference fixes surfaced by the cross-plugin prompt review.
+
+### Fixed
+
+- **`lsa/knowledge/conventions.md`** — dropped the reference to the removed `lsa:implement` skill in the Library documentation protocol.
+- **`lsa/knowledge/spec-templates.md`** — removed the stale "`lsa:discover` Extended flow" framing and fixed the pre-migration `vision/VISION.md` path → `.lsa/VISION.md`.
+
 ## [0.16.1] — 2026-06-08
 
 `reconcile` completeness check + conformance report. Closes the gap left when the re-base dropped the orphan-AC predicate: a diff could pass every Gherkin scenario yet silently skip a non-scenario requirement.

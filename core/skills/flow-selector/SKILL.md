@@ -8,13 +8,13 @@ description: Apply before any non-trivial task — when the work touches behavio
 
 # Flow Selector
 
-Classify a task into Quick / Standard / Extended by weighing boundary signals, then stop and wait for the human to confirm the flow before any downstream LSA ceremony fires. Per `.lsa/VISION.md` §4 (`.lsa/VISION.md:122`): *"the orchestrator picks the flow by chain-of-thought, then states its reasoning and the human confirms or overrides."*
+Classify a task into Quick / Standard / Extended by weighing boundary signals, then stop and wait for the human to confirm the flow before any downstream LSA ceremony fires. Per `.lsa/VISION.md` §4: *"the orchestrator picks the flow by chain-of-thought, then states its reasoning and the human confirms or overrides."*
 
 Three flows, named by *process shape*:
 
 - **Quick** — single pass, no LSA ceremony.
 - **Standard** — light discovery + agent TDD + verify.
-- **Extended** — full spec-driven flow: discover → plan → implement → verify.
+- **Extended** — full spec-driven flow: discover → specify → verify → delegate → reconcile.
 
 ## Goal
 
@@ -52,7 +52,7 @@ Produce a flow label (`Quick`, `Standard`, or `Extended`) plus a 2–4-sentence 
 5. **On confirm, hand off** per flow:
    - **Quick** — return control to the agent for a direct single-pass response. `ground-rules` still applies.
    - **Standard** — invoke `lsa:discover` for the light three-question probe.
-   - **Extended** — invoke `lsa:discover` (which includes the specify phase internally). Vision's Extended loop is "discover → plan → implement → verify".
+   - **Extended** — invoke `lsa:discover` to start the full loop. Vision's Extended loop is "discover → specify → verify → delegate → reconcile".
 
    Observable result: the named downstream skill is invoked, or — for Quick — direct response begins.
 
@@ -62,7 +62,7 @@ A flow label (`Quick` / `Standard` / `Extended`) and a 2–4-sentence rationale.
 
 ## Constraints
 
-- Do not start LSA ceremony before flow confirmation. No `lsa:discover`, `lsa:plan`, or any other LSA skill fires until the human responds.
+- Do not start LSA ceremony before flow confirmation. No `lsa:discover`, `lsa:specify`, or any other LSA skill fires until the human responds.
 - Do not invent boundary signals that are not actually present in the task description. If the task does not mention an API change, do not assume one.
 - Do not silently choose a heavier flow than the human picks. If the human overrides downward (e.g., Extended → Standard), log the override in the rationale and proceed at the human's flow.
 - Outputs follow [`../output/SKILL.md`](../output/SKILL.md) — citation by link, never restated.

@@ -45,3 +45,13 @@ modules:
       - management/knowledge/**/*.md
       - management/.claude-plugin/plugin.json
       - management/README.md
+  prompt-engineer:
+    spec: .lsa/modules/prompt-engineer/spec.md
+    artifact_paths:
+      - prompt-engineer/agents/**/*.md
+      - prompt-engineer/commands/**/*.md
+      - prompt-engineer/knowledge/**/*.md
+      - prompt-engineer/.claude-plugin/plugin.json
+      - prompt-engineer/README.md
+      - prompt-engineer/VERIFICATION.md
+      - prompt-engineer/tests/**/*.md

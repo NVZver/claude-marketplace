@@ -2,6 +2,16 @@
 
 All notable changes to the `core` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.11.1] — 2026-06-08
+
+Reference fixes surfaced by the cross-plugin prompt review.
+
+### Fixed
+
+- **`core/skills/output/SKILL.md`** — six stale links to renamed/removed LSA skills: `lsa-reconcile` → `reconcile` (Rule 7 body), `lsa-sync` → `verify` and `lsa-specify` → `specify` (the show-changes worked-example tables). The `lsa-` prefixes and the `sync` skill were dropped in `lsa` 0.16.
+- **`core/skills/flow-selector/SKILL.md`**, **`core/CLAUDE.md`** — the Extended-flow loop referenced the removed `lsa:plan` / `lsa:implement` skills; now `discover → specify → verify → delegate → reconcile`.
+- **`core/skills/ground-rules/SKILL.md`**, **`flow-selector`**, **`CLAUDE.md`** — drifted `.lsa/VISION.md` line-number citations (`:60`, `:122`, `:124`) replaced with §/principle references (drift-proof, per this plugin's own canonical-citation guidance).
+
 ## [0.11.0] — 2026-06-02
 
 Relax `core/output` to advisory — one hard rule, six guidance. Fact-grounding stays mandatory; the six shape rules become outcomes to aim for, not a per-response checklist. Frees simple answers to be short prose instead of a six-block template, and lets non-Claude substrates use their own voice.

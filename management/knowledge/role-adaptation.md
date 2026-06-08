@@ -2,7 +2,7 @@
 
 # Role adaptation — knowledge
 
-The marketplace is domain-neutral — there is no hardcoded domain. The product-manager agent self-selects a domain-expert role per invocation by reasoning about the user's problem description, the same visible chain-of-thought pattern as `core/flow-selector` per `.lsa/VISION.md:127`.
+The marketplace is domain-neutral — there is no hardcoded domain. The product-manager agent self-selects a domain-expert role per invocation by reasoning about the user's problem description, the same visible chain-of-thought pattern as `core/flow-selector` per `.lsa/VISION.md` §4.
 
 ## Role format
 
@@ -10,7 +10,7 @@ The marketplace is domain-neutral — there is no hardcoded domain. The product-
 <domain> product manager
 ```
 
-Examples (not a fixed catalog — the agent reasons fresh each time):
+Examples (not a fixed catalog — the agent reasons anew each time):
 
 - `payroll product manager` — user describes a pay-cycle problem.
 - `developer-tooling product manager` — user describes a CLI workflow gap.

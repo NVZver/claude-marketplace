@@ -39,7 +39,7 @@ Apply in order. Factor 1 (dependency) produces hard constraints. Factors 2 and 3
 
 **Rule.** Items with higher uncertainty rank earlier — fail fast. Adapted from the "fail fast" principle common in lean product development [unverified — general lean/agile practice].
 
-**Concrete signal:** Pitches with `[unverified]` or `[assumption]` markers in the Problem section carry unvalidated premises. Rank them earlier to validate or invalidate fast. Beyond this signal, the agent assesses risk naturally from the pitch content — Rabbit holes count, Solution sketch specificity, and open questions all inform the judgment.
+**Concrete signal:** Pitches with `[unverified]` or `[assumption]` markers in the Problem section carry unvalidated premises. Rank them earlier to validate or invalidate fast. Beyond this signal, the agent assesses risk from the pitch content — Rabbit holes count, Solution sketch specificity, and open questions all inform the judgment.
 
 ### Factor 3: Value delivery
 
