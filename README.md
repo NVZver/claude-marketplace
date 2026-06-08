@@ -11,7 +11,7 @@ A Claude Code marketplace shipping five composable plugins for spec-first, fact-
 | Plugin | What it gives you |
 |---|---|
 | [`core`](./core/) | Always-on discipline: six content rules, seven output rules, flow classification (Quick / Standard / Extended), and the Goal/Input/Steps/Output/Constraints shape every skill follows. |
-| [`lsa`](./lsa/) | **L**iving **S**pec **A**rchitecture — spec-first lifecycle: every code change traces to a requirement; hand-edits to code are *absorbed* into the spec instead of forbidden. |
+| [`lsa`](./lsa/) | **L**iving **S**pec **A**rchitecture — technology-agnostic spec layer: authors a grounded spec (EARS + Gherkin), verifies it against the codebase *before* you build and against the diff *after*, then delegates code-writing to any implementer. Not the coder; hand-edits are *absorbed* into the spec instead of forbidden. |
 | [`helper`](./helper/) | Friendly fact-grounded assistant: a `/help` slash command and an auto-engaging subagent that answers `what is X?` mid-flow with verifiable file citations (line range, heading anchor, or URL). |
 | [`management`](./management/) | Pre-build shaping: turns a vague problem into a structured pitch (problem, appetite, solution sketch, rabbit holes, no-gos) before the build cycle begins. |
 | [`prompt-engineer`](./prompt-engineer/) | Plugin-quality discipline: scans your own actors and knowledge files for ground-rule, KISS/DRY, AI over-engineering, and context-budget violations. |
@@ -38,14 +38,14 @@ One primary flow per plugin. Each example uses an illustrative prompt and a repr
 
 ### core
 
-The always-on `flow-selector` skill classifies every non-trivial task before work begins. You see the reasoning and confirm a flow type — **Quick** (one-pass change), **Standard** (discover → implement → verify), or **Extended** (full spec lifecycle).
+The always-on `flow-selector` skill classifies every non-trivial task before work begins. You see the reasoning and confirm a flow type — **Quick** (one-pass change), **Standard** (discover → specify → verify → delegate → reconcile, lightweight), or **Extended** (full spec lifecycle).
 
 ```text
 > claude "add a /lint slash command to the prompt-engineer plugin"
 
 [core/flow-selector] Classifying this task.
 Signals — adds new surface (slash command), touches 1 plugin, no existing spec.
-Verdict — Extended flow: discover → plan → implement → verify.
+Verdict — Extended flow: discover → specify → verify → delegate → reconcile.
 
 Approve [Extended], or pick [Quick] / [Standard].
 ```
@@ -54,29 +54,24 @@ Approve [Extended], or pick [Quick] / [Standard].
 
 ### lsa
 
-**LSA** — Living Spec Architecture — is a spec-first lifecycle in which specs are the permanent source of truth and every line of code traces back to a requirement. The Extended build cycle is four commands (Standard flow skips `lsa:plan`).
+**LSA** — Living Spec Architecture — is a technology-agnostic spec layer: it authors a grounded spec and verifies it *before and after* an external implementer builds it. LSA is not the coder — any agent (Claude Code, Cursor, Copilot) or a human writes the code. The loop is `discover → specify → verify → delegate → reconcile`.
 
 ```text
-> /lsa:new "analytics dashboard for spec-vs-code drift"
-[lsa:new] Created branch feature/analytics-dashboard.
-Handing off to /lsa:discover with the confirmed flow.
+> /lsa:discover "analytics dashboard for spec-vs-code drift"
+[lsa:discover] Intent + facts — roadmap.md exists @ .lsa/roadmap.md; one new module.
 
-> /lsa:discover
-[lsa:discover] User Verification 1 — Requirements + contract trigger.
-F1 (EARS-Event): WHEN a feature spec is merged, the dashboard SHALL list it within 60 s.
-Approve, revise, or add.
-
-> /lsa:plan
-[lsa:plan] PROPOSED — 3 epics, each test-first, each ≤ ½ day.
-  Epic 1: backend ingest of feature-spec merges.
-  Epic 2: drift-detector worker.
-  Epic 3: dashboard UI.
-
-> /lsa:implement
-[lsa:implement] Dispatching Epic 1 to the developer agent — TDD: RED → GREEN → REFACTOR.
+> /lsa:specify
+[lsa:specify] F1 (EARS-Event): WHEN a feature spec is merged, the dashboard SHALL list it within 60 s.
+drift.feature: Given a merged feature spec / When the dashboard refreshes / Then it lists the feature within 60 s.
 
 > /lsa:verify
-[lsa:verify] PASS — 8 acceptance criteria traced to 8 tests; 0 orphan diffs.
+[lsa:verify] GROUNDED — every reference resolves; flow buildable on the existing roadmap reader.
+
+> /lsa:delegate
+[lsa:delegate] Spec + drift.feature handed to your implementer. Awaiting the diff.
+
+> /lsa:reconcile
+[lsa:reconcile] PASS — drift.feature passes 5/5 runs; every changed hunk traces to F1.
 ```
 
 `[illustrative]`
@@ -92,10 +87,10 @@ A cited Q&A assistant. The default reply leads with the answer and the source �
 
 LSA = Living Spec Architecture: a spec-first development methodology where specs
 are the permanent source of truth and every code change traces to a spec
-requirement. The build cycle is `lsa:discover` → `lsa:plan` → `lsa:implement` →
-`lsa:verify`.
+requirement. The loop is `lsa:discover` → `lsa:specify` → `lsa:verify` →
+`lsa:delegate` → `lsa:reconcile`; code-writing is delegated to any implementer.
 
-Sources: README.md#lsa (build cycle and the four-command flow), lsa/README.md
+Sources: README.md#lsa (the loop and its five steps), lsa/README.md
 (skill table + credo quote).
 ```
 
@@ -103,7 +98,7 @@ Sources: README.md#lsa (build cycle and the four-command flow), lsa/README.md
 
 ### management
 
-The `management:start-feature` skill drives an interactive shaping conversation that turns a vague problem into a structured pitch. The `product-manager` agent self-selects a domain-expert role per invocation, asks the questions the codebase can't answer, gates on your explicit approval, and hands the approved pitch off to `management:roadmap` for epic decomposition. Each epic then enters the LSA build cycle (`lsa:discover` → `lsa:plan` → `lsa:implement` → `lsa:verify`).
+The `management:start-feature` skill drives an interactive shaping conversation that turns a vague problem into a structured pitch. The `product-manager` agent self-selects a domain-expert role per invocation, asks the questions the codebase can't answer, gates on your explicit approval, and hands the approved pitch off to `management:roadmap` for epic decomposition. Each item then enters the LSA loop (`lsa:discover` → `lsa:specify` → `lsa:verify` → `lsa:delegate` → `lsa:reconcile`).
 
 ```text
 > /management:start-feature "users complain onboarding takes too long"
@@ -126,7 +121,7 @@ Approve to hand off to /management:roadmap for epic decomposition, or reshape.
 
 ### prompt-engineer
 
-Audit your own plugin prompts against the marketplace's quality rules. The agent enforces actor structure (Goal / Input / Steps / Output / Constraints), Knowledge-vs-Actor separation, KISS/DRY hygiene, an AI-over-engineering sweep, and a context-budget ceiling.
+Audit your own plugin prompts against the marketplace's quality rules. The agent enforces actor structure (Goal / Input / Steps / Output / Constraints), Knowledge-vs-Actor separation, KISS/DRY hygiene, an AI-over-engineering sweep, a context-budget ceiling, and a warning-only show-changes-inline check that flags any step writing/editing/marking an artifact without a directive to quote the change.
 
 ```text
 > /prompt-engineer:prompt-review helper/agents/helper.md
@@ -150,10 +145,10 @@ The solution is discipline, not magic. `core` constrains output to grounded, sou
 
 ## How it works in 30 seconds
 
-1. **`core` is always-on.** Every task fires `ground-rules` + `output` automatically: sources, no hedging, no padding, verdict-first.
+1. **`core` is always-on.** Every task fires `ground-rules` + `output` automatically. The one hard output rule is *sourced* — every claim carries a source + quote; the rest (structured, minimal, verdict-first, …) is guidance the agent applies when it serves the answer, so simple questions get short prose instead of a six-block template.
 2. **Got a vague idea?** `/management:start-feature` shapes it into a pitch with clear scope before you commit to building.
 3. **Non-trivial tasks classify first.** `core/flow-selector` proposes Quick / Standard / Extended with chain-of-thought reasoning; you confirm.
-4. **Standard and Extended run through LSA.** `lsa:discover` → (Extended adds `lsa:plan` →) `lsa:implement` → `lsa:verify`. Every line of code traces back to a requirement.
+4. **Standard and Extended run through LSA.** `lsa:discover` → `lsa:specify` → `lsa:verify` → `lsa:delegate` → `lsa:reconcile`. Every line of code traces back to a requirement; code-writing is delegated to your implementer.
 5. **Hand-edited code?** `lsa:reconcile` offers to update the spec — it never blocks the edit.
 
 The single test the whole system answers: **what is the minimum ceremony that still guarantees grounded, spec-anchored output for *this* task?**

@@ -2,6 +2,58 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.16.1] — 2026-06-08
+
+`reconcile` completeness check + conformance report. Closes the gap left when the re-base dropped the orphan-AC predicate: a diff could pass every Gherkin scenario yet silently skip a non-scenario requirement.
+
+### Changed
+
+- **`lsa/skills/reconcile/SKILL.md`** — the after-delegation check is now three questions, **does · only · all**: (1) scenarios pass ×N, (2) every hunk traces to a requirement (no over-delivery), (3) every requirement maps to a change or covering test (no under-delivery). Emits `conformance.md` (requirement → satisfying change/test) — the durable "changes vs plan" record. No new step — folded into the existing after-check (same inputs, same time).
+- **`lsa/CORE.md`** §6 + §9 and **`.lsa/modules/lsa/spec.md`** — updated to the does/only/all framing + `conformance.md` state file.
+
+## [0.16.0] — 2026-06-08
+
+Re-base to the technology-agnostic two-verb model. LSA is no longer the implementer: it authors a grounded spec (EARS + Gherkin) and runs two checks — `verify` (ground the spec against the codebase, *before*) and `reconcile` (run the Gherkin scenarios against the diff N times, *after*) — then delegates code-writing to any implementer. Aligns the plugin with `.lsa/VISION.md` v0.10.
+
+### Added
+
+- **`lsa/CORE.md`** — the one-page contract every skill and agent follows (principle, loop, user flows, instruction pattern, standards, the two checks, templates, worked example).
+- **`lsa/skills/specify/SKILL.md`** — authors EARS requirements + user flows + Gherkin `.feature` scenarios.
+- **`lsa/skills/delegate/SKILL.md`** — hands the grounded spec to any external implementer; collects the returned diff.
+- **`lsa/agents/orchestrator.md`** — entry-point conductor; drives `discover → specify → verify → delegate → reconcile`, reading each sub-agent's `## Inputs` and resolving them via `discover`.
+
+### Changed
+
+- **`verify`** — refocused to the *before*-delegation grounding check (every spec reference resolves to real code; every flow is buildable). Removed the orphan-AC / `metrics.md` machinery.
+- **`reconcile`** — refocused to the *after*-delegation correctness check: run each Gherkin scenario against the diff N times (≥95% pass); absorb drift.
+- **`discover`** — refocused to intent extraction + codebase-fact gathering; the universal input-resolver.
+- Every skill + agent rewritten to the uniform Role / Goal / Inputs / Steps / Output pattern (`CORE.md` §4).
+- `plugin.json` description updated to "Seven skills + one agent".
+
+### Removed
+
+- **`lsa/skills/plan/`**, **`lsa/skills/implement/`**, **`lsa/skills/new/`**, **`lsa/skills/next/`**, and the **`developer`** agent — epic decomposition and TDD execution are the external implementer's job (Spec Kit / the coding agent), not LSA's.
+
+## [0.15.0] — 2026-06-02
+
+Show-changes-inline enforcement — PR-time regression check + skill-body sweep. The v0.8.0 sweep touched only `Observable result:` lines; this adds the instruction to the step bodies and a verify-time check.
+
+### Added
+
+- **`lsa/skills/verify/SKILL.md`** — new warning-only show-changes-inline scan over the feature's runtime artifacts / PR diff: flags banned "go check the file" phrasing and bare change-claims ("I added X to Y", "marked X", "updated Z") with no inline quote of the changed content. Mechanical/templated phrasings inside spec scaffolds are filtered first. PR-time half of Rule 7 enforcement; the author-time half lives in `prompt-engineer:prompt-review`. README skill-table row updated.
+
+### Changed
+
+- **`lsa/skills/plan/SKILL.md`**, **`discover/SKILL.md`**, **`init/SKILL.md`**, **`revise-constitution/SKILL.md`**, **`implement/SKILL.md`** — every step that writes / edits / marks now carries an explicit "quote the changed content inline before the verdict" instruction in the step body (the `Observable result:` line keeps the verdict; the body carries the instruction — no duplication). `lsa:reconcile`'s gold-standard drift block is unchanged.
+
+## [0.14.0] — 2026-06-02
+
+`lsa:next` fast-path for "what's next". Generalizes the Helper onboarding fast-path (helper v0.3.0) to the roadmap-navigation surface.
+
+### Added
+
+- **`lsa/skills/next/SKILL.md`** — new Step 0 fast-path: a "what's next" invocation reads `.lsa/roadmap.md` §`## Feature Backlog` directly and quotes the first `backlog`/`not started` row with a `file:line` citation in seconds — no sub-agent, no `context7`, no multi-round grep. Cites `core/knowledge/fast-path-source-of-truth.md`. Falls through to the existing flow (with an observable note) if the `## Feature Backlog` anchor is missing, the table is empty, or the question carries selection intent. README skill-table row updated.
+
 ## [0.13.0] — 2026-05-28
 
 Default workspace moves to `.lsa/`. `lsa:init`'s tail message now points at the management plugin instead of `/lsa:discover`.

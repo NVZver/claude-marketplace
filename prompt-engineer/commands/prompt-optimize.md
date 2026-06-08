@@ -28,6 +28,7 @@ Constraints:
    a. HIGH: add missing sections using actor format template from [knowledge/actor-ground-rules.md](../knowledge/actor-ground-rules.md) → file contains all required sections
    b. MEDIUM: apply fixes per [knowledge/quality-checks.md](../knowledge/quality-checks.md) and [knowledge/actor-ground-rules.md](../knowledge/actor-ground-rules.md) — rewrite vague steps with arrow-notation results, consolidate duplicates, replace hardcoded formats with knowledge references, merge constraints, remove restated descriptions
    c. LOW: delete adverbs, replace hedging with direct statements, convert passive to active voice, remove filler phrases, add paradigm citations, trim example bloat, remove low-density padding
+5.5. Quote each applied fix inline before the verdict (write, show, comment) per [`../../core/skills/output/SKILL.md`](../../core/skills/output/SKILL.md) Rule 7 — the Step 8 change table is the compressed-inspection-table form; for a small batch, show before/after per edit. Never report "fixed N issues" without the changed content.
 6. Re-run review on modified files → verify fixes resolved issues
 7. If new issues found → repeat steps 5-6 until no new issues remain or the same issue recurs
 8. Compile changes → output table

@@ -2,6 +2,41 @@
 
 All notable changes to the `core` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.11.0] — 2026-06-02
+
+Relax `core/output` to advisory — one hard rule, six guidance. Fact-grounding stays mandatory; the six shape rules become outcomes to aim for, not a per-response checklist. Frees simple answers to be short prose instead of a six-block template, and lets non-Claude substrates use their own voice.
+
+### Changed
+
+- **`skills/output/SKILL.md`** — split the seven golden rules into ONE hard rule (Rule 4, Sourced — fact-grounding + file-load trace + citation format) and SIX guidance rules (1-3, 5-7, applied when they serve the answer). Rule numbering preserved verbatim (other files cite by number); no rule content removed — only the enforcement posture changed. The canonical-source clause now hard-protects only Rule 4 and forbids re-promoting a guidance rule to a marketplace-wide hard requirement.
+- **`CLAUDE.md`** — always-on output block reframed to "one hard rule + six pieces of guidance". The four operational checkpoints are re-tagged: file-load trace (#3) stays hard (part of Rule 4); substrate-native pickers (#1), 1–1.5 screen budget (#2), and show-changes-inline (#4) become strongly-recommended guidance. The show-changes-inline note clarifies the discipline is still held at the skill / verify level (per v0.10.0), independent of the `core/output` posture.
+- **`core/tests/repo-anchored.md`** — probe D1 reworded from "satisfies all seven golden rules = PASS" to "hard rule (Sourced) holds + guidance applied where it serves"; the FAIL bar is now a missing source / unquoted claim (hard), with prose-first / padding demoted to guidance weaknesses.
+- **`core/README.md`** — output bullet describes the new hard-vs-guidance posture.
+
+### Why
+
+Per `.lsa/pitches/relax-core-output-to-advisory.md` (user, 2026-05-28: *"it feels like we restriced Claude too much … keep the hard requirements to provide Sources + Quotes but in a free format so Claude OR any other tool can shine"*). Safe to relax because show-changes-inline enforcement now lives at the skill / verify level (core v0.10.0), not the `core/output` posture. The prerequisite verdict-tag grep ran first: no automated tooling parses the verdict labels as data (no test harness this release), so reclassifying them as guidance breaks nothing.
+
+## [0.10.0] — 2026-06-02
+
+Show-changes-inline enforcement. Rule 7 gains a *How this gets enforced* sub-section; the operational checkpoint spells out the write → show → comment order; two warning-only regression checks (prompt-review for prompt sources, lsa:verify for runtime artifacts) now hold the discipline.
+
+### Added
+
+- **`skills/output/SKILL.md`** — Rule 7 *How this gets enforced* sub-section: names the per-skill cite locations, the two regression checks (`prompt-engineer:prompt-review` author-time over prompt sources; `lsa:verify` PR-time over runtime artifacts, both warning-only), and the `lsa:reconcile` 8-element drift block as the gold-standard exemplar. Rule 7's content and template are unchanged.
+
+### Changed
+
+- **`CLAUDE.md`** — operational checkpoint #4 now spells out the fixed write → show → comment order, the compressed-inspection-table threshold, the `lsa:reconcile` Step 4 reference, and both regression-check surfaces.
+
+## [0.9.0] — 2026-06-02
+
+Fast-path navigation contract. New shared knowledge file establishing the single-source-of-truth fast-path pattern cited by `lsa:next`, `management:roadmap`, the `project-manager` agent, and Helper's onboarding catalog.
+
+### Added
+
+- **`knowledge/fast-path-source-of-truth.md`** — the shared single-source-of-truth navigation fast-path contract: a navigation-class question ("what's next", "how do I get started") maps to one source-of-truth file at a known path → direct `Read` + cited `file:line` quote-back, no sub-agent / `context7` / multi-round `Grep`. Documents the pattern shape, exact-phrase detection (not semantic similarity), the fall-through-on-failure rule (no regression to the deep-research path), and the `file:line` citation format. `core/README.md` gains a Knowledge section; root `knowledge/index.md` count 14 → 15.
+
 ## [0.5.7] — 2026-05-27
 
 Prompt audit remediation — cross-reference fixes, Rule 7 trimming, wording polish.

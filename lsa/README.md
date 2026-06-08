@@ -1,36 +1,127 @@
 # LSA — Living Spec Architecture
 
-Spec-first development methodology installable as a Claude Code plugin. Specs are the permanent source of truth; every code change traces to a spec requirement; human gates at every phase. For the design rationale, see [`ARCHITECTURE.md`](./ARCHITECTURE.md).
+> **A technology-agnostic spec layer: ground the spec in your codebase *before* you build, verify the diff *after*. Bring your own coding agent.**
 
-## LSA's expression of the credo
+AI coding agents are fast but unanchored — specs live in chat, drift from the codebase, and nobody checks the diff against what was agreed. LSA owns the two ends no coder agent does:
 
-> *"LSA doesn't automate your thinking — it makes you own it."*
+- **`verify` (before)** — every reference in the spec resolves to real code; every flow is buildable. No fantasy specs.
+- **`reconcile` (after)** — the returned diff is checked **does · only · all** against the spec, and drift is absorbed.
 
-Every LSA User Verification is a decision asked of the human with explicit consequences; every artifact traces back to a human-owned requirement; every reconcile keeps the human in the loop. See [`../core/CLAUDE.md`](../core/CLAUDE.md) for the operating credo and [`../core/skills/ground-rules/SKILL.md`](../core/skills/ground-rules/SKILL.md) Rule 0 (Ownership over automation).
+The agent in the middle is yours: **Claude Code, Cursor, Copilot, or a human.** LSA never writes production code.
 
-## What's here
+> [!NOTE]
+> LSA is **not** a coding agent — it's the spec-and-verification layer that wraps one. It adopts industry-standard formats (**EARS** for requirements, **Gherkin** for acceptance) so it interoperates with Spec Kit, Kiro, and Cursor instead of competing with them.
+
+**Contents:** [The loop](#the-loop) · [Quick start](#quick-start) · [How LSA compares](#how-lsa-compares) · [Skills](#skills) · [The two checks](#the-two-checks--the-product) · [Standards](#standards) · [Configuration](#configuration) · [Install](#install)
+
+## The loop
+
+`discover → specify → verify → delegate → reconcile`, driven by the `orchestrator`. Ceremony scales to weight — a typo skips the spec; a new feature runs the full spine.
+
+```mermaid
+flowchart TD
+    you([you]) --> orch[orchestrator<br/>drives the loop]
+    subgraph lsa["LSA — you own this · technology-agnostic"]
+        direction LR
+        d["① discover<br/>intent + facts"] --> s["② specify<br/>EARS + Gherkin"]
+        s --> v["③ verify ✓ GROUNDED<br/>BEFORE — refs resolve? buildable?"]
+        rec["⑤ reconcile ✓ PASS<br/>AFTER — does · only · all<br/>→ conformance.md"]
+    end
+    orch -.-> d
+    v -->|"④ delegate — spec + .feature"| agent[["YOUR coding agent<br/>Claude · Cursor · Copilot · human"]]
+    agent -->|returns a diff| rec
+    rec -.->|"drift → spec absorbs reality"| s
+```
+
+**A run, end to end:**
+
+```text
+> /lsa:discover "add a /status command that lists in-flight features"
+[discover] intent + facts — roadmap.md exists @ .lsa/roadmap.md; one read-only flow.
+
+> /lsa:specify
+[specify] F1 (EARS): WHEN status runs, the system SHALL print in-flight features.
+          status.feature: Given the roadmap has in-flight rows / When status runs / Then a table is printed.
+
+> /lsa:verify                         ← the BEFORE check (ground vs codebase)
+[verify] GROUNDED — roadmap reader exists @ src/roadmap.ts:12; flow buildable.
+
+> /lsa:delegate                       ← hand off to YOUR agent
+[delegate] spec + status.feature → your implementer. Awaiting the diff…
+
+> /lsa:reconcile                      ← the AFTER check (does · only · all)
+[reconcile] does ✓ 5/5 runs · only ✓ hunks trace to F1 · all ✓ F1 covered
+            → PASS + conformance.md
+```
+
+## Quick start
+
+```
+/plugin marketplace add NVZver/claude-marketplace
+/plugin install core@NVZver
+/plugin install lsa@NVZver
+```
+
+1. **Initialize** — `/lsa:init` scaffolds the spec tree (greenfield or brownfield).
+2. **Discover** — `/lsa:discover "<what you want>"` extracts intent + gathers codebase facts.
+3. **Specify** — `/lsa:specify` writes EARS requirements + Gherkin `.feature` scenarios.
+4. **Verify** — `/lsa:verify` grounds the spec against your codebase; fix anything `NOT-GROUNDED` before building.
+5. **Delegate** — `/lsa:delegate` hands the spec to your coding agent.
+6. **Reconcile** — `/lsa:reconcile` checks the returned diff **does · only · all** and writes `conformance.md`.
+
+> [!TIP]
+> You don't have to run the steps by hand — talk to the `orchestrator` and it drives the whole loop, resolving each step's inputs via `discover`.
+
+## How LSA compares
+
+LSA deliberately does **less** than a full SDD toolkit — it owns the two grounding checks and delegates everything else, so it layers *on top of* the others rather than replacing them.
+
+| | **LSA** | Spec Kit | OpenSpec | Kiro |
+|---|---|---|---|---|
+| Writes the code | ✗ — bring any agent | ✓ orchestrates | via your agent | ✓ (AWS IDE) |
+| Tool-agnostic | ✓ | ✓ | ✓ | ✗ |
+| Grounds the spec in the codebase *before* build | ✓ `verify` | — | — | partial |
+| Verifies the diff vs the spec *after* (does · only · all) | ✓ `reconcile` | — | drift-prone | — |
+| Permanent, drift-absorbing spec | ✓ | branch-per-change | proposal → archive | ✓ |
+| Formats | EARS + Gherkin | spec / plan / tasks | change proposals | EARS |
+
+*LSA's read of the landscape — see [Spec Kit](https://github.com/github/spec-kit), [OpenSpec](https://github.com/Fission-AI/OpenSpec), [Kiro](https://kiro.dev). You can run LSA's `verify` / `reconcile` on top of any of them.*
+
+## Skills
 
 | Skill | Purpose |
 |---|---|
-| **`new`** | Start a new feature (creates branch → selects flow → discovers). Input: feature name or description. Output: feature branch created, discovery phase running. |
-| **`next`** | Pick and start the next backlog item (reads roadmap → confirms pick → creates branch → discovers). Input: none. Output: feature branch created, discovery phase running. |
-| **`discover`** | Discover and specify a feature. Standard flow: 3-row context table. Extended flow: full spec artifacts with three User Verifications. Merges the former `lsa-specify` + `lsa-discover`. |
-| **`plan`** | Break a spec into implementation epics. Input: approved spec artifacts. Output: tasks.md with ≤5 ordered epics, each with a `**Covers:**` line citing requirement IDs. |
-| **`implement`** | Orchestrate TDD implementation of approved epics. Dispatches each epic to the `developer` agent for principal-engineer-level execution (design → test strategy → TDD → self-review), manages inter-epic human gates. Input: approved tasks.md (or Standard-flow discovery context). Output: all epics implemented with passing tests, ready for `lsa:verify`. |
-| **`verify`** | Verify implementation matches the spec. Dual predicates: orphan-diff + orphan-AC. Code-mode, doc-mode, or mixed (per `.lsa.yaml`). Emits per-feature `metrics.md` on clean Extended-flow PASS. |
-| **`init`** | Initialize Living Spec Architecture for a project. Input: existing codebase (greenfield or brownfield). Output: .lsa.yaml + specs_root directory + module specs. |
-| **`reconcile`** | Absorb a direct artifact edit into its module spec — Level 2.5 (`.lsa/VISION.md:138`). One delta at a time — stop and present each individually; do not proceed without explicit approval. |
-| **`revise-constitution`** | Propose changes to the project constitution and standards. Input: feature decisions that should become permanent. Output: updated constitution + standards files. |
+| **`discover`** | Extract user intent and gather the codebase facts the spec rests on. Also the universal input-resolver other skills call. |
+| **`specify`** | Write the grounded spec — EARS requirements, user flows, and Gherkin `.feature` scenarios. |
+| **`verify`** | **Before** delegating: ground the spec against the codebase. Output: `GROUNDED` / `NOT-GROUNDED` + `grounding.md`. |
+| **`delegate`** | Hand the grounded spec + `.feature` files to your implementer; collect the returned diff. Code-writing happens outside LSA. |
+| **`reconcile`** | **After** the diff returns: check it **does · only · all**, write `conformance.md`, absorb drift. Also surfaced by the SessionStart drift hook. |
+| **`init`** | Initialize LSA on a project (greenfield or brownfield). |
+| **`revise-constitution`** | Promote a finished feature's lessons into permanent constitution / standards rules. |
 
-## Agents
+Plus one agent — **`orchestrator`** — the entry point that drives the loop. See [`CORE.md`](./CORE.md) for the one-page contract every skill follows.
 
-| Agent | Purpose |
-|---|---|
-| **`developer`** | Principal-engineer implementation agent. Dispatched by `implement` once per epic. Four phases: (1) Design brief — conventions, user flow, e2e data flow with reuse analysis, risks + mitigations, dependencies, migration safety, trade-offs; (2) Test plan — testing-pyramid selection with per-behavior justification; (3) TDD — RED→GREEN→REFACTOR; (4) Self-review — run suite, diff-review against design brief, present. Flags spec/plan divergence instead of silently deviating. |
+## The two checks — the product
+
+Everything else is table stakes; these two are why LSA exists.
+
+**`verify` — before you build (grounding).** Every module / function / type the spec names resolves to real code (cited `file:line`) or is explicitly `new`; every flow is buildable. An ungrounded spec is **blocked** — you never delegate a fantasy.
+
+**`reconcile` — after the diff returns (correctness).** Three questions:
+- **does** — every Gherkin scenario passes, run N times (agents are stochastic; ≥95%).
+- **only** — every changed hunk traces to a requirement (no scope creep).
+- **all** — every requirement maps to a change or a covering test (nothing skipped).
+
+Output is `conformance.md` — a requirement-by-requirement record of *what actually changed vs. the plan*. Drift → the spec absorbs reality; the code is never reverted.
+
+## Standards
+
+LSA adopts industry standards rather than inventing formats — **EARS** ("While `<state>` / when `<event>`, the system shall …") for requirements, and **Gherkin** (`Given / When / Then`, from [Specification by Example](https://gojko.net/books/specification-by-example/)) for acceptance scenarios. Authored tech-agnostically; your implementer wires execution.
 
 ## Configuration
 
-LSA is path-configurable via an optional `.lsa.yaml` at the repo root. Minimal default-overriding example:
+<details>
+<summary><code>.lsa.yaml</code> schema (optional — sensible defaults when absent)</summary>
 
 ```yaml
 constitution: .lsa/VISION.md         # default: .lsa/VISION.md
@@ -38,10 +129,6 @@ specs_root: .lsa/                    # default: .lsa/
 mode: docs                           # docs | code | mixed. default: code
 
 modules:
-  core:
-    spec: .lsa/modules/core/spec.md
-    artifact_paths:
-      - core/skills/**/SKILL.md
   lsa:
     spec: .lsa/modules/lsa/spec.md
     artifact_paths:
@@ -49,38 +136,27 @@ modules:
       - lsa/hooks/**/*
 ```
 
-When `.lsa.yaml` is absent, LSA applies the defaults documented in [`knowledge/conventions.md`](./knowledge/conventions.md) §"`.lsa.yaml` defaults" — `constitution: .lsa/VISION.md`, `specs_root: .lsa/`, `mode: code`, `modules: {}`. The default workspace lives entirely under `.lsa/` so a user can `rm -rf .lsa/` to fully detach from LSA. Projects with a pre-existing `/CLAUDE.md` constitution or `/specs/` tree should set both keys explicitly. See [`ARCHITECTURE.md`](./ARCHITECTURE.md) §3 for the full schema.
+When `.lsa.yaml` is absent, LSA applies the defaults documented in [`knowledge/conventions.md`](./knowledge/conventions.md) §"`.lsa.yaml` defaults": `constitution: .lsa/VISION.md`, `specs_root: .lsa/`, `mode: code`, `modules: {}`. The workspace lives entirely under `.lsa/` so you can `rm -rf .lsa/` to fully detach. See [`ARCHITECTURE.md`](./ARCHITECTURE.md) §3 for the full schema.
 
-A SessionStart drift hook (`lsa/hooks/hooks.json`) compares each module's `artifact_paths` against the baseline SHA — the last commit that modified the module's spec file, resolved at hook runtime via `git log -1 --format=%H -- <spec-path>` — and surfaces a one-line notice when there's drift, pointing the user at `/lsa:reconcile`.
+A SessionStart drift hook compares each module's `artifact_paths` against the baseline SHA (the last commit that modified the module's spec) and surfaces a one-line notice pointing at `/lsa:reconcile`.
+</details>
 
-## Depends on
-
-LSA's fact-grounding discipline is provided by the [`core`](../core/) plugin — specifically [`core/ground-rules`](../core/skills/ground-rules/SKILL.md). `ARCHITECTURE.md` §2 P4 and §7 defer to it rather than restating its content.
-
-Install `core` first, then `lsa`:
-
-```
-/plugin install core@NVZver
-/plugin install lsa@NVZver
-```
-
-The dependency is declared in [`lsa/.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) as `"dependencies": ["core"]` (since `lsa` v0.6.3). Claude Code auto-resolves and installs `core` when you install `lsa`, and refuses to disable `core` while `lsa` is enabled. The two manual install commands above still work for clarity (e.g., when bootstrapping a marketplace).
-
-## Install on Claude Code
+## Install
 
 ```
 /plugin marketplace add NVZver/claude-marketplace
-/plugin install core@NVZver
+/plugin install core@NVZver         # required dependency
 /plugin install lsa@NVZver
 /reload-plugins
 ```
 
-Invoke LSA skills directly via `/lsa:new`, `/lsa:discover`, `/lsa:plan`, `/lsa:implement`, `/lsa:verify`, etc., or let Claude trigger by description match. Core's `ground-rules` and `actor-template` apply automatically once installed.
+LSA depends on [`core`](../core/) for fact-grounding discipline ([`core/ground-rules`](../core/skills/ground-rules/SKILL.md)); Claude Code auto-installs it. Invoke skills directly via `/lsa:discover`, `/lsa:specify`, `/lsa:verify`, `/lsa:delegate`, `/lsa:reconcile`, or let Claude trigger by description match.
 
-## Install on Claude.ai
+> [!IMPORTANT]
+> LSA writes spec files to disk and reads `/CLAUDE.md` — it needs a filesystem. Use it in Claude Code (or any filesystem-backed agent), not the web app.
 
-LSA writes spec files to disk and reads `/CLAUDE.md` — it depends on a filesystem. **Not recommended for Claude.ai** in v0.1.0; the skills will trigger by description but cannot complete their I/O.
+---
 
-## Naming note
+> *"LSA doesn't automate your thinking — it makes you own it."*
 
-LSA's `${specs_root}/standards/` directory (default: `.lsa/standards/`) holds technical standards (`code.md`, `testing.md`) extracted from the project's constitution. It is **not** the same as the [`core/ground-rules`](../core/skills/ground-rules/) skill — Core's `ground-rules` enforces six content discipline rules (ownership, fact-grounding, no fake-confidence hedging, read-the-source, only-required-output, no-filler); Core's `output` skill enforces five format golden rules (structured, minimal, formatted, sourced, concrete). The two coexist in the marketplace and are independently installable.
+Every gate is a decision asked of the human with explicit consequences; every artifact traces to a human-owned requirement; every reconcile keeps the human in the loop. See [`../core/skills/ground-rules/SKILL.md`](../core/skills/ground-rules/SKILL.md) Rule 0 (Ownership over automation).

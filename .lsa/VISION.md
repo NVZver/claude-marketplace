@@ -3,8 +3,8 @@
 # The Vision
 
 **Working name:** Vision (placeholder — to be named later)
-**Version:** 0.5 — draft for review
-**Scope:** Tech is the first pack; the **core is domain-neutral**. Substrate: **Claude Code only.** (The Claude App is something you manage yourself; the system does not target it.)
+**Version:** 0.10 — draft for review
+**Scope:** Tech is the first pack; the **core is domain-neutral**. Substrate: **tool-agnostic** — the spec layer (EARS + Gherkin) targets no single tool; **Claude Code is the first reference implementation**, and code-writing is delegated to whatever implementer the developer uses.
 **Status:** Vision only. Build comes next, together.
 **Target rigor:** Level 2.5 — spec-anchored, human may edit code under gates; the system reconciles drift gracefully rather than forbidding the edit.
 
@@ -12,7 +12,7 @@
 
 ## 0. The one sentence
 
-> Build a personal, model-agnostic agentic engineering system whose single job is **trustworthy output** — every fact traces to a source, every line of code traces to a spec — and whose **ceremony scales to the weight of the task**. And whose operating philosophy is **ownership over automation** — the system does not think for the human; it makes the human think.
+> Build a personal, model- and tool-agnostic agentic engineering system whose single job is **trustworthy output** — every fact traces to a source, every line of code traces to a spec — and whose **ceremony scales to the weight of the task**. And whose operating philosophy is **ownership over automation** — the system does not think for the human; it makes the human think.
 
 Everything below serves that sentence.
 
@@ -44,7 +44,7 @@ Under all five sits a stable DNA. The vision keeps the DNA and discards the cere
 - **Source-of-truth first, runtime-discovered.** Read the truth before acting. Bind tools at runtime by description match. No hard-coded vendor names.
 - **Production prompt techniques.** Role+Goal, Chain-of-Thought via numbered steps, few-shot in frontmatter, structured output, constraints kept distinct from quality rules.
 - **Distribution + versioning.** Registry, SemVer, per-plugin CHANGELOG, bump-before-publish, one-line install.
-- **Human gates + TDD + measurement** as defaults, not afterthoughts.
+- **Human gates + test-first (acceptance / BDD) + measurement** as defaults, not afterthoughts.
 - **Dogfood.** Use the system to build the system.
 
 ---
@@ -83,8 +83,8 @@ core/  (domain-neutral — always loaded; the spine for any pack)
 └── registry         the map-not-territory loader
 
 packs/  (load on demand)
-├── tech/            TDD loop · verifier (code↔spec) · spec lifecycle · reconcile
-│                    library-docs · API contracts · EARS · marketplace/SemVer
+├── tech/            specify (EARS + Gherkin) · verify (ground spec↔codebase) · delegate · reconcile
+│                    library-docs · API contracts · spec lifecycle · marketplace/SemVer
 ├── writing/         (later)
 ├── research/        (later)
 └── planning/        (later)
@@ -93,6 +93,8 @@ packs/  (load on demand)
 **Core rules are always-on; flows govern workflow, not rules.** A deliberate decision: the four discipline rules fire on every task regardless of flow — facts get sourced even on a throwaway draft. What scales with the flow is *process ceremony* (how many phases), not *whether grounding applies*. (One refinement: "zero hedging" bans unsupported claims hidden behind vague words, not natural-language opinion stated honestly as opinion — otherwise prose goes robotic.)
 
 **Why core-first.** The core is pure markdown ground rules with no code dependency, so it can be installed and exercised on its own before the heavy tech pack exists — catching bugs in the vision against real usage. Tech, the heaviest pack, comes after the spine is proven.
+
+> The vision is tool-agnostic; the mapping below is the **Claude Code reference implementation** — the first pack, not the only possible substrate.
 
 ### Primitives and where each lives in Claude Code
 
@@ -121,8 +123,10 @@ This is the one genuinely new design decision versus the six docs. The enterpris
 | Flow | When | Loop | Groundings enforced |
 | --- | --- | --- | --- |
 | **Quick** (was `T1`) | Typo, rename, one-line fix, a question | Single pass. Cite sources if any claim is made. | Fact-grounding only |
-| **Standard** (was `T2`) | A bug, a small task, a refactor | Discover (light) → implement TDD → verify | Both, lightweight |
-| **Extended** (was `T3`) | A new feature or module | Full LSA: discover → plan → implement → verify | Both, full lifecycle + permanent spec |
+| **Standard** (was `T2`) | A bug, a small task, a refactor | discover → specify (light, 1 scenario) → verify → delegate → reconcile | Both, lightweight |
+| **Extended** (was `T3`) | A new feature or module | full spine: discover → specify (EARS + flows + Gherkin) → verify → delegate → reconcile | Both, full lifecycle + permanent spec |
+
+**The implementer is external.** In every flow the system authors and verifies the spec, then *delegates* code-writing to whatever implementer the developer uses (Claude Code, Cursor, Copilot, a human). The system's product is the two checks — grounding the spec before, reconciling the result after — never the production code itself.
 
 **The escalation rule** is the heart of it: start at the lowest plausible flow; escalate the moment the work crosses a boundary. The **orchestrator picks the flow by chain-of-thought**, then states its reasoning and the human confirms or overrides. The reasoning is visible, not hidden — that is itself the fact-grounding principle applied to the system's own decisions.
 
@@ -132,7 +136,7 @@ This is the one genuinely new design decision versus the six docs. The enterpris
 | --- | --- | --- |
 | "Fix the typo in the login button label" | One file, one string, no behavior change, no new contract → no grounding to verify beyond the change itself. | **Quick** |
 | "The date formatter returns the wrong month off-by-one" | One bug, one module that already has a spec, behavior change but no new API → needs a failing test that captures the bug, then a fix, then verify against the existing spec. No new spec needed. | **Standard** |
-| "Add password-reset via email" | New behavior, new endpoint (API change), touches auth + mailer modules, no spec exists yet → crosses three boundaries. Must specify first, plan epics, implement TDD, verify every line traces to a requirement, then sync a permanent spec. | **Extended** |
+| "Add password-reset via email" | New behavior, new endpoint (API change), touches auth + mailer modules, no spec exists yet → crosses three boundaries. Must specify first (EARS + flows + Gherkin), ground the spec against the codebase, delegate to the implementer, then reconcile every changed line against the spec — keeping the permanent spec. | **Extended** |
 | "Rename `getUser` to `fetchUser` everywhere" | Many files but zero behavior change, no contract change → mechanical. Verify nothing broke, but no spec work. | **Standard** (wide, shallow) |
 
 The orchestrator can be wrong; that is why it *proposes* and the human confirms. Over time, corrections to its flow calls become training examples in the orchestrator's own few-shot block — the system learns your boundaries.
@@ -248,7 +252,7 @@ Pass/fail hides variance — a skill that passes once may fail 4-in-10. **Verdic
 
 1. **Target rigor level. → RESOLVED: Level 2.5.** Spec-anchored; developer may edit code under gates; system reconciles drift by absorbing the edit into the spec (§4). Goal is to improve devs' lives, not retrain them.
 2. **Flow boundaries (was Tier boundaries). → DIRECTION SET, examples drafted (§4).** Orchestrator selects flow by visible chain-of-thought over boundary signals (new module? API/contract change? data-model change? file count? spec exists?), then proposes and the human confirms. Still to finalize together: the exact file-count threshold and whether to add more worked examples to the orchestrator's few-shot block.
-3. **Substrate. → RESOLVED: Claude Code only.** The whole system targets Claude Code natively (skills, `CLAUDE.md`, plugins, `marketplace.json`). The Claude App is managed separately by you and is not a target of the system.
+3. **Substrate. → UPDATED (v0.10): tool-agnostic, Claude Code first.** The vision targets no single tool — the spec layer is EARS + Gherkin, portable across implementers (Spec Kit, Kiro, Cursor). **Claude Code is the first reference implementation** (skills, `CLAUDE.md`, plugins, `marketplace.json`); code-writing is delegated out, not done in-system. Supersedes the v0.4 "Claude Code only" simplification; restores §1's standard-level ambition.
 4. **First bundle. → AGREED.** Minimal `core` bundle: fact-grounding ground rule + actor template + registry + one T2 implement→verify loop. Add the reconcile step early since it defines Level 2.5. Prove the spine before porting LSA's full seven phases.
 5. **Metrics. → RESOLVED. Track three:**
    - **Accuracy to the task** — did the output do what was asked, no more, no less?
@@ -260,6 +264,7 @@ Pass/fail hides variance — a skill that passes once may fail 4-in-10. **Verdic
 
 ## Changelog
 
+- **v0.10** — Tool-agnostic pivot + implementer boundary. Reversed §7.3 from "Claude Code only" to **tool-agnostic, Claude Code as first reference implementation** — restoring §1's standard-level ambition (the v0.4 "CC only" was a shipping simplification). LSA is **no longer the implementer**: it authors a grounded spec (EARS + Gherkin / Specification by Example) and runs the two checks — `verify` (ground the spec against the codebase, *before*) and `reconcile` (run the Gherkin scenarios against the diff N times, *after*) — then **delegates** code-writing to any implementer (Claude Code, Cursor, Copilot, human). Loop updated `discover → plan → implement → verify` ⟶ `discover → specify → verify → delegate → reconcile`; ceremony-scaling (Quick/Standard/Extended) retained per §0. LSA plugin re-based to 7 skills + 1 orchestrator agent; `plan`, `implement`, and the `developer` agent removed (that work is the external implementer's). Standards adopted: EARS + Gherkin, interoperable with Spec Kit / Kiro / Cursor. See `lsa/CORE.md`.
 - **v0.9** — §3 amendment: `flow-selector` activation. The always-on-vs-on-demand resolution paragraph (`.lsa/VISION.md:109`) was inaccurate after `core` v0.2.0 wired `flow-selector` invocation into `core/CLAUDE.md`. Updated wording: *"`flow-selector` ships as a skill invoked by a `CLAUDE.md` rule on every non-trivial task; `actor-template` (on-demand) ships as a skill loaded on description match."* Swept the paraphrased quote at `.lsa/2026-05-20-lsa-v0.2.0-design.md:471`. Clears the long-standing roadmap row from `.lsa/2026-05-20-lsa-v0.2.0-design.md` §15. No rule change — the rule was already operational since v0.4 / core v0.2.0; this entry codifies §3 prose to match.
 - **v0.8** — Naming clarity (Bundle B). Renamed `lsa-specify` "Gate N" → "User Verification N: <name>" (1: Requirements + Contract Trigger; 2: Test Suites + Contract + Design; 3: Final Integration). Renamed tier flow `T1` / `T2` / `T3` → `Quick` / `Standard` / `Extended` and the skill `core/tier-selector` → `core/flow-selector`. The new names describe *who* (the human) and *what* (verifying) and *process shape* respectively; the prior labels carried position but no meaning. Active behavior files updated; historical CHANGELOG / plan / archive references kept under original names with a one-line back-link note in the renamed surface. Corresponds to `core` v0.5.2 + `lsa` v0.6.2.
 - **v0.7** — Discipline ground (Bundle A). Elevated two `core/output` operational checkpoints to always-on bullets in `core/CLAUDE.md`: substrate-native pickers (`AskUserQuestion` in Claude Code; never text `[a]/[b]/[c]` blocks where picker exists) and the 1–1.5 screen budget per turn (split decisions, pull don't push). Tightened `core/output` Rule 2 (Minimal) with concrete screen-budget shape; renamed Rule 5 heading to *"Concrete (decision prompts) — prompt voice"*. `lsa-specify` / `lsa-plan` / `lsa-init` Present blocks gained explicit subject-voice scaffolds so pickers stop saying *"Approve Gate 1?"* / *"Approve F3?"*. Corresponds to `core` v0.5.1 + `lsa` v0.6.1.

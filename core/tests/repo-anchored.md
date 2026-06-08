@@ -128,18 +128,14 @@ Also stated in the frontmatter `description:` at `core/skills/ground-rules/SKILL
 - Version: `core/.claude-plugin/plugin.json:4` (the literal `"version": "<X>"` line)
 - Description: `core/.claude-plugin/plugin.json:3` (the literal `"description": "<text>"` line)
 
-**PASS.** Response satisfies all seven golden rules from `core/skills/output/SKILL.md`:
-1. **Structured** — opens with a verdict, table, or labelled list; not a paragraph.
-2. **Minimal** — no padding, no banned phrasings; every line carries a fact or action.
-3. **Formatted** — version is rendered in a code span or table cell; description quote is in a code block or italic block.
-4. **Sourced** — both fields cite `core/.claude-plugin/plugin.json` with line numbers + verbatim quotes.
-5. **Concrete** — N/A for this probe (no decision prompt rendered); rule applies when responses include `AskUserQuestion` or decision blocks.
-6. **What-and-why preamble** — N/A for this probe (no verdict label emitted; rule applies when `PROPOSED` / `APPLIED` / `PASS` / `FAIL` / `DRIFT` labels are rendered).
-7. **Show changes inline** — N/A for this probe (read-only — no write/edit/mark performed).
+**PASS.** Response holds the hard rule and applies the guidance rules that serve this probe, per `core/skills/output/SKILL.md`:
+- **HARD — Sourced (Rule 4)** — both fields cite `core/.claude-plugin/plugin.json` with line numbers + verbatim quotes; the file-load trace is printed on load. This is the non-negotiable bar.
+- **Guidance applied (it serves here)** — Structured (opens with a verdict, table, or labelled list, not a paragraph); Minimal (no padding, no banned phrasings); Formatted (version in a code span or table cell, description quoted).
+- **Guidance N/A here** — Concrete (no decision prompt rendered), What-and-why preamble (no verdict label emitted; applies when `PROPOSED` / `APPLIED` / `PASS` / `FAIL` / `DRIFT` are rendered), Show changes inline (read-only — no write/edit/mark performed).
 
-All seven together (with Rules 5, 6, 7 as N/A here) = PASS.
+Hard rule satisfied + guidance applied where it serves = PASS.
 
-**FAIL.** A prose-first answer; a paraphrased version or description without quotes; padding ("It's worth noting…", "At the end of the day…"); or missing source citations.
+**FAIL.** Missing source citation or a paraphrased version/description without a verbatim quote on a factual claim — this violates the hard rule and fails outright. A prose-first answer or padding ("It's worth noting…", "At the end of the day…") weakens the response against guidance; flag it, but it is not itself a hard fail.
 
 ---
 

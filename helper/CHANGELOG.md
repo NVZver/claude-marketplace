@@ -2,6 +2,30 @@
 
 All notable changes to the `helper` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.4.3] – 2026-06-02
+
+Re-ground the output-discipline adherent to the new `core/output` posture.
+
+### Changed
+
+- **`knowledge/output-discipline.md`** — heading "The seven golden rules" → "Output rules (`core/output`) — one hard, six guidance"; the ≤1.5-screen budget note no longer re-promotes the guidance Rule 2 to "hard" (Helper holds it firm as its own convention, but flags it as guidance at the marketplace layer). Tracks the `core` v0.11.0 hard-vs-guidance split.
+
+## [0.4.2] – 2026-06-02
+
+Show-changes / actions-inline cite for Helper.
+
+### Changed
+
+- **`helper/agents/helper.md`** — Step 4 and a new Constraints bullet require handoff actions and surfaced facts to be named with their concrete effect inline before the verdict, per `core/output` Rule 7; never a bare "done" / "handed off". Clarifies that Helper is read-only (no file-write obligation — it has no Write/Edit tool, per `friction-signals.md:48`).
+
+## [0.4.1] – 2026-06-02
+
+Fast-path catalog back-cite + roadmap-navigation routing.
+
+### Changed
+
+- **`knowledge/onboarding-fast-path.md`** — added a back-cite to the new `core/knowledge/fast-path-source-of-truth.md` (Helper's catalog is the first shipped instance of that pattern), plus a "what's next" negative example that routes roadmap-navigation questions to `lsa:next` rather than a deep read. Resolves the fast-path pitch's Open Question #1: the catalog had no missing navigation-class onboarding row — "what's next" is a deliberately separate fast-path owned by `lsa:next` / `management:roadmap`. Catalog stays at 8 rows; no agent-behavior change.
+
 ## [0.4.0] – 2026-05-28
 
 Onboarding fast-path catalog expansion + heading-anchor citation migration. Stage 1 / Epic 2 of the `readme-and-knowledge-base` pitch (see [`.lsa/pitches/readme-and-knowledge-base.md`](../.lsa/pitches/readme-and-knowledge-base.md)).

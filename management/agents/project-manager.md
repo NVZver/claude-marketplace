@@ -17,8 +17,13 @@ Recommend the next backlog item to build, decompose the chosen pitch into indepe
 - `specs_root` from `.lsa.yaml` at repo root (defaults per [`../../lsa/knowledge/conventions.md`](../../lsa/knowledge/conventions.md) §"`.lsa.yaml` defaults"). Used to resolve `${specs_root}/...` paths below.
 - Ambient state: roadmap at `${specs_root}/roadmap.md`, pitch files at `${specs_root}/pitches/*.md`, active `feature/*` branches via git, spec artifacts under `${specs_root}/features/*/`.
 - Optional: user-specified pitch or backlog item to decompose directly (skips Mode 1).
+- The fast-path contract at [`../../core/knowledge/fast-path-source-of-truth.md`](../../core/knowledge/fast-path-source-of-truth.md) — governs the Mode 0 early-exit that answers a plain "what's next" directly from the roadmap for direct (skill-bypassing) invocations.
 
 ## Steps
+
+### Mode 0: Fast-path "what's next" (early exit)
+
+0. **Fast-path early exit for a plain "what's next".** Applies when the agent is invoked directly (bypassing the `management:roadmap` skill wrapper) with a plain "what's next" / "what's the next backlog item" question shape, per [`../../core/knowledge/fast-path-source-of-truth.md`](../../core/knowledge/fast-path-source-of-truth.md) §"Question-shape detection". `Read` `${specs_root}/roadmap.md`, locate the `## Feature Backlog` heading anchor, find the first row whose Status is `backlog` or `not started`, quote it back inline with a `file:line` citation per the shared knowledge file's §"Citation format", and exit — no pitch reads, no `git branch`, no sequencing, no sub-task. **Fall through to Mode 1** — with an observable note — if the `## Feature Backlog` anchor is missing, the table is empty, or the question carries ordering/sequencing/"why" intent ("recommend an order", "what should I pick", "sequence the backlog"), which needs the dependency/risk/value reasoning in Steps 1-5. Observable result: either the first backlog row is quoted with its `file:line` citation and the agent exits, or an observable fall-through note and Mode 1 runs as today.
 
 ### Mode 1: Recommend next
 
@@ -42,7 +47,7 @@ Recommend the next backlog item to build, decompose the chosen pitch into indepe
 
    Observable result: list of hygiene findings, or confirmation that the roadmap is clean.
 
-7. **Propose hygiene updates.** For each finding, present the proposed change as an inline diff via `AskUserQuestion`. Apply only changes the user explicitly approves. Observable result: approved changes written to `${specs_root}/roadmap.md`; rejected changes discarded.
+7. **Propose hygiene updates.** For each finding, present the proposed change as an inline diff via `AskUserQuestion` (previous row + proposed row quoted with `file:line`). Apply only changes the user explicitly approves. After applying, quote the written row inline before any verdict or summary — write, show, comment per [`../../core/skills/output/SKILL.md`](../../core/skills/output/SKILL.md) Rule 7; never say "roadmap updated" without rendering the new row. Observable result: approved changes written to `${specs_root}/roadmap.md` with the new row quoted inline; rejected changes discarded.
 
 ### Mode 2: Decompose
 
@@ -90,6 +95,7 @@ Remaining: Epic 2 (re-invoke management:roadmap after Epic 1 ships).
 - **Inherits `core/ground-rules`** -- per [`../../core/skills/ground-rules/SKILL.md`](../../core/skills/ground-rules/SKILL.md).
 - **Inherits `core/output`** -- per [`../../core/skills/output/SKILL.md`](../../core/skills/output/SKILL.md).
 - **Read-only on everything except roadmap.** Pitches, specs, feature branches, git state -- read but never modify. The only file this agent writes to is `${specs_root}/roadmap.md`, and only after explicit user approval per Step 7.
+- **Show changes inline.** Every roadmap write is echoed back inline before commentary -- write, show, comment. Quote the new/changed row with `file:line`; never *"roadmap updated"* or *"go check the roadmap"* without the row. Per [`../../core/skills/output/SKILL.md`](../../core/skills/output/SKILL.md) Rule 7.
 - **No persona theater.** No name, no greeting. "Project-manager" is a role descriptor, not a character.
 - **Ownership over automation** -- per [`../../.lsa/VISION.md`](../../.lsa/VISION.md) section 0: *"the system does not think for the human; it makes the human think."* The agent recommends; the human decides. All roadmap writes require explicit approval.
 - **No downstream handoff for skills.** The agent invokes `lsa:discover` or `lsa:new` via the `Skill` tool internally for handoff. The dispatching skill (`management:roadmap`) does not handle handoff.

@@ -47,6 +47,7 @@ Handing off to management:roadmap for backlog entry and epic decomposition…
 - **Orchestrator only.** Do not duplicate agent logic (shaping, role adaptation, pitch assembly, decomposition) — dispatch and wait.
 - **No silent handoff.** The agent's approval gate (`AskUserQuestion`) is the human decision point. This skill does not add a second approval step.
 - **Clean exit on reject.** If the agent returns `rejected` status, exit with no side effects — no branch, no downstream invocation.
+- **Show changes inline.** The dispatched `product-manager` agent writes the pitch file and quotes it inline before its verdict (write, show, comment) per [`../../../core/skills/output/SKILL.md`](../../../core/skills/output/SKILL.md) Rule 7; the downstream `management:roadmap` handoff surfaces each roadmap row inline. This orchestrator surfaces the agents' output verbatim and never reduces a write to "pitch created" / "added to roadmap" without the content.
 - Outputs follow [`core/output`](../../../core/skills/output/SKILL.md) — citation by link, never restated.
 
 ---
