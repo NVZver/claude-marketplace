@@ -1,6 +1,6 @@
 # Prompt Engineer
 
-Prompt engineering discipline for Claude Code plugins. One agent enforces quality rules across prompt files (agents, commands, skills, knowledge); three commands provide review, optimize, and create workflows.
+Prompt engineering discipline for Claude Code plugins. An agent enforces quality rules across prompt files (agents, commands, skills, knowledge); commands provide review, optimize, and create workflows.
 
 ## Install
 

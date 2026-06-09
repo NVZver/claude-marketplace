@@ -2,7 +2,7 @@
 
 # Module Spec — `helper`
 
-The fact-grounded assistant plugin. One subagent + one slash command + three knowledge files.
+The fact-grounded assistant plugin. A subagent + a slash command + knowledge files.
 
 **Plugin manifest:** [`helper/.claude-plugin/plugin.json`](../../../helper/.claude-plugin/plugin.json) (v0.4.0)
 **Plugin README** (install, default flow, status): [`helper/README.md`](../../../helper/README.md)

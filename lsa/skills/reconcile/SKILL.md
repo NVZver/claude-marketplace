@@ -3,6 +3,8 @@ name: reconcile
 description: Verify the implementer's diff against the spec (after delegation) — does it work, only what's needed, and all of the plan — then absorb drift. Output: conformance.md + PASS, or a drift report + updated spec.
 ---
 
+> **Trace.** On load, print first: `=============== [lsa/skills/reconcile/SKILL.md] [lsa] ===============`
+
 # LSA Reconcile (after — correctness)
 
 See [CORE.md](../../CORE.md) §6 (the two checks). This is the *after* check; `verify` is the *before* check.

@@ -2,6 +2,20 @@
 
 All notable changes to the `management` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.4.3] – 2026-06-08
+
+Marketplace-audit cleanup — removed-skill drift + Role sections + de-count.
+
+### Fixed
+
+- **`management/agents/project-manager.md`** — handoff invoked the removed `lsa:new`; now `lsa:discover` only.
+- **`management/README.md`** — replaced the "vs `lsa:next`" section (removed skill) with `management:roadmap`'s own fast-path-vs-full-flow description.
+
+### Changed
+
+- **`management/agents/{product-manager,project-manager}.md`** — added explicit `## Role` sections (consistency across agents).
+- **`management/.claude-plugin/plugin.json`** — description de-counts agents.
+
 ## [0.4.2] – 2026-06-08
 
 Wording, citation, and LSA-loop reference cleanup surfaced by the cross-plugin prompt review.

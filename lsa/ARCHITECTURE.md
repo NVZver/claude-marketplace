@@ -50,7 +50,7 @@ This document is the design-rationale narrative for `lsa`. For other concerns, s
 │   │   └── session-start-drift-check.sh
 │   ├── CORE.md                        ← the one-page contract every skill follows
 │   ├── agents/orchestrator.md         ← entry-point conductor
-│   └── skills/                        (seven skills — see README.md for the table)
+│   └── skills/                        (the spec-loop skills — see README.md for the table)
 └── ${specs_root}/                     (defaults to .lsa/ — also holds constitution at .lsa/VISION.md)
     ├── main.spec.md                   ← App-level behavior, module index, global contracts
     ├── roadmap.md                     ← Prioritized feature backlog

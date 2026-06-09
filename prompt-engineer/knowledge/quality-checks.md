@@ -25,6 +25,7 @@ Cross-file and within-file checks for unnecessary complexity and duplication.
 3. Format definitions reference their source — if a knowledge file defines a format, actors cite it instead of hardcoding
 4. Single concern per file — each file operates at one level of abstraction
 5. Minimal steps — see AI Sweep rule 1; in actors, no step that restates what the LLM does unprompted
+6. No volatile component counts — describe a surface by capability, not by counting components ("an agent and commands", not "one agent and three commands"). The component inventory lives in the README table (single source); a recounted prose tally drifts. Counts return at release. Applies to components (agents / commands / skills / knowledge files), not to rule tallies within a file.
 
 # AI Over-Engineering Checks
 

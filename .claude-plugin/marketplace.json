@@ -11,7 +11,7 @@
     {
       "name": "lsa",
       "source": "./lsa",
-      "description": "Living Spec Architecture: spec-first methodology with nine skills (new, next, discover, plan, verify, init, reconcile, revise-constitution) and human User Verifications at every phase. Main flow: discover → plan → implement → verify."
+      "description": "Living Spec Architecture: a technology-agnostic spec layer — skills that discover intent, author a grounded spec (EARS + Gherkin), verify it before build and reconcile the diff after, driven by an orchestrator agent. The implementer (Claude Code, Cursor, a human) is external. Loop: discover → specify → verify → delegate → reconcile."
     },
     {
       "name": "helper",
@@ -21,12 +21,12 @@
     {
       "name": "management",
       "source": "./management",
-      "description": "Product and project management discipline: shapes vague ideas into structured pitches before the build cycle. Ships a product-manager agent with dynamic domain-role adaptation and a start-feature skill that hands off to lsa:new on approval. Depends on `core` (ground-rules, output)."
+      "description": "Product and project management discipline: shapes vague ideas into structured pitches before the build cycle. Ships a product-manager agent with dynamic domain-role adaptation and a start-feature skill that hands off to management:roadmap on approval. Depends on `core` (ground-rules, output)."
     },
     {
       "name": "prompt-engineer",
       "source": "./prompt-engineer",
-      "description": "Prompt engineering discipline: one agent enforcing quality rules (ground rules, SOC, KISS/DRY, AI sweep, context budget) plus three commands (prompt-review, prompt-optimize, prompt-create)."
+      "description": "Prompt engineering discipline: an agent and commands that review, optimize, and create prompts against a shared quality rule set (ground rules, separation of concerns, KISS/DRY, AI sweep, context budget)."
     }
   ]
 }

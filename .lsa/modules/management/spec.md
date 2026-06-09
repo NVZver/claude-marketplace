@@ -15,7 +15,7 @@ Product and project management discipline. Shapes vague ideas into structured pi
 1. **Shaping (product-manager)** — turns a user's vague idea into a structured pitch with clear scope, boundaries, and exclusions.
 2. **Project coordination (project-manager)** — stewards the roadmap: recommends what to build next (dependency/risk/value reasoning), decomposes pitches into independently-shippable epics, proposes roadmap hygiene updates, and hands each epic to LSA.
 
-The pitch is the bridge: the product-manager produces it, the project-manager consumes it. The LSA build cycle (`lsa:discover` → `lsa:plan` → `lsa:implement` → `lsa:verify`) receives individual epics from the project-manager.
+The pitch is the bridge: the product-manager produces it, the project-manager consumes it. The LSA build cycle (`lsa:discover` → `lsa:specify` → `lsa:verify` → `lsa:delegate` → `lsa:reconcile`) receives individual epics from the project-manager.
 
 Depends on `core` ([`management/README.md`](../../../management/README.md) *"Depends on"*) for:
 

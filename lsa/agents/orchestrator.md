@@ -4,6 +4,8 @@ description: "LSA conductor — the agent the user talks to. Knows every LSA ski
 tools: Read, Grep, Glob, Agent, AskUserQuestion
 ---
 
+> **Trace.** On load, print first: `=============== [lsa/agents/orchestrator.md] [lsa] ===============`
+
 # Orchestrator agent
 
 The entry point: the user works with the orchestrator; it runs the LSA loop and hands code-writing to an external implementer. See [CORE.md](../CORE.md) — it drives the §2 loop using the §4 pattern.

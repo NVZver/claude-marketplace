@@ -2,7 +2,7 @@
 
 # Module Spec — `lsa`
 
-The Living Spec Architecture plugin — a technology-agnostic spec layer. Seven skills + one agent (orchestrator) + one SessionStart hook + a config schema. LSA authors and verifies the spec; it does **not** implement — code-writing is delegated to an external implementer.
+The Living Spec Architecture plugin — a technology-agnostic spec layer. Skills + an orchestrator agent + a SessionStart hook + a config schema. LSA authors and verifies the spec; it does **not** implement — code-writing is delegated to an external implementer.
 
 **Plugin manifest:** [`lsa/.claude-plugin/plugin.json`](../../../lsa/.claude-plugin/plugin.json) (v0.16.1)
 **One-page contract** (the loop, rules, standards, templates): [`lsa/CORE.md`](../../../lsa/CORE.md)

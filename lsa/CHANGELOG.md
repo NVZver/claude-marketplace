@@ -2,6 +2,18 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.16.3] — 2026-06-08
+
+Marketplace-audit cleanup — restore file-load traces + de-count descriptions.
+
+### Fixed
+
+- **All 8 actors (`orchestrator` + 7 skills)** — re-added the `> **Trace.**` file-load directive the re-base dropped (hard rule per `core/CLAUDE.md` #3; every other plugin carries it).
+
+### Changed
+
+- **`lsa/.claude-plugin/plugin.json`**, **`lsa/README.md`**, **`lsa/ARCHITECTURE.md`** — descriptions de-count components.
+
 ## [0.16.2] — 2026-06-08
 
 Knowledge-file reference fixes surfaced by the cross-plugin prompt review.

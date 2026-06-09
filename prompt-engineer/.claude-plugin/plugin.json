@@ -1,6 +1,6 @@
 {
   "name": "prompt-engineer",
-  "description": "Prompt engineering discipline for Claude Code plugins. One agent (prompt-engineer) enforces quality rules across actors and knowledge files. Three knowledge files: actor-ground-rules (10 rules), quality-checks (KISS/DRY, AI sweep, context budget, severity levels), separation-of-concerns (classification + boundary violations). Three commands: prompt-review (scan for violations), prompt-optimize (fix violations), prompt-create (scaffold new prompts).",
-  "version": "0.5.0",
+  "description": "Prompt engineering discipline for Claude Code plugins. An agent (prompt-engineer) enforces quality rules across actors and knowledge files. Knowledge files: actor-ground-rules (10 rules), quality-checks (KISS/DRY, AI sweep, context budget, severity levels), separation-of-concerns (classification + boundary violations). Commands: prompt-review (scan for violations), prompt-optimize (fix violations), prompt-create (scaffold new prompts).",
+  "version": "0.6.0",
   "author": { "name": "Nikita Zverev" }
 }
