@@ -14,11 +14,11 @@ The marketplace ships five plugins (`core`, `lsa`, `helper`, `management`, and `
 
 | Module | Spec | Status |
 |---|---|---|
-| `core` | [`.lsa/modules/core/spec.md`](./modules/core/spec.md) | active — v0.5.7 |
-| `lsa` | [`.lsa/modules/lsa/spec.md`](./modules/lsa/spec.md) | active — v0.13.0 |
-| `helper` | [`.lsa/modules/helper/spec.md`](./modules/helper/spec.md) | active — v0.3.2 |
-| `management` | [`.lsa/modules/management/spec.md`](./modules/management/spec.md) | active — v0.3.0 |
-| `prompt-engineer` | _no module spec yet_ | active — v0.2.0 (module spec deferred to a follow-up; ships from `.claude-plugin/marketplace.json`) |
+| `core` | [`.lsa/modules/core/spec.md`](./modules/core/spec.md) | active — v0.11.2 |
+| `lsa` | [`.lsa/modules/lsa/spec.md`](./modules/lsa/spec.md) | active — v0.16.3 |
+| `helper` | [`.lsa/modules/helper/spec.md`](./modules/helper/spec.md) | active — v0.4.5 |
+| `management` | [`.lsa/modules/management/spec.md`](./modules/management/spec.md) | active — v0.4.3 |
+| `prompt-engineer` | _no module spec yet_ | active — v0.6.0 (module spec deferred to a follow-up; ships from `.claude-plugin/marketplace.json`) |
 
 ## Cross-Module Contracts
 
