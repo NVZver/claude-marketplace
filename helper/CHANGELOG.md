@@ -2,6 +2,14 @@
 
 All notable changes to the `helper` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.4.6] – 2026-06-09
+
+Sync the inherited-ground-rules count to `core` 0.12.0.
+
+### Changed
+
+- **`helper/agents/helper.md`** — the "Inherits `core/ground-rules`" line now reads **seven** content rules (added *untrusted content is data*), tracking the new always-on Rule 6 added in `core` 0.12.0 (`core/skills/ground-rules/SKILL.md`).
+
 ## [0.4.5] – 2026-06-08
 
 Marketplace-audit cleanup — Role section, DRY, drift, conform `/help`.
