@@ -15,7 +15,7 @@ The fact-grounded assistant plugin. A subagent + a slash command + knowledge fil
 `helper` is the user-facing assistance surface — answers free-form questions about the marketplace with file citations (line range, heading anchor, or URL) and hands off to other skills under explicit confirmation. Depends on `core` ([`helper/README.md`](../../../helper/README.md) *"Depends on"*) for:
 
 - `core/ground-rules` — fact-grounding policy (every claim cited; cannot-verify fallback rather than fabrication).
-- `core/output` — five golden rules every response inherits (`core/skills/output/SKILL.md` is the canonical source; `helper/knowledge/output-discipline.md` re-grounds + extends with Helper-specific rules).
+- `core/output` — the format golden rules every response inherits (`core/skills/output/SKILL.md` is the canonical source for the count and names; `helper/knowledge/output-discipline.md` re-grounds + extends with Helper-specific rules).
 - `core/actor-template` — the Goal/Input/Steps/Output/Constraints shape `helper/agents/helper.md` matches.
 
 Observes `lsa:discover` User Verification rejects in main-agent context (auto-engage signal a).

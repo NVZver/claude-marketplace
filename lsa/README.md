@@ -81,11 +81,13 @@ LSA deliberately does **less** than a full SDD toolkit — it owns the two groun
 | Writes the code | ✗ — bring any agent | ✓ orchestrates | via your agent | ✓ (AWS IDE) |
 | Tool-agnostic | ✓ | ✓ | ✓ | ✗ |
 | Grounds the spec in the codebase *before* build | ✓ `verify` | — | — | partial |
-| Verifies the diff vs the spec *after* (does · only · all) | ✓ `reconcile` | — | drift-prone | — |
-| Permanent, drift-absorbing spec | ✓ | branch-per-change | proposal → archive | ✓ |
+| Verifies the diff vs the spec *after* (does · only · all) | ✓ `reconcile` (blocking) | — | `/opsx:verify` — non-blocking, no hunk trace | — |
+| Permanent, drift-absorbing spec | ✓ | branch-per-change | ✓ living `specs/` (delta-merge) | ✓ |
 | Formats | EARS + Gherkin | spec / plan / tasks | change proposals | EARS |
 
 *LSA's read of the landscape — see [Spec Kit](https://github.com/github/spec-kit), [OpenSpec](https://github.com/Fission-AI/OpenSpec), [Kiro](https://kiro.dev). You can run LSA's `verify` / `reconcile` on top of any of them.*
+
+OpenSpec is the closest neighbour: it ships an after-the-fact `/opsx:verify` and a living `specs/` set merged via deltas, so it is no more drift-prone than LSA. LSA's edge is narrower and specific — `reconcile` is a **blocking PASS gate** (`/opsx:verify` "won't block archive, but it surfaces issues"), its `only` check maps **every changed hunk to a requirement**, and its `does` check runs each Gherkin scenario **N times for ≥95%**. OpenSpec's verify is single-pass and non-blocking with no hunk→requirement trace.
 
 ## Skills
 
@@ -154,6 +156,10 @@ LSA depends on [`core`](../core/) for fact-grounding discipline ([`core/ground-r
 
 > [!IMPORTANT]
 > LSA writes spec files to disk and reads `/CLAUDE.md` — it needs a filesystem. Use it in Claude Code (or any filesystem-backed agent), not the web app.
+
+### Security & least privilege
+
+The `orchestrator` agent carries no `Write` / `Edit` / `Bash` tools — only `Read, Grep, Glob, Agent, AskUserQuestion` ([`agents/orchestrator.md`](./agents/orchestrator.md) frontmatter `tools:`). LSA delegates all code-writing to an external implementer, so its autonomous write surface is bounded to spec files. Gates are advisory, not coercive — Level 2.5 lets the developer edit code and absorbs the drift rather than forbidding it ([`.lsa/VISION.md`](../.lsa/VISION.md) §7 decision 1, *"RESOLVED: Level 2.5"*). For the full threat model, see [`SECURITY.md`](../SECURITY.md).
 
 ---
 
