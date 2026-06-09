@@ -2,6 +2,23 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.16.4] — 2026-06-09
+
+Production-hardening of `lsa/README.md` — correct the OpenSpec comparison + add a least-privilege note.
+
+### Fixed
+
+- **`lsa/README.md` "How LSA compares" table** — the OpenSpec column no longer overclaims. "Verifies the diff *after*" was `drift-prone`; OpenSpec ships `/opsx:verify` (completeness · correctness · coherence) — corrected to *"`/opsx:verify` — non-blocking, no hunk trace"*. "Permanent, drift-absorbing spec" was `proposal → archive`; OpenSpec reconciles spec↔code at archive via a delta-merge into a living `openspec/specs/` set — corrected to *"✓ living `specs/` (delta-merge)"*. Verified against OpenSpec's docs ([`concepts.md`](https://github.com/Fission-AI/OpenSpec/blob/main/docs/concepts.md), [`workflows.md`](https://github.com/Fission-AI/OpenSpec/blob/main/docs/workflows.md)).
+
+### Changed
+
+- **`lsa/README.md`** — added a prose line under the comparison table stating LSA's *genuine* edge over OpenSpec: `reconcile` is a blocking PASS gate (`/opsx:verify` "won't block archive, but it surfaces issues"), the `only` check maps every changed hunk to a requirement, and the `does` check runs each scenario N times for ≥95% — versus OpenSpec's single-pass, non-blocking verify with no hunk→requirement trace.
+- **`lsa/README.md`** — added a **Security & least privilege** subsection: the `orchestrator` agent carries no `Write` / `Edit` / `Bash` tools (cites `lsa/agents/orchestrator.md` frontmatter `tools:`), LSA's autonomous write surface is bounded to spec files, and gates are advisory (Level 2.5; cites `.lsa/VISION.md` §7 decision 1). Links the repo `SECURITY.md` for the full threat model.
+
+### Why
+
+Production-hardening: don't overclaim against a competitor that closed the drift gap — OpenSpec has after-the-fact verify and a living spec layer, so the honest, defensible edge is the *shape* of LSA's reconcile (blocking · hunk-level · N-run), not OpenSpec's absence of verification.
+
 ## [0.16.3] — 2026-06-08
 
 Marketplace-audit cleanup — restore file-load traces + de-count descriptions.
