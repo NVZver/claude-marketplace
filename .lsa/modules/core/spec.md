@@ -4,7 +4,7 @@
 
 The domain-neutral discipline plugin. Ships four skills + one always-on `CLAUDE.md` fragment.
 
-**Plugin manifest:** [`core/.claude-plugin/plugin.json`](../../../core/.claude-plugin/plugin.json) (v0.11.2)
+**Plugin manifest:** [`core/.claude-plugin/plugin.json`](../../../core/.claude-plugin/plugin.json) (v0.12.0)
 **Plugin README** (skill list, install): [`core/README.md`](../../../core/README.md)
 **Always-on fragment** (canonical source): [`core/CLAUDE.md`](../../../core/CLAUDE.md)
 **Per-skill behavior** (source of truth per skill): [`core/skills/*/SKILL.md`](../../../core/skills/)
@@ -16,7 +16,7 @@ The domain-neutral discipline plugin. Ships four skills + one always-on `CLAUDE.
 
 Four skills:
 
-- `core/ground-rules` — four discipline rules every output follows.
+- `core/ground-rules` — seven discipline rules every output follows.
 - `core/output` — seven format rules in two postures: one **HARD** (Rule 4, Sourced / fact-grounding) + six **GUIDANCE** (Rules 1-3, 5-7, applied when they serve the answer). **Single marketplace-wide source-of-truth** — see Invariants below. Canonical clause + list at `core/skills/output/SKILL.md`.
 - `core/actor-template` — the Goal / Input / Steps / Output / Constraints shape any Actor must follow.
 - `core/flow-selector` (renamed from `core/tier-selector` in core v0.5.2) — pre-task chain-of-thought Quick / Standard / Extended classifier with visible reasoning.
