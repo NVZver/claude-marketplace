@@ -157,8 +157,18 @@ The single test the whole system answers: **what is the minimum ceremony that st
 
 Personal-use first; open-sourced for visibility. Claude Code is the v1 substrate; the discipline (specs, sourcing, flow gating) isn't Claude-specific and the skills are plain Markdown — porting to another agentic IDE is a routing exercise, not a rewrite.
 
+## Security
+
+The trust boundary is small by design: five **pure-Markdown** plugins plus **one** transparent `SessionStart` shell hook ([`lsa/hooks/session-start-drift-check.sh`](./lsa/hooks/session-start-drift-check.sh)) that runs read-only Git (`rev-parse` / `log` / `diff`), writes nothing, makes no network calls, and always exits 0. No server, no secrets, no PII.
+
+- **Indirect prompt injection** — untrusted content (web fetches, library docs, analyzed repo files, tool output) is treated as data, never instructions, per `core/ground-rules`. Residual risk is real and acknowledged ([OWASP LLM01](https://genai.owasp.org/llmrisk/llm01-prompt-injection/)); human review backs every gated decision.
+- **Install safely** — review the source first, and prefer pinning the marketplace to a reviewed tag/commit (`/plugin marketplace add <git-url>#<ref>`, per [Claude Code docs](https://code.claude.com/docs/en/discover-plugins)) over tracking `main`.
+
+Full threat model, reporting channel, and hook transparency: [`SECURITY.md`](./SECURITY.md).
+
 ## Further reading
 
+- [`SECURITY.md`](./SECURITY.md) — threat model, vulnerability reporting, and SessionStart-hook transparency.
 - [`.lsa/VISION.md`](./.lsa/VISION.md) — the full design rationale (the constitution).
 - [`knowledge/index.md`](./knowledge/index.md) — flat topic-to-path index across every knowledge file in every plugin.
 - [`CONTRIBUTING.md`](./CONTRIBUTING.md) — how to build, contribute, verify.

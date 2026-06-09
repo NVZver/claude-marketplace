@@ -84,6 +84,71 @@ else
   pass_line "C3 actor ground-rules list defined once in prompt-engineer/knowledge"
 fi
 
+# Plugin dirs that ship Actors (SKILL.md + agents). Kept as a single list so C4
+# and C5 scan the same surface. A literal `find` over these avoids globbing
+# surprises and is bash 3.2 (macOS) safe.
+PLUGIN_DIRS="core lsa helper management prompt-engineer"
+
+# ---------------------------------------------------------------------------
+# C4 — every Actor file (*/skills/**/SKILL.md and */agents/*.md) carries the
+# load-time trace directive near the top. The directive (`> **Trace.** On load,
+# print first:`) is what makes a skill/agent announce which file is driving the
+# turn — a transparency invariant. It sits just below frontmatter, so we scan
+# the first 30 lines (the widest real offset today is line 17 — a multi-line
+# `description:` agent). Missing it is reported, not auto-fixed: SKILL.md /
+# agent bodies are out of this repo-internal script's edit scope.
+# ---------------------------------------------------------------------------
+trace_needle='> \*\*Trace\.\*\* On load, print first:'
+c4_missing=""
+while IFS= read -r f; do
+  [[ -z "${f}" ]] && continue
+  if ! head -n 30 "${f}" 2>/dev/null | grep -qE "${trace_needle}"; then
+    c4_missing="${c4_missing}${f}"$'\n'
+  fi
+done < <(
+  for d in ${PLUGIN_DIRS}; do
+    find "${d}" -type f \( -path '*/skills/*/SKILL.md' -o -path '*/agents/*.md' \) 2>/dev/null
+  done | sort
+)
+if [[ -z "${c4_missing}" ]]; then
+  pass_line "C4 trace directive present in every SKILL.md and agents/*.md"
+else
+  fail_line "C4 trace directive missing from:"
+  printf '%s' "${c4_missing}" | grep -v '^$' | sed 's/^/        /'
+fi
+
+# ---------------------------------------------------------------------------
+# C5 — every plugin agent (*/agents/*.md) declares a `tools:` line in its YAML
+# frontmatter (least-privilege visibility: a reader can see an agent's tool
+# surface without running it). We check inside the frontmatter block only
+# (between the first two `---` fences) so a coincidental `tools:` in a body
+# line cannot mask a genuinely missing declaration, and a multi-line
+# `description:` block cannot hide the real frontmatter end. Violations are
+# reported, not auto-fixed (agent bodies are out of scope).
+# ---------------------------------------------------------------------------
+c5_missing=""
+while IFS= read -r f; do
+  [[ -z "${f}" ]] && continue
+  has_tools="$(awk '
+    NR==1 && /^---[[:space:]]*$/ { infm=1; next }
+    infm && /^---[[:space:]]*$/  { exit }
+    infm && /^tools:[[:space:]]/ { print "yes"; exit }
+  ' "${f}" 2>/dev/null)"
+  if [[ "${has_tools}" != "yes" ]]; then
+    c5_missing="${c5_missing}${f}"$'\n'
+  fi
+done < <(
+  for d in ${PLUGIN_DIRS}; do
+    find "${d}" -type f -path '*/agents/*.md' 2>/dev/null
+  done | sort
+)
+if [[ -z "${c5_missing}" ]]; then
+  pass_line "C5 every agents/*.md declares tools: in frontmatter"
+else
+  fail_line "C5 tools: declaration missing from agent frontmatter:"
+  printf '%s' "${c5_missing}" | grep -v '^$' | sed 's/^/        /'
+fi
+
 echo
 if [[ "${fail}" -eq 0 ]]; then
   echo "All invariants hold."
