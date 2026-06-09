@@ -3,6 +3,8 @@ name: specify
 description: Write the grounded spec — EARS requirements, user flows, and Gherkin acceptance scenarios. Output: requirements.md + <flow>.feature files.
 ---
 
+> **Trace.** On load, print first: `=============== [lsa/skills/specify/SKILL.md] [lsa] ===============`
+
 # LSA Specify
 
 See [CORE.md](../../CORE.md) §5 (standards) and §8 (templates).

@@ -3,6 +3,8 @@ name: init
 description: Initialize the LSA spec tree on a project. Output: spec tree + module specs.
 ---
 
+> **Trace.** On load, print first: `=============== [lsa/skills/init/SKILL.md] [lsa] ===============`
+
 # LSA Init
 
 See [CORE.md](../../CORE.md).

@@ -2,6 +2,15 @@
 
 All notable changes to the `core` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.11.2] — 2026-06-08
+
+Marketplace-audit cleanup.
+
+### Changed
+
+- **`core/.claude-plugin/plugin.json`** — description de-counts components ("Skills:" not "Four skills"), per the new no-volatile-component-counts convention.
+- **`core/README.md`** — fast-path consumer list drops the removed `lsa:next`.
+
 ## [0.11.1] — 2026-06-08
 
 Reference fixes surfaced by the cross-plugin prompt review.

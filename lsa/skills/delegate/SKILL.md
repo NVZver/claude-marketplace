@@ -4,6 +4,8 @@ description: Hand the grounded spec to any implementer and collect the returned 
 allowed-tools: Read, Write, Bash, Agent, AskUserQuestion
 ---
 
+> **Trace.** On load, print first: `=============== [lsa/skills/delegate/SKILL.md] [lsa] ===============`
+
 # LSA Delegate
 
 See [CORE.md](../../CORE.md). The handoff boundary — LSA writes no production code.

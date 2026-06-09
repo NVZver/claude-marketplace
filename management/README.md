@@ -49,13 +49,9 @@ management:start-feature → (human approves pitch) → roadmap entry → manage
 
 The management plugin owns both the pre-build shaping phase (product-manager) and the project coordination phase (project-manager). The product-manager produces pitches; the project-manager converts them into roadmap items and decomposes them into epics for LSA. Human approval gates exist at every handoff — pitch approval, roadmap entry, epic approval, and LSA handoff.
 
-## `management:roadmap` vs `lsa:next`
+## `management:roadmap` — fast-path vs full reasoning
 
-Both skills answer "what should I work on next?" — but at different levels:
+`management:roadmap` answers "what should I work on next?" at two levels:
 
-- **`lsa:next`** — simple priority-sorted pop from the roadmap. No pitch reading, no dependency reasoning, no decomposition. Available without the management plugin.
-- **`management:roadmap`** — reads linked pitches, applies sequencing heuristics (dependency/risk/value), decomposes into epics, hands off to LSA. Requires the management plugin.
-
-Both also share the same **"what's next" fast-path**: a plain "what's next" returns the first `backlog`/`not started` roadmap row quoted with a `file:line` citation in seconds, without dispatching an agent or doing a deep read (per [`../core/knowledge/fast-path-source-of-truth.md`](../core/knowledge/fast-path-source-of-truth.md)). `management:roadmap` falls through to the full project-manager flow only when the question explicitly asks for ordering or selection reasoning.
-
-When management is installed, use `management:roadmap` for the full project-management flow. `lsa:next` remains available as a lightweight fallback.
+- **Fast-path (Mode 0)** — a plain "what's next" returns the first `backlog` / `not started` roadmap row quoted with a `file:line` citation in seconds, without dispatching the agent or doing a deep read (per [`../core/knowledge/fast-path-source-of-truth.md`](../core/knowledge/fast-path-source-of-truth.md)).
+- **Full flow** — when the question asks for ordering or selection reasoning, it reads linked pitches, applies sequencing heuristics (dependency / risk / value), decomposes the chosen pitch into epics, and hands off to LSA.

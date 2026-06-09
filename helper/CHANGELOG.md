@@ -2,6 +2,20 @@
 
 All notable changes to the `helper` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.4.5] – 2026-06-08
+
+Marketplace-audit cleanup — Role section, DRY, drift, conform `/help`.
+
+### Fixed
+
+- **`helper/knowledge/onboarding-fast-path.md`** — removed-skill drift: `/lsa:new`→`/lsa:discover`, `lsa:next`→`management:roadmap`, dropped the stale "`lsa:specify` merged into discover" note (specify is its own skill again), de-counted "four-command build cycle".
+- **`helper/agents/helper.md`**, **`knowledge/output-discipline.md`**, **`commands/help.md`** — `.lsa/VISION.md:63` Principle-9 citations (Principle 9 is at :66) → drift-proof `§2 Principle 9`.
+
+### Changed
+
+- **`helper/agents/helper.md`** — added a `## Role` section; Constraints cite `output-discipline.md` for jargon / ≤1.5-screen rules instead of restating (DRY); fixed a bare `design.md` ref.
+- **`helper/commands/help.md`** — conformed to the actor template (Goal / Input / Steps / Output / Example Output + `name:`); behavior unchanged (still a thin `Skill(helper)` dispatcher).
+
 ## [0.4.4] – 2026-06-08
 
 Reference fixes surfaced by the cross-plugin prompt review.

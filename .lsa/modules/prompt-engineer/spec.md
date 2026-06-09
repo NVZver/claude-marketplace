@@ -2,7 +2,7 @@
 
 # Module Spec — `prompt-engineer`
 
-Prompt-engineering discipline for the marketplace's own prompt files. One agent + three commands enforce quality rules across Actors (agents, commands) and Knowledge files; three knowledge files hold the rule categories.
+Prompt-engineering discipline for the marketplace's own prompt files. An agent + commands enforce quality rules across Actors (agents, commands) and Knowledge files; the knowledge files hold the rule categories.
 
 **Plugin manifest:** [`prompt-engineer/.claude-plugin/plugin.json`](../../../prompt-engineer/.claude-plugin/plugin.json) (v0.4.0)
 **Plugin README** (install, command table, rule categories): [`prompt-engineer/README.md`](../../../prompt-engineer/README.md)

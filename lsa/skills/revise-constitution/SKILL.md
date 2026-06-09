@@ -3,6 +3,8 @@ name: revise-constitution
 description: Promote a finished feature's lessons into permanent rules. Output: updated constitution + standards.
 ---
 
+> **Trace.** On load, print first: `=============== [lsa/skills/revise-constitution/SKILL.md] [lsa] ===============`
+
 # LSA Revise Constitution
 
 See [CORE.md](../../CORE.md). Edits only the constitution and `${specs_root}/standards/`.

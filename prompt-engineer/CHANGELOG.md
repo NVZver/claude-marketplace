@@ -2,6 +2,18 @@
 
 All notable changes to the `prompt-engineer` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.6.0] – 2026-06-08
+
+Review rule: no volatile component counts.
+
+### Added
+
+- **`prompt-engineer/knowledge/quality-checks.md`** — KISS/DRY rule 6: describe a surface by capability, not by counting components ("an agent and commands", not "one agent and three commands"); the inventory lives in the README table; counts return at release. Applies to components, not rule tallies. Enforced via `prompt-review`'s KISS/DRY check on prompt-file descriptions.
+
+### Changed
+
+- **`prompt-engineer/.claude-plugin/plugin.json`**, **`prompt-engineer/README.md`** — descriptions de-count components (self-applying rule 6).
+
 ## [0.5.0] – 2026-06-08
 
 Review scope — defer to leaner actor contracts.

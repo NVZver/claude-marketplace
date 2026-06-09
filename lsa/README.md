@@ -99,7 +99,7 @@ LSA deliberately does **less** than a full SDD toolkit — it owns the two groun
 | **`init`** | Initialize LSA on a project (greenfield or brownfield). |
 | **`revise-constitution`** | Promote a finished feature's lessons into permanent constitution / standards rules. |
 
-Plus one agent — **`orchestrator`** — the entry point that drives the loop. See [`CORE.md`](./CORE.md) for the one-page contract every skill follows.
+Plus the **`orchestrator`** agent — the entry point that drives the loop. See [`CORE.md`](./CORE.md) for the one-page contract every skill follows.
 
 ## The two checks — the product
 
