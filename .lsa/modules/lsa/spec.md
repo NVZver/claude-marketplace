@@ -4,7 +4,7 @@
 
 The Living Spec Architecture plugin — a technology-agnostic spec layer. Skills + an orchestrator agent + a SessionStart hook + a config schema. LSA authors and verifies the spec; it does **not** implement — code-writing is delegated to an external implementer.
 
-**Plugin manifest:** [`lsa/.claude-plugin/plugin.json`](../../../lsa/.claude-plugin/plugin.json) (v0.16.1)
+**Plugin manifest:** [`lsa/.claude-plugin/plugin.json`](../../../lsa/.claude-plugin/plugin.json) (v0.16.4)
 **One-page contract** (the loop, rules, standards, templates): [`lsa/CORE.md`](../../../lsa/CORE.md)
 **Plugin README** (skill table, install, configuration): [`lsa/README.md`](../../../lsa/README.md)
 **Architecture** (directory structure, `.lsa.yaml` schema, branch management): [`lsa/ARCHITECTURE.md`](../../../lsa/ARCHITECTURE.md)
@@ -45,4 +45,4 @@ Baseline SHA per module (consumed by the SessionStart drift hook and `reconcile`
 - **`orchestrator` routes; it never implements.** It reads each sub-agent's `## Inputs`, resolves them via `discover`, delegates, and collects output. Per `lsa/agents/orchestrator.md`.
 - **Depends on `core`** for `flow-selector`, `ground-rules`, `output`, `actor-template`. Documented in `lsa/.claude-plugin/plugin.json: description` and `lsa/README.md` *"Depends on"*.
 - **Spec source-of-truth.** Each skill's behavior is owned by its `SKILL.md`; the shared contract is `CORE.md`; this module spec carries module-level invariants only.
-- **Versioning.** `lsa` evolves with its own SemVer + CHANGELOG. Currently v0.16.1.
+- **Versioning.** `lsa` evolves with its own SemVer + CHANGELOG. Currently v0.16.4.
