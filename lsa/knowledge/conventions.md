@@ -62,6 +62,8 @@ All LSA skill outputs follow [`core/output`](../../core/skills/output/SKILL.md) 
 
 When a skill presents a decision to the human inside Claude Code, it uses `AskUserQuestion` per `core/CLAUDE.md` operational checkpoint #1. The decision block is formatted per [`core/output`](../../core/skills/output/SKILL.md) (Rule 5 for picker prompts, Rule 6 for verdicts). Skills cite this convention instead of restating the checkpoint reference and formatting instruction.
 
+A gate must be **self-contained or preceded by turn-final delivery** of its subject — per [`core/output`](../../core/skills/output/SKILL.md) Rule 5 *Self-contained gates* and Rule 7 *Delivery test*. Content in a subagent transcript, or in same-turn text emitted before a tool call, counts as **not shown**; the skill re-renders it before gating. Approval-gated artifacts follow show → approve → write per Rule 7 *Authorization boundary*.
+
 ---
 
 ## Prompt voice convention

@@ -64,7 +64,7 @@ flowchart TD
 
 1. **Initialize** — `/lsa:init` scaffolds the spec tree (greenfield or brownfield).
 2. **Discover** — `/lsa:discover "<what you want>"` extracts intent + gathers codebase facts.
-3. **Specify** — `/lsa:specify` writes EARS requirements + Gherkin `.feature` scenarios.
+3. **Specify** — `/lsa:specify` drafts EARS requirements + Gherkin `.feature` scenarios, shows you the full draft, and writes the files only after you approve (since v0.17.0).
 4. **Verify** — `/lsa:verify` grounds the spec against your codebase; fix anything `NOT-GROUNDED` before building.
 5. **Delegate** — `/lsa:delegate` hands the spec to your coding agent.
 6. **Reconcile** — `/lsa:reconcile` checks the returned diff **does · only · all** and writes `conformance.md`.
@@ -94,14 +94,14 @@ OpenSpec is the closest neighbour: it ships an after-the-fact `/opsx:verify` and
 | Skill | Purpose |
 |---|---|
 | **`discover`** | Extract user intent and gather the codebase facts the spec rests on. Also the universal input-resolver other skills call. |
-| **`specify`** | Write the grounded spec — EARS requirements, user flows, and Gherkin `.feature` scenarios. |
+| **`specify`** | Draft the grounded spec — EARS requirements, user flows, and Gherkin `.feature` scenarios — show it in full, then write the files only on approval (show → approve → write). |
 | **`verify`** | **Before** delegating: ground the spec against the codebase. Output: `GROUNDED` / `NOT-GROUNDED` + `grounding.md`. |
 | **`delegate`** | Hand the grounded spec + `.feature` files to your implementer; collect the returned diff. Code-writing happens outside LSA. |
 | **`reconcile`** | **After** the diff returns: check it **does · only · all**, write `conformance.md`, absorb drift. Also surfaced by the SessionStart drift hook. |
 | **`init`** | Initialize LSA on a project (greenfield or brownfield). |
 | **`revise-constitution`** | Promote a finished feature's lessons into permanent constitution / standards rules. |
 
-Plus the **`orchestrator`** agent — the entry point that drives the loop. See [`CORE.md`](./CORE.md) for the one-page contract every skill follows.
+Plus the **`orchestrator`** agent — the entry point that drives the loop. Since v0.17.0 it surfaces every sub-agent's output to you verbatim before any gate (a sub-agent transcript is invisible to the human), and returns pending gates instead of attempting pickers when it runs as a subagent itself. See [`CORE.md`](./CORE.md) for the one-page contract every skill follows.
 
 ## The two checks — the product
 

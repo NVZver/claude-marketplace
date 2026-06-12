@@ -2,6 +2,23 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.17.0] — 2026-06-12
+
+Adopts the `core` 0.13.0 **gate-delivery contract** (Rule 5 *Self-contained gates*, Rule 7 *Authorization boundary* + *Delivery test*) — completes the "agents propose, skills gate" inversion that `management` 0.5.0 started. Fixes the class behind approve-without-seeing: gates asked about content that lived only in subagent transcripts or same-turn pre-tool-call text, and spec files landed on disk before their approval.
+
+### Changed
+
+- **`lsa/skills/specify/SKILL.md` Steps 2–4 + Output** — *write → approve* inverted to **show → approve → write**: Steps 2–3 now *draft* (nothing on disk), Step 4 shows the full draft spec per the Rule 7 *Delivery test*, takes approval, and only then writes `requirements.md` + `<flow>.feature`. Output states "written only after the Step 4 approval".
+- **`lsa/agents/orchestrator.md` Step 5** — collecting a sub-agent's `## Output` now requires **surfacing it verbatim to the human** (a sub-agent transcript is invisible) and running any returned pending gates.
+- **`lsa/agents/orchestrator.md` Constraints** — new *"Gates belong to whoever talks to the human"* constraint (mirrors `management/agents/product-manager.md`): as a subagent, never attempt `AskUserQuestion` — return pending gates + the content under decision to the dispatcher.
+- **`lsa/knowledge/conventions.md` § AskUserQuestion convention** — gains the gate-delivery prerequisite paragraph: gates are self-contained or preceded by turn-final delivery; subagent-transcript / pre-tool-call content counts as not shown; approval-gated artifacts follow show → approve → write.
+- **`lsa/skills/reconcile/SKILL.md` Step 4** — drift presentation now cites the Rule 7 *Delivery test* (ordering was already present → approve → edit).
+- **`lsa/README.md`** — specify row + quickstart step 3 + orchestrator note updated to the new approval moment.
+
+### Why
+
+`core` 0.13.0 (same date) defines the contract; this release wires LSA to it. The triggering failure and audit are documented in `core/CHANGELOG.md` 0.13.0 §Why.
+
 ## [0.16.5] — 2026-06-12
 
 Doc-drift sweep (80/20 audit, 2026-06-12). No behavior change.

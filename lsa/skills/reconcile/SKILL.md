@@ -31,7 +31,7 @@ Three questions — **does · only · all**:
 1. **Does it work** — run each Gherkin scenario against the diff **N times** (agents are stochastic); pass = succeeds on ≥95% of runs. (→ scenario results)
 2. **Only what's needed** — every changed hunk traces to a requirement; an untraced hunk is over-delivery. (→ scope check)
 3. **All of the plan** — every requirement (F1…, including non-scenario ones) maps to a change in the diff or a covering test; an uncovered requirement is under-delivery. (→ completeness check)
-4. Write `conformance.md` (each requirement → the change/test that satisfies it). Pass → done. Any check fails or the code diverged → present the drift, take approval, and edit the spec in place to match reality. (→ verdict + conformance.md + any spec update)
+4. Write `conformance.md` (each requirement → the change/test that satisfies it). Pass → done. Any check fails or the code diverged → present the drift (per [`core/output`](../../../core/skills/output/SKILL.md) Rule 7 *Delivery test* — never only in a subagent transcript or pre-tool-call text), take approval, and edit the spec in place to match reality. (→ verdict + conformance.md + any spec update)
 
 ## Output
 
