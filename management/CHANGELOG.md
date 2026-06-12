@@ -12,6 +12,7 @@ Adopts the `core` 0.13.0 **gate-delivery contract** (Rule 5 *Self-contained gate
 - **`management/skills/start-feature/SKILL.md` Step 3** — now *delivers* the pitch first (turn-final message or gate `preview` — the agent's payload is invisible per the Rule 7 *Delivery test*), then gates. **Approve** → this skill `Write`s the pitch with `Status: approved` + gate decisions and quotes it inline (show → approve → write). **Reject** → *no file is written* (was: file existed "regardless of outcome" with `Status: rejected`). Output + constraints updated accordingly.
 - **`management/skills/roadmap/SKILL.md` Step 2 + constraints** — gates must be self-contained (subject in question text / option descriptions / `preview`) or preceded by turn-final delivery; this skill re-renders the agent's applied-row quotes (the payload is invisible).
 - **`management/agents/project-manager.md` Steps 7/10** — payload quotes are marked as dispatcher-re-render material; Step 10 returns the full epic list for delivery.
+- **`management/knowledge/pitch-structure.md`** — status lifecycle documented: `draft` exists only in the agent payload (never on disk); on-disk pitches are always `Status: approved`; `rejected` removed from the metadata enum.
 
 ### Removed
 
