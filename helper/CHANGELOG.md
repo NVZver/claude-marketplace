@@ -2,6 +2,21 @@
 
 All notable changes to the `helper` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.5.0] – 2026-06-12
+
+Adopts the `core` 0.13.0 **gate-delivery contract** (Rule 5 *Self-contained gates*, Rule 7 *Delivery test*) — the "agents propose, skills gate" inversion that `management` got in 0.5.0. Helper's whole design assumed a subagent can run `AskUserQuestion`/`Skill`; it cannot, so its pickers, handoff confirmations, and even the answer body lived in a payload the user never sees.
+
+### Changed
+
+- **`helper/agents/helper.md`** — `tools:` drops `AskUserQuestion` + `Skill`. Step 3 signal-(a) fork, Step 4 handoff confirmation, and Step 5 closing picker are now returned as **pending gates** in the payload; Step 4 stages a ready-to-use `Skill()` seed instead of invoking (mirrors `management/agents/project-manager.md` Step 11). New constraint *Gates belong to the dispatcher*. Output section reframed as a dispatcher payload (answer body + pending gates + optional staged handoff).
+- **`helper/commands/help.md`** — fixes the dangling `Skill(helper)` dispatch (helper is an **agent**, not a skill): now dispatches via the `Agent` tool, then owns **delivery and gating** — new Step 3 surfaces Helper's answer verbatim through a rendered channel (turn-final message or gate `preview`), runs returned gates via `AskUserQuestion`, and invokes confirmed staged handoffs.
+- **`helper/knowledge/output-discipline.md`**, **`helper/knowledge/friction-signals.md`** — v0.5.0 note each: `AskUserQuestion` references describe gates the dispatcher runs from Helper's pending gates.
+- **`helper/VERIFICATION.md`** — probes now observe dispatcher-run pickers; a probe FAILs if the answer body never renders to the user or a picker opens about unseen content.
+
+### Why
+
+Sibling of `core` 0.13.0 (contract definition), `lsa` 0.17.0, `management` 0.6.0, `prompt-engineer` 0.7.0. The triggering failure and full audit live in `core/CHANGELOG.md` 0.13.0 §Why.
+
 ## [0.4.6] – 2026-06-09
 
 Sync the inherited-ground-rules count to `core` 0.12.0.

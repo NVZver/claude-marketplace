@@ -6,6 +6,8 @@ When the Helper agent auto-engages and when it stays out of the way. Per the abs
 
 Detection runs in the main Claude Code agent's own context — not as a separate detector subagent. The main agent matches Helper's `description` (frontmatter of [`../agents/helper.md`](../agents/helper.md)) against the live conversation and invokes Helper on signal-match. This file is the canonical spec for which patterns count.
 
+> **Since helper v0.5.0** the invoking main agent is also Helper's **dispatcher**: it delivers Helper's answer body through a rendered channel and runs Helper's returned pending gates via `AskUserQuestion` (the subagent payload is invisible to the user — `core/output` Rule 7 *Delivery test*). `AskUserQuestion` references below describe gates the dispatcher runs.
+
 ## The three signals
 
 | Signal | Definition | Trigger condition |

@@ -2,16 +2,18 @@
 
 # Pitch structure — knowledge
 
-The canonical format for a shaped pitch. Every pitch lives at `${specs_root}/pitches/<slug>.md` (where `specs_root` is resolved from `.lsa.yaml` — see [`../../lsa/knowledge/conventions.md`](../../lsa/knowledge/conventions.md) §"`.lsa.yaml` defaults"). Inspiration: Basecamp Shape Up shaping phase [unverified -- cited from training knowledge].
+The canonical format for a shaped pitch. An approved pitch lives at `${specs_root}/pitches/<slug>.md` (where `specs_root` is resolved from `.lsa.yaml` — see [`../../lsa/knowledge/conventions.md`](../../lsa/knowledge/conventions.md) §"`.lsa.yaml` defaults"). Inspiration: Basecamp Shape Up shaping phase [unverified -- cited from training knowledge].
 
 ## Metadata header
 
 ```
 Shaped by: <name>
 Date: <YYYY-MM-DD>
-Status: draft | approved | rejected
+Status: draft | approved
 Why now: <one sentence — what makes this timely; "no urgency — backlog candidate" if none>
 ```
+
+**Status lifecycle (since management v0.6.0, per `core/output` Rule 7 *Authorization boundary*):** `draft` exists only in the product-manager agent's return payload — never on disk. `management:start-feature` writes the file with `Status: approved` only after its approve gate. A rejected pitch is never written; its rationale stays in the conversation.
 
 ## Five sections
 

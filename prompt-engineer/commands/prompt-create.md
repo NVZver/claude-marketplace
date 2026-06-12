@@ -32,15 +32,16 @@ Constraints:
 6. Generate file using actor format template from [knowledge/actor-ground-rules.md](../knowledge/actor-ground-rules.md):
    - Agent: frontmatter (name, description with examples, tools) + body (Role, Goal, Input, Constraints, Steps, Output, Example Output)
    - Command: frontmatter (name, description, allowed-tools) + body (Goal, Input, Constraints, Steps, Output, Example Output)
-7. Write file → quote the generated file content inline before any verdict (write, show, comment) per [`../../core/skills/output/SKILL.md`](../../core/skills/output/SKILL.md) Rule 7; then confirm path
+7. Show the full generated content per the [`../../core/skills/output/SKILL.md`](../../core/skills/output/SKILL.md) Rule 7 *Delivery test* (turn-final message, or carried in the approval gate's `preview`) → take approval via `AskUserQuestion` → **then** write the file and confirm the path — show → approve → write per Rule 7 *Authorization boundary*; on reject, write nothing
 8. Run prompt-review logic on new file → verify compliance
 
 ## Output
 
-Format: File path + compliance status.
-Length: 2 lines.
+Format — approve path: file path + compliance status, 2 lines. Reject path: one line stating nothing was written.
 
 ## Example Output
 
 Created: `.claude/commands/lint-config.md`
 Review: 0 issues found.
+
+(reject path: `Rejected — nothing written.`)

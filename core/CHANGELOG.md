@@ -2,6 +2,32 @@
 
 All notable changes to the `core` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.13.0] — 2026-06-12
+
+Adds the **gate-delivery contract** to `core/output`: Rule 5 *"Self-contained gates"* + Rule 7 *"Authorization boundary"* and *"Delivery test"*. Root-cause fix for a live failure (2026-06-12) where the user was asked to approve a pitch they never saw — the artifact was written before its gate, and the "shown inline" obligation was discharged in channels the harness never renders (a subagent transcript; same-turn text before a tool call).
+
+### Added
+
+- **`core/skills/output/SKILL.md` Rule 7 § "Authorization boundary — authorized changes vs proposals"** — *write → show → comment* now explicitly scopes to already-authorized changes; **approval-gated artifacts** (pitches, specs, roadmap rows, generated prompt files) invert to **show → approve → write**: deliver the full content first, run the gate, write the file only on approve; on reject, nothing is written. Prior art credited: `lsa:init` Step 3, `lsa:revise-constitution` Steps 3–4.
+- **`core/skills/output/SKILL.md` Rule 7 § "Delivery test — what counts as 'shown'"** — content counts as delivered only via a turn-final text message (no tool calls after it) or inside an `AskUserQuestion` gate (question text, option descriptions, option `preview`). Explicitly NOT delivered: subagent transcripts/final reports, same-turn pre-tool-call text, file paths. Dispatchers re-render agent proposals themselves before gating.
+- **`core/skills/output/SKILL.md` Rule 5 bullet "Self-contained gates"** — a picker may only ask about content already delivered per the Delivery test or carried by the picker itself; never an approve/reject gate whose subject exists only in an invisible channel.
+- **`core/skills/output/SKILL.md` § "What this rule forbids"** — two new bullets: writing an approval-gated artifact before its gate; treating subagent-transcript / pre-tool-call content as "shown".
+
+### Changed
+
+- **`core/CLAUDE.md` checkpoint 1** — gains the gate-delivery pointer sentence (Rule 5 *Self-contained gates* + Rule 7 *Delivery test*).
+- **`core/CLAUDE.md` checkpoint 4** — gains the proposal-ordering pointer sentence (Rule 7 *Authorization boundary*).
+- **`core/skills/flow-selector/SKILL.md` Step 4** — the 5-signal checklist + rationale must ride inside the `AskUserQuestion` (question text / option descriptions), not in same-turn prose before the picker.
+
+### Fixed
+
+- **`core/skills/output/SKILL.md` § "How this gets enforced" + `core/CLAUDE.md` checkpoint 4 + `core/README.md`** — removed the claim that `lsa:verify` performs a PR-time banned-phrasing scan: `lsa/skills/verify/SKILL.md` contains only grounding checks (reference map, feasibility, citation check) — the scan was never implemented. Enforcement is now stated truthfully as per-skill cites + the author-time `prompt-engineer:prompt-review` check; the human reviewing the turn is the runtime backstop. (Echoes fixed same-day in `prompt-engineer` 0.7.0.)
+- **Stale "8-element drift block at `lsa:reconcile`" references (Rule 7 intro, single-change template note, enforcement §1)** — the block no longer exists verbatim in `lsa/skills/reconcile/SKILL.md` (slimmed in a prior minimality pass); references now credit it as the absorbed origin and point to Rule 7's *Single-change template* as the canonical form, with the enforcement exemplar re-quoted from reconcile Step 4's live wording.
+
+### Why
+
+Two channels every plugin relied on for "showing" content are invisible to the human: a subagent's final report returns only to its dispatcher, and the harness may drop text emitted before a tool call in the same turn (observed twice in the triggering session). Without an authorization boundary, Rule 7's write-first order also applied to proposals, so artifacts landed on disk before anyone approved them. Sibling per-plugin fixes land in `lsa` 0.17.0, `management` 0.6.0, `helper` 0.5.0, `prompt-engineer` 0.7.0.
+
 ## [0.12.1] — 2026-06-12
 
 Doc-drift sweep (80/20 audit, 2026-06-12). No behavior change.

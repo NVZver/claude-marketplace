@@ -2,6 +2,22 @@
 
 All notable changes to the `prompt-engineer` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.7.0] – 2026-06-12
+
+Adopts the `core` 0.13.0 **gate-delivery contract** for the one approval-gated artifact this plugin produces.
+
+### Changed
+
+- **`prompt-engineer/commands/prompt-create.md` Step 7 + Output** — *write → show → confirm* inverted to **show → approve → write** (`core/output` Rule 7 *Authorization boundary*): the full generated content is delivered per the Rule 7 *Delivery test* (turn-final message or gate `preview`), approval runs via `AskUserQuestion`, and only then is the file written; on reject, nothing is written (Output/Example now cover the reject path).
+
+### Fixed
+
+- **`prompt-engineer/commands/prompt-review.md` check (l) + `prompt-engineer/README.md`** — dropped the claim that `lsa:verify` runs the complementary PR-time runtime-artifact scan (never implemented — removed from the canonical enforcement section in `core` 0.13.0); the stale `lsa:reconcile` 8-element-block cite now points at `core/output` Rule 7's *Single-change template*.
+
+### Why
+
+Sibling of `core` 0.13.0 (contract definition), `lsa` 0.17.0, `management` 0.6.0, `helper` 0.5.0. The triggering failure and full audit live in `core/CHANGELOG.md` 0.13.0 §Why.
+
 ## [0.6.0] – 2026-06-08
 
 Review rule: no volatile component counts.

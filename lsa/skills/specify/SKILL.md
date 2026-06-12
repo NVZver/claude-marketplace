@@ -26,13 +26,13 @@ A grounded, technology-agnostic spec: EARS requirements, user flows, and one Ghe
 ## Steps
 
 1. For each user flow, answer Flow / Success / I/O / Test (CORE §3). (→ user flows)
-2. Write EARS requirements — "While/when … the system shall …" (CORE §5). No mechanism (CORE §7). (→ requirements.md)
-3. Write one Gherkin `.feature` per flow; each `Given` grounded in a fact from `discover` (CORE §8). (→ `<flow>.feature` files)
-4. Show the spec inline; take human approval. (→ approved spec)
+2. Draft EARS requirements — "While/when … the system shall …" (CORE §5). No mechanism (CORE §7). (→ draft requirements)
+3. Draft one Gherkin `.feature` per flow; each `Given` grounded in a fact from `discover` (CORE §8). (→ draft scenarios)
+4. Show the full draft spec (per [`core/output`](../../../core/skills/output/SKILL.md) Rule 7 *Delivery test*); take human approval; **then** write `requirements.md` + the `<flow>.feature` files — show → approve → write per Rule 7 *Authorization boundary*. (→ approved spec on disk)
 
 ## Output
 
-`${specs_root}/features/<name>/requirements.md` + `<flow>.feature` files.
+`${specs_root}/features/<name>/requirements.md` + `<flow>.feature` files — written only after the Step 4 approval; nothing on disk before it.
 
 ## Constraints
 

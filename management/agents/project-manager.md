@@ -52,7 +52,7 @@ Recommend the next backlog item to build, decompose the chosen pitch into indepe
 
    Observable result: list of hygiene findings, or confirmation that the roadmap is clean.
 
-7. **Propose hygiene updates.** For each finding, return a proposed row diff in the payload -- previous row + proposed row, each quoted with `file:line`. Apply nothing without decisions. When the dispatcher sends back approvals (continuation), apply only the approved rows; after applying, quote the written row inline per the **Show changes inline** constraint below. Observable result: proposed row diffs returned; on continuation, approved changes written to `${specs_root}/roadmap.md` with the new row quoted inline; rejected changes discarded.
+7. **Propose hygiene updates.** For each finding, return a proposed row diff in the payload -- previous row + proposed row, each quoted with `file:line`. Apply nothing without decisions. When the dispatcher sends back approvals (continuation), apply only the approved rows; after applying, quote the written row in the payload per the **Show changes inline** constraint below — the payload is invisible to the user, so the dispatcher re-renders these quotes ([`core/output`](../../core/skills/output/SKILL.md) Rule 7 *Delivery test*). Observable result: proposed row diffs returned; on continuation, approved changes written to `${specs_root}/roadmap.md` with the new row quoted in the payload for the dispatcher to re-render; rejected changes discarded.
 
 ### Mode 2: Decompose
 
@@ -60,7 +60,7 @@ Recommend the next backlog item to build, decompose the chosen pitch into indepe
 
 9. **Decompose into epics.** Decompose per [`../knowledge/epic-decomposition.md`](../knowledge/epic-decomposition.md). Observable result: numbered epic list in the format specified by `epic-decomposition.md` -- each epic is independently shippable, scoped to one LSA cycle.
 
-10. **Return epics as a pending gate.** Return the epic list as a pending gate: approve (recommended default) / reject / adjust individual epics. On a reject or adjust continuation, re-decompose with the user's feedback and return a fresh payload. Observable result: epic list returned with options + recommended default; final list confirmed through the dispatcher's gate.
+10. **Return epics as a pending gate.** Return the **full epic list** as a pending gate — approve (recommended default) / reject / adjust individual epics — so the dispatcher can deliver it to the user (the payload itself is invisible — [`core/output`](../../core/skills/output/SKILL.md) Rule 7 *Delivery test*). On a reject or adjust continuation, re-decompose with the user's feedback and return a fresh payload. Observable result: epic list returned with options + recommended default; final list confirmed through the dispatcher's gate.
 
 ### Handoff (staged)
 

@@ -27,14 +27,14 @@ Install `core` first — `management` cites `core/ground-rules` for fact-groundi
 
 | Skill | What it does |
 |---|---|
-| `management:start-feature` | Shape a new feature. Accepts a problem description, dispatches the product-manager agent, runs the agent's returned human gates (role, shaping forks, approve/reshape/reject), hands off to `management:roadmap` for epic decomposition on approval. |
+| `management:start-feature` | Shape a new feature. Accepts a problem description, dispatches the product-manager agent, **delivers the full pitch to you** (the agent's payload is invisible), runs the returned human gates (role, shaping forks, approve/reshape/reject), and writes the pitch file **only on approve** — nothing lands on disk on reject (since v0.6.0). Hands off to `management:roadmap` for epic decomposition on approval. |
 | `management:roadmap` | Manage the project roadmap. A plain "what's next" gets a fast-path answer in seconds — a Step 0 branch reads `.lsa/roadmap.md` §`## Feature Backlog` directly and quotes the first `backlog`/`not started` row with a `file:line` citation, no agent dispatch (per [`../core/knowledge/fast-path-source-of-truth.md`](../core/knowledge/fast-path-source-of-truth.md)). The full project-manager dispatch (dependency/risk/value sequencing, epic decomposition, hygiene) is reserved for "recommend an order" / "what should I pick" questions. |
 
 ## Agents
 
 | Agent | What it does |
 |---|---|
-| `product-manager` | Shaping agent. Adapts domain-expert role per invocation, produces structured draft pitches, returns pending human gates for `management:start-feature` to run. |
+| `product-manager` | Shaping agent. Adapts domain-expert role per invocation, drafts the pitch and returns its full content + pending human gates for `management:start-feature` to deliver and run — writes no files (since v0.6.0). |
 | `project-manager` | Roadmap steward. Recommends next backlog item (dependency/risk/value reasoning), decomposes pitches into independently-shippable epics, proposes roadmap hygiene updates, stages the first-epic LSA handoff for `management:roadmap` to invoke. |
 
 ## How it fits
