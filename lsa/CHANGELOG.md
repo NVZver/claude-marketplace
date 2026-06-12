@@ -2,6 +2,15 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.16.5] — 2026-06-12
+
+Doc-drift sweep (80/20 audit, 2026-06-12). No behavior change.
+
+### Fixed
+
+- **`lsa/ARCHITECTURE.md` Version line** — stale `0.16.1 (plugin)` → current plugin version (drifted three releases behind `plugin.json`).
+- **Repo-side, same commit:** `.lsa.yaml` lsa module `artifact_paths` gains `lsa/CORE.md` + `lsa/CHANGELOG.md` (the SessionStart drift hook was blind to edits of CORE.md — the contract file every LSA skill cites); the `.lsa.yaml` header comment's schema pointer corrected `§4.10` → `§3` (ARCHITECTURE.md has no §4.10).
+
 ## [0.16.4] — 2026-06-09
 
 Production-hardening of `lsa/README.md` — correct the OpenSpec comparison + add a least-privilege note.
