@@ -68,7 +68,7 @@ fails this rule.
 
 Every write, edit, or mark performed by an agent is **echoed back inline** before any commentary. The order is **write → show → comment** — never *"I added X to file Y; here's why it matters."* without quoting X first.
 
-This rule generalizes the 8-element drift block already in use by [`reconcile`](../../../lsa/skills/reconcile/SKILL.md), which the user endorsed as the gold standard: *"Good! Love it!"* (2026-05-22).
+This rule generalizes the 8-element drift block originally pioneered by [`reconcile`](../../../lsa/skills/reconcile/SKILL.md), which the user endorsed as the gold standard: *"Good! Love it!"* (2026-05-22). That block has since been absorbed here — the *Single-change template* below is the canonical form.
 
 ### Authorization boundary — authorized changes vs proposals
 
@@ -97,7 +97,7 @@ For one edit to one file, the response contains, in order:
 6. **Source** — a `file:line` (or URL) for the authority that justified the change. Inherits Rule 4 (Sourced).
 7. **Type tag** — one of `add` / `edit` / `replace` / `append` / `mark`, so the human can skim a sequence of changes by type.
 
-Combined, the seven elements line up with the eight-element drift block at [`reconcile`](../../../lsa/skills/reconcile/SKILL.md) (the eighth — *bundle-explanation* — collapses into element 5 here when the change is not part of a multi-module batch).
+Combined, the seven elements line up with the original eight-element drift block (the eighth — *bundle-explanation* — collapses into element 5 here when the change is not part of a multi-module batch).
 
 ### Batch template — compressed inspection table
 
@@ -176,13 +176,12 @@ After the table: one cluster of follow-up `file:line` pointers the human can ope
 
 ### How this gets enforced
 
-This rule is held in three places — content here, scaffolding elsewhere:
+This rule is held in two places — content here, scaffolding elsewhere:
 
-1. **Per-skill cites.** Every skill / agent step that writes / edits / marks an artifact carries an explicit "quote the change inline before your verdict" instruction in the step body, plus an `Observable result:` that names the quoted-diff format. The gold-standard exemplar is the 8-element drift block at [`lsa:reconcile`](../../../lsa/skills/reconcile/SKILL.md) Step 4 — *"verbatim spec quote with path:line + verbatim artifact quote with path:line + proposed one-line spec update"* — which this rule generalizes.
+1. **Per-skill cites.** Every skill / agent step that writes / edits / marks an artifact carries an explicit "quote the change inline before your verdict" instruction in the step body, plus an `Observable result:` that names the quoted-diff format. The live exemplar is the drift gate at [`lsa:reconcile`](../../../lsa/skills/reconcile/SKILL.md) Step 4 (*"present the drift … take approval, and edit the spec in place"*), whose original 8-element block this rule absorbed as the *Single-change template* above.
 2. **Author-time regression check (prompt sources).** [`prompt-engineer:prompt-review`](../../../prompt-engineer/commands/prompt-review.md) scans prompt SOURCE files (`**/SKILL.md`, `**/agents/*.md`) for a step that writes / edits / marks without an accompanying show-changes-inline directive. Catches a structural omission in the prompt before the skill ships. Warning-only initially (signal, not gate).
-3. **PR-time regression check (runtime artifacts).** [`lsa:verify`](../../../lsa/skills/verify/SKILL.md) scans the feature's runtime outputs / PR diff for banned phrasings (*"go check the file"*, *"I added X to Y"*, *"marked X"*, *"updated Z"*) with no inline quote of the change. Catches the violation as a runtime symptom. Warning-only initially.
 
-The two checks are complementary, not redundant: prompt-review catches violations in prompt **sources**; lsa:verify catches violations in runtime **artifacts**. A correctly-prompted skill can still mis-execute (caught only by lsa:verify); a structural prompt-source omission stays invisible until a feature ships (caught only by prompt-review). Neither alone suffices.
+A correctly-prompted skill can still mis-execute at runtime — no automated PR-time check exists for that today (a claim that `lsa:verify` performed one was removed in v0.13.0 as unimplemented); the human reviewing the turn is the runtime backstop.
 
 ---
 

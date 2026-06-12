@@ -19,6 +19,11 @@ Adds the **gate-delivery contract** to `core/output`: Rule 5 *"Self-contained ga
 - **`core/CLAUDE.md` checkpoint 4** — gains the proposal-ordering pointer sentence (Rule 7 *Authorization boundary*).
 - **`core/skills/flow-selector/SKILL.md` Step 4** — the 5-signal checklist + rationale must ride inside the `AskUserQuestion` (question text / option descriptions), not in same-turn prose before the picker.
 
+### Fixed
+
+- **`core/skills/output/SKILL.md` § "How this gets enforced" + `core/CLAUDE.md` checkpoint 4 + `core/README.md`** — removed the claim that `lsa:verify` performs a PR-time banned-phrasing scan: `lsa/skills/verify/SKILL.md` contains only grounding checks (reference map, feasibility, citation check) — the scan was never implemented. Enforcement is now stated truthfully as per-skill cites + the author-time `prompt-engineer:prompt-review` check; the human reviewing the turn is the runtime backstop. (Echoes fixed same-day in `prompt-engineer` 0.7.0.)
+- **Stale "8-element drift block at `lsa:reconcile`" references (Rule 7 intro, single-change template note, enforcement §1)** — the block no longer exists verbatim in `lsa/skills/reconcile/SKILL.md` (slimmed in a prior minimality pass); references now credit it as the absorbed origin and point to Rule 7's *Single-change template* as the canonical form, with the enforcement exemplar re-quoted from reconcile Step 4's live wording.
+
 ### Why
 
 Two channels every plugin relied on for "showing" content are invisible to the human: a subagent's final report returns only to its dispatcher, and the harness may drop text emitted before a tool call in the same turn (observed twice in the triggering session). Without an authorization boundary, Rule 7's write-first order also applied to proposals, so artifacts landed on disk before anyone approved them. Sibling per-plugin fixes land in `lsa` 0.17.0, `management` 0.6.0, `helper` 0.5.0, `prompt-engineer` 0.7.0.
