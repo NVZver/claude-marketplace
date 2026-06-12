@@ -2,6 +2,25 @@
 
 All notable changes to the `management` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.6.0] – 2026-06-12
+
+Adopts the `core` 0.13.0 **gate-delivery contract** (Rule 5 *Self-contained gates*, Rule 7 *Authorization boundary* + *Delivery test*). Completes the 0.5.0 inversion: 0.5.0 moved the *gates* to the skills but left the *pitch write* before the gate and the *show-obligation* inside the invisible subagent payload — producing the live failure (2026-06-12) where the user faced "Approve?" for a pitch they never saw, written to disk before they answered.
+
+### Changed
+
+- **`management/agents/product-manager.md`** — `tools:` drops `Write`; Step 4 composes the pitch and returns its **full content in the payload** instead of writing `${specs_root}/pitches/<slug>.md` as a draft; Step 5/Output return content + proposed slug + pending gates. The agent writes no files.
+- **`management/skills/start-feature/SKILL.md` Step 3** — now *delivers* the pitch first (turn-final message or gate `preview` — the agent's payload is invisible per the Rule 7 *Delivery test*), then gates. **Approve** → this skill `Write`s the pitch with `Status: approved` + gate decisions and quotes it inline (show → approve → write). **Reject** → *no file is written* (was: file existed "regardless of outcome" with `Status: rejected`). Output + constraints updated accordingly.
+- **`management/skills/roadmap/SKILL.md` Step 2 + constraints** — gates must be self-contained (subject in question text / option descriptions / `preview`) or preceded by turn-final delivery; this skill re-renders the agent's applied-row quotes (the payload is invisible).
+- **`management/agents/project-manager.md` Steps 7/10** — payload quotes are marked as dispatcher-re-render material; Step 10 returns the full epic list for delivery.
+
+### Removed
+
+- **Rejected-pitch files.** A rejected pitch no longer leaves `${specs_root}/pitches/<slug>.md` on disk — rationale stays in the conversation. (User decision, 2026-06-12: "save to file ONLY after approve".)
+
+### Why
+
+Sibling of `core` 0.13.0 (contract definition), `lsa` 0.17.0, `helper` 0.5.0, `prompt-engineer` 0.7.0. The triggering failure and full audit live in `core/CHANGELOG.md` 0.13.0 §Why.
+
 ## [0.5.0] – 2026-06-12
 
 Gate contract inverted: agents propose, skills gate. `AskUserQuestion` and the `Skill` tool are unavailable in subagent context — in live runs (2026-06-09 and 2026-06-12) both agents returned *"AskUserQuestion isn't available in this subagent context"* and produced un-gated outputs while the docs promised agent-side gating.
