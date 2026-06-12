@@ -53,6 +53,7 @@ Questions and options name the real-world subject — not spec IDs, not project 
 - **No project jargon.** Strip terms a first-time user can't decode (`contract-trigger`, `Hard Confirm`, `diagonal coverage`). Reserve jargon for skill bodies, not user-facing prompts.
 - **Must-decide only — Genuine-fork test.** Surface as picker questions only choices that meaningfully change the outcome. Before opening a picker, the agent answers: *is there a real fork I cannot resolve from in-scope sources?* A fork is real when **at least one** holds: (a) **destructive** — the next action edits a file, deletes a row, calls an external service, or starts a multi-turn skill flow; (b) **two named designs in scope and neither overrides the other** — the agent has identified ≥2 reasonable continuations from in-scope sources (`.lsa/VISION.md:63` Principle 6) and no source ranks one above the other; (c) **a fact required by the next step is absent from working context and cannot be derived** — spec, repo, and prior turns do not supply it; (d) **per-row triage** — N items each need an independent decision (batched into one multi-question picker). If none apply, deliver the cited answer directly and offer at most ONE closing picker for the user to override. Substrate selection (which primitive) is governed by `.lsa/VISION.md:66` Principle 9.
 - **One decision per question.** Don't bundle "approve A and B and C?" — split into separate questions.
+- **Self-contained gates.** A picker may only ask about content the user has already received per the Rule 7 *Delivery test*, or that the picker itself carries (question text, option descriptions, option `preview`). Never open an approve/reject gate whose subject exists only in a subagent transcript or in same-turn pre-tool-call text. Dispatcher pattern: re-render the agent's proposal as the turn-final message, gate in the following turn — or embed the proposal in the gate's `preview`.
 
 ## 6. What-and-why preamble — verdicts carry a one-sentence frame
 Every emission of a verdict label from
@@ -68,6 +69,21 @@ fails this rule.
 Every write, edit, or mark performed by an agent is **echoed back inline** before any commentary. The order is **write → show → comment** — never *"I added X to file Y; here's why it matters."* without quoting X first.
 
 This rule generalizes the 8-element drift block already in use by [`reconcile`](../../../lsa/skills/reconcile/SKILL.md), which the user endorsed as the gold standard: *"Good! Love it!"* (2026-05-22).
+
+### Authorization boundary — authorized changes vs proposals
+
+Write → show → comment applies to **already-authorized** changes — work the user asked for or a spec mandates.
+
+For **approval-gated artifacts** — anything whose existence depends on a pending human gate (pitches, specs, roadmap rows, generated prompt files) — the order inverts: **show → approve → write**. Deliver the full content first (Delivery test below), run the gate, write the file only on approve. Nothing lands on disk "as a draft" before its gate. On reject, nothing is written. Prior art: [`lsa:init`](../../../lsa/skills/init/SKILL.md) Step 3 (*"show, approve, write"*) and [`lsa:revise-constitution`](../../../lsa/skills/revise-constitution/SKILL.md) Steps 3–4.
+
+### Delivery test — what counts as "shown"
+
+Content counts as delivered ONLY via a channel the harness renders to the user:
+
+- the **final text message of a turn** (no tool calls after it in that turn), or
+- **inside an `AskUserQuestion` gate** (question text, option descriptions, or option `preview`).
+
+NOT delivered: a subagent's transcript or final report (returned to the dispatcher, never rendered to the user); same-turn text emitted before a tool call (the harness may drop it); a file path (*"see the file"* — already forbidden below). A dispatcher that receives a proposal from an agent re-renders it itself before gating.
 
 ### Single-change template
 
@@ -100,6 +116,8 @@ After the table: one cluster of follow-up `file:line` pointers the human can ope
 - *"Marked OQ5 as resolved"* without the new line content.
 - *"Observable result: file is edited"* / *"diff shown"* without naming whether the diff is full-quote or compressed-table.
 - *"go check the file"* / *"see file for details"* in any form.
+- Writing an approval-gated artifact before its gate (see *Authorization boundary* above).
+- Treating content in a subagent transcript or same-turn pre-tool-call text as "shown" (see *Delivery test* above).
 
 ### Worked examples
 
