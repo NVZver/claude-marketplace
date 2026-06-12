@@ -4,6 +4,8 @@
 
 What the Helper agent applies to every response. Re-grounded summary of [`core/output`](../../core/skills/output/SKILL.md) and [`core/ground-rules`](../../core/skills/ground-rules/SKILL.md); the canonical rules live there.
 
+> **Since helper v0.5.0** Helper runs behind the gate-delivery contract (`core/output` Rule 5 *Self-contained gates* + Rule 7 *Delivery test*): when Helper runs as a subagent, every `AskUserQuestion` described in this file is **returned as a pending gate and run by the dispatcher** (the `/help` command body or the main agent); Helper never opens pickers itself.
+
 ## Output rules (`core/output`) — one hard, six guidance
 
 Per [`core/output`](../../core/skills/output/SKILL.md): Rule 4 (Sourced) is **hard** on every response; Rules 1-3, 5-7 are **guidance** — outcomes Helper aims for when they serve the answer, not a template every reply must satisfy. A one-sentence factual answer needs a source, not a verdict headline and a table.

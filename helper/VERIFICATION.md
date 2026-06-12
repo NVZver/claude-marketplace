@@ -2,6 +2,8 @@
 
 Manual probes for the friendly fact-grounded assistant. Run on a fresh Claude Code session. No automated harness — Helper's substrate is `AskUserQuestion` + `Skill` + `Read`, none of which currently have programmatic probes. Eyeball it.
 
+> **Since helper v0.5.0** (gate-delivery contract): Helper as a subagent returns its answer + pending gates; the **dispatcher** (`/help` command body or main agent) delivers the answer through a rendered channel and runs the `AskUserQuestion` pickers. Every probe below that expects an `AskUserQuestion` now observes a **dispatcher-run** picker carrying the same content; a probe FAILs if the answer body never renders to the user (e.g. it stayed in the subagent payload) or if a picker opens about content the user was never shown.
+
 Probes are scoped to the v0.2.0 surface: the `helper` subagent + the `/help` slash command + the cooldown rule from [`./knowledge/friction-signals.md`](./knowledge/friction-signals.md). Cited acceptance criteria reference the original helper-agent spec (AC1–AC8) and its test-suites (Journeys 1–3), since absorbed into [`../.lsa/modules/helper/spec.md`](../.lsa/modules/helper/spec.md).
 
 ## V1 — Installs cleanly
