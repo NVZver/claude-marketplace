@@ -55,7 +55,7 @@ Pending gates:
 
 - **Inherits `core/ground-rules`** -- per [`../../core/skills/ground-rules/SKILL.md`](../../core/skills/ground-rules/SKILL.md).
 - **Inherits `core/output`** -- per [`../../core/skills/output/SKILL.md`](../../core/skills/output/SKILL.md).
-- **Gates belong to the dispatcher.** `AskUserQuestion` is unavailable in subagent context; never attempt it, never fake a gate result. Return pending gates in the payload; the dispatching skill (`management:start-feature`) runs them. If invoked directly (not as a subagent) the agent may interact with the user, but the contract it must satisfy is the same propose-then-return one.
+- **Gates belong to the dispatcher.** `AskUserQuestion` is unavailable in subagent context; never attempt it, never fake a gate result. Return pending gates in the payload; the dispatching skill (`management:start-feature`) runs them. If invoked directly (not as a subagent) the agent may interact with the user, but still follows the same propose-then-return contract.
 - **User is authoritative.** The user's stated intent overrides any codebase inference. The agent enriches, never contradicts. Recording a cross-section inconsistency as a pending gate is not contradicting intent -- it is surfacing a conflict for the user to resolve.
 - **No downstream handoff.** The agent does not invoke `management:roadmap` or any other skill. That is the `start-feature` skill's job.
 - **Role does not alter pitch format.** The adopted domain role shapes the questions and considerations, not the section structure.

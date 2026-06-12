@@ -47,7 +47,7 @@ management:start-feature → (human approves pitch) → roadmap entry → manage
               lsa:discover → lsa:specify → lsa:verify → lsa:delegate → lsa:reconcile
 ```
 
-The management plugin owns both the pre-build shaping phase (product-manager) and the project coordination phase (project-manager). The product-manager produces pitches; the project-manager converts them into roadmap items and decomposes them into epics for LSA. Human approval gates exist at every handoff — pitch approval, roadmap entry, epic approval, and LSA handoff. The orchestrator skills run these gates via `AskUserQuestion`; the agents prepare them (agents propose, skills gate — `AskUserQuestion` is unavailable in subagent context).
+The management plugin owns both the pre-build shaping phase (product-manager) and the project coordination phase (project-manager). The product-manager produces pitches; the project-manager converts them into roadmap items and decomposes them into epics for LSA. Human approval gates exist at every handoff — pitch approval, roadmap entry, epic approval, and LSA handoff. The orchestrator skills run these gates; the agents prepare them (agents propose, skills gate — `AskUserQuestion` is unavailable in subagent context).
 
 ## `management:roadmap` — fast-path vs full reasoning
 

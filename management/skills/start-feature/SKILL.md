@@ -8,7 +8,7 @@ description: "Shape a new feature from a vague idea into a structured pitch. Inp
 
 # Start Feature
 
-Orchestrator skill. Accepts a vague idea, dispatches the `product-manager` agent for shaping, runs the agent's returned human gates via `AskUserQuestion`, then hands off to `management:roadmap` for epic decomposition. Does not contain shaping logic or decomposition logic — those live in the agents. The human gates live here: the dispatched agent cannot ask the user.
+Orchestrator skill. Accepts a vague idea, dispatches the `product-manager` agent for shaping, runs the agent's returned human gates via `AskUserQuestion`, then hands off to `management:roadmap` for epic decomposition. Does not contain shaping logic or decomposition logic — those live in the agents.
 
 ## Goal
 
@@ -36,7 +36,7 @@ Go from a vague idea to a human-approved pitch with epics ready for the LSA buil
 
 ## Output
 
-Either `management:roadmap` is executing (approved path) or clean exit (rejected path). The pitch file exists at `${specs_root}/pitches/<slug>.md` regardless of outcome — the agent only ever writes `Status: draft`; this skill flips it to `approved` or `rejected` after its gates. Roadmap writes (backlog row, priority, sequencing) are handled by the project-manager agent via `management:roadmap` — this skill never writes to `${specs_root}/roadmap.md` directly.
+Either `management:roadmap` is executing (approved path) or clean exit (rejected path). The pitch file exists at `${specs_root}/pitches/<slug>.md` regardless of outcome, with `Status:` flipped by this skill. Roadmap writes (backlog row, priority, sequencing) are handled by the project-manager agent via `management:roadmap` — this skill never writes to `${specs_root}/roadmap.md` directly.
 
 ### Example Output
 
@@ -56,7 +56,7 @@ Handing off to management:roadmap for backlog entry and epic decomposition…
 ## Constraints
 
 - **Orchestrator only.** Do not duplicate agent logic (shaping, role adaptation, pitch assembly, decomposition) — dispatch, run the gates, hand off.
-- **No silent handoff.** The human gates live in THIS skill (the agent cannot ask — `AskUserQuestion` is unavailable in subagent context): every pending gate the agent returns is presented via `AskUserQuestion` before any downstream step. The agent proposes; the human disposes here.
+- **No silent handoff.** The human gates live in THIS skill (the agent cannot ask — `AskUserQuestion` is unavailable in subagent context): every pending gate the agent returns is presented via `AskUserQuestion` before any downstream step.
 - **Clean exit on reject.** If the final gate returns reject, set `Status: rejected` and exit with no side effects — no branch, no downstream invocation.
 - **Show changes inline.** The dispatched `product-manager` agent writes the draft pitch and quotes it inline before returning (write, show, comment) per [`../../../core/skills/output/SKILL.md`](../../../core/skills/output/SKILL.md) Rule 7; this skill quotes its own `Status:` flip inline; the downstream `management:roadmap` handoff surfaces each roadmap row inline. This orchestrator surfaces the agent's output verbatim and never reduces a write to "pitch created" / "added to roadmap" without the content.
 - Outputs follow [`core/output`](../../../core/skills/output/SKILL.md) — citation by link, never restated.

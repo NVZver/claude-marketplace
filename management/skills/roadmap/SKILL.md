@@ -1,6 +1,6 @@
 ---
 name: roadmap
-description: "Manage the project roadmap. Dispatches the project-manager agent to recommend what to work on next, decompose pitches into epics, and tidy roadmap hygiene; runs the agent's returned decision gates via AskUserQuestion and invokes the staged lsa:discover handoff. Single entry point for project management."
+description: "Manage the project roadmap. Dispatches the project-manager agent to recommend what to work on next, decompose pitches into epics, and tidy roadmap hygiene; runs the agent's returned pending gates via AskUserQuestion and invokes the staged lsa:discover handoff. Single entry point for project management."
 ---
 
 > **Trace.** On load, print first: `=============== [management/skills/roadmap/SKILL.md] [management] ===============`
@@ -8,7 +8,7 @@ description: "Manage the project roadmap. Dispatches the project-manager agent t
 
 # Roadmap
 
-Orchestrator skill. Dispatches the `project-manager` agent for roadmap management — sequencing, decomposition, hygiene — then runs the agent's returned decision gates and the staged LSA handoff. Does not contain recommendation logic, decomposition rules, or roadmap-write logic — those live in the agent and its knowledge files ([`../../knowledge/sequencing-heuristics.md`](../../knowledge/sequencing-heuristics.md), [`../../knowledge/epic-decomposition.md`](../../knowledge/epic-decomposition.md)). The human gates live here: the dispatched agent cannot ask the user or invoke skills.
+Orchestrator skill. Dispatches the `project-manager` agent for roadmap management — sequencing, decomposition, hygiene — then runs the agent's returned pending gates and the staged LSA handoff. Does not contain recommendation logic, decomposition rules, or roadmap-write logic — those live in the agent and its knowledge files ([`../../knowledge/sequencing-heuristics.md`](../../knowledge/sequencing-heuristics.md), [`../../knowledge/epic-decomposition.md`](../../knowledge/epic-decomposition.md)).
 
 ## Goal
 
@@ -25,7 +25,7 @@ Give the user a single entry point to manage the project roadmap — what to bui
 
 1. **Dispatch project-manager agent.** Invoke the `project-manager` agent via the `Agent` tool with no additional context — the agent reads ambient state itself per [`../../agents/project-manager.md`](../../agents/project-manager.md) Steps 1-3. Wait for the agent's payload: sequenced recommendation, proposed hygiene row diffs, epic list, and/or staged `lsa:discover` seed — each decision returned as a pending gate (the agent cannot ask). Observable result: agent payload received with its pending-gates list.
 
-2. **Run the returned gates.** Present each pending decision to the user via `AskUserQuestion`: item pick (offering the agent's recommended default), hygiene row diffs one by one, epic approval (approve / reject / adjust). Send the decisions back to the agent via `SendMessage` continuation wherever the agent owns the write — approved roadmap rows are applied by the agent, which quotes each written row inline per [`../../agents/project-manager.md`](../../agents/project-manager.md) Step 7; proceed directly where no write is needed. On reject/adjust of epics, send the feedback back and re-gate the fresh epic list. Observable result: every gate resolved by the user; approved roadmap rows applied by the agent and quoted inline; rejected proposals discarded.
+2. **Run the returned gates.** Present each pending gate to the user via `AskUserQuestion`: item pick (offering the agent's recommended default), hygiene row diffs one by one, epic approval (approve / reject / adjust). Send the decisions back to the agent via `SendMessage` continuation wherever the agent owns the write — approved roadmap rows are applied by the agent (quoted inline per its Step 7); proceed directly where no write is needed. On reject/adjust of epics, send the feedback back and re-gate the fresh epic list. Observable result: every gate resolved by the user; approved roadmap rows applied by the agent and quoted inline; rejected proposals discarded.
 
 3. **Run the staged handoff.** On epic approval, invoke `lsa:discover` via the `Skill` tool with the agent's staged seed text verbatim (first epic paragraph + pitch link, per [`../../agents/project-manager.md`](../../agents/project-manager.md) Step 11). Surface the agent's remaining-epics note. Observable result: `lsa:discover` executing with the first epic's context; remaining epic list displayed with instruction to continue.
 
@@ -57,7 +57,7 @@ Remaining: Epic 2 (re-invoke management:roadmap after Epic 1 ships).
 ## Constraints
 
 - **Orchestrator only.** Do not duplicate agent logic (sequencing, decomposition, roadmap writing) — dispatch, run the gates, dispatch the staged handoff. The agent proposes everything; roadmap writes stay agent-owned via continuation.
-- **No silent handoff.** The human gates live in THIS skill (the agent cannot ask — `AskUserQuestion` and the `Skill` tool are unavailable in subagent context): every pending gate the agent returns is presented via `AskUserQuestion` before any downstream step, and `lsa:discover` is invoked here only after epic approval, with the agent's staged seed. The agent proposes; the human disposes here.
+- **No silent handoff.** The human gates live in THIS skill (the agent cannot ask — `AskUserQuestion` and the `Skill` tool are unavailable in subagent context): every pending gate the agent returns is presented via `AskUserQuestion` before any downstream step, and `lsa:discover` is invoked here only after epic approval, with the agent's staged seed.
 - **Show changes inline.** The dispatched `project-manager` agent writes roadmap rows only after this skill returns approvals; it must quote each written/changed row inline before its verdict (write, show, comment) per [`../../../core/skills/output/SKILL.md`](../../../core/skills/output/SKILL.md) Rule 7 and `project-manager.md` Step 7. This skill surfaces the agent's output verbatim and does not summarize the changes as "roadmap updated".
 - Outputs follow [`core/output`](../../../core/skills/output/SKILL.md) — citation by link, never restated.
 

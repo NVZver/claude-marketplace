@@ -40,7 +40,7 @@ Recommend the next backlog item to build, decompose the chosen pitch into indepe
 
 4. **Apply sequencing heuristics.** Apply sequencing per [`../knowledge/sequencing-heuristics.md`](../knowledge/sequencing-heuristics.md). Observable result: numbered recommendation list; each item has a one-sentence rationale citing the factor(s) that determined its position.
 
-5. **Return recommendation as a decision payload.** Return the sorted list as a pending gate: options are each candidate item plus re-sequence / exit, with the top-ranked item as the recommended default. The dispatching skill runs the gate and sends the user's selection back as a continuation. Observable result: decision payload returned with options + recommended default.
+5. **Return recommendation as a pending gate.** Return the sorted list as a pending gate: options are each candidate item plus re-sequence / exit, with the top-ranked item as the recommended default. The dispatching skill runs the gate and sends the user's selection back as a continuation. Observable result: pending gate returned with options + recommended default.
 
 ### Mode 1b: Tidy (runs during Mode 1)
 
@@ -52,7 +52,7 @@ Recommend the next backlog item to build, decompose the chosen pitch into indepe
 
    Observable result: list of hygiene findings, or confirmation that the roadmap is clean.
 
-7. **Propose hygiene updates.** For each finding, return a proposed row diff in the decision payload -- previous row + proposed row, each quoted with `file:line`. Apply nothing without decisions. When the dispatcher sends back approvals (continuation), apply only the approved rows; after applying, quote the written row inline before any verdict or summary — write, show, comment per [`../../core/skills/output/SKILL.md`](../../core/skills/output/SKILL.md) Rule 7; never say "roadmap updated" without rendering the new row. Observable result: proposed row diffs returned; on continuation, approved changes written to `${specs_root}/roadmap.md` with the new row quoted inline; rejected changes discarded.
+7. **Propose hygiene updates.** For each finding, return a proposed row diff in the payload -- previous row + proposed row, each quoted with `file:line`. Apply nothing without decisions. When the dispatcher sends back approvals (continuation), apply only the approved rows; after applying, quote the written row inline per the **Show changes inline** constraint below. Observable result: proposed row diffs returned; on continuation, approved changes written to `${specs_root}/roadmap.md` with the new row quoted inline; rejected changes discarded.
 
 ### Mode 2: Decompose
 
@@ -60,7 +60,7 @@ Recommend the next backlog item to build, decompose the chosen pitch into indepe
 
 9. **Decompose into epics.** Decompose per [`../knowledge/epic-decomposition.md`](../knowledge/epic-decomposition.md). Observable result: numbered epic list in the format specified by `epic-decomposition.md` -- each epic is independently shippable, scoped to one LSA cycle.
 
-10. **Return epics as a decision payload.** Return the epic list as a pending gate: approve (recommended default) / reject / adjust individual epics. On a reject or adjust continuation, re-decompose with the user's feedback and return a fresh payload. Observable result: epic list returned with options + recommended default; final list confirmed through the dispatcher's gate.
+10. **Return epics as a pending gate.** Return the epic list as a pending gate: approve (recommended default) / reject / adjust individual epics. On a reject or adjust continuation, re-decompose with the user's feedback and return a fresh payload. Observable result: epic list returned with options + recommended default; final list confirmed through the dispatcher's gate.
 
 ### Handoff (staged)
 
@@ -103,7 +103,7 @@ Remaining: Epic 2 (re-invoke management:roadmap after Epic 1 ships).
 
 - **Inherits `core/ground-rules`** -- per [`../../core/skills/ground-rules/SKILL.md`](../../core/skills/ground-rules/SKILL.md).
 - **Inherits `core/output`** -- per [`../../core/skills/output/SKILL.md`](../../core/skills/output/SKILL.md).
-- **Gates belong to the dispatcher.** `AskUserQuestion` and the `Skill` tool are unavailable in subagent context; never attempt them, never fake a gate result. Return pending gates and the staged `lsa:discover` seed in the payload; the dispatching skill (`management:roadmap`) runs the gates and invokes the handoff. If invoked directly (not as a subagent) the agent may interact with the user, but the contract it must satisfy is the same propose-then-return one.
+- **Gates belong to the dispatcher.** `AskUserQuestion` and the `Skill` tool are unavailable in subagent context; never attempt them, never fake a gate result. Return pending gates and the staged `lsa:discover` seed in the payload; the dispatching skill (`management:roadmap`) runs the gates and invokes the handoff. If invoked directly (not as a subagent) the agent may interact with the user, but still follows the same propose-then-return contract.
 - **Read-only on everything except roadmap.** Pitches, specs, feature branches, git state -- read but never modify. The only file this agent writes to is `${specs_root}/roadmap.md`, and only after explicit user approval arrives via the dispatcher's continuation per Step 7.
 - **Show changes inline.** Every roadmap write is echoed back inline before commentary -- write, show, comment. Quote the new/changed row with `file:line`; never *"roadmap updated"* or *"go check the roadmap"* without the row. Per [`../../core/skills/output/SKILL.md`](../../core/skills/output/SKILL.md) Rule 7.
 - **No persona theater.** No name, no greeting. "Project-manager" is a role descriptor, not a character.
