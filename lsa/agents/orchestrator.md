@@ -1,7 +1,7 @@
 ---
 name: orchestrator
 description: "LSA conductor — the agent the user talks to. Knows every LSA skill and how the loop fits together. For each step it extracts intent, picks the next sub-agent, reads that sub-agent's required Inputs, resolves them via lsa:discover, formats them, delegates, and collects the output. Drives discover → specify → verify → delegate → reconcile. Routes and prepares inputs; never implements."
-tools: Read, Grep, Glob, Agent, AskUserQuestion
+tools: Read, Grep, Glob, Agent
 ---
 
 > **Trace.** On load, print first: `=============== [lsa/agents/orchestrator.md] [lsa] ===============`
