@@ -2,6 +2,26 @@
 
 All notable changes to the `management` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.5.0] – 2026-06-12
+
+Gate contract inverted: agents propose, skills gate. `AskUserQuestion` and the `Skill` tool are unavailable in subagent context — in live runs (2026-06-09 and 2026-06-12) both agents returned *"AskUserQuestion isn't available in this subagent context"* and produced un-gated outputs while the docs promised agent-side gating.
+
+### Changed
+
+- **`management/agents/product-manager.md`** — `tools:` drops `AskUserQuestion`; Step 1 records the adopted role + rationale as a pending gate instead of asking; Step 4 writes the pitch as `Status: draft` and never flips it; Step 5 returns pitch path + an ordered pending-gates list (role confirmation, shaping forks with recommended defaults, final approve/reshape/reject). New constraint: *Gates belong to the dispatcher.*
+- **`management/agents/project-manager.md`** — `tools:` drops `AskUserQuestion` and `Skill`; Steps 5/7/10 return decision payloads (options + recommended default) instead of asking; Step 7 applies hygiene rows only after the dispatcher returns approvals (continuation), quoting each written row inline; Steps 11-12 stage the `lsa:discover` handoff as ready-to-use seed text instead of invoking the `Skill` tool. Same new constraint.
+- **`management/skills/start-feature/SKILL.md`** — new Step 3 *"Run the returned gates"*: presents the agent's pending gates via `AskUserQuestion`, flips pitch `Status:` to `approved`/`rejected` and records the gate decisions in the pitch header via `Edit`, re-dispatches on reshape. "No silent handoff" constraint rewritten: the gates live in the skill; the agent proposes.
+- **`management/skills/roadmap/SKILL.md`** — Steps 1-3 reworked: receive the agent's payload, run each decision via `AskUserQuestion`, send decisions back via `SendMessage` continuation for the agent-owned roadmap writes, and invoke `lsa:discover` via the `Skill` tool with the agent's staged seed. "No silent handoff" constraint rewritten to match. Step 0 fast-path untouched.
+- **`management/knowledge/epic-decomposition.md`** — scope note (audit finding): the rules govern epics within one pitch; cross-feature sequencing between pitches is `sequencing-heuristics.md` Factor 1 (dependency order).
+- **`management/knowledge/role-adaptation.md`** — the too-vague-to-select-a-domain "ask the user" clause glossed: when dispatched as a subagent, the ask travels as a pending gate run by the dispatching skill.
+- **`management/README.md`** — handoff prose and agent/skill tables now state that the orchestrator skills run the human gates (the agents prepare them).
+- **`management/.claude-plugin/plugin.json`** — version 0.4.3 → 0.5.0; description aligned with the agents-propose/skills-gate contract.
+- **`.lsa/modules/management/spec.md`** — stale `v0.3.0` pins → `v0.5.0`; "Human gate before every handoff" invariant updated to the agents-propose/skills-gate contract.
+
+### Why
+
+When dispatched via the `Agent` tool by their orchestrator skills, the agents cannot use `AskUserQuestion` or invoke skills, so the documented agent-side gates could never run; the main-loop assistant had to improvise them. The human gates stay — they move to the orchestrator skills, which run in the main loop and have both tools. MINOR bump: documented decision-flow contract change.
+
 ## [0.4.3] – 2026-06-08
 
 Marketplace-audit cleanup — removed-skill drift + Role sections + de-count.

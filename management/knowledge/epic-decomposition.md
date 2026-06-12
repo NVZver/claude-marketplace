@@ -4,6 +4,8 @@
 
 Rules for breaking a shaped pitch into epics, adapted from Shape Up's "scoping" phase [unverified — Basecamp Shape Up methodology]. Each epic maps to one LSA build cycle: `lsa:discover` → `lsa:specify` → `lsa:verify` → `lsa:delegate` → `lsa:reconcile`.
 
+**Scope.** These rules govern epics *within* one pitch. Cross-feature sequencing *between* pitches is governed by [`sequencing-heuristics.md`](./sequencing-heuristics.md) §"Factor 1: Dependency order".
+
 ## What makes a good epic
 
 1. **Independently shippable.** Completing the epic delivers observable value even if subsequent epics are deferred. If epic B is meaningless without epic A's output, they are one epic.

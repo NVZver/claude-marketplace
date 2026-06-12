@@ -16,7 +16,7 @@ Examples (not a fixed catalog — the agent reasons anew each time):
 - `developer-tooling product manager` — user describes a CLI workflow gap.
 - `infrastructure product manager` — user describes a deployment pipeline issue.
 
-If the problem description is too vague to select a domain, the agent asks the user to describe the domain before proceeding. It does not guess.
+If the problem description is too vague to select a domain, the agent asks the user to describe the domain before proceeding (when dispatched as a subagent, the ask travels as a pending gate run by the dispatching skill). It does not guess.
 
 ## Override
 
