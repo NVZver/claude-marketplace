@@ -1,6 +1,6 @@
 # .lsa.yaml — Living Spec Architecture configuration for this repo.
 # Schema version: 1 (matches lsa plugin major version 0.x.y)
-# See lsa/ARCHITECTURE.md §4.10 for the full schema.
+# See lsa/ARCHITECTURE.md §3 for the full schema.
 
 constitution: .lsa/VISION.md
 specs_root: .lsa/
@@ -28,6 +28,8 @@ modules:
       - lsa/.claude-plugin/plugin.json
       - lsa/ARCHITECTURE.md
       - lsa/README.md
+      - lsa/CORE.md
+      - lsa/CHANGELOG.md
   helper:
     spec: .lsa/modules/helper/spec.md
     artifact_paths:
