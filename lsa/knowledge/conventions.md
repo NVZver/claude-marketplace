@@ -54,7 +54,7 @@ Skills that perform discovery (`lsa:discover`) do this proactively; any unknown 
 
 ## Output discipline
 
-All LSA skill outputs follow [`core/output`](../../core/skills/output/SKILL.md) — citation by link, never restated. No LSA skill restates the seven golden rules inline; it cites `core/output` by section or rule number.
+All LSA skill outputs follow [`core/output`](../../core/skills/output/SKILL.md) — citation by link, never restated. No LSA skill restates the `core/output` rules inline; it cites `core/output` by section or rule number.
 
 ---
 

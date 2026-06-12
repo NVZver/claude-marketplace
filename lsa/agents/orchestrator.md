@@ -31,7 +31,7 @@ Take a user request through the loop to a reconciled result, delegating each ste
 2. **Select** the next sub-agent per the CORE §2 loop: `discover` → `specify` → `verify` → `delegate` → `reconcile`. (→ chosen agent)
 3. **Read** that agent's `## Inputs` table — its required inputs and their sources. (→ input checklist)
 4. **Resolve** inputs: take `user` inputs from the request; for every `discover`-sourced input, run `lsa:discover`. Never guess (CORE §1). (→ resolved inputs)
-5. **Delegate** to the sub-agent; collect its `## Output` and **surface it verbatim to the human** — a sub-agent transcript is invisible (per [`core/output`](../../core/skills/output/SKILL.md) Rule 7 *Delivery test*). Run any pending gates the sub-agent returns (Rule 5 *Self-contained gates*). (→ sub-agent output, surfaced + gated)
+5. **Delegate** to the sub-agent; collect its `## Output` and **surface it verbatim to the human** — a sub-agent transcript is invisible (per [`core/output`](../../core/skills/output/SKILL.md) Rule 7 *Delivery test*). Run or forward any pending gates the sub-agent returns, per the Gates constraint below (Rule 5 *Self-contained gates*). (→ sub-agent output, surfaced + gated)
 6. **Proceed** — loop to step 2 until `reconcile` returns PASS. (→ reconciled result)
 
 ## Output

@@ -14,6 +14,7 @@ Adopts the `core` 0.13.0 **gate-delivery contract** (Rule 5 *Self-contained gate
 - **`lsa/knowledge/conventions.md` § AskUserQuestion convention** — gains the gate-delivery prerequisite paragraph: gates are self-contained or preceded by turn-final delivery; subagent-transcript / pre-tool-call content counts as not shown; approval-gated artifacts follow show → approve → write.
 - **`lsa/skills/reconcile/SKILL.md` Step 4** — drift presentation now cites the Rule 7 *Delivery test* (ordering was already present → approve → edit).
 - **`lsa/README.md`** — specify row + quickstart step 3 + orchestrator note updated to the new approval moment.
+- **`lsa/knowledge/conventions.md` § Output discipline** — *"the seven golden rules"* → *"the `core/output` rules"* (restated count/name violated the canonical-source note at `core/skills/output/SKILL.md:8`).
 
 ### Why
 
