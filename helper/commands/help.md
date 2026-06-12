@@ -34,6 +34,6 @@ Helper's cited answer (≤1.5 screens, opening with a goal restatement) delivere
 ```
 > /help how do I install the marketplace?
 
-(dispatches to Skill(helper))
+(dispatches via Agent tool to helper; answer surfaced verbatim)
 You want to install the marketplace plugins. Per `README.md#install`: run `/plugin marketplace add NVZver/claude-marketplace`, then `/plugin install core@NVZver` (install `core` first). …
 ```
