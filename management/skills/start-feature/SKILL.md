@@ -59,7 +59,7 @@ Handing off to management:roadmap for backlog entry and epic decomposition…
 
 - **Orchestrator only.** Do not duplicate agent logic (shaping, role adaptation, pitch assembly, decomposition) — dispatch, run the gates, hand off.
 - **No silent handoff.** The human gates live in THIS skill (the agent cannot ask — `AskUserQuestion` is unavailable in subagent context): every pending gate the agent returns is presented via `AskUserQuestion` before any downstream step.
-- **Clean exit on reject.** If the final gate returns reject, set `Status: rejected` and exit with no side effects — no branch, no downstream invocation.
+- **Clean exit on reject.** If the final gate returns reject, write nothing and exit with no side effects — no file, no branch, no downstream invocation.
 - **Show changes inline — and own the delivery.** The agent returns the pitch content in its payload, which the user never sees ([`core/output`](../../../core/skills/output/SKILL.md) Rule 7 *Delivery test*). THIS skill delivers the full pitch through a rendered channel before gating, writes the file only on approve (Rule 7 *Authorization boundary*), and quotes the written file inline. The downstream `management:roadmap` handoff surfaces each roadmap row inline. Never reduce a write to "pitch created" / "added to roadmap" without the content.
 - Outputs follow [`core/output`](../../../core/skills/output/SKILL.md) — citation by link, never restated.
 
