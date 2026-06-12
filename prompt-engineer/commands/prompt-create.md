@@ -37,10 +37,11 @@ Constraints:
 
 ## Output
 
-Format: File path + compliance status.
-Length: 2 lines.
+Format — approve path: file path + compliance status, 2 lines. Reject path: one line stating nothing was written.
 
 ## Example Output
 
 Created: `.claude/commands/lint-config.md`
 Review: 0 issues found.
+
+(reject path: `Rejected — nothing written.`)

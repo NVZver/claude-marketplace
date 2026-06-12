@@ -8,7 +8,11 @@ Adopts the `core` 0.13.0 **gate-delivery contract** for the one approval-gated a
 
 ### Changed
 
-- **`prompt-engineer/commands/prompt-create.md` Step 7** — *write → show → confirm* inverted to **show → approve → write** (`core/output` Rule 7 *Authorization boundary*): the full generated content is delivered per the Rule 7 *Delivery test* (turn-final message or gate `preview`), approval runs via `AskUserQuestion`, and only then is the file written; on reject, nothing is written.
+- **`prompt-engineer/commands/prompt-create.md` Step 7 + Output** — *write → show → confirm* inverted to **show → approve → write** (`core/output` Rule 7 *Authorization boundary*): the full generated content is delivered per the Rule 7 *Delivery test* (turn-final message or gate `preview`), approval runs via `AskUserQuestion`, and only then is the file written; on reject, nothing is written (Output/Example now cover the reject path).
+
+### Fixed
+
+- **`prompt-engineer/commands/prompt-review.md` check (l) + `prompt-engineer/README.md`** — dropped the claim that `lsa:verify` runs the complementary PR-time runtime-artifact scan (never implemented — removed from the canonical enforcement section in `core` 0.13.0); the stale `lsa:reconcile` 8-element-block cite now points at `core/output` Rule 7's *Single-change template*.
 
 ### Why
 
