@@ -4,7 +4,7 @@
 
 The Living Spec Architecture plugin — a technology-agnostic spec layer. Skills + an orchestrator agent + a SessionStart hook + a config schema. LSA authors and verifies the spec; it does **not** implement — code-writing is delegated to an external implementer.
 
-**Plugin manifest:** [`lsa/.claude-plugin/plugin.json`](../../../lsa/.claude-plugin/plugin.json) (v0.16.4)
+**Plugin manifest:** [`lsa/.claude-plugin/plugin.json`](../../../lsa/.claude-plugin/plugin.json) (v0.17.0)
 **One-page contract** (the loop, rules, standards, templates): [`lsa/CORE.md`](../../../lsa/CORE.md)
 **Plugin README** (skill table, install, configuration): [`lsa/README.md`](../../../lsa/README.md)
 **Architecture** (directory structure, `.lsa.yaml` schema, branch management): [`lsa/ARCHITECTURE.md`](../../../lsa/ARCHITECTURE.md)
@@ -43,6 +43,7 @@ Baseline SHA per module (consumed by the SessionStart drift hook and `reconcile`
 - **The two checks are the product.** `verify` grounds the spec against the codebase before delegation and blocks an ungrounded spec; `reconcile` checks the returned diff **does · only · all** (scenarios pass ×N ≥95%; every hunk traces; every requirement covered), emits `conformance.md`, and absorbs drift. Per `CORE.md` §6.
 - **Reconcile is absorptive, not blocking** (`.lsa/VISION.md:144`). The `reconcile` skill never blocks, reverts, or reformats the code; it edits the spec to match reality.
 - **`orchestrator` routes; it never implements.** It reads each sub-agent's `## Inputs`, resolves them via `discover`, delegates, and collects output. Per `lsa/agents/orchestrator.md`.
+- **Gate-delivery — show → approve → write (lsa v0.17.0).** Adopts `core` v0.13.0 (`.lsa/modules/core/spec.md`, Rule 7 *Authorization boundary* / *Delivery test*, Rule 5 *Self-contained gates*). `specify` now **drafts** requirements + `.feature` scenarios, shows the full draft, takes approval, and writes `requirements.md` + `<flow>.feature` **only on approve** — nothing on disk before the gate. The `orchestrator` surfaces each sub-agent's `## Output` **verbatim to the human** before any gate (a sub-agent transcript is invisible) and, when it runs as a subagent itself, returns pending gates to the dispatcher rather than attempting `AskUserQuestion`. The convention is recorded once in `lsa/knowledge/conventions.md` § AskUserQuestion convention and cited by skills.
 - **Depends on `core`** for `flow-selector`, `ground-rules`, `output`, `actor-template`. Documented in `lsa/.claude-plugin/plugin.json: description` and `lsa/README.md` *"Depends on"*.
 - **Spec source-of-truth.** Each skill's behavior is owned by its `SKILL.md`; the shared contract is `CORE.md`; this module spec carries module-level invariants only.
-- **Versioning.** `lsa` evolves with its own SemVer + CHANGELOG. Currently v0.16.4.
+- **Versioning.** `lsa` evolves with its own SemVer + CHANGELOG. Currently v0.17.0.
