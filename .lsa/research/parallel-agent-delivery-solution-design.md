@@ -76,3 +76,48 @@ The shape of every point is the same: *the substrate already exists; the thing t
 - **Epic 2** — component 2 (the `fleet` dispatcher + disjoint-epic decomposer).
 - **Epic 3** — semi autonomy (auto-merge on green), gated on Epic 1 proving safe.
 - **Epic 4** — component 5 fleet roll-up (after `lsa-stage-reports` lands) + auto autonomy (deploy + healthcheck).
+
+---
+
+## Design refinement (post-spike, 2026-06-14) — supersedes the "fleet plugin" home
+
+After the spike, the architecture was reshaped in design discussion. This section is the current source of truth where it conflicts with the pitch's "new `fleet` plugin" line (`parallel-agent-delivery.md:31`).
+
+### Separation of Concerns (the real one)
+
+| Role | Owns |
+|---|---|
+| **You** | source of knowledge + intent + approvals |
+| **Manager** (`manager`, the project-aware agent) | *what* to build, *when*, *what can parallelize*, dispatch + orchestrate the parallel runs, gate + serialized-merge + roll-up + autonomy |
+| **LSA** | *how* to build — the executor; runs one full loop per epic; provides `reconcile` as the independent grader (unchanged single-loop semantics) |
+| **Core** | the always-on "done = a cited, gate-proven predicate" rule |
+| **GitHub / git** | isolation (worktrees), enforcement (required checks), serialization (merge queue) |
+
+**No new plugin.** Parallel orchestration bubbles *up* to the manager — it already does sequencing + dependency reasoning (`roadmap.md:218`) and already stages the LSA handoff. The pitch components re-home: dispatcher + serialized-merge + roll-up + autonomy (2, 3, 5, 4) → `manager`; the independent grader (`lsa:reconcile`, component 1) → `lsa`; the done-rule (component 6) → `core`.
+
+### Trigger — `manager:implement`
+
+Function-like command (see naming convention below). Smart default: the manager computes the dependency-ordered plan and **proposes**, the human owns the go (ownership-over-automation, `core/ground-rules` Rule 0).
+
+| Invocation | Behavior |
+|---|---|
+| `manager:implement` *(no args)* | read-only preview: last X roadmap items + which can run in parallel |
+| `manager:implement A, B, C` | compute wave plan → propose → confirm → run (parallel within a wave, sequential across waves) |
+| `manager:implement … --sequential` | override: force one-at-a-time |
+| `manager:implement … --parallel` | override: force all-parallel (user asserts disjointness) |
+
+```
+you:      manager:implement A, B, C
+manager:  "A and B are independent; C depends on B.
+           Plan: wave 1 = A + B in parallel, then wave 2 = C. Run A and B now?"
+you:      yes
+manager:  ▸ LSA implement A ┐ parallel, isolated worktrees → gated + merged
+          ▸ LSA implement B ┘
+          ▸ LSA implement C   (waited for B) → gated + merged → roll-up
+```
+
+### Naming convention adopted: function-like, not noun-like
+
+Shape: `<object|actor>:<action>-<modifier> arg1, arg2`. Commands are verbs you call with arguments, not nouns you browse. `management:roadmap` is the anti-pattern (a noun that was really three verbs). First-pass migration: `manager:next` (recommend), `manager:decompose <pitch>`, `manager:check` (hygiene), `manager:shape <idea>` (was `start-feature`), `manager:implement [epics]` (new). Implies the plugin rename **`management` → `manager`** (the actor, not the abstract domain).
+
+> The convention + rename is cross-plugin (touches all READMEs, cross-refs, `.lsa.yaml`, marketplace) and is tracked as its own roadmap feature, separate from the parallel-execution build.
