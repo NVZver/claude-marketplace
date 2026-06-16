@@ -19,9 +19,9 @@
       "description": "Friendly fact-grounded assistant: `/help` slash command + auto-engaging subagent on user-friction signals (consecutive discover User Verification rejections, free-form `what is X?` mid-flow), with per-signal-type cooldown to prevent nag. Depends on `core` (output discipline) and `lsa` (User Verification reject signal)."
     },
     {
-      "name": "management",
-      "source": "./management",
-      "description": "Product and project management discipline: shapes vague ideas into structured pitches before the build cycle. Ships a product-manager agent with dynamic domain-role adaptation and a start-feature skill that hands off to management:roadmap on approval. Depends on `core` (ground-rules, output)."
+      "name": "manager",
+      "source": "./manager",
+      "description": "Product and project management discipline: shapes vague ideas into structured pitches before the build cycle. Ships a product-manager agent with dynamic domain-role adaptation and a shape skill that hands off to manager:roadmap on approval. Depends on `core` (ground-rules, output)."
     },
     {
       "name": "prompt-engineer",

@@ -3,7 +3,7 @@ name: roadmap
 description: "Manage the project roadmap. Dispatches the project-manager agent to recommend what to work on next, decompose pitches into epics, and tidy roadmap hygiene; runs the agent's returned pending gates via AskUserQuestion and invokes the staged lsa:discover handoff. Single entry point for project management."
 ---
 
-> **Trace.** On load, print first: `=============== [management/skills/roadmap/SKILL.md] [management] ===============`
+> **Trace.** On load, print first: `=============== [manager/skills/roadmap/SKILL.md] [manager] ===============`
 
 
 # Roadmap
@@ -51,7 +51,7 @@ Gate — epics for "Onboarding checklist": approve / reject / adjust
 > approve
 
 Invoking lsa:discover with the staged seed...
-Remaining: Epic 2 (re-invoke management:roadmap after Epic 1 ships).
+Remaining: Epic 2 (re-invoke manager:roadmap after Epic 1 ships).
 ```
 
 ## Constraints
@@ -63,4 +63,4 @@ Remaining: Epic 2 (re-invoke management:roadmap after Epic 1 ships).
 
 ---
 
-`/management:roadmap` — manual invocation.
+`/manager:roadmap` — manual invocation.

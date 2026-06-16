@@ -13,7 +13,7 @@ A Claude Code marketplace shipping five composable plugins for spec-first, fact-
 | [`core`](./core/) | Always-on discipline: seven content rules, seven output rules, flow classification (Quick / Standard / Extended), and the Goal/Input/Steps/Output/Constraints shape every skill follows. |
 | [`lsa`](./lsa/) | **L**iving **S**pec **A**rchitecture — technology-agnostic spec layer: authors a grounded spec (EARS + Gherkin), verifies it against the codebase *before* you build and against the diff *after*, then delegates code-writing to any implementer. Not the coder; hand-edits are *absorbed* into the spec instead of forbidden. |
 | [`helper`](./helper/) | Friendly fact-grounded assistant: a `/help` slash command and an auto-engaging subagent that answers `what is X?` mid-flow with verifiable file citations (line range, heading anchor, or URL). |
-| [`management`](./management/) | Pre-build shaping: turns a vague problem into a structured pitch (problem, appetite, solution sketch, rabbit holes, no-gos) before the build cycle begins. |
+| [`manager`](./manager/) | Pre-build shaping: turns a vague problem into a structured pitch (problem, appetite, solution sketch, rabbit holes, no-gos) before the build cycle begins. |
 | [`prompt-engineer`](./prompt-engineer/) | Plugin-quality discipline: scans your own actors and knowledge files for ground-rule, KISS/DRY, AI over-engineering, and context-budget violations. |
 
 ## Install
@@ -23,14 +23,14 @@ A Claude Code marketplace shipping five composable plugins for spec-first, fact-
 /plugin install core@NVZver
 /plugin install lsa@NVZver
 /plugin install helper@NVZver           # optional — /help Q&A assistant
-/plugin install management@NVZver       # optional — pitch shaping
+/plugin install manager@NVZver          # optional — pitch shaping
 /plugin install prompt-engineer@NVZver  # optional — prompt-quality audits
 /reload-plugins
 ```
 
-Install `core` first — `lsa` and `management` declare it as a `plugin.json` dependency, and the other two plugins (`helper`, `prompt-engineer`) align with its conventions. Then merge the [`core/CLAUDE.md`](./core/CLAUDE.md) fragment into your project's `CLAUDE.md` to wire up the always-on rules.
+Install `core` first — `lsa` and `manager` declare it as a `plugin.json` dependency, and the other two plugins (`helper`, `prompt-engineer`) align with its conventions. Then merge the [`core/CLAUDE.md`](./core/CLAUDE.md) fragment into your project's `CLAUDE.md` to wire up the always-on rules.
 
-**First command.** Run `/lsa:init` in any project to scaffold the spec tree (greenfield or brownfield). Or run `/management:start-feature "<vague idea>"` to shape a pitch before any code lands.
+**First command.** Run `/lsa:init` in any project to scaffold the spec tree (greenfield or brownfield). Or run `/manager:shape "<vague idea>"` to shape a pitch before any code lands.
 
 ## User flows
 
@@ -96,12 +96,12 @@ Sources: README.md#lsa (the loop and its five steps), lsa/README.md
 
 `[illustrative]`
 
-### management
+### manager
 
-The `management:start-feature` skill drives an interactive shaping conversation that turns a vague problem into a structured pitch. The `product-manager` agent self-selects a domain-expert role per invocation, asks the questions the codebase can't answer, gates on your explicit approval, and hands the approved pitch off to `management:roadmap` for epic decomposition. Each item then enters the LSA loop (`lsa:discover` → `lsa:specify` → `lsa:verify` → `lsa:delegate` → `lsa:reconcile`).
+The `manager:shape` skill drives an interactive shaping conversation that turns a vague problem into a structured pitch. The `product-manager` agent self-selects a domain-expert role per invocation, asks the questions the codebase can't answer, gates on your explicit approval, and hands the approved pitch off to `manager:roadmap` for epic decomposition. Each item then enters the LSA loop (`lsa:discover` → `lsa:specify` → `lsa:verify` → `lsa:delegate` → `lsa:reconcile`).
 
 ```text
-> /management:start-feature "users complain onboarding takes too long"
+> /manager:shape "users complain onboarding takes too long"
 
 [product-manager] Shaping into a pitch.
 Adopting role — onboarding-funnel product manager.
@@ -114,7 +114,7 @@ Q2 — how long is "too long" (in minutes), and who measured it?
 
 PROPOSED — pitch at .lsa/pitches/onboarding-friction.md.
 Appetite: small batch (~1 week).
-Approve to hand off to /management:roadmap for epic decomposition, or reshape.
+Approve to hand off to /manager:roadmap for epic decomposition, or reshape.
 ```
 
 `[illustrative]`
@@ -141,12 +141,12 @@ Apply auto-fixes with /prompt-engineer:prompt-optimize.
 
 Agents make silent decisions. Hedged claims (*"probably"*, *"typically"*, *"based on convention"*) pass for facts. Code drifts from intent. Specs rot the moment the code lands. Six months in, nobody — human or agent — knows why the system is the way it is. The system that was supposed to make you faster turned you into a passenger.
 
-The solution is discipline, not magic. `core` constrains output to grounded, sourced, decision-first prose on every task. `lsa` chains every code line to a human-owned requirement and absorbs drift instead of forbidding it. `helper` and `management` keep you from typing yourself into a corner before the code starts. `prompt-engineer` keeps the discipline files themselves honest.
+The solution is discipline, not magic. `core` constrains output to grounded, sourced, decision-first prose on every task. `lsa` chains every code line to a human-owned requirement and absorbs drift instead of forbidding it. `helper` and `manager` keep you from typing yourself into a corner before the code starts. `prompt-engineer` keeps the discipline files themselves honest.
 
 ## How it works in 30 seconds
 
 1. **`core` is always-on.** Every task fires `ground-rules` + `output` automatically. The one hard output rule is *sourced* — every claim carries a source + quote; the rest (structured, minimal, verdict-first, …) is guidance the agent applies when it serves the answer, so simple questions get short prose instead of a six-block template.
-2. **Got a vague idea?** `/management:start-feature` shapes it into a pitch with clear scope before you commit to building.
+2. **Got a vague idea?** `/manager:shape` shapes it into a pitch with clear scope before you commit to building.
 3. **Non-trivial tasks classify first.** `core/flow-selector` proposes Quick / Standard / Extended with chain-of-thought reasoning; you confirm.
 4. **Standard and Extended run through LSA.** `lsa:discover` → `lsa:specify` → `lsa:verify` → `lsa:delegate` → `lsa:reconcile`. Every line of code traces back to a requirement; code-writing is delegated to your implementer.
 5. **Hand-edited code?** `lsa:reconcile` offers to update the spec — it never blocks the edit.
@@ -172,7 +172,7 @@ Full threat model, reporting channel, and hook transparency: [`SECURITY.md`](./S
 - [`.lsa/VISION.md`](./.lsa/VISION.md) — the full design rationale (the constitution).
 - [`knowledge/index.md`](./knowledge/index.md) — flat topic-to-path index across every knowledge file in every plugin.
 - [`CONTRIBUTING.md`](./CONTRIBUTING.md) — how to build, contribute, verify.
-- Per-plugin docs — [`core/README.md`](./core/README.md), [`lsa/README.md`](./lsa/README.md), [`helper/README.md`](./helper/README.md), [`management/README.md`](./management/README.md), [`prompt-engineer/README.md`](./prompt-engineer/README.md).
+- Per-plugin docs — [`core/README.md`](./core/README.md), [`lsa/README.md`](./lsa/README.md), [`helper/README.md`](./helper/README.md), [`manager/README.md`](./manager/README.md), [`prompt-engineer/README.md`](./prompt-engineer/README.md).
 - [`lsa/ARCHITECTURE.md`](./lsa/ARCHITECTURE.md) — directory layout, `.lsa.yaml` schema, branch management.
 
 Licensed under [`LICENSE`](./LICENSE).

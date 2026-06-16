@@ -40,10 +40,10 @@ Three stages, planned together, executed as separate batches. Each stage is inde
     - **`core`** — always-on discipline. Show how `flow-selector` classifies a task before work begins.
     - **`lsa`** — the build cycle: `lsa:discover` -> `lsa:plan` -> `lsa:implement` -> `lsa:verify`. Prompt, phase, and what the user sees at each step.
     - **`helper`** — `/help what is LSA?` -> cited answer in seconds.
-    - **`management`** — `management:start-feature` with a vague idea -> shaped pitch -> approval gate -> LSA handoff.
+    - **`manager`** — `manager:shape` with a vague idea -> shaped pitch -> approval gate -> LSA handoff.
     - **`prompt-engineer`** — `prompt-engineer:prompt-review <path>` -> findings table with severity and rule citations.
   - The helper agent reads `knowledge/index.md` — a flat table (one row per topic: name, canonical file path, one-sentence description) indexing every knowledge file across all plugins. Agents look up topics by structure instead of grepping.
-  - The onboarding fast-path switches from `file:line-range` citations (e.g., `README.md:73-83`) to `file#heading-anchor` citations (e.g., `README.md#install`). Headings survive line shifts. New rows added for `management` and `prompt-engineer`.
+  - The onboarding fast-path switches from `file:line-range` citations (e.g., `README.md:73-83`) to `file#heading-anchor` citations (e.g., `README.md#install`). Headings survive line shifts. New rows added for `manager` and `prompt-engineer`.
   - `main.spec.md` module index gains entries for `helper` and `prompt-engineer`.
 
 - **Main components (Stage 1):**

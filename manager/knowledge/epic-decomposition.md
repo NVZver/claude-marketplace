@@ -1,4 +1,4 @@
-> **Trace.** On load, print first: `=============== [management/knowledge/epic-decomposition.md] [management] ===============`
+> **Trace.** On load, print first: `=============== [manager/knowledge/epic-decomposition.md] [manager] ===============`
 
 # Epic decomposition — knowledge
 

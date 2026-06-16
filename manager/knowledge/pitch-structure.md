@@ -1,4 +1,4 @@
-> **Trace.** On load, print first: `=============== [management/knowledge/pitch-structure.md] [management] ===============`
+> **Trace.** On load, print first: `=============== [manager/knowledge/pitch-structure.md] [manager] ===============`
 
 # Pitch structure — knowledge
 
@@ -13,7 +13,7 @@ Status: draft | approved
 Why now: <one sentence — what makes this timely; "no urgency — backlog candidate" if none>
 ```
 
-**Status lifecycle (since management v0.6.0, per `core/output` Rule 7 *Authorization boundary*):** `draft` exists only in the product-manager agent's return payload — never on disk. `management:start-feature` writes the file with `Status: approved` only after its approve gate. A rejected pitch is never written; its rationale stays in the conversation.
+**Status lifecycle (since management v0.6.0, per `core/output` Rule 7 *Authorization boundary*):** `draft` exists only in the product-manager agent's return payload — never on disk. `manager:shape` writes the file with `Status: approved` only after its approve gate. A rejected pitch is never written; its rationale stays in the conversation.
 
 ## Five sections
 
@@ -70,7 +70,7 @@ Definition of success: <how we will know this is solved>
 Shaped by: Nikita Zverev
 Date: 2026-05-26
 Status: draft
-Why now: third plugin just shipped (management) — pattern is repeating, cost of mistakes compounds
+Why now: third plugin just shipped (manager) — pattern is repeating, cost of mistakes compounds
 
 # Onboarding checklist for new marketplace plugins
 
@@ -114,5 +114,5 @@ Out of appetite: a scaffolding command that auto-generates files (that is a sepa
 1. This pitch does NOT cover auto-scaffolding (a `/plugin new` command) — that requires
    agent logic and a separate appetite decision.
 2. This pitch does NOT cover external contributor onboarding (CoC, PR templates) — out of
-   scope for the management plugin.
+   scope for the manager plugin.
 ```

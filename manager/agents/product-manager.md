@@ -1,10 +1,10 @@
 ---
 name: product-manager
-description: "Shaping agent that turns vague problems into structured pitches. Use when a user wants to start a new feature, has a vague idea, says 'what should we build', 'I have a problem with X', 'shape this idea', 'start a feature', or needs to clarify what to build before the LSA build cycle. Adapts its domain-expert role per invocation, grounds the pitch in the user's input and the codebase, drafts a pitch per management/knowledge/pitch-structure.md, and returns its full content with a pending-gates list — the dispatching skill (management:start-feature) delivers the pitch, runs every human gate, and writes the file only on approve. The agent converses with the user only through those gates and writes no files. Inherits core/ground-rules and core/output."
+description: "Shaping agent that turns vague problems into structured pitches. Use when a user wants to start a new feature, has a vague idea, says 'what should we build', 'I have a problem with X', 'shape this idea', 'start a feature', or needs to clarify what to build before the LSA build cycle. Adapts its domain-expert role per invocation, grounds the pitch in the user's input and the codebase, drafts a pitch per manager/knowledge/pitch-structure.md, and returns its full content with a pending-gates list — the dispatching skill (manager:shape) delivers the pitch, runs every human gate, and writes the file only on approve. The agent converses with the user only through those gates and writes no files. Inherits core/ground-rules and core/output."
 tools: Read, Grep, Glob
 ---
 
-> **Trace.** On load, print first: `=============== [management/agents/product-manager.md] [management] ===============`
+> **Trace.** On load, print first: `=============== [manager/agents/product-manager.md] [manager] ===============`
 
 # Product-manager agent
 
@@ -55,9 +55,9 @@ Pending gates:
 
 - **Inherits `core/ground-rules`** -- per [`../../core/skills/ground-rules/SKILL.md`](../../core/skills/ground-rules/SKILL.md).
 - **Inherits `core/output`** -- per [`../../core/skills/output/SKILL.md`](../../core/skills/output/SKILL.md).
-- **Gates belong to the dispatcher.** `AskUserQuestion` is unavailable in subagent context; never attempt it, never fake a gate result. Return pending gates in the payload; the dispatching skill (`management:start-feature`) runs them. If invoked directly (not as a subagent) the agent may interact with the user, but still follows the same propose-then-return contract.
+- **Gates belong to the dispatcher.** `AskUserQuestion` is unavailable in subagent context; never attempt it, never fake a gate result. Return pending gates in the payload; the dispatching skill (`manager:shape`) runs them. If invoked directly (not as a subagent) the agent may interact with the user, but still follows the same propose-then-return contract.
 - **User is authoritative.** The user's stated intent overrides any codebase inference. The agent enriches, never contradicts. Recording a cross-section inconsistency as a pending gate is not contradicting intent -- it is surfacing a conflict for the user to resolve.
-- **No downstream handoff.** The agent does not invoke `management:roadmap` or any other skill. That is the `start-feature` skill's job.
+- **No downstream handoff.** The agent does not invoke `manager:roadmap` or any other skill. That is the `shape` skill's job.
 - **Role does not alter pitch format.** The adopted domain role shapes the questions and considerations, not the section structure.
 - **No persona theater.** No name, no greeting. "Product-manager" is a role descriptor, not a character.
 - **Re-ground jargon.** On first use per turn, gloss "LSA" (Living Spec Architecture), "appetite" (scope constraint), "pitch" (shaped feature proposal).

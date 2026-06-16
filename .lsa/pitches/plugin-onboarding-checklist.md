@@ -13,7 +13,7 @@ Plugin authors (the repo owner today, but the pattern should hold for contributo
 
 Evidence: the `helper` plugin's `.lsa.yaml` module entry was added in v0.2.0 as a separate item, not part of the v0.1.0 scaffold (`helper/CHANGELOG.md:61` — *"`.lsa.yaml` — added `modules.helper` block with artifact paths ... so `lsa-verify` tracks the plugin"*). The module spec at `.lsa/modules/helper/spec.md` was also a later addition, first referenced in the v0.3.0 changelog. `CONTRIBUTING.md` documents how to add a skill (8-step checklist, lines 42–51) and a knowledge surface (lines 57–62), but has no "Adding a plugin" section.
 
-Current workaround: the author manually cross-references existing plugins (copies structure from `helper/`, `lsa/`, or `management/`) and hopes they remember every file. Each new plugin repeats this from scratch.
+Current workaround: the author manually cross-references existing plugins (copies structure from `helper/`, `lsa/`, or `manager/`) and hopes they remember every file. Each new plugin repeats this from scratch.
 
 Definition of success: a new plugin scaffold passes `lsa:verify` on the first commit — no follow-up fix commits for missing structural files.
 
@@ -37,7 +37,7 @@ Out of appetite: a scaffolding command that auto-generates files (separate pitch
 
 ## No-gos
 
-1. This pitch does NOT cover auto-scaffolding (a `/plugin new` or `management:scaffold-plugin` command) — that requires agent logic and a separate appetite decision. The checklist establishes the canonical file list that any future scaffolding command would consume.
+1. This pitch does NOT cover auto-scaffolding (a `/plugin new` or `manager:scaffold-plugin` command) — that requires agent logic and a separate appetite decision. The checklist establishes the canonical file list that any future scaffolding command would consume.
 2. This pitch does NOT cover `lsa:verify` structural validation (automatically checking plugin completeness) — that is a verification enhancement, not a knowledge artifact. Follow-on pitch that could read the checklist as its source of truth.
 3. This pitch does NOT cover external contributor onboarding (CoC, PR templates, contributor license) — community governance, not plugin structure.
 4. This pitch does NOT cover content templates (pre-filled `plugin.json`, boilerplate `CHANGELOG.md` text) — the checklist tells you what to create and where to find the format, not what to paste. Content templates blur into scaffolding, which is out of appetite.

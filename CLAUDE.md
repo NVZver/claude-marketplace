@@ -6,7 +6,7 @@ Operating rules live in [`.lsa/VISION.md`](./.lsa/VISION.md) — that file is th
 
 ## Default plugins
 
-Five plugins ship from this marketplace ([`README.md#the-five-plugins`](./README.md#the-five-plugins) lists all of them). Two — `core` and `lsa` — form the required development discipline; the other three (`helper`, `management`, `prompt-engineer`) are optional. **Install at least the required pair:**
+Five plugins ship from this marketplace ([`README.md#the-five-plugins`](./README.md#the-five-plugins) lists all of them). Two — `core` and `lsa` — form the required development discipline; the other three (`helper`, `manager`, `prompt-engineer`) are optional. **Install at least the required pair:**
 
 ```
 /plugin marketplace add NVZver/claude-marketplace

@@ -15,7 +15,7 @@ Users repeatedly hit the same friction: a skill says "I added X to file Y" or "I
 It is now 2026-05-28 and the user is reporting the same friction again. Evidence (verbatim): *"Sometimes steps are unclear because only files changed, and the agent asks to go and verify them. I'd rather see what actually was changed without jumping through files and picking changes."*
 
 Diagnosis: Rule 7 lives in `core/output` as a general rule, was applied to LSA skill `Observable result:` lines once, and was deferred for Helper (Epic 3 of the original ship). The gaps where skills still violate the rule:
-- Skills added after the v0.8.0 sweep (`lsa:implement`, `management:*`, `prompt-engineer:*`) inherit Rule 7 via cite but don't have explicit show-changes templates in their step bodies.
+- Skills added after the v0.8.0 sweep (`lsa:implement`, `manager:*`, `prompt-engineer:*`) inherit Rule 7 via cite but don't have explicit show-changes templates in their step bodies.
 - Helper Epic 3 was deferred per the original roadmap row — Helper still describes file changes without quoting them.
 - The original sweep targeted `Observable result:` lines, not the verb-headline lines (PROPOSED, APPLIED, MARKED) where the violation typically appears.
 - No regression check exists — the rule can decay silently without any verify-time signal.
@@ -24,7 +24,7 @@ Reference exemplar that the user explicitly endorsed: `lsa:reconcile`'s 8-elemen
 
 Current workaround: the user opens the changed files manually after every skill turn to verify what actually happened.
 
-Definition of success: (a) every skill in `lsa/`, `core/`, `helper/`, `management/`, `prompt-engineer/` that writes / edits / marks anything has the show-changes-inline expectation explicitly cited in its `Steps` body — not just in the constraints inheritance; (b) regression checks flag violations at BOTH author-time (`prompt-engineer:prompt-review` against skill/agent prompt sources) AND PR-time (`lsa:verify` against feature-implementation runtime outputs); (c) the `lsa:reconcile` 8-element template is the documented exemplar referenced from every enforcement cite.
+Definition of success: (a) every skill in `lsa/`, `core/`, `helper/`, `manager/`, `prompt-engineer/` that writes / edits / marks anything has the show-changes-inline expectation explicitly cited in its `Steps` body — not just in the constraints inheritance; (b) regression checks flag violations at BOTH author-time (`prompt-engineer:prompt-review` against skill/agent prompt sources) AND PR-time (`lsa:verify` against feature-implementation runtime outputs); (c) the `lsa:reconcile` 8-element template is the documented exemplar referenced from every enforcement cite.
 
 ## Appetite
 
@@ -41,7 +41,7 @@ Out of appetite:
 - **Key user interactions:**
   - User runs `lsa:plan` and approves an epic -> the skill writes the epic to `tasks.md`, then quotes the new epic block inline before saying anything else. Today it often just says "Epic 3 added".
   - User runs `helper /help` and Helper updates a knowledge file as a side-effect -> Helper quotes the change inline. Today it says "I updated onboarding-fast-path.md".
-  - User runs `management:roadmap` and a new row is appended -> the skill quotes the new row inline with `file:line` before the verdict. Today the verdict comes first; the row content is implicit.
+  - User runs `manager:roadmap` and a new row is appended -> the skill quotes the new row inline with `file:line` before the verdict. Today the verdict comes first; the row content is implicit.
   - User runs `prompt-engineer:prompt-review` against a skill source -> the review flags any step body that writes/edits/marks without an explicit show-changes-inline cite. Catches the violation in the prompt source before it ships.
   - User runs `lsa:verify` on a feature PR -> the verify scans the runtime outputs / PR diff for the "go check the file" patterns (bare "I added X to Y", "marked X as resolved", "updated Z") with no inline quote of the changed content. Catches the violation in the runtime artifact.
 
@@ -51,8 +51,8 @@ Out of appetite:
   - Skill body sweep (5 plugins):
     - `lsa/skills/**/SKILL.md` — every step that writes / edits / marks gets an explicit "quote the change inline" instruction in the step body, not only in the `Observable result:` line. Touches `discover`, `plan`, `implement`, `verify`, `init`, `revise-constitution` at minimum.
     - `helper/agents/helper.md` — explicit show-changes when Helper writes to its own knowledge files or surfaces a fact from a file (the fact-quote is already there; this extends to actions Helper takes).
-    - `management/skills/**/SKILL.md` — `start-feature` and `roadmap` skills get explicit cites.
-    - `management/agents/**` — `product-manager` already writes pitches and quotes them inline (per Step 4 of this very agent); `project-manager` needs the cite.
+    - `manager/skills/**/SKILL.md` — `shape` and `roadmap` skills get explicit cites.
+    - `manager/agents/**` — `product-manager` already writes pitches and quotes them inline (per Step 4 of this very agent); `project-manager` needs the cite.
     - `core/skills/**/SKILL.md` — `flow-selector` and others get cites where applicable.
     - `prompt-engineer/**` — already complies; spot-check only.
   - **Regression check — author-time (sources):** new check inside `prompt-engineer:prompt-review` that scans skill/agent prompt source files (`**/SKILL.md`, `**/agents/*.md`) for steps that describe a write/edit/mark action without an accompanying show-changes-inline directive. Frames violations at the prompt-source layer, before the skill ships. Warning-only initially.
@@ -61,7 +61,7 @@ Out of appetite:
 
 - **Tasks (ordered):**
   1. Update `core/output` Rule 7 with the "How this gets enforced" sub-section pointing to both regression checks + `lsa:reconcile` gold standard.
-  2. Per-skill sweep across the 5 plugins (lsa first, then management, helper, core, prompt-engineer — independent PRs).
+  2. Per-skill sweep across the 5 plugins (lsa first, then manager, helper, core, prompt-engineer — independent PRs).
   3. Wire the author-time regression check into `prompt-engineer/skills/prompt-review/SKILL.md` (scan prompt sources).
   4. Wire the PR-time regression check into `lsa/skills/verify/SKILL.md` (scan runtime artifacts).
   5. Validate both checks against a recent PR known to comply (positive baseline) and one known to violate (negative baseline).
@@ -74,7 +74,7 @@ Out of appetite:
 
 2. **Interaction with pitch #2 (relax `core/output` to advisory).** Per the sequencing note above, this pitch ships FIRST. Once Pitch 2 lands, Rule 7 becomes guidance in `core/output` — but the per-skill enforcement and the two regression checks shipped here already hold the discipline at the skill / verify-time level, independent of `core/output`'s posture. This is exactly Pitch 2's stated mitigation pattern.
 
-3. **Sweep scope blast radius.** Touching every skill body across five plugins is a wide change. Mitigation: chunk by plugin in separate PRs (lsa first, then management, then helper, then core, then prompt-engineer). Each PR is independently shippable; no cross-plugin atomicity required.
+3. **Sweep scope blast radius.** Touching every skill body across five plugins is a wide change. Mitigation: chunk by plugin in separate PRs (lsa first, then manager, then helper, then core, then prompt-engineer). Each PR is independently shippable; no cross-plugin atomicity required.
 
 4. **`Observable result:` vs. step body.** The original v0.8.0 sweep modified `Observable result:` lines. This pitch proposes adding the cite to the step body too — duplication risk. Mitigation: keep `Observable result:` as the verdict ("change was quoted inline per Rule 7"); the step body carries the *instruction* ("when you write, quote the new content before your verdict"). Different roles, no duplication.
 

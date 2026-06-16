@@ -1,4 +1,4 @@
-Shaped by: Nikita Zverev (via management:product-manager, developer-tooling lens)
+Shaped by: Nikita Zverev (via manager:product-manager, developer-tooling lens)
 Date: 2026-06-12
 Status: draft
 Why now: first external adopters are running LSA without the author's context (field reports 2026-06-11) — opaque stage transitions now cost real users, not just the owner.

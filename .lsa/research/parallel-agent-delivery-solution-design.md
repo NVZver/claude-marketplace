@@ -24,7 +24,7 @@ The shape of every point is the same: *the substrate already exists; the thing t
 - **Our layer on top.**
   1. The **disjoint-epic decomposer** — split a backlog into epics that don't *logically* overlap (vendors isolate file edits, none guarantee epic-logic disjointness; this is the real risk we own).
   2. A **dispatch policy** — one worktree + branch + agent + PR per epic, with a **configurable concurrency cap (default ~4)**, plus teardown baked into the gate (worktrees are a known cleanup footgun).
-  3. Likely a new optional **`fleet` plugin** (depends on core + lsa + management).
+  3. Likely a new optional **`fleet` plugin** (depends on core + lsa + manager).
 
 ## 3. Serialized merge (keep `main` always-green)
 
