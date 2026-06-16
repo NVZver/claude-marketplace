@@ -2,6 +2,18 @@
 
 All notable changes to the `manager` plugin (formerly `management`) are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.10.0] – 2026-06-16
+
+Adds `manager:implement` as a **read-only preview stub** — Epic 3 of the `function-command-naming-and-manager-rename` pitch. Names the command surface ahead of the `parallel-agent-delivery` execution engine; the engine itself is explicitly out of scope.
+
+### Added
+
+- **`manager/skills/implement/SKILL.md`** (`manager:implement [epics] [--parallel|--sequential]`) — read-only preview stub. Reads `${specs_root}/roadmap.md` per the fast-path discipline (`core/knowledge/fast-path-source-of-truth.md`), quotes the last X (~5) `backlog`/`not started` rows with `file:line` citations, and gives an explicitly-INDICATIVE parallel-vs-sequential note. Prominently states that the execution engine (dependency-wave planning, isolated git-worktree dispatch, per-PR gating, serialized merge, autonomy levels) is **not yet implemented** and is owned by the `parallel-agent-delivery` feature (`.lsa/pitches/parallel-agent-delivery.md`). Writes nothing and dispatches no implementer; with args it still only previews and never implies execution ran (embodies "done is a gate-proven predicate"). Name follows `manager/knowledge/command-naming.md`.
+
+### Why
+
+Third epic of the `management` → `manager` rename arc. Names the `manager:implement` command surface now — with an honest read-only preview — so the surface reads truthfully ahead of the deferred parallel-agent-delivery engine, which is explicitly out of scope here (no worktree/merge/autonomy/dependency-graph logic). Prevents a future false "it runs" claim by shipping the stub with the deferral stated up front.
+
 ## [0.9.0] – 2026-06-16
 
 Splits the 3-in-1 `manager:roadmap` skill into three function-named verb skills — Epic 4 of the `function-command-naming-and-manager-rename` pitch. `manager:roadmap` *was* one noun bundling three verbs; it is now `manager:next` / `manager:decompose <pitch>` / `manager:check`, each dispatching the same `project-manager` agent with a distinct intent. Realizes the `command-naming.md` convention the anti-pattern flagged. Clean break, **no alias** — `manager:roadmap` no longer exists. Pre-1.0, so a breaking change ships as a minor bump per SemVer §4.

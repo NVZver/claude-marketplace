@@ -1,7 +1,7 @@
 {
   "name": "manager",
   "description": "Product and project management discipline for the NVZver marketplace. Agents: product-manager — shapes vague ideas into structured draft pitches and returns their full content + pending human gates (writes no files); project-manager — stewards the roadmap, recommends what to build next with dependency/risk/value reasoning, decomposes pitches into focused epics, and stages each epic's LSA handoff. Entry points: manager:shape (shaping), manager:next (recommend what to work on next), manager:decompose <pitch> (decompose a pitch into epics), and manager:check (roadmap hygiene) — the skills deliver the content, run every human gate, and write artifacts only on approve (agents propose, skills gate — per the core 0.13.0 gate-delivery contract). Depends on core (ground-rules, output).",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "author": {
     "name": "Nikita Zverev"
   },
