@@ -2,6 +2,32 @@
 
 All notable changes to the `manager` plugin (formerly `management`) are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.9.0] – 2026-06-16
+
+Splits the 3-in-1 `manager:roadmap` skill into three function-named verb skills — Epic 4 of the `function-command-naming-and-manager-rename` pitch. `manager:roadmap` *was* one noun bundling three verbs; it is now `manager:next` / `manager:decompose <pitch>` / `manager:check`, each dispatching the same `project-manager` agent with a distinct intent. Realizes the `command-naming.md` convention the anti-pattern flagged. Clean break, **no alias** — `manager:roadmap` no longer exists. Pre-1.0, so a breaking change ships as a minor bump per SemVer §4.
+
+### Added
+
+- **`manager/skills/next/SKILL.md`** (`manager:next`) — recommend what to work on next. Keeps the Step 0 fast-path (plain "what's next" → first `backlog`/`not started` row quoted with `file:line`, no dispatch, per `core/knowledge/fast-path-source-of-truth.md`); dispatches the `project-manager` (`intent: recommend-next` / `sequence-backlog`) for "recommend an order" / "what should I pick" and runs the pick gate. No `lsa:discover` handoff.
+- **`manager/skills/decompose/SKILL.md`** (`manager:decompose <pitch>`) — decompose a pitch (slug/path argument) into epics. Dispatches the `project-manager` (`intent: decompose <pitch>`), runs the approve/reject/adjust epic gate, and on approval invokes the staged `lsa:discover` handoff with the first-epic seed.
+- **`manager/skills/check/SKILL.md`** (`manager:check`) — check roadmap hygiene. Dispatches the `project-manager` (`intent: hygiene-check`) and gates each proposed row diff one by one; re-renders the rows the agent applies.
+- **`manager/knowledge/roadmap-orchestration.md`** — the shared dispatch → gate → re-render contract extracted (DRY) from the former roadmap skill's Step 2 + Constraints. The three verb skills cite it instead of restating the orchestration loop.
+
+### Removed
+
+- **`manager/skills/roadmap/SKILL.md`** — the 3-in-1 skill. Clean break, no alias.
+
+### Changed
+
+- **`manager/skills/shape/SKILL.md`** — handoff `manager:roadmap` → `manager:decompose` (description, Step 4, Output, constraints) since decomposition is now its own verb.
+- **`manager/agents/project-manager.md`** — `manager:roadmap` references retargeted: description (dispatching skills list), Mode 0 wrapper note (`manager:next`), Step 12 + example (`manager:decompose`), constraints (three-verb list). Behavior unchanged — the agent is shared; each skill passes an explicit intent.
+- **`manager/knowledge/command-naming.md`** — the worked anti-pattern rephrased as resolved: `manager:roadmap` *was* the noun bundling three verbs; the split is now the live state. Citation kept valid.
+- **Cross-references swept to the matching verb** — `manager/README.md` (skill/agent tables, flow diagram, fast-path section), `.lsa/modules/manager/spec.md` (invariants), `.claude-plugin/marketplace.json` (description), `knowledge/index.md` (fast-path caller), `helper/knowledge/onboarding-fast-path.md` (row 7 → `manager:decompose`, "what's next" owner → `manager:next`), `core/knowledge/fast-path-source-of-truth.md` (caller table → `manager:next`), `core/README.md` (fast-path caller list).
+
+### Why
+
+Fourth and final epic of the `management` → `manager` rename. Epic 1 (0.7.0) defined the command-naming convention; this epic realizes it on the roadmap surface — one verb per action, arguments explicit, nothing hidden behind a noun. The three verbs share one agent + one orchestration contract (`roadmap-orchestration.md`), so the split adds clarity without duplicating logic.
+
 ## [0.8.0] – 2026-06-16
 
 Renames the plugin `management` → `manager` and the shaping command `management:start-feature` → `manager:shape` — Epic 2 of the `function-command-naming-and-manager-rename` pitch. The plugin is now named for the **actor** (`manager`) rather than the activity; it still *does* product and project management. Clean break, **no aliases** — the old `management:` command namespace and `management/` plugin path no longer exist. Pre-1.0, so a breaking change ships as a minor bump per SemVer §4.

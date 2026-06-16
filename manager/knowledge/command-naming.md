@@ -17,23 +17,21 @@ Commands are **functions you call**, not nouns you browse. A command name plus i
 
 **Test.** Read the name and args aloud as a sentence. `manager:decompose <pitch>` reads as "manager, decompose this pitch" — passes. `manager:roadmap` reads as "manager roadmap" — a noun phrase, no verb, fails.
 
-## Anti-pattern: the noun that hides verbs
+## Worked example: the noun that hid verbs (now resolved)
 
-`manager:roadmap` is a noun. Its own description bundles **three distinct verbs** into one entry point — "recommend what to work on next, decompose pitches into epics, and tidy roadmap hygiene" (`manager/skills/roadmap/SKILL.md:3`). A reader cannot tell from the name `roadmap` which of the three will run, or what to pass it.
-
-Split one noun into three verbs:
+`manager:roadmap` *was* a noun. Its description bundled **three distinct verbs** into one entry point — "recommend what to work on next, decompose pitches into epics, and tidy roadmap hygiene". A reader could not tell from the name `roadmap` which of the three would run, or what to pass it. As of `manager` v0.9.0 the noun is split into three verb skills, each dispatching the same `project-manager` agent with a distinct intent. The before→after:
 
 ```
 # Before — one noun, three hidden actions
 manager:roadmap            # recommend? decompose? tidy? unclear
 
-# After — one verb each, args explicit
+# After (live) — one verb each, args explicit
 manager:next               # recommend the next backlog item
 manager:decompose <pitch>  # decompose a pitch into epics
-manager:check              # tidy roadmap hygiene
+manager:check              # check roadmap hygiene
 ```
 
-Each verb has a name that states its action and an argument list that states its input. Nothing is hidden.
+Each verb now has a name that states its action and an argument list that states its input. Nothing is hidden. The shared dispatch → gate → re-render logic lives once at [`./roadmap-orchestration.md`](./roadmap-orchestration.md); the verb skills cite it rather than restating it.
 
 ## How to apply
 

@@ -98,7 +98,7 @@ Sources: README.md#lsa (the loop and its five steps), lsa/README.md
 
 ### manager
 
-The `manager:shape` skill drives an interactive shaping conversation that turns a vague problem into a structured pitch. The `product-manager` agent self-selects a domain-expert role per invocation, asks the questions the codebase can't answer, gates on your explicit approval, and hands the approved pitch off to `manager:roadmap` for epic decomposition. Each item then enters the LSA loop (`lsa:discover` → `lsa:specify` → `lsa:verify` → `lsa:delegate` → `lsa:reconcile`).
+The `manager:shape` skill drives an interactive shaping conversation that turns a vague problem into a structured pitch. The `product-manager` agent self-selects a domain-expert role per invocation, asks the questions the codebase can't answer, gates on your explicit approval, and hands the approved pitch off to `manager:decompose` for epic decomposition. Each item then enters the LSA loop (`lsa:discover` → `lsa:specify` → `lsa:verify` → `lsa:delegate` → `lsa:reconcile`).
 
 ```text
 > /manager:shape "users complain onboarding takes too long"
@@ -114,7 +114,7 @@ Q2 — how long is "too long" (in minutes), and who measured it?
 
 PROPOSED — pitch at .lsa/pitches/onboarding-friction.md.
 Appetite: small batch (~1 week).
-Approve to hand off to /manager:roadmap for epic decomposition, or reshape.
+Approve to hand off to /manager:decompose for epic decomposition, or reshape.
 ```
 
 `[illustrative]`
