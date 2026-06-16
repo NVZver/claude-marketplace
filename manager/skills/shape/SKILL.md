@@ -1,6 +1,6 @@
 ---
 name: shape
-description: "Shape a new feature from a vague idea into a structured pitch. Input: problem or opportunity description (argument or interactive prompt). Output: approved pitch file at ${specs_root}/pitches/<slug>.md — the agent returns the draft content + pending gates; this skill delivers the pitch to the user, runs the gates via AskUserQuestion, and writes the file only on approve (nothing on reject) — then handoff to manager:roadmap for epic decomposition."
+description: "Shape a new feature from a vague idea into a structured pitch. Input: problem or opportunity description (argument or interactive prompt). Output: approved pitch file at ${specs_root}/pitches/<slug>.md — the agent returns the draft content + pending gates; this skill delivers the pitch to the user, runs the gates via AskUserQuestion, and writes the file only on approve (nothing on reject) — then handoff to manager:decompose for epic decomposition."
 ---
 
 > **Trace.** On load, print first: `=============== [manager/skills/shape/SKILL.md] [manager] ===============`
@@ -8,7 +8,7 @@ description: "Shape a new feature from a vague idea into a structured pitch. Inp
 
 # Start Feature
 
-Orchestrator skill. Accepts a vague idea, dispatches the `product-manager` agent for shaping, runs the agent's returned human gates via `AskUserQuestion`, then hands off to `manager:roadmap` for epic decomposition. Does not contain shaping logic or decomposition logic — those live in the agents.
+Orchestrator skill. Accepts a vague idea, dispatches the `product-manager` agent for shaping, runs the agent's returned human gates via `AskUserQuestion`, then hands off to `manager:decompose` for epic decomposition. Does not contain shaping logic or decomposition logic — those live in the agents.
 
 ## Goal
 
@@ -32,11 +32,11 @@ Go from a vague idea to a human-approved pitch with epics ready for the LSA buil
 
    Observable result: pitch delivered through a rendered channel; every pending gate resolved by the user; on approve the file exists with `Status: approved` and is quoted inline; on reject no file exists.
 
-4. **Hand off to roadmap.** On approve, invoke `manager:roadmap` via the `Skill` tool. The project-manager agent handles the roadmap entry (backlog row, priority, sequencing) and epic decomposition — this skill does not write to `${specs_root}/roadmap.md` directly. (On reject, Step 3 already exited cleanly.) Observable result: `manager:roadmap` executing; pitch added to roadmap by project-manager.
+4. **Hand off to decompose.** On approve, invoke `manager:decompose` via the `Skill` tool with the approved pitch slug. The project-manager agent handles the roadmap entry (backlog row, priority, sequencing) and epic decomposition — this skill does not write to `${specs_root}/roadmap.md` directly. (On reject, Step 3 already exited cleanly.) Observable result: `manager:decompose` executing; pitch added to roadmap and decomposed into epics by project-manager.
 
 ## Output
 
-Either `manager:roadmap` is executing (approved path) or clean exit (rejected path). The pitch file exists at `${specs_root}/pitches/<slug>.md` **only on approve** (`Status: approved`, written by this skill after its gates); on reject nothing is written. Roadmap writes (backlog row, priority, sequencing) are handled by the project-manager agent via `manager:roadmap` — this skill never writes to `${specs_root}/roadmap.md` directly.
+Either `manager:decompose` is executing (approved path) or clean exit (rejected path). The pitch file exists at `${specs_root}/pitches/<slug>.md` **only on approve** (`Status: approved`, written by this skill after its gates); on reject nothing is written. Roadmap writes (backlog row, priority, sequencing) are handled by the project-manager agent via `manager:decompose` — this skill never writes to `${specs_root}/roadmap.md` directly.
 
 ### Example Output
 
@@ -52,7 +52,7 @@ Gate 2 — appetite fork: checklist knowledge file only (recommended)? > accept
 Gate 3 — approve / reshape / reject? > approve
 
 Written: .lsa/pitches/onboarding-checklist.md (Status: approved) — file quoted inline
-Handing off to manager:roadmap for backlog entry and epic decomposition…
+Handing off to manager:decompose for backlog entry and epic decomposition…
 ```
 
 ## Constraints
@@ -60,7 +60,7 @@ Handing off to manager:roadmap for backlog entry and epic decomposition…
 - **Orchestrator only.** Do not duplicate agent logic (shaping, role adaptation, pitch assembly, decomposition) — dispatch, run the gates, hand off.
 - **No silent handoff.** The human gates live in THIS skill (the agent cannot ask — `AskUserQuestion` is unavailable in subagent context): every pending gate the agent returns is presented via `AskUserQuestion` before any downstream step.
 - **Clean exit on reject.** If the final gate returns reject, write nothing and exit with no side effects — no file, no branch, no downstream invocation.
-- **Show changes inline — and own the delivery.** The agent returns the pitch content in its payload, which the user never sees ([`core/output`](../../../core/skills/output/SKILL.md) Rule 7 *Delivery test*). THIS skill delivers the full pitch through a rendered channel before gating, writes the file only on approve (Rule 7 *Authorization boundary*), and quotes the written file inline. The downstream `manager:roadmap` handoff surfaces each roadmap row inline. Never reduce a write to "pitch created" / "added to roadmap" without the content.
+- **Show changes inline — and own the delivery.** The agent returns the pitch content in its payload, which the user never sees ([`core/output`](../../../core/skills/output/SKILL.md) Rule 7 *Delivery test*). THIS skill delivers the full pitch through a rendered channel before gating, writes the file only on approve (Rule 7 *Authorization boundary*), and quotes the written file inline. The downstream `manager:decompose` handoff surfaces each roadmap row inline. Never reduce a write to "pitch created" / "added to roadmap" without the content.
 - Outputs follow [`core/output`](../../../core/skills/output/SKILL.md) — citation by link, never restated.
 
 ---

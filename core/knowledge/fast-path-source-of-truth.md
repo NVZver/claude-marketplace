@@ -45,6 +45,6 @@ Every fast-path answer carries the source inline: a verbatim quote of the answer
 | Caller | Source-of-truth file | Trigger shape |
 |---|---|---|
 | [`../../lsa/skills/next/SKILL.md`](../../lsa/skills/next/SKILL.md) | `${specs_root}/roadmap.md` §`## Feature Backlog` | "what's next" |
-| [`../../manager/skills/roadmap/SKILL.md`](../../manager/skills/roadmap/SKILL.md) | `${specs_root}/roadmap.md` §`## Feature Backlog` | "what's next" (reserves full dispatch for "recommend an order") |
+| [`../../manager/skills/next/SKILL.md`](../../manager/skills/next/SKILL.md) | `${specs_root}/roadmap.md` §`## Feature Backlog` | "what's next" (reserves full dispatch for "recommend an order") |
 | [`../../manager/agents/project-manager.md`](../../manager/agents/project-manager.md) | `${specs_root}/roadmap.md` §`## Feature Backlog` | "what's next" (early-exit on direct invocation) |
 | [`../../helper/knowledge/onboarding-fast-path.md`](../../helper/knowledge/onboarding-fast-path.md) | named `README.md` heading anchors | install / start / what-is-X |

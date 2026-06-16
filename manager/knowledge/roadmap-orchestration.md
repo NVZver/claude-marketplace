@@ -1,0 +1,22 @@
+> **Trace.** On load, print first: `=============== [manager/knowledge/roadmap-orchestration.md] [manager] ===============`
+
+# Roadmap orchestration — knowledge
+
+The shared contract every roadmap-management skill (`manager:next`, `manager:decompose`, `manager:check`) follows when it dispatches the `project-manager` agent and runs the agent's returned gates. Extracted from the former 3-in-1 `manager:roadmap` skill (Step 2 + Constraints) so the three verb skills **cite this, never restate it** (DRY). Each skill adds only its own intent, its own Step 0/fast-path branch (if any), and its own handoff (if any); the dispatch → gate → re-render → agent-owned-write loop lives here.
+
+The agents propose; the skills gate. `AskUserQuestion` and the `Skill` tool are unavailable in subagent context (per [`../agents/project-manager.md`](../agents/project-manager.md) Constraints *"Gates belong to the dispatcher"*), so the agent returns pending gates and a staged `lsa:discover` seed in its payload, and the dispatching skill runs them in the main loop.
+
+## The contract
+
+1. **Dispatch the `project-manager` agent with an explicit intent.** Invoke the agent via the `Agent` tool. State the intent in the dispatch prompt — `intent: recommend-next` / `intent: sequence-backlog` (for `manager:next`), `intent: decompose <pitch>` (for `manager:decompose`), `intent: hygiene-check` (for `manager:check`) — so the agent runs the right mode ([`../agents/project-manager.md`](../agents/project-manager.md) Steps 1-12; modes 1/1b/2). The agent reads ambient state itself (roadmap, pitches, branches, specs). Wait for its payload: the sequenced recommendation, proposed hygiene row diffs, epic list, and/or staged `lsa:discover` seed — each decision returned as a pending gate (the agent cannot ask). Observable result: agent payload received with its pending-gates list.
+
+2. **Run the returned gates — self-contained.** The agent's payload is invisible to the user; every gate must carry its subject (row diff, epic list, candidate sequence) in the question text, option descriptions, or option `preview`, or be preceded by turn-final delivery of it — per [`../../core/skills/output/SKILL.md`](../../core/skills/output/SKILL.md) Rule 5 *Self-contained gates* and Rule 7 *Delivery test*. Carry the subject of each gate per `core/output` Rule 5. Present each pending gate via `AskUserQuestion`: item pick (offering the agent's recommended default), hygiene row diffs one by one, epic approval (approve / reject / adjust). On reject/adjust, send the feedback back and re-gate the fresh payload. Observable result: every gate self-contained and resolved by the user; rejected proposals discarded.
+
+3. **Re-render the agent's applied-row quotes — the agent owns the write.** Send the user's decisions back to the agent via `SendMessage` continuation (or a new dispatch with the prior payload + decisions if the agent has exited) wherever the agent owns the write. The agent applies approved roadmap rows and quotes each written/changed row in its payload before its verdict — write → show → comment ([`../agents/project-manager.md`](../agents/project-manager.md) Step 7, [`../../core/skills/output/SKILL.md`](../../core/skills/output/SKILL.md) Rule 7). The payload is invisible, so this skill **re-renders those quotes through a channel the user actually sees** (turn-final message or gate `preview` — Rule 7 *Delivery test*); never summarize the change as "roadmap updated". Proceed directly where no write is needed. Observable result: approved roadmap rows applied by the agent and re-rendered inline by the skill.
+
+## Constraints every citing skill inherits
+
+- **Orchestrator only.** Do not duplicate agent logic (sequencing, decomposition, roadmap writing) — dispatch with an explicit intent, run the gates, re-render. The agent proposes everything; roadmap writes stay agent-owned via continuation.
+- **No silent handoff.** The human gates live in the skill (the agent cannot ask). Every pending gate the agent returns is presented via `AskUserQuestion` before any downstream step. Any `lsa:discover` handoff is invoked by the skill only after approval, with the agent's staged seed.
+- **Show changes inline.** The skill re-renders the agent's quoted rows through a channel the user sees — never "roadmap updated" / "go check the roadmap" without the row. Per [`../../core/skills/output/SKILL.md`](../../core/skills/output/SKILL.md) Rule 7.
+- Outputs follow [`core/output`](../../core/skills/output/SKILL.md) — citation by link, never restated.

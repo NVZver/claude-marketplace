@@ -12,7 +12,7 @@ Two domain-neutral discipline skills that make output trustworthy and any actor 
 ## Knowledge
 
 - **[`knowledge/output-vocabulary.md`](./knowledge/output-vocabulary.md)** — The canonical marketplace verdict labels (PROPOSED, DRIFT, APPLIED, PASS, FAIL, etc.) cited by `core/output`.
-- **[`knowledge/fast-path-source-of-truth.md`](./knowledge/fast-path-source-of-truth.md)** — The shared single-source-of-truth navigation fast-path contract: a navigation-class question ("what's next", "how do I get started") maps to one source-of-truth file at a known path → direct `Read` + cited `file:line` quote-back, no sub-agent / `context7` / multi-round `Grep`. Exact-phrase detection (not semantic similarity); any failure falls through to the deep-research path unchanged. Cited by `manager:roadmap`, the `project-manager` agent, and Helper's onboarding catalog.
+- **[`knowledge/fast-path-source-of-truth.md`](./knowledge/fast-path-source-of-truth.md)** — The shared single-source-of-truth navigation fast-path contract: a navigation-class question ("what's next", "how do I get started") maps to one source-of-truth file at a known path → direct `Read` + cited `file:line` quote-back, no sub-agent / `context7` / multi-round `Grep`. Exact-phrase detection (not semantic similarity); any failure falls through to the deep-research path unchanged. Cited by `manager:next`, the `project-manager` agent, and Helper's onboarding catalog.
 
 ## Install on Claude Code
 
