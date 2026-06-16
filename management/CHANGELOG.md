@@ -2,6 +2,23 @@
 
 All notable changes to the `management` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.7.0] – 2026-06-16
+
+Adds the function-like command-naming convention as a citable knowledge file — Epic 1 of the `management` → `manager` rename (pitch `function-command-naming-and-manager-rename`). Establishes the convention before the rename so the new command surface is named once.
+
+### Added
+
+- **`management/knowledge/command-naming.md`** — the convention `<actor>:<action>-<modifier> args` (commands are verbs you call with arguments, not nouns you browse; zero metaphor). Worked anti-pattern: `management:roadmap` (one noun bundling three verbs — `management/skills/roadmap/SKILL.md:3`) vs the verb split `manager:next` / `manager:decompose <pitch>` / `manager:check`. Plus a "How to apply" for authoring future commands.
+
+### Changed
+
+- **`management/README.md`** — inline reference to the new convention from the project-manager entry.
+- **`.lsa/modules/management/spec.md`** — knowledge list updated + new "Command naming is canonical" invariant.
+
+### Why
+
+First of 4 epics renaming `management` → `manager` (Epics 2-4: atomic dir/namespace rename, the `roadmap` 3-in-1 verb split, and the `manager:implement` preview stub). Defining the convention first prevents naming the renamed surface twice. Decided 2026-06-14 during the parallel-agent-delivery Epic-0 design.
+
 ## [0.6.0] – 2026-06-12
 
 Adopts the `core` 0.13.0 **gate-delivery contract** (Rule 5 *Self-contained gates*, Rule 7 *Authorization boundary* + *Delivery test*). Completes the 0.5.0 inversion: 0.5.0 moved the *gates* to the skills but left the *pitch write* before the gate and the *show-obligation* inside the invisible subagent payload — producing the live failure (2026-06-12) where the user faced "Approve?" for a pitch they never saw, written to disk before they answered.

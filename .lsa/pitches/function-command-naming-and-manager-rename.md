@@ -37,7 +37,7 @@ In appetite:
 - `.lsa.yaml` module key `management` + its five `artifact_paths` (`.lsa.yaml:42-49`).
 - `.claude-plugin/marketplace.json` (3 occurrences), root `README.md` (12), `CLAUDE.md` (2), `core/README.md`, `helper/` cross-refs, `knowledge/index.md` (6), `scripts/lint.sh` (1).
 - The module spec `.lsa/modules/management/spec.md` → `.lsa/modules/manager/spec.md` (23 internal `management` occurrences) and `.lsa/main.spec.md` (3).
-- Per-plugin CHANGELOG entry + SemVer **major** bump on the renamed plugin (breaking: every command prefix changes).
+- Per-plugin CHANGELOG entry + SemVer **minor** bump on the renamed plugin (breaking — every command prefix changes — but the project is **pre-1.0**, so breaking changes bump the *minor*; `1.0.0` is reserved for the first public release, per the roadmap `:19` precedent).
 
 Out of appetite:
 - The parallel-execution engine behind `manager:implement` — dependency-wave planning, worktree dispatch, serialized merge, autonomy. That is the separate `parallel-agent-delivery` pitch. This pitch may *name and sketch the signature* of `manager:implement`, but ships it as a read-only preview stub only.
@@ -54,7 +54,7 @@ Out of appetite:
   4. **Config + manifest sweep** — `.lsa.yaml` module key + artifact_paths, `marketplace.json`, plugin.json (name + **major** bump).
   5. **Cross-ref sweep** — all *live* artifacts across root, `core/`, `helper/`, `lsa/`, `knowledge/index.md`, `.lsa/modules/`, `.lsa/main.spec.md` rewritten `management` → `manager`.
   6. **Module-spec rename** `.lsa/modules/management/` → `.lsa/modules/manager/`.
-- **Critical path:** decide the verb map (locked: full split) → rename dir + skills → update plugin.json (name + major bump) + marketplace.json + `.lsa.yaml` → sweep live cross-refs → rename module spec → CHANGELOG + READMEs (root + plugin) in the same commit → reference check passes (no broken `management:*` in live artifacts).
+- **Critical path:** decide the verb map (locked: full split) → rename dir + skills → update plugin.json (name + minor bump) + marketplace.json + `.lsa.yaml` → sweep live cross-refs → rename module spec → CHANGELOG + READMEs (root + plugin) in the same commit → reference check passes (no broken `management:*` in live artifacts).
 
 ## Rabbit holes
 

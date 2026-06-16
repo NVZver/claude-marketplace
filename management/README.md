@@ -4,7 +4,7 @@ Product and project management discipline for the NVZver marketplace. Two roles:
 
 1. **Product manager** — shapes vague ideas into structured, buildable pitches before the build cycle begins. The shaping conversation follows a 5-section pitch format (defined in [`knowledge/pitch-structure.md`](./knowledge/pitch-structure.md)) inspired by Basecamp's Shape Up methodology [unverified]. The product-manager agent dynamically adapts its domain-expert role per invocation.
 
-2. **Project manager** — stewards the roadmap after pitches are approved. Recommends what to build next using dependency/risk/value reasoning, decomposes chosen pitches into focused epics, and hands each epic to LSA for technical refinement. The project-manager agent reads the roadmap, pitches, branches, and spec state to ground every recommendation.
+2. **Project manager** — stewards the roadmap after pitches are approved. Recommends what to build next using dependency/risk/value reasoning, decomposes chosen pitches into focused epics, and hands each epic to LSA for technical refinement. The project-manager agent reads the roadmap, pitches, branches, and spec state to ground every recommendation. Its commands follow the function-like naming convention in [`knowledge/command-naming.md`](./knowledge/command-naming.md) — verbs you call with arguments, not nouns you browse.
 
 Spec: [`.lsa/modules/management/spec.md`](../.lsa/modules/management/spec.md).
 
