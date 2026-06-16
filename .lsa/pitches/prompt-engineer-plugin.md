@@ -15,12 +15,12 @@ Evidence:
 
 - The agent is at `.claude/agents/prompt-engineer.md` — workspace scope, not plugin scope.
 - The three commands are at `.claude/commands/prompt-review.md`, `.claude/commands/prompt-create.md`, `.claude/commands/prompt-optimize.md` — same workspace scope.
-- Every distributable plugin in this repo follows the `<plugin-name>/.claude-plugin/plugin.json` convention (see `core/`, `lsa/`, `helper/`, `management/`). The prompt-engineer follows none of it.
+- Every distributable plugin in this repo follows the `<plugin-name>/.claude-plugin/plugin.json` convention (see `core/`, `lsa/`, `helper/`, `manager/`). The prompt-engineer follows none of it.
 - `.claude/rules/plugin-development.md` (lines 1-6) scopes itself to `core/**/*`, `lsa/**/*`, `helper/**/*` — no `prompt-engineer/` directory exists to cover.
 
 Current workaround: Anyone who wants these capabilities in another project must manually copy the four files into their own `.claude/` directory. There is no versioning, no changelog, no install path, and no update mechanism.
 
-Definition of success: A user can run `/plugin install prompt-engineer@NVZver`, get the agent and all three commands, and use them immediately. The plugin follows the same structural conventions as `helper` and `management` (plugin.json, CHANGELOG.md, README.md, SemVer). No new functionality — same agent, same commands, same prompt-engineering rules.
+Definition of success: A user can run `/plugin install prompt-engineer@NVZver`, get the agent and all three commands, and use them immediately. The plugin follows the same structural conventions as `helper` and `manager` (plugin.json, CHANGELOG.md, README.md, SemVer). No new functionality — same agent, same commands, same prompt-engineering rules.
 
 ## Appetite
 

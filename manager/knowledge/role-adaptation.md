@@ -1,4 +1,4 @@
-> **Trace.** On load, print first: `=============== [management/knowledge/role-adaptation.md] [management] ===============`
+> **Trace.** On load, print first: `=============== [manager/knowledge/role-adaptation.md] [manager] ===============`
 
 # Role adaptation — knowledge
 

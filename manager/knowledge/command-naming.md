@@ -1,4 +1,4 @@
-> **Trace.** On load, print first: `=============== [management/knowledge/command-naming.md] [management] ===============`
+> **Trace.** On load, print first: `=============== [manager/knowledge/command-naming.md] [manager] ===============`
 
 # Command naming — knowledge
 
@@ -15,17 +15,17 @@ Commands are **functions you call**, not nouns you browse. A command name plus i
 - **`-<modifier>`** — optional refinement of the action (`check-hygiene`, `decompose-pitch`); express as a `-suffix` or a flag.
 - **`arg1, arg2`** — the inputs the verb operates on.
 
-**Test.** Read the name and args aloud as a sentence. `manager:decompose <pitch>` reads as "manager, decompose this pitch" — passes. `management:roadmap` reads as "management roadmap" — a noun phrase, no verb, fails.
+**Test.** Read the name and args aloud as a sentence. `manager:decompose <pitch>` reads as "manager, decompose this pitch" — passes. `manager:roadmap` reads as "manager roadmap" — a noun phrase, no verb, fails.
 
 ## Anti-pattern: the noun that hides verbs
 
-`management:roadmap` is a noun. Its own description bundles **three distinct verbs** into one entry point — "recommend what to work on next, decompose pitches into epics, and tidy roadmap hygiene" (`management/skills/roadmap/SKILL.md:3`). A reader cannot tell from the name `roadmap` which of the three will run, or what to pass it.
+`manager:roadmap` is a noun. Its own description bundles **three distinct verbs** into one entry point — "recommend what to work on next, decompose pitches into epics, and tidy roadmap hygiene" (`manager/skills/roadmap/SKILL.md:3`). A reader cannot tell from the name `roadmap` which of the three will run, or what to pass it.
 
 Split one noun into three verbs:
 
 ```
 # Before — one noun, three hidden actions
-management:roadmap          # recommend? decompose? tidy? unclear
+manager:roadmap            # recommend? decompose? tidy? unclear
 
 # After — one verb each, args explicit
 manager:next               # recommend the next backlog item

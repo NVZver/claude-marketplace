@@ -1,6 +1,21 @@
 # Changelog
 
-All notable changes to the `management` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
+All notable changes to the `manager` plugin (formerly `management`) are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
+
+## [0.8.0] – 2026-06-16
+
+Renames the plugin `management` → `manager` and the shaping command `management:start-feature` → `manager:shape` — Epic 2 of the `function-command-naming-and-manager-rename` pitch. The plugin is now named for the **actor** (`manager`) rather than the activity; it still *does* product and project management. Clean break, **no aliases** — the old `management:` command namespace and `management/` plugin path no longer exist. Pre-1.0, so a breaking change ships as a minor bump per SemVer §4.
+
+### Changed
+
+- **Plugin renamed `management` → `manager`** — directory `management/` → `manager/`, manifest `name`, command namespace `management:` → `manager:`, `.lsa.yaml` module key, module-spec path `.lsa/modules/management/` → `.lsa/modules/manager/`, and all trace-header plugin tags `[management]` → `[manager]`.
+- **`management:start-feature` → `manager:shape`** — skill directory `skills/start-feature/` → `skills/shape/`; behavior unchanged (orchestrator that dispatches `product-manager`, runs the gates, hands off to `manager:roadmap`).
+- **`management:roadmap` → `manager:roadmap`** — namespace-only rename; the `roadmap` verb is retained for now (the 3-in-1 split into `next` / `decompose` / `check` is a later epic).
+- **Cross-references swept** — marketplace manifest, root + per-plugin READMEs, module specs, knowledge files, and in-flight backlog pitches updated to the new identity tokens; English domain prose ("management discipline") preserved.
+
+### Why
+
+Second of the rename epics (Epic 1 shipped the command-naming convention in 0.7.0). Names the plugin for the actor and aligns the entry command with the `<actor>:<verb>` convention from `manager/knowledge/command-naming.md`. Clean break chosen over aliases because the marketplace is pre-1.0 and single-owner — no external installs to migrate.
 
 ## [0.7.0] – 2026-06-16
 

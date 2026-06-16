@@ -1,4 +1,4 @@
-> **Trace.** On load, print first: `=============== [management/knowledge/sequencing-heuristics.md] [management] ===============`
+> **Trace.** On load, print first: `=============== [manager/knowledge/sequencing-heuristics.md] [manager] ===============`
 
 # Sequencing heuristics — knowledge
 

@@ -39,14 +39,14 @@ modules:
       - helper/.claude-plugin/plugin.json
       - helper/README.md
       - helper/VERIFICATION.md
-  management:
-    spec: .lsa/modules/management/spec.md
+  manager:
+    spec: .lsa/modules/manager/spec.md
     artifact_paths:
-      - management/agents/**/*.md
-      - management/skills/**/SKILL.md
-      - management/knowledge/**/*.md
-      - management/.claude-plugin/plugin.json
-      - management/README.md
+      - manager/agents/**/*.md
+      - manager/skills/**/SKILL.md
+      - manager/knowledge/**/*.md
+      - manager/.claude-plugin/plugin.json
+      - manager/README.md
   prompt-engineer:
     spec: .lsa/modules/prompt-engineer/spec.md
     artifact_paths:

@@ -5,7 +5,7 @@ Why now: five verification passes emerged organically during the project-manager
 
 # Verification checklist for the project-manager
 
-A note on what was verified and what each pass caught, to inform a future `management:verify` or quality-gate skill.
+A note on what was verified and what each pass caught, to inform a future `manager:verify` or quality-gate skill.
 
 ## 1. Spec trace (lsa:verify)
 

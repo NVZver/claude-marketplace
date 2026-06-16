@@ -8,7 +8,7 @@ The top-level spec for this repo. Sources the constitution at [`.lsa/VISION.md`]
 
 Build a personal, model-agnostic agentic engineering system whose single job is **trustworthy output** — every fact traces to a source, every line of code (or any other behavior-bearing artifact) traces to a spec — and whose **ceremony scales to the weight of the task**. Per `.lsa/VISION.md:11`.
 
-The marketplace ships five plugins (`core`, `lsa`, `helper`, `management`, and `prompt-engineer`) installable natively via Claude Code. Each evolves independently with its own SemVer + CHANGELOG (per `.lsa/VISION.md` §1 *"per-plugin SemVer + CHANGELOG"*).
+The marketplace ships five plugins (`core`, `lsa`, `helper`, `manager`, and `prompt-engineer`) installable natively via Claude Code. Each evolves independently with its own SemVer + CHANGELOG (per `.lsa/VISION.md` §1 *"per-plugin SemVer + CHANGELOG"*).
 
 ## Module Index
 
@@ -17,7 +17,7 @@ The marketplace ships five plugins (`core`, `lsa`, `helper`, `management`, and `
 | `core` | [`.lsa/modules/core/spec.md`](./modules/core/spec.md) | active — v0.12.0 |
 | `lsa` | [`.lsa/modules/lsa/spec.md`](./modules/lsa/spec.md) | active — v0.16.4 |
 | `helper` | [`.lsa/modules/helper/spec.md`](./modules/helper/spec.md) | active — v0.4.5 |
-| `management` | [`.lsa/modules/management/spec.md`](./modules/management/spec.md) | active — v0.4.3 |
+| `manager` | [`.lsa/modules/manager/spec.md`](./modules/manager/spec.md) | active — v0.4.3 |
 | `prompt-engineer` | _no module spec yet_ | active — v0.6.0 (module spec deferred to a follow-up; ships from `.claude-plugin/marketplace.json`) |
 
 ## Cross-Module Contracts
@@ -27,7 +27,7 @@ The marketplace ships five plugins (`core`, `lsa`, `helper`, `management`, and `
   - `core/flow-selector` (added as `core/tier-selector` in core v0.2.0; renamed to `core/flow-selector` in core v0.5.2) is invoked upstream of `discover` for every Standard / Extended task (was `T2 / T3`) — its confirmed flow hand-off is the input to `discover`.
   - Claude Code's plugin manifest does not (as of this release) expose a `dependencies` field; the dependency is prose-only in `lsa/README.md` and `lsa/.claude-plugin/plugin.json`'s `description`. Adopt the field when Claude Code adds it.
 - **`core/actor-template` is the shape any actor in this repo must follow.** Every LSA skill body in `lsa/skills/*/SKILL.md` matches Goal / Input / Steps / Output / Constraints. Boundary violation = highest-severity defect (`.lsa/VISION.md:57`).
-- **`management` depends on `core`.** Cites `core/ground-rules` for fact-grounding and `core/output` for format discipline. Declared in `management/.claude-plugin/plugin.json` `dependencies` field. Reads `lsa` artifacts (roadmap, specs) but `lsa` does not depend on `management`.
+- **`manager` depends on `core`.** Cites `core/ground-rules` for fact-grounding and `core/output` for format discipline. Declared in `manager/.claude-plugin/plugin.json` `dependencies` field. Reads `lsa` artifacts (roadmap, specs) but `lsa` does not depend on `manager`.
 
 ## Non-Functional Requirements
 
