@@ -4,7 +4,7 @@
 
 Product and project management discipline. Shapes vague ideas into structured pitches (product-manager) and stewards the roadmap from approved pitches through epic decomposition to LSA handoff (project-manager).
 
-**Plugin manifest:** [`management/.claude-plugin/plugin.json`](../../../management/.claude-plugin/plugin.json) (v0.6.0)
+**Plugin manifest:** [`management/.claude-plugin/plugin.json`](../../../management/.claude-plugin/plugin.json) (v0.7.0)
 **Plugin README** (install, dependencies, status): [`management/README.md`](../../../management/README.md)
 **Knowledge** (pitch format, role adaptation, epic decomposition, sequencing heuristics, command naming): [`management/knowledge/`](../../../management/knowledge/)
 
@@ -26,7 +26,7 @@ Reads `lsa` artifacts (roadmap, specs, branches) for codebase context but does n
 
 ## Invariants
 
-- **Versioning.** `management` evolves with its own SemVer + CHANGELOG (`.lsa/VISION.md` §1 *"Distribution + versioning"*). Currently v0.6.0.
+- **Versioning.** `management` evolves with its own SemVer + CHANGELOG (`.lsa/VISION.md` §1 *"Distribution + versioning"*). Currently v0.7.0.
 - **Markdown-only.** No `/src/`; the plugin is pure Markdown plus the JSON manifest. Per `.lsa/standards/code.md`.
 - **Depends on `core`.** Documented in `management/.claude-plugin/plugin.json` `dependencies` field and `management/README.md` *"Depends on"*.
 - **Ownership over automation.** Both agents facilitate — they do not decide scope or sequencing. Per `.lsa/VISION.md:15`.
