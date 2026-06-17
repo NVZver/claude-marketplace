@@ -94,6 +94,9 @@ modules:
     artifact_paths:
       - <glob>
       - <glob>
+
+gate:                                # optional; the quality-gate script contract (default: {})
+  <check-name>: <command>            # e.g. test: npm test
 ```
 
 - `constitution` — every LSA skill reads this first.
@@ -104,6 +107,7 @@ modules:
   - `mixed` — both; either failing fails verify.
 - `modules.<name>.spec` — path to that module's spec.md.
 - `modules.<name>.artifact_paths` — globs (repo-root-relative) that implement this module; consumed by verify (doc-mode), reconcile (drift diff), and the SessionStart hook.
+- `gate` — per-check name → command; each check passes iff its command exits `0`, and a completion state may be reported only with the command + output cited (`core/ground-rules` Rule 7). Consumed by `reconcile` and, in parallel runs, mapped to GitHub required-check slots. LSA hardcodes no tool. Full contract: [`knowledge/quality-gate-contract.md`](./knowledge/quality-gate-contract.md).
 
 **When absent**, LSA applies the defaults documented in [`knowledge/conventions.md`](./knowledge/conventions.md) §"`.lsa.yaml` defaults": `constitution: .lsa/VISION.md`, `specs_root: .lsa/`, `mode: code`, `modules: {}`. A fresh `lsa:init` scaffolds the spec tree under `.lsa/` so the entire LSA workspace is one removable directory.
 
