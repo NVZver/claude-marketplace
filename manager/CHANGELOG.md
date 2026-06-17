@@ -2,6 +2,21 @@
 
 All notable changes to the `manager` plugin (formerly `management`) are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.11.0] – 2026-06-17
+
+Epic 1 / S3 of parallel-agent-delivery (`.lsa/features/2026-06-17-parallel-agent-delivery-epic-1/` R10–R12) — closes Epic 1. Defines the **serialized-merge + roadmap-write-lock contract** that the (Epic 2) `manager:implement` engine will follow: how N per-epic PRs converge without turning the integration branch red, and that only the serialized-merge step writes roadmap status. Builds on `core` 0.14.0 Rule 7 + `lsa` 0.18.0 (independent grader + gate contract).
+
+### Added
+
+- **`manager/knowledge/serialized-merge.md`** (new) — serialized-merge contract (merge only the tested SHA against the up-to-date base; GitHub merge queue `merge_group` when available, else local rebase-onto-main + re-gate before each merge; one PR at a time) + the **roadmap-write lock** (only the serialized-merge step writes `${specs_root}/roadmap.md` status; per-epic agents propose "done", the merge step commits it after the SHA is known — defends the concurrent-write race, pitch rabbit-hole 8). Scoped to `manual` autonomy this epic; human owns the final merge to `main` (pitch no-go #2).
+
+### Changed
+
+- **`manager/knowledge/roadmap-orchestration.md`** — new Constraint: during a parallel run, status writes serialize through the merge step (cites `serialized-merge.md`); single-feature roadmap edits stay agent-owned.
+- **`manager/skills/implement/SKILL.md` Step 4** — the deferral notice now cites the `serialized-merge.md` contract the engine will follow, while keeping the dispatch engine itself deferred to Epic 2.
+- **`manager/README.md`** — `manager:implement` row cites the serialized-merge contract.
+- **`manager/.claude-plugin/plugin.json`** — version 0.10.0 → 0.11.0.
+
 ## [0.10.0] – 2026-06-16
 
 Adds `manager:implement` as a **read-only preview stub** — Epic 3 of the `function-command-naming-and-manager-rename` pitch. Names the command surface ahead of the `parallel-agent-delivery` execution engine; the engine itself is explicitly out of scope.

@@ -16,7 +16,7 @@ Show the user, in seconds, which backlog items are candidates for implementation
 
 ## Input
 
-- **`[epics]`** — optional. A list of epic slugs or paths the user is interested in. When supplied, the preview is framed around those items; when absent, the skill defaults to the last X (~5) `backlog` / `not started` roadmap rows (per [`../knowledge/command-naming.md`](../knowledge/command-naming.md) §"The no-arg form does something useful").
+- **`[epics]`** — optional. A list of epic slugs or paths the user is interested in. When supplied, the preview is framed around those items; when absent, the skill defaults to the last X (~5) `backlog` / `not started` roadmap rows (per [`../../knowledge/command-naming.md`](../../knowledge/command-naming.md) §"The no-arg form does something useful").
 - **`--parallel` / `--sequential`** — optional hint expressing how the user *imagines* running the items. It only colors the INDICATIVE note below; it triggers no execution.
 - The fast-path read contract at [`../../../core/knowledge/fast-path-source-of-truth.md`](../../../core/knowledge/fast-path-source-of-truth.md) — governs the single bounded read of `${specs_root}/roadmap.md`.
 
@@ -28,7 +28,7 @@ Show the user, in seconds, which backlog items are candidates for implementation
 
 3. **Give an INDICATIVE parallel-vs-sequential note — clearly labelled as a guess.** Offer a coarse hint at which items *might* be workable in parallel versus serially (e.g., distinct vs overlapping areas as suggested by their pitch links / titles), honoring any `--parallel` / `--sequential` hint. **State explicitly that this is indicative only** — true disjointness / dependency-wave analysis is part of the deferred execution engine and is NOT performed here. Observable result: a parallel-vs-sequential hint, explicitly marked non-authoritative.
 
-4. **State the deferral prominently — the engine is not implemented.** Print a clear notice that the execution engine — dependency-wave planning, isolated git-worktree dispatch, per-PR gating, serialized merge, and autonomy levels — is **not yet implemented** and is owned by the `parallel-agent-delivery` feature ([`../../../.lsa/pitches/parallel-agent-delivery.md`](../../../.lsa/pitches/parallel-agent-delivery.md)). Even when called with `[epics]` and a `--parallel` / `--sequential` flag, this skill SHALL only preview and SHALL NOT imply anything ran. Observable result: an unmissable "execution pending — nothing was run" statement closes the turn.
+4. **State the deferral prominently — the engine is not implemented.** Print a clear notice that the execution engine — dependency-wave planning, isolated git-worktree dispatch, per-PR gating, serialized merge, and autonomy levels — is **not yet implemented** and is owned by the `parallel-agent-delivery` feature ([`../../../.lsa/pitches/parallel-agent-delivery.md`](../../../.lsa/pitches/parallel-agent-delivery.md)). The merge half of that engine follows a defined contract — the serialized-merge + roadmap-write lock at [`../../knowledge/serialized-merge.md`](../../knowledge/serialized-merge.md) — but the dispatch engine that executes it is still pending (`parallel-agent-delivery` Epic 2). Even when called with `[epics]` and a `--parallel` / `--sequential` flag, this skill SHALL only preview and SHALL NOT imply anything ran. Observable result: an unmissable "execution pending — nothing was run" statement closes the turn.
 
 ## Output
 
@@ -60,7 +60,7 @@ feature (.lsa/pitches/parallel-agent-delivery.md). Nothing was run — this is a
 - **Read-only — preview stub.** This skill reads `${specs_root}/roadmap.md` and prints; it writes no file and dispatches no implementer. There is no execution path here.
 - **No false completion — done is a gate-proven predicate.** Never imply any item was implemented, merged, or deployed. Arguments (`[epics]`, `--parallel` / `--sequential`) refine the *preview* only; they never run work. Per the `parallel-agent-delivery` pitch ([`../../../.lsa/pitches/parallel-agent-delivery.md`](../../../.lsa/pitches/parallel-agent-delivery.md)) Definition of success #1.
 - **Parallel-vs-sequential is indicative only.** True disjointness / dependency-wave reasoning belongs to the deferred engine, not this stub.
-- **Function-named command.** Name + args read as "manager, implement these epics" per [`../knowledge/command-naming.md`](../knowledge/command-naming.md); the bare form does a useful read-only thing.
+- **Function-named command.** Name + args read as "manager, implement these epics" per [`../../knowledge/command-naming.md`](../../knowledge/command-naming.md); the bare form does a useful read-only thing.
 - Outputs follow [`core/output`](../../../core/skills/output/SKILL.md) — citation by link/quote, never restated.
 
 ---
