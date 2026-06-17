@@ -12,7 +12,7 @@ Source: pitch `.lsa/pitches/parallel-agent-delivery.md:22` (success #4), `:26` (
 |---|---|---|---|
 | `manual` *(default)* | the human performs the merge after seeing the gate-green PR + SHA | n/a — no deploy | **built** (Epic 1/2) |
 | `semi` | **auto-merge on green** — the serialized-merge step lands the tested SHA without a human prompt | the human still owns deploy | **built** (this epic) |
-| `auto` | auto-merge on green | full SDLC: deploy + healthcheck, still gated by the same green gate + a defined rollback | **Epic 4** (not yet built) |
+| `auto` | auto-merge on green | full SDLC: deploy + healthcheck, still gated by the same green gate + a defined rollback | **built** (Epic 4) |
 
 - **Default is `manual`.** Absent or unrecognized `autonomy:` → `manual`. Full-auto is never the silent default (pitch success #4).
 - **The gate never weakens.** `semi`/`auto` only remove the human *prompt* after the gate is green; a red gate blocks the merge at every level (pitch `:41`).
@@ -28,6 +28,11 @@ Under `semi`, when an epic's PR passes the gate (independent `lsa:reconcile` + t
 
 A `semi` run still reports each merge `merged @ <sha>` with its cited gate artifact (`core/ground-rules` Rule 7) — auto-merge does not mean unreported.
 
-## `auto` — deferred to Epic 4
+## `auto` — full SDLC: deploy + healthcheck (Epic 4)
 
-`auto` extends `semi` with deploy + healthcheck (a state may be reported `deployed` only after the healthcheck passes) and a defined rollback/revert step. Not built here; `manager:implement` clamps a configured `auto` to `semi` with a one-line notice until Epic 4 lands.
+`auto` extends `semi`: after a PR auto-merges on green, the engine runs the project's **deploy** command and then a **healthcheck**, and may report `deployed` only after the healthcheck passes (`core/ground-rules` Rule 7 — e.g. `/healthz` returns 200). Like `gate:`, no deploy/healthcheck tool is hardcoded — the repo supplies the commands (a `deploy` and a `healthcheck` entry alongside the `gate:` checks, run only at `auto`).
+
+- **Still gated.** Deploy runs only after the same green gate that every level requires; a red gate blocks before deploy is reached (pitch `:41`).
+- **Rollback is defined.** If the healthcheck fails, the engine runs the configured **rollback/revert** step and reports the deploy `failed` with the healthcheck output — never `deployed` (pitch rabbit-hole 6 `:41`).
+- **`main` still belongs to the human.** `auto` operates on the integration branch + the deploy target; it does not change the human-owned integration → `main` merge (pitch no-go #2).
+- **Default stays `manual`.** `auto` is opt-in and intended only after `semi` has proven safe (pitch `:26`).

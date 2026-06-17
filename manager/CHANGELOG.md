@@ -2,6 +2,21 @@
 
 All notable changes to the `manager` plugin (formerly `management`) are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.14.0] – 2026-06-17
+
+Epic 4 of parallel-agent-delivery (`.lsa/features/2026-06-17-parallel-agent-delivery-epic-4/`) — the final epic. Adds the **fleet-scope roll-up** + **`auto` autonomy** (deploy + healthcheck), completing the autonomy ladder. Builds on Epics 1–3.
+
+### Added
+
+- **`manager/knowledge/fleet-rollup.md`** (new) — the end-of-run report contract: per-epic table (epic · agent · wave · gate verdict · state · proof), files-changed section reusing the `core/output` Rule 7 inspection table grouped by Conventional-Commits `type(scope)`, proven-facts line, open-items line. **No new table format** — the "one report contract" is `core/output` Rule 7 (pitch rabbit-hole 7). Documents the relationship to the standalone `lsa-stage-reports` backlog feature: both reuse Rule 7, so they are consistent by construction; the fleet roll-up consumes per-epic `conformance.md` + gate artifacts and does not block on it.
+
+### Changed
+
+- **`manager/knowledge/autonomy-policy.md`** — `auto` rung un-deferred: deploy + healthcheck (report `deployed` only after the healthcheck passes, `core/ground-rules` Rule 7), still gated by the same green gate, with a defined rollback on healthcheck failure (pitch rabbit-hole 6); no deploy/healthcheck tool hardcoded; `main` still human-owned; default stays `manual`.
+- **`manager/skills/implement/SKILL.md`** — Step 5 adds the `auto` deploy+healthcheck+rollback branch; Step 6 now emits the fleet roll-up (was a flat status list); Input + intro + Constraints describe the full ladder; auto→semi clamp removed. Frontmatter description updated.
+- **`manager/README.md`** — `manager:implement` row describes the full autonomy ladder + the fleet roll-up.
+- **`manager/.claude-plugin/plugin.json`** — version 0.13.0 → 0.14.0.
+
 ## [0.13.0] – 2026-06-17
 
 Epic 3 of parallel-agent-delivery (`.lsa/features/2026-06-17-parallel-agent-delivery-epic-3/`). Implements **`semi` autonomy** — auto-merge on green — as the second rung of the autonomy ladder. Builds on Epic 2 (the engine) + Epic 1 (the gate). Requires `lsa` 0.19.0 (the `.lsa.yaml` `autonomy:` schema).
