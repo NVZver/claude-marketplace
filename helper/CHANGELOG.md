@@ -2,6 +2,14 @@
 
 All notable changes to the `helper` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.5.1] – 2026-06-17
+
+Consistency fix for `core` 0.14.0, which added `core/ground-rules` Rule 7 *"Done is a gate-proven, cited predicate"* (content-rule count 7 → 8). Helper restates the inherited ground-rules list in its agent body, so the stale "seven content rules" citation is corrected.
+
+### Changed
+
+- **`helper/agents/helper.md`** — "Inherits `core/ground-rules` seven content rules (…)" → "eight content rules (…)"; appended `done is a gate-proven cited predicate` to the restated list.
+
 ## [0.5.0] – 2026-06-12
 
 Adopts the `core` 0.13.0 **gate-delivery contract** (Rule 5 *Self-contained gates*, Rule 7 *Delivery test*) — the "agents propose, skills gate" inversion that `management` got in 0.5.0. Helper's whole design assumed a subagent can run `AskUserQuestion`/`Skill`; it cannot, so its pickers, handoff confirmations, and even the answer body lived in a payload the user never sees.

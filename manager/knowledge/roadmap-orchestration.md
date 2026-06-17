@@ -17,6 +17,7 @@ The agents propose; the skills gate. `AskUserQuestion` and the `Skill` tool are 
 ## Constraints every citing skill inherits
 
 - **Orchestrator only.** Do not duplicate agent logic (sequencing, decomposition, roadmap writing) — dispatch with an explicit intent, run the gates, re-render. The agent proposes everything; roadmap writes stay agent-owned via continuation.
+- **Parallel runs serialize status writes.** During a parallel `manager:implement` run, per-epic agents *propose* status transitions but do not write the roadmap status column; only the serialized-merge step writes status, after the merge lands and the SHA is known — per [`serialized-merge.md`](./serialized-merge.md) §"Roadmap-write lock" (defends the concurrent-write race, pitch rabbit-hole 8). Single-feature roadmap edits outside a parallel run stay agent-owned as above.
 - **No silent handoff.** The human gates live in the skill (the agent cannot ask). Every pending gate the agent returns is presented via `AskUserQuestion` before any downstream step. Any `lsa:discover` handoff is invoked by the skill only after approval, with the agent's staged seed.
 - **Show changes inline.** The skill re-renders the agent's quoted rows through a channel the user sees — never "roadmap updated" / "go check the roadmap" without the row. Per [`../../core/skills/output/SKILL.md`](../../core/skills/output/SKILL.md) Rule 7.
 - Outputs follow [`core/output`](../../core/skills/output/SKILL.md) — citation by link, never restated.

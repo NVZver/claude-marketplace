@@ -97,7 +97,7 @@ OpenSpec is the closest neighbour: it ships an after-the-fact `/opsx:verify` and
 | **`specify`** | Draft the grounded spec — EARS requirements, user flows, and Gherkin `.feature` scenarios — show it in full, then write the files only on approval (show → approve → write). |
 | **`verify`** | **Before** delegating: ground the spec against the codebase. Output: `GROUNDED` / `NOT-GROUNDED` + `grounding.md`. |
 | **`delegate`** | Hand the grounded spec + `.feature` files to your implementer; collect the returned diff. Code-writing happens outside LSA. |
-| **`reconcile`** | **After** the diff returns: check it **does · only · all**, write `conformance.md`, absorb drift. Also surfaced by the SessionStart drift hook. |
+| **`reconcile`** | **After** the diff returns: check it **does · only · all**, write `conformance.md`, absorb drift. Runs as the **independent grader** — a context with no write access to the tests, `.feature` scenarios, or `.lsa.yaml` `gate:` it judges (the work cannot edit its own grader). Also surfaced by the SessionStart drift hook. |
 | **`init`** | Initialize LSA on a project (greenfield or brownfield). |
 | **`revise-constitution`** | Promote a finished feature's lessons into permanent constitution / standards rules. |
 
@@ -136,7 +136,16 @@ modules:
     artifact_paths:
       - lsa/skills/**/SKILL.md
       - lsa/hooks/**/*
+
+gate:                                # optional — quality-gate script contract
+  test: <command>                    # check name → command; passes iff exit 0, cited as the gate artifact
+
+autonomy: manual                     # optional — manual | semi | auto. default: manual
 ```
+
+The optional `gate:` block is the **quality-gate script contract** — per-check name → command, consumed by `reconcile` (and mapped to GitHub required-check slots in parallel runs). It is the configuration side of `core/ground-rules` Rule 7 *"done is a gate-proven, cited predicate"*; LSA hardcodes no tool. Full contract: [`knowledge/quality-gate-contract.md`](./knowledge/quality-gate-contract.md).
+
+The optional `autonomy:` knob (`manual | semi | auto`, default `manual`) sets how much human-in-the-loop a parallel `manager:implement` run uses at the merge boundary — `manual` = human merges, `semi` = auto-merge on green, `auto` = + deploy + healthcheck. The gate is identical at every level. Semantics: `manager/knowledge/autonomy-policy.md`.
 
 When `.lsa.yaml` is absent, LSA applies the defaults documented in [`knowledge/conventions.md`](./knowledge/conventions.md) §"`.lsa.yaml` defaults": `constitution: .lsa/VISION.md`, `specs_root: .lsa/`, `mode: code`, `modules: {}`. The workspace lives entirely under `.lsa/` so you can `rm -rf .lsa/` to fully detach. See [`ARCHITECTURE.md`](./ARCHITECTURE.md) §3 for the full schema.
 

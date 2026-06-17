@@ -2,6 +2,64 @@
 
 All notable changes to the `manager` plugin (formerly `management`) are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.14.0] – 2026-06-17
+
+Epic 4 of parallel-agent-delivery (`.lsa/features/2026-06-17-parallel-agent-delivery-epic-4/`) — the final epic. Adds the **fleet-scope roll-up** + **`auto` autonomy** (deploy + healthcheck), completing the autonomy ladder. Builds on Epics 1–3.
+
+### Added
+
+- **`manager/knowledge/fleet-rollup.md`** (new) — the end-of-run report contract: per-epic table (epic · agent · wave · gate verdict · state · proof), files-changed section reusing the `core/output` Rule 7 inspection table grouped by Conventional-Commits `type(scope)`, proven-facts line, open-items line. **No new table format** — the "one report contract" is `core/output` Rule 7 (pitch rabbit-hole 7). Documents the relationship to the standalone `lsa-stage-reports` backlog feature: both reuse Rule 7, so they are consistent by construction; the fleet roll-up consumes per-epic `conformance.md` + gate artifacts and does not block on it.
+
+### Changed
+
+- **`manager/knowledge/autonomy-policy.md`** — `auto` rung un-deferred: deploy + healthcheck (report `deployed` only after the healthcheck passes, `core/ground-rules` Rule 7), still gated by the same green gate, with a defined rollback on healthcheck failure (pitch rabbit-hole 6); no deploy/healthcheck tool hardcoded; `main` still human-owned; default stays `manual`.
+- **`manager/skills/implement/SKILL.md`** — Step 5 adds the `auto` deploy+healthcheck+rollback branch; Step 6 now emits the fleet roll-up (was a flat status list); Input + intro + Constraints describe the full ladder; auto→semi clamp removed. Frontmatter description updated.
+- **`manager/README.md`** — `manager:implement` row describes the full autonomy ladder + the fleet roll-up.
+- **`manager/.claude-plugin/plugin.json`** — version 0.13.0 → 0.14.0.
+
+## [0.13.0] – 2026-06-17
+
+Epic 3 of parallel-agent-delivery (`.lsa/features/2026-06-17-parallel-agent-delivery-epic-3/`). Implements **`semi` autonomy** — auto-merge on green — as the second rung of the autonomy ladder. Builds on Epic 2 (the engine) + Epic 1 (the gate). Requires `lsa` 0.19.0 (the `.lsa.yaml` `autonomy:` schema).
+
+### Added
+
+- **`manager/knowledge/autonomy-policy.md`** (new) — the `manual | semi | auto` ladder (default `manual`), each bound to an SDLC outcome: `manual` = human merges; `semi` = auto-merge on green into the integration branch (no per-merge prompt; human still owns the merge to `main` + deploy); `auto` = + deploy + healthcheck (Epic 4, clamps to `semi`). The gate is identical at every level — autonomy removes only the post-green prompt, never the gate. Escalation gated on the prior level proving safe (pitch `:26`).
+
+### Changed
+
+- **`manager/skills/implement/SKILL.md`** — Input + Steps 1 & 5 + Constraints now resolve and honor the autonomy level: `semi` auto-merges each gate-green PR via the serialized-merge step without a per-merge prompt; `auto` clamps to `semi`; `manual` unchanged. The gate must be green at every level.
+- **`manager/knowledge/serialized-merge.md` + `parallel-dispatch.md`** — the "Autonomy boundary" sections rewritten from "manual only" to the full ladder (cite `autonomy-policy.md`); no level auto-merges into `main`.
+- **`manager/.claude-plugin/plugin.json`** — version 0.12.0 → 0.13.0.
+
+## [0.12.0] – 2026-06-17
+
+Epic 2 of parallel-agent-delivery (`.lsa/features/2026-06-17-parallel-agent-delivery-epic-2/` R1–R10). Promotes `manager:implement` from a **read-only preview stub to the parallel execution engine**: disjoint-epic decomposer → wave plan → propose → isolated-worktree dispatch → independent gate → serialized merge, at `manual` autonomy. Builds on Epic 1 (`core` 0.14.0 Rule 7, `lsa` 0.18.0 grader/gate, `manager` 0.11.0 serialized-merge/lock).
+
+### Added
+
+- **`manager/knowledge/parallel-dispatch.md`** (new) — the net-new dispatch layer: the **disjoint-epic decomposer** (file/module overlap · output dependency · shared new data structure; conservative default = overlapping), **wave planning** (parallel within a wave, sequential across; a later wave starts only after the prior wave merged), the **dispatch policy** (one worktree+branch+agent+PR per epic, concurrency cap ~4, mandatory teardown), the `manual`-autonomy boundary, and the honesty contract (`merged @ <sha>` only when gate-proven).
+
+### Changed
+
+- **`manager/skills/implement/SKILL.md`** — rewritten from preview stub to execution engine (Goal/Input/Steps/Output/Constraints): resolve targets + autonomy (clamp to `manual`) → compute wave plan → **propose (human gate before any dispatch)** → dispatch each wave in isolated worktrees, each gated by the independent `lsa:reconcile` + `gate:` checks → serialized merge (manual: stop at merge boundary for the human) → gate-proven per-epic report. `--sequential` / `--parallel` overrides. No-arg form preserved as the read-only preview. Frontmatter description updated.
+- **`manager/README.md`** — `manager:implement` row rewritten from preview-stub to execution-engine description.
+- **`manager/.claude-plugin/plugin.json`** — version 0.11.0 → 0.12.0.
+
+## [0.11.0] – 2026-06-17
+
+Epic 1 / S3 of parallel-agent-delivery (`.lsa/features/2026-06-17-parallel-agent-delivery-epic-1/` R10–R12) — closes Epic 1. Defines the **serialized-merge + roadmap-write-lock contract** that the (Epic 2) `manager:implement` engine will follow: how N per-epic PRs converge without turning the integration branch red, and that only the serialized-merge step writes roadmap status. Builds on `core` 0.14.0 Rule 7 + `lsa` 0.18.0 (independent grader + gate contract).
+
+### Added
+
+- **`manager/knowledge/serialized-merge.md`** (new) — serialized-merge contract (merge only the tested SHA against the up-to-date base; GitHub merge queue `merge_group` when available, else local rebase-onto-main + re-gate before each merge; one PR at a time) + the **roadmap-write lock** (only the serialized-merge step writes `${specs_root}/roadmap.md` status; per-epic agents propose "done", the merge step commits it after the SHA is known — defends the concurrent-write race, pitch rabbit-hole 8). Scoped to `manual` autonomy this epic; human owns the final merge to `main` (pitch no-go #2).
+
+### Changed
+
+- **`manager/knowledge/roadmap-orchestration.md`** — new Constraint: during a parallel run, status writes serialize through the merge step (cites `serialized-merge.md`); single-feature roadmap edits stay agent-owned.
+- **`manager/skills/implement/SKILL.md` Step 4** — the deferral notice now cites the `serialized-merge.md` contract the engine will follow, while keeping the dispatch engine itself deferred to Epic 2.
+- **`manager/README.md`** — `manager:implement` row cites the serialized-merge contract.
+- **`manager/.claude-plugin/plugin.json`** — version 0.10.0 → 0.11.0.
+
 ## [0.10.0] – 2026-06-16
 
 Adds `manager:implement` as a **read-only preview stub** — Epic 3 of the `function-command-naming-and-manager-rename` pitch. Names the command surface ahead of the `parallel-agent-delivery` execution engine; the engine itself is explicitly out of scope.

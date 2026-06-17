@@ -2,6 +2,31 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.19.0] — 2026-06-17
+
+Epic 3 of parallel-agent-delivery (autonomy knob). Documents the optional `.lsa.yaml` `autonomy:` key — the schema side of the manual/semi/auto ladder consumed by `manager:implement`.
+
+### Changed
+
+- **`lsa/ARCHITECTURE.md` §3** — `.lsa.yaml` schema gains `autonomy: manual | semi | auto` (default `manual`) + a bullet: how much human-in-the-loop a parallel `manager:implement` run uses at the merge boundary; the gate is identical at every level (autonomy removes only the prompt after green). Semantics live in `manager/knowledge/autonomy-policy.md`.
+- **`lsa/README.md`** — `.lsa.yaml` schema block + prose gain the `autonomy:` knob.
+- **`lsa/.claude-plugin/plugin.json`** — version 0.18.0 → 0.19.0.
+
+## [0.18.0] — 2026-06-17
+
+Epic 1 / S2 of parallel-agent-delivery (`.lsa/features/2026-06-17-parallel-agent-delivery-epic-1/` R6–R9). Wires `reconcile` as the **independent grader** and defines the **quality-gate script contract** — the LSA half of the pitch's safety core (the grader the work cannot edit + the configurable gate that proves "done"). Consumes `core` 0.14.0 Rule 7 (`done = a gate-proven, cited predicate`).
+
+### Added
+
+- **`lsa/knowledge/quality-gate-contract.md`** (new) — the repo-local `.lsa.yaml` `gate:` contract: per-check name → command, passes iff the command exits `0`, reportable only with the command + output cited (the Rule 7 gate artifact). Hardcodes no lint/test/migration/deploy tool (pitch rabbit-hole 5). Carries the **independence rule** — the `gate:` block + acceptance `.feature` scenarios are not editable within the same epic's change they grade (reward-hacking defense, pitch no-go #5 / arxiv 2406.10162v3). Includes a docs-mode note (this marketplace's gate is the LSA checks + structural probes, not a compiler) and an illustrative code-repo example.
+
+### Changed
+
+- **`lsa/skills/reconcile/SKILL.md`** — new Inputs row for the `gate:` checks; Step 1 *"does it work"* now also runs each configured gate check and cites its command + output as proof; new Constraint *"Independent grader"* — reconcile runs in a context with no write access to the tests, `.feature` scenarios, or `gate:` config it grades, and the implementer's diff never edits its own grader.
+- **`lsa/ARCHITECTURE.md` §3** — `.lsa.yaml` schema gains the optional `gate:` block + a bullet describing its semantics.
+- **`lsa/README.md`** — reconcile skill-table row notes the independent-grader role; `.lsa.yaml` schema block gains `gate:` + a paragraph linking the contract.
+- **`lsa/.claude-plugin/plugin.json`** — version 0.17.0 → 0.18.0.
+
 ## [0.17.0] — 2026-06-12
 
 Adopts the `core` 0.13.0 **gate-delivery contract** (Rule 5 *Self-contained gates*, Rule 7 *Authorization boundary* + *Delivery test*) — completes the "agents propose, skills gate" inversion that `management` 0.5.0 started. Fixes the class behind approve-without-seeing: gates asked about content that lived only in subagent transcripts or same-turn pre-tool-call text, and spec files landed on disk before their approval.

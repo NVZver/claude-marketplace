@@ -10,7 +10,7 @@ A Claude Code marketplace shipping five composable plugins for spec-first, fact-
 
 | Plugin | What it gives you |
 |---|---|
-| [`core`](./core/) | Always-on discipline: seven content rules, seven output rules, flow classification (Quick / Standard / Extended), and the Goal/Input/Steps/Output/Constraints shape every skill follows. |
+| [`core`](./core/) | Always-on discipline: eight content rules, seven output rules, flow classification (Quick / Standard / Extended), and the Goal/Input/Steps/Output/Constraints shape every skill follows. |
 | [`lsa`](./lsa/) | **L**iving **S**pec **A**rchitecture — technology-agnostic spec layer: authors a grounded spec (EARS + Gherkin), verifies it against the codebase *before* you build and against the diff *after*, then delegates code-writing to any implementer. Not the coder; hand-edits are *absorbed* into the spec instead of forbidden. |
 | [`helper`](./helper/) | Friendly fact-grounded assistant: a `/help` slash command and an auto-engaging subagent that answers `what is X?` mid-flow with verifiable file citations (line range, heading anchor, or URL). |
 | [`manager`](./manager/) | Pre-build shaping: turns a vague problem into a structured pitch (problem, appetite, solution sketch, rabbit holes, no-gos) before the build cycle begins. |
