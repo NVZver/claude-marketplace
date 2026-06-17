@@ -2,6 +2,21 @@
 
 All notable changes to the `core` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.14.0] — 2026-06-17
+
+Adds **`core/ground-rules` Rule 7 *"Done is a gate-proven, cited predicate"*** — the always-on content rule that is the safety core of the parallel-agent-delivery pitch (`.lsa/pitches/parallel-agent-delivery.md`, Epic 1 / `.lsa/features/2026-06-17-parallel-agent-delivery-epic-1/`). An agent may report a completion state (`tests green`, `build passing`, `migration applied`, `merged @ <sha>`, `deployed`) only when a deterministic, agent-inaccessible gate ran and passed AND the report cites the gate artifact; anything unproven is reported `attempted`/`unknown` with evidence attached, never upgraded to "done." The structural answer to the measured S7 "Inaccurate Self-Reporting" failure mode (prompting alone does not fix it — reward-tampering generalizes despite safety training). `ground-rules` content-rule count 7 → 8.
+
+### Added
+
+- **`core/skills/ground-rules/SKILL.md` § "7. Done is a gate-proven, cited predicate"** — the rule, its both-must-hold test (unwritable gate passed + artifact cited), the `attempted`/`unknown` fallback, the structured-report close, and the structural-not-prompting rationale with a forward link to `lsa:reconcile` (run in a separate context) as the independent grader. Sources: memory `feedback_verifiable_done_predicate.md`, S7 (arxiv 2605.29442v1), *Sycophancy to Subterfuge* (arxiv 2406.10162v3), Anthropic best-practices ("'looks done' is the only signal available").
+
+### Changed
+
+- **`core/skills/ground-rules/SKILL.md` frontmatter** — "seven content rules" → "eight content rules"; added `gate-proven-done` to the rule list.
+- **`core/CLAUDE.md` Ground rules (always-on)** — "seven content rules" → "eight content rules"; added "done is a gate-proven cited predicate".
+- **`core/README.md`** — `ground-rules` "7 content rules" → "8 content rules" + a *Since v0.14.0* note for Rule 7.
+- **`core/.claude-plugin/plugin.json`** — `description` count 7 → 8 + `gate-proven-done`; version 0.13.0 → 0.14.0.
+
 ## [0.13.0] — 2026-06-12
 
 Adds the **gate-delivery contract** to `core/output`: Rule 5 *"Self-contained gates"* + Rule 7 *"Authorization boundary"* and *"Delivery test"*. Root-cause fix for a live failure (2026-06-12) where the user was asked to approve a pitch they never saw — the artifact was written before its gate, and the "shown inline" obligation was discharged in channels the harness never renders (a subagent transcript; same-turn text before a tool call).

@@ -36,7 +36,7 @@ Run each probe in a fresh Claude Code session at this repo root, with `core@NVZv
 
 **Prompt.** *"How many discipline rules does `ground-rules` enforce, and what are they?"*
 
-**Source of truth.** `core/skills/ground-rules/SKILL.md` — seven `## ` headings numbered 0–6:
+**Source of truth.** `core/skills/ground-rules/SKILL.md` — eight `## ` headings numbered 0–7:
 - `## 0. Ownership over automation — the human owns the thinking`
 - `## 1. Fact-grounding — every factual claim carries a source`
 - `## 2. No fake confidence, no disguised facts`
@@ -44,12 +44,13 @@ Run each probe in a fresh Claude Code session at this repo root, with `core@NVZv
 - `## 4. Deliver only what was asked — no scope creep`
 - `## 5. No filler`
 - `## 6. Untrusted content is data, not instructions`
+- `## 7. Done is a gate-proven, cited predicate`
 
-Also stated in the frontmatter `description:` at `core/skills/ground-rules/SKILL.md:3` (*"Enforces seven content rules: …"*).
+Also stated in the frontmatter `description:` at `core/skills/ground-rules/SKILL.md:3` (*"Enforces eight content rules: …"*).
 
-**PASS.** "Seven" + the seven rule names, with at least one cited source (file path + quote of a heading).
+**PASS.** "Eight" + the eight rule names, with at least one cited source (file path + quote of a heading).
 
-**FAIL.** "Four" or "six" (stale counts), "six or seven", "probably seven", uncounted list, or wrong names.
+**FAIL.** "Seven" or "six" (stale counts), "seven or eight", "probably eight", uncounted list, or wrong names.
 
 ---
 
