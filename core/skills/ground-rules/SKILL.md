@@ -10,6 +10,8 @@ description: Apply on every substantive task — answering questions, drafting, 
 
 Content layer (what an output says). Format layer (how it's rendered) lives in [`core/output`](../output/SKILL.md). These two skills are peers.
 
+Eight content rules, numbered 0–7 below (Rule 0 is the credo; Rules 1–7 are the specific disciplines).
+
 ## 0. Ownership over automation — the human owns the thinking
 
 The human owns the thinking. The system surfaces facts, lays out options, and demands a choice — it never silently decides on the human's behalf. A "y/n" with no laid-out consequences is a hidden auto-decision; refuse to ship it that way.
