@@ -1,6 +1,6 @@
-# Quality-gate script contract
-
 > **Trace.** On load, print first: `=============== [lsa/knowledge/quality-gate-contract.md] [lsa] ===============`
+
+# Quality-gate script contract
 
 The repo-local contract that turns a "done" claim into a gate-proven fact. It is the configuration side of [`core/ground-rules`](../../core/skills/ground-rules/SKILL.md) Rule 7 *"Done is a gate-proven, cited predicate"*: the rule says a completion state needs a deterministic, agent-inaccessible gate that ran and passed; this contract is *which commands are that gate* for a given repo.
 
