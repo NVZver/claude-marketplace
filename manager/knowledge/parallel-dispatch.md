@@ -35,9 +35,9 @@ Worked shape (solution-design `:109-117`): `A` and `B` independent, `C` depends 
 - **Convergence is serialized** per [`serialized-merge.md`](./serialized-merge.md): merge only the tested SHA against the up-to-date base; only the merge step writes roadmap status.
 - **Teardown is part of the run.** Every worktree is removed when its epic merges or is abandoned — worktree sprawl is a known cleanup footgun (pitch rabbit-hole 2). A run that cannot tear down a worktree reports it as an open item.
 
-## 4. Autonomy boundary (this epic)
+## 4. Autonomy boundary
 
-At `manual` autonomy — the only level built in Epic 2 — the engine dispatches, gates, and **stops at the merge boundary for the human to merge**. It never auto-merges or deploys. `semi` (auto-merge on green) and `auto` are `parallel-agent-delivery` Epics 3/4. The human owns the final merge of the integration branch to `main` (pitch no-go #2).
+The engine dispatches and gates the same way at every autonomy level; the level (`.lsa.yaml` `autonomy:`, default `manual`) decides only the merge-boundary behavior — see [`autonomy-policy.md`](./autonomy-policy.md). `manual` stops for the human to merge; `semi` auto-merges on green into the integration branch; `auto` (deploy + healthcheck) is Epic 4 and clamps to `semi`. No level auto-merges into `main` — the human owns the final merge of the integration branch to `main` (pitch no-go #2).
 
 ## 5. Honesty contract
 

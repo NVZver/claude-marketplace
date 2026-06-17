@@ -27,6 +27,12 @@ Merges are **serialized** — one PR lands at a time, and each is tested against
 - The merge step writes the status only after the gate proved the merge and the SHA is known — so the written status is itself gate-proven (Rule 7), citing the merged SHA.
 - This narrows, for parallel runs, the agent-owned roadmap write in [`roadmap-orchestration.md`](./roadmap-orchestration.md): single-feature roadmap edits stay agent-owned through the gate; **status** transitions during a parallel run are serialized through the merge step.
 
-## Autonomy boundary (this epic)
+## Autonomy boundary
 
-At `manual` autonomy (Epic 1 — the only level built here), the human performs the merge; the contract above defines what is tested and what may be written, not an auto-merge. `semi` (auto-merge on green) and `auto` are later epics (`parallel-agent-delivery` Epics 3/4). The integration branch converges here; the human owns the final merge to `main` (pitch no-go #2, `:48`).
+The contract above (what is tested, what may be written) is identical at every autonomy level — autonomy decides only *who pushes the button after green*, per [`autonomy-policy.md`](./autonomy-policy.md):
+
+- `manual` (default) — the human performs each merge after seeing the gate-green PR + SHA.
+- `semi` — the serialized-merge step auto-merges each PR on green into the integration branch, no per-merge prompt.
+- `auto` — `semi` + deploy + healthcheck (Epic 4; clamps to `semi` until built).
+
+At no level does an auto-merge land into `main`: the integration branch converges here; the human owns the final merge to `main` (pitch no-go #2, `:48`).

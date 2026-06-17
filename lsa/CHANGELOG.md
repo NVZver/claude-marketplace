@@ -2,6 +2,16 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.19.0] — 2026-06-17
+
+Epic 3 of parallel-agent-delivery (autonomy knob). Documents the optional `.lsa.yaml` `autonomy:` key — the schema side of the manual/semi/auto ladder consumed by `manager:implement`.
+
+### Changed
+
+- **`lsa/ARCHITECTURE.md` §3** — `.lsa.yaml` schema gains `autonomy: manual | semi | auto` (default `manual`) + a bullet: how much human-in-the-loop a parallel `manager:implement` run uses at the merge boundary; the gate is identical at every level (autonomy removes only the prompt after green). Semantics live in `manager/knowledge/autonomy-policy.md`.
+- **`lsa/README.md`** — `.lsa.yaml` schema block + prose gain the `autonomy:` knob.
+- **`lsa/.claude-plugin/plugin.json`** — version 0.18.0 → 0.19.0.
+
 ## [0.18.0] — 2026-06-17
 
 Epic 1 / S2 of parallel-agent-delivery (`.lsa/features/2026-06-17-parallel-agent-delivery-epic-1/` R6–R9). Wires `reconcile` as the **independent grader** and defines the **quality-gate script contract** — the LSA half of the pitch's safety core (the grader the work cannot edit + the configurable gate that proves "done"). Consumes `core` 0.14.0 Rule 7 (`done = a gate-proven, cited predicate`).

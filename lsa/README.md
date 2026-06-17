@@ -139,9 +139,13 @@ modules:
 
 gate:                                # optional — quality-gate script contract
   test: <command>                    # check name → command; passes iff exit 0, cited as the gate artifact
+
+autonomy: manual                     # optional — manual | semi | auto. default: manual
 ```
 
 The optional `gate:` block is the **quality-gate script contract** — per-check name → command, consumed by `reconcile` (and mapped to GitHub required-check slots in parallel runs). It is the configuration side of `core/ground-rules` Rule 7 *"done is a gate-proven, cited predicate"*; LSA hardcodes no tool. Full contract: [`knowledge/quality-gate-contract.md`](./knowledge/quality-gate-contract.md).
+
+The optional `autonomy:` knob (`manual | semi | auto`, default `manual`) sets how much human-in-the-loop a parallel `manager:implement` run uses at the merge boundary — `manual` = human merges, `semi` = auto-merge on green, `auto` = + deploy + healthcheck. The gate is identical at every level. Semantics: `manager/knowledge/autonomy-policy.md`.
 
 When `.lsa.yaml` is absent, LSA applies the defaults documented in [`knowledge/conventions.md`](./knowledge/conventions.md) §"`.lsa.yaml` defaults": `constitution: .lsa/VISION.md`, `specs_root: .lsa/`, `mode: code`, `modules: {}`. The workspace lives entirely under `.lsa/` so you can `rm -rf .lsa/` to fully detach. See [`ARCHITECTURE.md`](./ARCHITECTURE.md) §3 for the full schema.
 

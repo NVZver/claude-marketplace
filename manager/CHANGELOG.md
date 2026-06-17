@@ -2,6 +2,20 @@
 
 All notable changes to the `manager` plugin (formerly `management`) are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.13.0] – 2026-06-17
+
+Epic 3 of parallel-agent-delivery (`.lsa/features/2026-06-17-parallel-agent-delivery-epic-3/`). Implements **`semi` autonomy** — auto-merge on green — as the second rung of the autonomy ladder. Builds on Epic 2 (the engine) + Epic 1 (the gate). Requires `lsa` 0.19.0 (the `.lsa.yaml` `autonomy:` schema).
+
+### Added
+
+- **`manager/knowledge/autonomy-policy.md`** (new) — the `manual | semi | auto` ladder (default `manual`), each bound to an SDLC outcome: `manual` = human merges; `semi` = auto-merge on green into the integration branch (no per-merge prompt; human still owns the merge to `main` + deploy); `auto` = + deploy + healthcheck (Epic 4, clamps to `semi`). The gate is identical at every level — autonomy removes only the post-green prompt, never the gate. Escalation gated on the prior level proving safe (pitch `:26`).
+
+### Changed
+
+- **`manager/skills/implement/SKILL.md`** — Input + Steps 1 & 5 + Constraints now resolve and honor the autonomy level: `semi` auto-merges each gate-green PR via the serialized-merge step without a per-merge prompt; `auto` clamps to `semi`; `manual` unchanged. The gate must be green at every level.
+- **`manager/knowledge/serialized-merge.md` + `parallel-dispatch.md`** — the "Autonomy boundary" sections rewritten from "manual only" to the full ladder (cite `autonomy-policy.md`); no level auto-merges into `main`.
+- **`manager/.claude-plugin/plugin.json`** — version 0.12.0 → 0.13.0.
+
 ## [0.12.0] – 2026-06-17
 
 Epic 2 of parallel-agent-delivery (`.lsa/features/2026-06-17-parallel-agent-delivery-epic-2/` R1–R10). Promotes `manager:implement` from a **read-only preview stub to the parallel execution engine**: disjoint-epic decomposer → wave plan → propose → isolated-worktree dispatch → independent gate → serialized merge, at `manual` autonomy. Builds on Epic 1 (`core` 0.14.0 Rule 7, `lsa` 0.18.0 grader/gate, `manager` 0.11.0 serialized-merge/lock).
