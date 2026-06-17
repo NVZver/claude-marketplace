@@ -33,6 +33,6 @@ The contract above (what is tested, what may be written) is identical at every a
 
 - `manual` (default) — the human performs each merge after seeing the gate-green PR + SHA.
 - `semi` — the serialized-merge step auto-merges each PR on green into the integration branch, no per-merge prompt.
-- `auto` — `semi` + deploy + healthcheck (Epic 4; clamps to `semi` until built).
+- `auto` — `semi` + deploy + healthcheck (rollback on healthcheck failure).
 
 At no level does an auto-merge land into `main`: the integration branch converges here; the human owns the final merge to `main` (pitch no-go #2, `:48`).
