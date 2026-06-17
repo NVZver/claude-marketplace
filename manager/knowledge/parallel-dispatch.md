@@ -37,7 +37,7 @@ Worked shape (solution-design `:109-117`): `A` and `B` independent, `C` depends 
 
 ## 4. Autonomy boundary
 
-The engine dispatches and gates the same way at every autonomy level; the level (`.lsa.yaml` `autonomy:`, default `manual`) decides only the merge-boundary behavior — see [`autonomy-policy.md`](./autonomy-policy.md). `manual` stops for the human to merge; `semi` auto-merges on green into the integration branch; `auto` adds deploy + healthcheck on top of `semi` (rollback on healthcheck failure). No level auto-merges into `main` — the human owns the final merge of the integration branch to `main` (pitch no-go #2).
+The engine dispatches and gates the same way at every autonomy level; the level (`.lsa.yaml` `autonomy:`, default `manual`) decides only the merge-boundary behavior — the level definitions live in [`autonomy-policy.md`](./autonomy-policy.md) and are not restated here. No level auto-merges into `main` — the human owns the final merge of the integration branch to `main` (pitch no-go #2).
 
 ## 5. Honesty contract
 

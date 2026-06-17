@@ -29,10 +29,4 @@ Merges are **serialized** — one PR lands at a time, and each is tested against
 
 ## Autonomy boundary
 
-The contract above (what is tested, what may be written) is identical at every autonomy level — autonomy decides only *who pushes the button after green*, per [`autonomy-policy.md`](./autonomy-policy.md):
-
-- `manual` (default) — the human performs each merge after seeing the gate-green PR + SHA.
-- `semi` — the serialized-merge step auto-merges each PR on green into the integration branch, no per-merge prompt.
-- `auto` — `semi` + deploy + healthcheck (rollback on healthcheck failure).
-
-At no level does an auto-merge land into `main`: the integration branch converges here; the human owns the final merge to `main` (pitch no-go #2, `:48`).
+The contract above (what is tested, what may be written) is **identical at every autonomy level** — the level decides only *who pushes the button after green*, never whether the gate must be green. The level definitions (`manual | semi | auto`, default `manual`) live in [`autonomy-policy.md`](./autonomy-policy.md) and are not restated here. At no level does an auto-merge land into `main`: the integration branch converges here; the human owns the final merge to `main` (pitch no-go #2, `:48`).

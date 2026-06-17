@@ -10,13 +10,13 @@ Source: pitch `.lsa/pitches/parallel-agent-delivery.md:22` (success #4), `:26` (
 
 | Level | At the merge boundary | At the deploy boundary | Status |
 |---|---|---|---|
-| `manual` *(default)* | the human performs the merge after seeing the gate-green PR + SHA | n/a — no deploy | **built** (Epic 1/2) |
-| `semi` | **auto-merge on green** — the serialized-merge step lands the tested SHA without a human prompt | the human still owns deploy | **built** (this epic) |
-| `auto` | auto-merge on green | full SDLC: deploy + healthcheck, still gated by the same green gate + a defined rollback | **built** (Epic 4) |
+| `manual` *(default)* | the human performs the merge after seeing the gate-green PR + SHA | n/a — no deploy | **built + validated default** |
+| `semi` | **auto-merge on green** — the serialized-merge step lands the tested SHA without a human prompt | the human still owns deploy | **built, not yet enabled** (see Enablement gate) |
+| `auto` | auto-merge on green | full SDLC: deploy + healthcheck, still gated by the same green gate + a defined rollback | **built, not yet enabled** (see Enablement gate) |
 
 - **Default is `manual`.** Absent or unrecognized `autonomy:` → `manual`. Full-auto is never the silent default (pitch success #4).
 - **The gate never weakens.** `semi`/`auto` only remove the human *prompt* after the gate is green; a red gate blocks the merge at every level (pitch `:41`).
-- **Escalation is gated on evidence.** `semi` is intended for use only once `manual` has proven safe in dogfooding (pitch `:26`); `auto` likewise after `semi`.
+- **Enablement gate — `semi`/`auto` are built but not yet validated.** The pitch ships `manual` first and gates the higher levels on *"the first slice proving safe in dogfooding"* (`.lsa/pitches/parallel-agent-delivery.md:26`). Until `manual` has run on real parallel work and proven safe, the config SHOULD stay `manual`; `semi` is enabled only after that, and `auto` only after `semi`. Setting a higher level beforehand enables un-dogfooded behavior — `manager:implement` surfaces a one-line caution when it resolves a non-`manual` level.
 
 ## `semi` — auto-merge on green (this epic)
 
