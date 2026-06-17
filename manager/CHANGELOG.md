@@ -2,6 +2,20 @@
 
 All notable changes to the `manager` plugin (formerly `management`) are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.12.0] – 2026-06-17
+
+Epic 2 of parallel-agent-delivery (`.lsa/features/2026-06-17-parallel-agent-delivery-epic-2/` R1–R10). Promotes `manager:implement` from a **read-only preview stub to the parallel execution engine**: disjoint-epic decomposer → wave plan → propose → isolated-worktree dispatch → independent gate → serialized merge, at `manual` autonomy. Builds on Epic 1 (`core` 0.14.0 Rule 7, `lsa` 0.18.0 grader/gate, `manager` 0.11.0 serialized-merge/lock).
+
+### Added
+
+- **`manager/knowledge/parallel-dispatch.md`** (new) — the net-new dispatch layer: the **disjoint-epic decomposer** (file/module overlap · output dependency · shared new data structure; conservative default = overlapping), **wave planning** (parallel within a wave, sequential across; a later wave starts only after the prior wave merged), the **dispatch policy** (one worktree+branch+agent+PR per epic, concurrency cap ~4, mandatory teardown), the `manual`-autonomy boundary, and the honesty contract (`merged @ <sha>` only when gate-proven).
+
+### Changed
+
+- **`manager/skills/implement/SKILL.md`** — rewritten from preview stub to execution engine (Goal/Input/Steps/Output/Constraints): resolve targets + autonomy (clamp to `manual`) → compute wave plan → **propose (human gate before any dispatch)** → dispatch each wave in isolated worktrees, each gated by the independent `lsa:reconcile` + `gate:` checks → serialized merge (manual: stop at merge boundary for the human) → gate-proven per-epic report. `--sequential` / `--parallel` overrides. No-arg form preserved as the read-only preview. Frontmatter description updated.
+- **`manager/README.md`** — `manager:implement` row rewritten from preview-stub to execution-engine description.
+- **`manager/.claude-plugin/plugin.json`** — version 0.11.0 → 0.12.0.
+
 ## [0.11.0] – 2026-06-17
 
 Epic 1 / S3 of parallel-agent-delivery (`.lsa/features/2026-06-17-parallel-agent-delivery-epic-1/` R10–R12) — closes Epic 1. Defines the **serialized-merge + roadmap-write-lock contract** that the (Epic 2) `manager:implement` engine will follow: how N per-epic PRs converge without turning the integration branch red, and that only the serialized-merge step writes roadmap status. Builds on `core` 0.14.0 Rule 7 + `lsa` 0.18.0 (independent grader + gate contract).
