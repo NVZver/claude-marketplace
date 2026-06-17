@@ -58,7 +58,7 @@ Recommend the next backlog item to build, decompose the chosen pitch into indepe
 
 8. **Read the selected pitch.** After the dispatcher returns the user's pick from Step 5 (or the user provides one directly as input), read the full pitch file. Observable result: pitch content loaded -- Problem, Appetite, Solution sketch, Rabbit holes, No-gos sections available.
 
-9. **Decompose into epics.** Decompose per [`../knowledge/epic-decomposition.md`](../knowledge/epic-decomposition.md). Observable result: numbered epic list in the format specified by `epic-decomposition.md` -- each epic is independently shippable, scoped to one LSA cycle.
+9. **Decompose into epics.** Decompose per [`../knowledge/epic-decomposition.md`](../knowledge/epic-decomposition.md). Each epic is keyed by a **stable slug** (`<feature-slug>/<short-kebab-scope>`) per that file's §"Epic key" — never a global ordinal — assigned once here and immutable through the commit message, branch name, and PR title (no renumbering). Observable result: slug-keyed epic list in the format specified by `epic-decomposition.md` -- each epic is independently shippable, scoped to one LSA cycle.
 
 10. **Return epics as a pending gate.** Return the **full epic list** as a pending gate — approve (recommended default) / reject / adjust individual epics — so the dispatcher can deliver it to the user (the payload itself is invisible — [`core/output`](../../core/skills/output/SKILL.md) Rule 7 *Delivery test*). On a reject or adjust continuation, re-decompose with the user's feedback and return a fresh payload. Observable result: epic list returned with options + recommended default; final list confirmed through the dispatcher's gate.
 
@@ -86,8 +86,8 @@ Pending gate: pick next item — [1] onboarding-checklist (recommended) / [2] pl
 --- continuation: dispatcher returns "1" ---
 
 Epics for "Onboarding checklist" (2 epics):
-1. Onboarding checklist knowledge file — DoD: file exists with numbered items.
-2. Verify integration for checklist drift — DoD: lsa:verify reports missing file.
+- onboarding-checklist/knowledge-file — DoD: file exists with numbered items.
+- onboarding-checklist/verify-drift — DoD: lsa:verify reports missing file.
 
 Pending gate: epics — approve (recommended) / reject / adjust.
 
@@ -96,7 +96,7 @@ Pending gate: epics — approve (recommended) / reject / adjust.
 Staged lsa:discover seed:
 "Create the onboarding checklist knowledge file: numbered items, each naming a
 file path to create. Pitch: .lsa/pitches/onboarding-checklist.md"
-Remaining: Epic 2 (re-invoke manager:decompose after Epic 1 ships).
+Remaining: onboarding-checklist/verify-drift (re-invoke manager:decompose after the first epic ships).
 ```
 
 ## Constraints

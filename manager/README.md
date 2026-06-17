@@ -49,9 +49,13 @@ manager:shape → (human approves pitch) → manager:decompose
                                                   ↓
               lsa:discover → lsa:specify → lsa:verify → lsa:delegate → lsa:reconcile
 
-manager:next  → recommend what to work on next (fast-path or sequenced)
-manager:check → check roadmap hygiene, gate proposed row diffs
+manager:next      → recommend what to work on next (fast-path or sequenced)
+manager:implement → build the approved epics in parallel (the fleet entry point):
+                    wave plan → isolated worktrees → independent gate → serialized merge → PRs
+manager:check     → check roadmap hygiene, gate proposed row diffs
 ```
+
+`manager:implement` is the **parallel build-execution entry point** — once epics are approved (or you just want the backlog built in parallel), invoke it directly. It surfaces in this flow and the skill table above so the fleet engine is findable without hunting (observation log C1, [`../.lsa/observations/2026-06-17-tripanchor-manager-implement.md:59`](../.lsa/observations/2026-06-17-tripanchor-manager-implement.md) *"C1 — entry-point discoverability. `manager:implement` hard to find."*).
 
 The manager plugin owns both the pre-build shaping phase (product-manager) and the project coordination phase (project-manager). The product-manager produces pitches; the project-manager converts them into roadmap items and decomposes them into epics for LSA. Human approval gates exist at every handoff — pitch approval, roadmap entry, epic approval, and LSA handoff. The orchestrator skills run these gates; the agents prepare them (agents propose, skills gate — `AskUserQuestion` is unavailable in subagent context).
 

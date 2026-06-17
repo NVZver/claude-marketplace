@@ -12,7 +12,7 @@ Decompose a pitch into epics ready for the LSA build cycle. Dispatches the `proj
 
 ## Goal
 
-Turn an approved pitch into a numbered list of independently-shippable epics, each scoped to one LSA cycle, and stage the first epic into discovery — without the user manually decomposing the pitch or invoking the agent directly.
+Turn an approved pitch into a list of independently-shippable epics — each keyed by a **stable slug** (`<feature-slug>/<short-kebab-scope>`, never a global ordinal) and scoped to one LSA cycle — and stage the first epic into discovery, without the user manually decomposing the pitch or invoking the agent directly. The slug is assigned once here and is immutable through commit and PR per [`../../knowledge/epic-decomposition.md`](../../knowledge/epic-decomposition.md) §"Epic key".
 
 ## Input
 
@@ -27,7 +27,7 @@ Turn an approved pitch into a numbered list of independently-shippable epics, ea
 
 ## Output
 
-The agent's epic list is delivered and the approve/reject/adjust gate is resolved. On approval `lsa:discover` is executing with the first epic's seed and the remaining epics are surfaced; on reject no handoff runs. The agent proposes; this skill runs the gate and the `lsa:discover` invocation.
+The agent's epic list — each epic carrying its **stable slug** key (`<feature-slug>/<short-kebab-scope>`, per [`../../knowledge/epic-decomposition.md`](../../knowledge/epic-decomposition.md) §"Epic key") — is delivered and the approve/reject/adjust gate is resolved. On approval `lsa:discover` is executing with the first epic's seed (slug included verbatim, so it survives unchanged into the eventual commit and PR) and the remaining epics are surfaced; on reject no handoff runs. The agent proposes; this skill runs the gate and the `lsa:discover` invocation.
 
 ### Example Output
 
@@ -36,15 +36,15 @@ The agent's epic list is delivered and the approve/reject/adjust gate is resolve
 ```
 Dispatching project-manager (intent: decompose onboarding-checklist)...
 
-Epics for "Onboarding checklist" (2 epics):
-1. Onboarding checklist knowledge file — DoD: file exists with numbered items.
-2. Verify integration for checklist drift — DoD: lsa:verify reports missing file.
+Epics for "Onboarding checklist" (2 epics, keyed by stable slug):
+- onboarding-checklist/knowledge-file — DoD: file exists with numbered items.
+- onboarding-checklist/verify-drift — DoD: lsa:verify reports missing file.
 
 Gate — epics: approve (recommended) / reject / adjust
 > approve
 
-Invoking lsa:discover with the staged seed...
-Remaining: Epic 2 (re-invoke manager:decompose after Epic 1 ships).
+Invoking lsa:discover with the staged seed (epic onboarding-checklist/knowledge-file)...
+Remaining: onboarding-checklist/verify-drift (re-invoke manager:decompose after the first epic ships). Each slug stays fixed through commit and PR.
 ```
 
 ## Constraints

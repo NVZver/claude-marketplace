@@ -36,12 +36,13 @@ Three questions — **does · only · all**:
 
 ## Output
 
-`conformance.md` (requirement → satisfying change/test) + **PASS**, or a drift report + the spec updated to reality.
+`conformance.md` (requirement → satisfying change/test) + a verdict line `reconcile: PASS @ <graded-sha>` — emitted as a distinct gate artifact in a context the implementer cannot author (see Constraints, *Independence must be observable*) — or a drift report + the spec updated to reality.
 
 ## Constraints
 
 - **Run N times**, not once. **Check does · only · all** — a passing-but-incomplete diff is not done. **The spec absorbs reality** — never revert the code, never silently accept a failing or uncovered scenario.
 - **Independent grader.** reconcile is the grader the work cannot edit. Run it in a context with no write access to the tests, acceptance `.feature` scenarios, or quality-gate config (`.lsa.yaml` `gate:`) it grades — those are not editable within the same epic's change they judge. The implementer's diff never includes an edit to its own grader. (Reward-hacking defense — see [`knowledge/quality-gate-contract.md`](../../knowledge/quality-gate-contract.md) §"Independence rule"; `.lsa/pitches/parallel-agent-delivery.md:51`.)
+- **Independence must be observable, not asserted.** reconcile runs in a **separate context** from the implementer (a distinct agent/session), and its verdict lands as a **distinct gate artifact** the implementing agent could not author — `conformance.md` plus an explicit verdict line (`reconcile: PASS|FAIL @ <graded-sha>`, naming the SHA it graded). Emit that artifact in a **commit separate from the implementation commit** (or, where a single commit is unavoidable, as a record whose authoring context is provably not the implementer's). A run where reconcile is folded inline into the implementation commit fails this rule: "independent grader" is then asserted, not provable at the git/gate layer. (The marketplace differentiator — observed failing on TripAnchor-1 where reconcile shared `2f824ca` with the impl: `.lsa/observations/2026-06-17-tripanchor-manager-implement.md:33` *"reconcile folded into the implementation commit, not an independent context … no separation visible at the git layer"*.)
 
 ---
 

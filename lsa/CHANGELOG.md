@@ -2,6 +2,16 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.20.0] — 2026-06-17
+
+Gate-observability fixes from the first live `manager:implement` run on an external project (TripAnchor-1). Observation log: [`.lsa/observations/2026-06-17-tripanchor-manager-implement.md`](../.lsa/observations/2026-06-17-tripanchor-manager-implement.md). Feature: [`.lsa/features/2026-06-17-parallel-engine-findings/`](../.lsa/features/2026-06-17-parallel-engine-findings/epic.md).
+
+### Changed
+
+- **C3 — independent grader is now observable, not asserted.** `lsa/skills/reconcile/SKILL.md` + `lsa/knowledge/quality-gate-contract.md`: reconcile runs in a separate context and lands its verdict (`conformance.md` + `reconcile: PASS|FAIL @ <graded-sha>`) as a distinct gate artifact in a commit separate from the implementation — a run that folds reconcile inline (as observed on TripAnchor) now fails the contract.
+- **C6 — required vs. non-required checks.** `lsa/knowledge/quality-gate-contract.md` classifies gate checks as required (correctness, blocking) vs. non-required (infra/deploy, non-blocking), so an infra-permission failure no longer reads as a correctness failure.
+- **`lsa/.claude-plugin/plugin.json`** — version 0.19.0 → 0.20.0.
+
 ## [0.19.0] — 2026-06-17
 
 Epic 3 of parallel-agent-delivery (autonomy knob). Documents the optional `.lsa.yaml` `autonomy:` key — the schema side of the manual/semi/auto ladder consumed by `manager:implement`.
