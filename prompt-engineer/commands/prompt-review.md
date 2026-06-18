@@ -26,10 +26,10 @@ Constraints:
    - No target → ask: "(A) all agents, (B) all commands, (C) specific path"
 3. For each file, check:
    a. Separation of concerns per knowledge/separation-of-concerns.md → boundary violations = HIGH
-   b. Actor ground rules 1-4 per knowledge/actor-ground-rules.md: Goal, Input, Steps, Output, Constraints sections exist → missing = HIGH
+   b. Actor ground rules 1 + 3 per knowledge/actor-ground-rules.md: Goal, Input, Steps, Output (rule 1) and Constraints (rule 3) sections exist → missing = HIGH
    c. Role (rule 2): agents have Role, commands do not → violation = MEDIUM
    d. Steps (rule 5): each step has observable result → vague steps = MEDIUM
-   e. Example Output (rule 10): section exists with synthetic example → missing = HIGH
+   e. Example Output (rule 10): section exists with synthetic example → missing = HIGH — unless the actor cites a leaner contract (`core/actor-template`, `lsa/CORE.md §4`) per actor-ground-rules.md §Scope; then exempt (no finding)
    f. Output spec (rule 4): format and length defined → missing = MEDIUM
    g. Wording (rule 9): check for adverbs, hedging, filler, passive voice → each = LOW
    h. Assumptions (rule 7): check for unverified claims ("probably", "likely", "usually") → each = MEDIUM

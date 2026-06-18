@@ -2,6 +2,15 @@
 
 All notable changes to the `prompt-engineer` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.7.1] – 2026-06-18
+
+Two execution-correctness fixes in `prompt-review`, surfaced by a repository quality audit.
+
+### Fixed
+
+- **`commands/prompt-review.md` step 3b — wrong rule citation.** The section-existence check cited "Actor ground rules 1-4", but in `actor-ground-rules.md` the five sections come from **rule 1** (Goal/Input/Steps/Output) + **rule 3** (Constraints); rules 2 (Role) and 4 (Output spec) are separate checks already covered by 3c/3f. A missing-Constraints finding would have mis-cited the rule (the constraint at `:18` makes the citation load-bearing). Now cites "rules 1 + 3".
+- **`commands/prompt-review.md` step 3e — missing leaner-contract exemption.** Flagged a missing Example Output as HIGH unconditionally, but `actor-ground-rules.md` §Scope says **not** to flag it when the actor cites a leaner contract (`core/actor-template`, `lsa/CORE.md §4`). The step now carries that exemption, eliminating the false positives the §Scope rule exists to prevent.
+
 ## [0.7.0] – 2026-06-12
 
 Adopts the `core` 0.13.0 **gate-delivery contract** for the one approval-gated artifact this plugin produces.
