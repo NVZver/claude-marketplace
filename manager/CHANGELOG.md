@@ -2,6 +2,14 @@
 
 All notable changes to the `manager` plugin (formerly `management`) are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.15.2] – 2026-06-18
+
+Doc-accuracy fix from the repository quality audit (iteration 5).
+
+### Fixed
+
+- **`skills/next/SKILL.md`** — the *Recommend-only* constraint cited the observation log at `:59` (the "Run complete / idle" bullet) for the C1 discoverability rationale; the actual C1 finding is at `:83`. Corrected the line number.
+
 ## [0.15.1] – 2026-06-18
 
 Closes the last open finding (**C7**) from the TripAnchor `manager:implement` dogfood. Observation log: [`.lsa/observations/2026-06-17-tripanchor-manager-implement.md:80`](../.lsa/observations/2026-06-17-tripanchor-manager-implement.md).

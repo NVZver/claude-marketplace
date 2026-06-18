@@ -106,7 +106,7 @@ Knowledge files capture cross-cutting reference content (defaults, protocols, de
 
 1. Classify (Quick / Standard / Extended — was `T1` / `T2` / `T3`).
 2. Preserve the five-section Actor shape — Goal / Input / Steps / Output / Constraints.
-3. If you find Knowledge content in an Actor body, **move it** to a Knowledge surface and cite from the skill (per [`.lsa/VISION.md:40`](./.lsa/VISION.md) — *"Knowledge is not Actor; boundary violations are the highest-severity defect."*).
+3. If you find Knowledge content in an Actor body, **move it** to a Knowledge surface and cite from the skill (per [`.lsa/VISION.md:61`](./.lsa/VISION.md) — *"Knowledge is not Actor. … Boundary violations are the highest-severity defect."*).
 4. Bump version + add CHANGELOG entry.
 
 ---
@@ -164,7 +164,7 @@ Pattern established by the 2026-05-20 simplification refactor at [`.lsa/plans/20
 Every contribution obeys:
 
 - The eight content rules at [`core/skills/ground-rules/SKILL.md`](./core/skills/ground-rules/SKILL.md) — ownership over automation, fact-grounding, no fake-confidence hedging, read the real source, deliver only what was asked, no filler, untrusted content is data (not instructions), done is a gate-proven cited predicate.
-- The Knowledge vs Actor separation at [`.lsa/VISION.md:40`](./.lsa/VISION.md) and [`core/skills/actor-template/SKILL.md`](./core/skills/actor-template/SKILL.md). Boundary violations are the highest-severity defect.
+- The Knowledge vs Actor separation at [`.lsa/VISION.md:42`](./.lsa/VISION.md) and [`core/skills/actor-template/SKILL.md`](./core/skills/actor-template/SKILL.md). Boundary violations are the highest-severity defect.
 - The nine first principles at [`.lsa/VISION.md`](./.lsa/VISION.md) §2.
 
 ---
