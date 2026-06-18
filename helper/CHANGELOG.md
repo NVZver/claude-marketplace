@@ -2,6 +2,14 @@
 
 All notable changes to the `helper` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.5.2] – 2026-06-18
+
+Doc-accuracy fix from the repository quality audit (iteration 3).
+
+### Fixed
+
+- **`helper/README.md`** — the `## Status` header read `v0.4.0` and its lede was frozen at `v0.2.0` while the plugin is at `v0.5.x`. Updated the header to the current version and rewrote the lede to describe current state (all three invocation paths wired + the adopted gate-delivery contract), letting the version table + CHANGELOG carry the per-release history.
+
 ## [0.5.1] – 2026-06-17
 
 Consistency fix for `core` 0.14.0, which added `core/ground-rules` Rule 7 *"Done is a gate-proven, cited predicate"* (content-rule count 7 → 8). Helper restates the inherited ground-rules list in its agent body, so the stale "seven content rules" citation is corrected.
