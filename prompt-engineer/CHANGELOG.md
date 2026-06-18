@@ -2,6 +2,14 @@
 
 All notable changes to the `prompt-engineer` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.7.3] – 2026-06-18
+
+Self-conformance fix from the repository quality audit (iteration 4): the `prompt-engineer` agent now follows the actor shape it enforces.
+
+### Fixed
+
+- **`agents/prompt-engineer.md`** — promoted Role/Goal/Input from inline `Label:` lines to `##` headers and moved Constraints to a `## Constraints` section after Output (canonical Goal/Input/Steps/Output/Constraints ordering, matching the other four agents); added an explicit `Observable result:` to each of the 6 steps (actor-template requires every step to produce an observable result). No behavior change — structure only.
+
 ## [0.7.2] – 2026-06-18
 
 ### Fixed

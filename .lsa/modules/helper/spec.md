@@ -4,7 +4,7 @@
 
 The fact-grounded assistant plugin. A subagent + a slash command + knowledge files.
 
-**Plugin manifest:** [`helper/.claude-plugin/plugin.json`](../../../helper/.claude-plugin/plugin.json) (v0.5.2)
+**Plugin manifest:** [`helper/.claude-plugin/plugin.json`](../../../helper/.claude-plugin/plugin.json) (v0.5.3)
 **Plugin README** (install, default flow, status): [`helper/README.md`](../../../helper/README.md)
 **Per-agent behavior** (source of truth): [`helper/agents/helper.md`](../../../helper/agents/helper.md)
 **Per-command behavior** (source of truth): [`helper/commands/help.md`](../../../helper/commands/help.md)
@@ -22,7 +22,7 @@ Observes `lsa:discover` User Verification rejects in main-agent context (auto-en
 
 ## Invariants
 
-- **Versioning.** `helper` evolves with its own SemVer + CHANGELOG (`.lsa/VISION.md` §1 *"Distribution + versioning"*). Currently v0.5.2.
+- **Versioning.** `helper` evolves with its own SemVer + CHANGELOG (`.lsa/VISION.md` §1 *"Distribution + versioning"*). Currently v0.5.3.
 - **Gate-delivery — agent proposes, dispatcher delivers + gates (helper v0.5.0).** Adopts `core` v0.13.0 (`.lsa/modules/core/spec.md`, Rule 7 *Delivery test*, Rule 5 *Self-contained gates*). The `helper` agent's tools no longer include `AskUserQuestion` or `Skill` — it returns its cited answer body plus any pending gates (signal-a re-explain offer, handoff confirmation, closing fork) and a staged `lsa:discover` seed in its payload. The **dispatcher** (the `/help` command body, which dispatches via the `Agent` tool, or the main agent) re-renders the answer through a rendered channel (the agent payload is invisible) and runs the `AskUserQuestion` pickers / invokes the handoff `Skill()`. Picker content the user was never shown is a contract violation.
 - **Markdown-only.** No `/src/`; the plugin is pure Markdown plus the JSON manifest. Per `.lsa/standards/code.md`.
 - **Depends on `core` v0.5.2+** for `output`, `ground-rules`, `actor-template`. Documented in `helper/.claude-plugin/plugin.json: description` and `helper/README.md` *"Depends on"*.

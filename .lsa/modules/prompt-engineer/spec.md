@@ -4,7 +4,7 @@
 
 Prompt-engineering discipline for the marketplace's own prompt files. An agent + commands enforce quality rules across Actors (agents, commands) and Knowledge files; the knowledge files hold the rule categories.
 
-**Plugin manifest:** [`prompt-engineer/.claude-plugin/plugin.json`](../../../prompt-engineer/.claude-plugin/plugin.json) (v0.7.2)
+**Plugin manifest:** [`prompt-engineer/.claude-plugin/plugin.json`](../../../prompt-engineer/.claude-plugin/plugin.json) (v0.7.3)
 **Plugin README** (install, command table, rule categories): [`prompt-engineer/README.md`](../../../prompt-engineer/README.md)
 **Per-agent behavior** (source of truth): [`prompt-engineer/agents/prompt-engineer.md`](../../../prompt-engineer/agents/prompt-engineer.md)
 **Per-command behavior** (source of truth): [`prompt-engineer/commands/`](../../../prompt-engineer/commands/) — `prompt-review`, `prompt-optimize`, `prompt-create`
@@ -23,7 +23,7 @@ This relationship is reciprocal: `core`'s Rule 7 invariant (`.lsa/modules/core/s
 
 ## Invariants
 
-- **Versioning.** `prompt-engineer` evolves with its own SemVer + CHANGELOG (`.lsa/VISION.md` §1 *"Distribution + versioning"*). Currently v0.7.2.
+- **Versioning.** `prompt-engineer` evolves with its own SemVer + CHANGELOG (`.lsa/VISION.md` §1 *"Distribution + versioning"*). Currently v0.7.3.
 - **Gate-delivery — show → approve → write (prompt-engineer v0.7.0).** Adopts `core` v0.13.0 (`.lsa/modules/core/spec.md`, Rule 7 *Authorization boundary*). `prompt-create` quotes the generated prompt content through a rendered channel, takes approval, and writes the file **only on approve** — a generated prompt is an approval-gated artifact, not written before its gate. Per `prompt-engineer/commands/prompt-create.md`.
 - **Markdown-only.** No `/src/`; the plugin is pure Markdown plus the JSON manifest. Per `.lsa/standards/code.md`.
 - **Spec source-of-truth.** Behavior is owned by `prompt-engineer/agents/prompt-engineer.md` + `prompt-engineer/commands/*.md` (Actors) and `prompt-engineer/knowledge/*.md` (rules); this module spec carries module-level invariants only — not a per-rule catalog (that's the knowledge files).
