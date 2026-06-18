@@ -1,5 +1,5 @@
 # Living Spec Architecture (LSA)
-**Version:** 0.16.5 (plugin)
+**Version:** 0.20.1 (plugin)
 **Author:** Nikita Zverev
 **Status:** 0.4.0 — Vision-aligned; dogfooded on `claude-marketplace`; each skill cites `core/output` for output discipline. See [`../.lsa/2026-05-20-lsa-v0.2.0-design.md`](../.lsa/2026-05-20-lsa-v0.2.0-design.md) for the earlier baseline and [`../.lsa/plans/2026-05-20-credo-rollout-plan.md`](../.lsa/plans/2026-05-20-credo-rollout-plan.md) for the credo-rollout restructure.
 
@@ -25,7 +25,7 @@ This document is the design-rationale narrative for `lsa`. For other concerns, s
 - **Per-skill behavior** — [`skills/*/SKILL.md`](./skills/) (each `SKILL.md` is the source of truth for its skill)
 - **User-facing skill list + install** — [`README.md`](./README.md)
 - **Module-level invariants** — [`../.lsa/modules/lsa/spec.md`](../.lsa/modules/lsa/spec.md)
-- **Content discipline** — [`../core/skills/ground-rules/SKILL.md`](../core/skills/ground-rules/SKILL.md) (6 rules)
+- **Content discipline** — [`../core/skills/ground-rules/SKILL.md`](../core/skills/ground-rules/SKILL.md) (8 rules)
 - **Output discipline** — [`../core/skills/output/SKILL.md`](../core/skills/output/SKILL.md) (canonical source-of-truth; cite by link, never restate the count)
 - **Flow types (Quick / Standard / Extended — was T1/T2/T3) + boundary signals** — [`../.lsa/VISION.md`](../.lsa/VISION.md) §4
 - **Testing policy** — [`../.lsa/standards/testing.md`](../.lsa/standards/testing.md)

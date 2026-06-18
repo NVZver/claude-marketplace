@@ -2,6 +2,14 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.20.1] — 2026-06-18
+
+Doc-accuracy fixes surfaced by a repository quality audit.
+
+### Fixed
+
+- **`lsa/ARCHITECTURE.md`** — stale version header (`0.16.5` → `0.20.1`) and a wrong cross-reference: `core/ground-rules` was cited as "(6 rules)" but it defines **eight** content rules (numbered 0–7, per `core/skills/ground-rules/SKILL.md:13` + `README.md:13`). Corrected to "(8 rules)".
+
 ## [0.20.0] — 2026-06-17
 
 Gate-observability fixes from the first live `manager:implement` run on an external project (TripAnchor-1). Observation log: [`.lsa/observations/2026-06-17-tripanchor-manager-implement.md`](../.lsa/observations/2026-06-17-tripanchor-manager-implement.md). Feature: [`.lsa/features/2026-06-17-parallel-engine-findings/`](../.lsa/features/2026-06-17-parallel-engine-findings/epic.md).
