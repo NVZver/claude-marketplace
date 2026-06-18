@@ -2,6 +2,15 @@
 
 All notable changes to the `manager` plugin (formerly `management`) are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.15.1] – 2026-06-18
+
+Closes the last open finding (**C7**) from the TripAnchor `manager:implement` dogfood. Observation log: [`.lsa/observations/2026-06-17-tripanchor-manager-implement.md:80`](../.lsa/observations/2026-06-17-tripanchor-manager-implement.md).
+
+### Changed
+
+- **C7 — worktree isolation is required, not optional.** `manager/knowledge/parallel-dispatch.md` §3 + `manager/skills/implement/SKILL.md` *Isolation* constraint: the contract now states that each epic agent is dispatched with `isolation: worktree` and that a **single shared working tree with convention-only file-ownership is non-conforming** (no OS-level isolation — a stray edit to a peer's "disjoint" file silently corrupts that peer). If a per-epic worktree cannot be created, the epic is **held back as an open item**, never silently dispatched single-tree. Resolves the spec-vs-behavior seam observed on TripAnchor (the live run used a single tree); direction chosen is *enforce worktrees* — it aligns behavior to the contract + memory `project_parallel_worktree_workflow` and preserves the pitch's safety differentiator. No user-facing surface changed (`manager/README.md` already documents "isolated git worktree").
+- **`manager/.claude-plugin/plugin.json`** — version 0.15.0 → 0.15.1.
+
 ## [0.15.0] – 2026-06-17
 
 Seam-level fixes from the **first live `manager:implement` run on an external project** (TripAnchor-1). The core engine worked (gate-proven done, disjoint-code parallelism, high throughput); these close the integration-seam defects the run surfaced. Observation log: [`.lsa/observations/2026-06-17-tripanchor-manager-implement.md`](../.lsa/observations/2026-06-17-tripanchor-manager-implement.md). Feature: [`.lsa/features/2026-06-17-parallel-engine-findings/`](../.lsa/features/2026-06-17-parallel-engine-findings/epic.md).

@@ -55,11 +55,29 @@ External-project run of the shipped fleet engine (`manager:implement`, manager 0
 3. Is "done" reported as a **gate-proven, cited** predicate (CI green on tested SHA + PR) or asserted?
 4. Does the appetite/scope hold, or does it over-build past the pitch slice (the marketplace E3/E4 failure mode)?
 
+### 2026-06-17 23:37 CEST — run reached idle; C6 externally corroborated
+- **Run complete / idle.** PRs #86 (23:22) and #87 (23:32) merged; **no open PRs**; HEAD `1043565` (#87). Five PRs (#83–#87) shipped gate-proven in the session, backlog churned to empty. Autonomous multi-PR churn ran to a clean stop.
+- **✅ C6 corroborated externally.** TripAnchor's *own* CI gained a check literally named **"DB security advisors (report, non-blocking)"** (passing) on #86 — i.e. the project independently arrived at the required-vs-**non-blocking** check taxonomy we just built into `lsa/knowledge/quality-gate-contract.md`. Independent evidence the C6 direction is correct. (Vercel now fails with "Deployment was blocked" — still non-required; #86/#87 merged regardless.)
+- Watch-loop natural end: nothing left in flight.
+
+### 2026-06-18 00:08 CEST — run resumed (cross-tier feature)
+- PR **#88** opened: `feat(web,conversation): E28 polished BriefSummaryCard` — first **cross-module** feature observed (spans `web` + `conversation` `.lsa.yaml` modules; earlier work was single-module). No new defect; same lifecycle. Epic ID "E28" after E30/E35 merged reconfirms C2 (already fixed our side). Watching only for whether cross-module decomposition triggers a different collision pattern than the within-module C4 case.
+
+### 2026-06-18 09:14 CEST — cross-module feature merged clean; run active again
+- **#88 merged** 07:02 (`feat(web,conversation)` BriefSummaryCard — the first cross-module feature). Landed gate-proven; **no new collision pattern** surfaced despite spanning `web` + `conversation` modules. Caveat: single PR, so it didn't stress *parallel* ledger writes across modules — the C4 case remains the multi-fork scenario, already fixed our side.
+- **#89 open**: `test(e2e): wire product Playwright suite into CI + fix drifted funnel stub` (HEAD `cec57b5`). Run is active again after the overnight pause.
+
+### 2026-06-18 11:09 CEST — #90/#91 merged (single-PR, not parallel)
+- #90 `fix(conversation): plan-confirmation card survives edits (3 gate bugs)` + #91 `test(conversation): guard plan-confirmation date/edit guidance` merged (10:51 / 11:06). Idle after. **Both single-PR sequential** (feature→bugfix→test-guard iteration), **not** parallel fleet dispatches — so no new parallel-engine insight; the engine isn't being exercised in parallel mode this morning. Meta-note: the original agent-robustness run remains the only observed *parallel* fleet dispatch; everything since has been serial single PRs.
+
+### 2026-06-18 18:23 CEST — #92 merged (single-PR DB fix)
+- #92 `fix(db): harden functions by name so prod signature drift can't abort the security migration` merged 18:23 after a ~9h idle gap. Single-PR, gate-proven, no open PRs after. Still serial (not parallel) — no new manager+parallel-engine insight. Pattern holds: only the original agent-robustness run exercised the parallel fleet path.
+
 ## Resolution — 2026-06-17 (feature `2026-06-17-parallel-engine-findings`)
 
 All six findings fixed on branch `feature/fix-parallel-engine-findings` (manager 0.15.0 + lsa 0.20.0), built by dogfooding the parallel engine itself: 4 disjoint prompt-engineer epics + orchestrator-owned shared-ledger writes (the C4 fix, applied to its own build). **C1–C6 resolved** (see CHANGELOG entries). One new finding logged below.
 
-- **C7 — `manager:implement` SKILL documents worktree-per-epic, but the live run used a single tree + file-ownership isolation.** `manager/skills/implement/SKILL.md` Step 4 / `parallel-dispatch.md` §3 say "one worktree + branch per epic (`isolation: worktree`)"; the observed run showed `git worktree list` = single tree (this log's 23:00 checkpoint). Spec-vs-behavior seam; also contradicts marketplace memory `project_parallel_worktree_workflow`. **Open** — not fixed this pass; candidate for the next remediation (decide: enforce worktrees in the engine, or update the contract to bless single-tree + disjoint-file ownership).
+- **C7 — `manager:implement` SKILL documents worktree-per-epic, but the live run used a single tree + file-ownership isolation.** `manager/skills/implement/SKILL.md` Step 4 / `parallel-dispatch.md` §3 say "one worktree + branch per epic (`isolation: worktree`)"; the observed run showed `git worktree list` = single tree (this log's 23:00 checkpoint). Spec-vs-behavior seam; also contradicts marketplace memory `project_parallel_worktree_workflow`. **✅ Resolved — 2026-06-18 (manager 0.15.1), direction: enforce worktrees.** Rationale: worktrees give OS-level isolation (a stray edit can't corrupt a peer — the risk flagged at this log's `:24`), the contract + memory already assume them, and `Agent(isolation:"worktree")` is a working primitive — the observed single-tree was a manual dogfood shortcut, not an engine constraint. Fix closes the silent seam: `parallel-dispatch.md` §3 + `implement/SKILL.md` *Isolation* constraint now mark a single shared tree **non-conforming**, and an epic whose worktree cannot be created is held back as an open item rather than dispatched single-tree. No memory edit needed — enforcing worktrees aligns behavior *to* `project_parallel_worktree_workflow` rather than contradicting it.
 
 ## Fix/improve candidates (running)
 - **C1 — entry-point discoverability.** `manager:implement` hard to find. (Confirmed.)
