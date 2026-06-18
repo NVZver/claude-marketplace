@@ -16,7 +16,7 @@ The marketplace ships five plugins (`core`, `lsa`, `helper`, `manager`, and `pro
 |---|---|---|
 | `core` | [`.lsa/modules/core/spec.md`](./modules/core/spec.md) | active — v0.14.1 |
 | `lsa` | [`.lsa/modules/lsa/spec.md`](./modules/lsa/spec.md) | active — v0.20.2 |
-| `helper` | [`.lsa/modules/helper/spec.md`](./modules/helper/spec.md) | active — v0.5.1 |
+| `helper` | [`.lsa/modules/helper/spec.md`](./modules/helper/spec.md) | active — v0.5.2 |
 | `manager` | [`.lsa/modules/manager/spec.md`](./modules/manager/spec.md) | active — v0.15.1 |
 | `prompt-engineer` | [`.lsa/modules/prompt-engineer/spec.md`](./modules/prompt-engineer/spec.md) | active — v0.7.2 |
 
@@ -32,7 +32,7 @@ The marketplace ships five plugins (`core`, `lsa`, `helper`, `manager`, and `pro
 ## Non-Functional Requirements
 
 - **NFR1 — Fact-grounding.** Every factual claim in any artifact this repo ships carries a source + searchable quote. No silent hedging. Marker convention: lowercase `[assumption: <why>]` and `[cannot verify]`. Source: `core/skills/ground-rules/SKILL.md`.
-- **NFR2 — Spec-grounding.** Every artifact change traces to a spec requirement. Direct edits are absorbed (Level 2.5) rather than blocked — via `reconcile`. Source: `.lsa/VISION.md:135`.
+- **NFR2 — Spec-grounding.** Every artifact change traces to a spec requirement. Direct edits are absorbed (Level 2.5) rather than blocked — via `reconcile`. Source: `.lsa/VISION.md:156`.
 - **NFR3 — Per-plugin SemVer + CHANGELOG.** Every plugin in this marketplace maintains its own `CHANGELOG.md` (Keep a Changelog) plus a SemVer in `.claude-plugin/plugin.json`. The version is bumped in the same commit as the changelog entry. Source: `.lsa/VISION.md` §1 *"Distribution + versioning"*.
 - **NFR4 — Read before write.** In-repo config → in-repo docs → the artifact itself → external sources → ask the human. In that order. Source: `.lsa/VISION.md:59` (first principle 6).
 - **NFR5 — Knowledge vs Actor separation.** Every file is either *what is true* (rules, patterns, checklists) or *how to act* (Goal / Input / Steps / Output / Constraints). Never both. Source: `.lsa/VISION.md:40` and `core/skills/actor-template/SKILL.md`.

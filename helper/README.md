@@ -9,9 +9,9 @@ Inherits [`core/output`](../core/skills/output/SKILL.md) discipline: ≤1.5 scre
 
 Spec (absorbed into the module spec): [`.lsa/modules/helper/spec.md`](../.lsa/modules/helper/spec.md). Rationale: [`.lsa/VISION.md`](../.lsa/VISION.md).
 
-## Status — v0.4.0
+## Status — v0.5.2
 
-Built in 4 steps (original helper-agent spec, since absorbed into [`.lsa/modules/helper/spec.md`](../.lsa/modules/helper/spec.md)). Steps 1–3 landed as v0.1.0 (the description-matched assistant + `/help` command); step 4 ships as v0.2.0 — the auto-engage path. All three invocation paths are now wired: (c) explicit `/help`, (a) two consecutive `[c] reject` selections at an `lsa:discover` User Verification, (b) free-form `?` / `what is X?` mid-flow. Per-signal-type cooldown prevents nag.
+Built from the original 4-step helper-agent spec (since absorbed into [`.lsa/modules/helper/spec.md`](../.lsa/modules/helper/spec.md)). All three invocation paths are wired: (c) explicit `/help`, (a) two consecutive `[c] reject` selections at an `lsa:discover` User Verification, (b) free-form `?` / `what is X?` mid-flow. Per-signal-type cooldown prevents nag. Later releases adopted the `core` gate-delivery contract (agent proposes, dispatcher gates). The per-release history is the table below + [`CHANGELOG.md`](./CHANGELOG.md).
 
 | Step | Adds | In this commit? |
 |---|---|---|
