@@ -2,6 +2,12 @@
 
 All notable changes to the `prompt-engineer` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.7.2] – 2026-06-18
+
+### Fixed
+
+- **`knowledge/separation-of-concerns.md`** — the `knowledge/*.md` classification example cited `spec-templates.md`, which was deleted in `lsa` 0.20.2. Replaced with `quality-gate-contract.md` (a live `lsa` knowledge file).
+
 ## [0.7.1] – 2026-06-18
 
 Two execution-correctness fixes in `prompt-review`, surfaced by a repository quality audit.

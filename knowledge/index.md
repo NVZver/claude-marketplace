@@ -6,7 +6,7 @@ Flat table of every knowledge file across the five marketplace plugins. Agents c
 
 Maintained manually. When a knowledge file is added, moved, or removed, update this index in the same commit. Per [`.lsa/pitches/readme-and-knowledge-base.md`](../.lsa/pitches/readme-and-knowledge-base.md) "Solution sketch".
 
-## Catalog — 17 knowledge files
+## Catalog — 21 knowledge files
 
 | Topic | Plugin | Path | One-sentence description |
 |---|---|---|---|
@@ -17,13 +17,17 @@ Maintained manually. When a knowledge file is added, moved, or removed, update t
 | Onboarding fast-path | `helper` | [`helper/knowledge/onboarding-fast-path.md`](../helper/knowledge/onboarding-fast-path.md) | Catalog mapping onboarding triggers (install / start / what-is-X / how-do-I-run) to README excerpts so Helper short-circuits to seconds. |
 | Output discipline | `helper` | [`helper/knowledge/output-discipline.md`](../helper/knowledge/output-discipline.md) | The seven golden output rules Helper applies to every response — re-grounded summary of `core/output` and `core/ground-rules`. |
 | LSA conventions | `lsa` | [`lsa/knowledge/conventions.md`](../lsa/knowledge/conventions.md) | Cross-cutting conventions every LSA skill applies; referenced by section name rather than restated in each skill body. |
-| Spec templates | `lsa` | [`lsa/knowledge/spec-templates.md`](../lsa/knowledge/spec-templates.md) | Markdown templates for LSA spec artifacts — `requirements.md`, `test-suites.md`, `design.md`. |
+| Quality gate contract | `lsa` | [`lsa/knowledge/quality-gate-contract.md`](../lsa/knowledge/quality-gate-contract.md) | The required-vs-non-blocking check taxonomy and the independent-grader gate contract `lsa:reconcile` enforces. |
+| Autonomy policy | `manager` | [`manager/knowledge/autonomy-policy.md`](../manager/knowledge/autonomy-policy.md) | The `manual`/`semi`/`auto` autonomy-ladder definitions + per-level scope of unattended multi-PR churn; the single source for autonomy levels. |
 | Command naming | `manager` | [`manager/knowledge/command-naming.md`](../manager/knowledge/command-naming.md) | The function-like command-naming convention `<actor>:<action>-<modifier> args` — verbs you call with arguments, not nouns you browse; the single source of truth for command naming. |
 | Epic decomposition | `manager` | [`manager/knowledge/epic-decomposition.md`](../manager/knowledge/epic-decomposition.md) | Rules for breaking a shaped pitch into epics; each epic maps to one LSA build cycle. |
+| Fleet roll-up | `manager` | [`manager/knowledge/fleet-rollup.md`](../manager/knowledge/fleet-rollup.md) | The end-of-run fleet roll-up report contract — per-epic table, files-changed, proven-facts, open-items; reuses `core/output` Rule 7. |
+| Parallel dispatch | `manager` | [`manager/knowledge/parallel-dispatch.md`](../manager/knowledge/parallel-dispatch.md) | How `manager:implement` turns epics into a dependency-ordered wave plan and dispatches one worktree-isolated agent per epic (disjointness analysis + dispatch policy). |
 | Pitch structure | `manager` | [`manager/knowledge/pitch-structure.md`](../manager/knowledge/pitch-structure.md) | Canonical format for a shaped pitch — Problem / Appetite / Solution sketch / Rabbit holes / No-gos. |
 | Roadmap orchestration | `manager` | [`manager/knowledge/roadmap-orchestration.md`](../manager/knowledge/roadmap-orchestration.md) | The shared dispatch → gate → re-render contract the three roadmap verb skills (`manager:next` / `manager:decompose` / `manager:check`) cite when they dispatch the `project-manager` agent and run its returned gates. |
 | Role adaptation | `manager` | [`manager/knowledge/role-adaptation.md`](../manager/knowledge/role-adaptation.md) | The self-selected domain-expert role the `product-manager` agent adopts per invocation, with visible chain-of-thought. |
 | Sequencing heuristics | `manager` | [`manager/knowledge/sequencing-heuristics.md`](../manager/knowledge/sequencing-heuristics.md) | Three factors for ordering backlog items — dependency, then risk, then value — grounded in roadmap and codebase state. |
+| Serialized merge | `manager` | [`manager/knowledge/serialized-merge.md`](../manager/knowledge/serialized-merge.md) | The serialized-merge convergence contract + shared-ledger lock — who writes `CHANGELOG.md` / version / roadmap during a parallel run, and how N per-epic PRs land without turning the branch red. |
 | Actor ground rules | `prompt-engineer` | [`prompt-engineer/knowledge/actor-ground-rules.md`](../prompt-engineer/knowledge/actor-ground-rules.md) | Ten ground rules for agents and commands, plus the actor format template (Goal / Input / Steps / Output / Constraints). |
 | Quality checks | `prompt-engineer` | [`prompt-engineer/knowledge/quality-checks.md`](../prompt-engineer/knowledge/quality-checks.md) | Knowledge-file quality checks, KISS/DRY audit, AI over-engineering sweep, context-budget ceiling, severity levels. |
 | Separation of concerns | `prompt-engineer` | [`prompt-engineer/knowledge/separation-of-concerns.md`](../prompt-engineer/knowledge/separation-of-concerns.md) | Classification table and boundary violations for plugin file categories — Knowledge vs Actor. |
