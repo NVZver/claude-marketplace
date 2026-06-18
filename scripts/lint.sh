@@ -33,8 +33,8 @@ echo "=== marketplace invariant lint ==="
 # C1 — output-discipline rule COUNT is stated only in the canonical file.
 # A literal "(N golden rules)" anywhere else goes stale when the count changes.
 # ---------------------------------------------------------------------------
-hits="$(grep -rEn '\([0-9]+ golden rules\)' --include='*.md' \
-  --exclude-dir=archive --exclude-dir=plans --exclude-dir=.git \
+hits="$(grep -rEn '\([0-9]+ (format )?golden rules' --include='*.md' \
+  --exclude-dir=archive --exclude-dir=plans --exclude-dir=pitches --exclude-dir=.git \
   --exclude=CHANGELOG.md . 2>/dev/null \
   | grep -v "^\./${CANON}:" || true)"
 if [[ -z "${hits}" ]]; then
@@ -50,15 +50,15 @@ fi
 # or carries the full canonical enumeration (…, concrete). The test doc that
 # describes this recipe is exempt — it is allowed to name what it catches.
 # ---------------------------------------------------------------------------
-raw="$(grep -rEn 'structured, ?minimal, ?formatted, ?sourced' --include='*.md' \
-  --exclude-dir=archive --exclude-dir=plans --exclude-dir=.git \
+raw="$(grep -rEn 'structured[ ,/]+minimal[ ,/]+formatted[ ,/]+sourced' --include='*.md' \
+  --exclude-dir=archive --exclude-dir=plans --exclude-dir=pitches --exclude-dir=.git \
   --exclude=CHANGELOG.md . 2>/dev/null || true)"
 viol="$(printf '%s\n' "${raw}" \
   | grep -v '^$' \
   | grep -v "^\./${CANON}:" \
   | grep -v '^\./core/tests/repo-anchored\.md:' \
   | grep -vE 'skills/output/SKILL\.md' \
-  | grep -vE 'structured, ?minimal, ?formatted, ?sourced, ?concrete' \
+  | grep -vE 'structured[ ,/]+minimal[ ,/]+formatted[ ,/]+sourced[ ,/]+concrete' \
   || true)"
 if [[ -z "${viol}" ]]; then
   pass_line "C2 rule-name list stated only in ${CANON} (or cited)"

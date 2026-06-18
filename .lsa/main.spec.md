@@ -14,7 +14,7 @@ The marketplace ships five plugins (`core`, `lsa`, `helper`, `manager`, and `pro
 
 | Module | Spec | Status |
 |---|---|---|
-| `core` | [`.lsa/modules/core/spec.md`](./modules/core/spec.md) | active — v0.14.0 |
+| `core` | [`.lsa/modules/core/spec.md`](./modules/core/spec.md) | active — v0.14.1 |
 | `lsa` | [`.lsa/modules/lsa/spec.md`](./modules/lsa/spec.md) | active — v0.20.2 |
 | `helper` | [`.lsa/modules/helper/spec.md`](./modules/helper/spec.md) | active — v0.5.1 |
 | `manager` | [`.lsa/modules/manager/spec.md`](./modules/manager/spec.md) | active — v0.15.1 |
