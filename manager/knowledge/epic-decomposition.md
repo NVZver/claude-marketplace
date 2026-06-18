@@ -23,33 +23,41 @@ When in doubt, prefer the boundary that produces the smaller, more testable epic
 ## Anti-patterns
 
 1. **Sequential dependency chain.** If epic 2 cannot start until epic 1 merges, and epic 3 cannot start until epic 2 merges, the decomposition is a disguised waterfall. Re-split along component boundaries so epics can proceed independently.
-2. **"Part 1 / Part 2" naming.** Naming epics by ordinal ("Part 1", "Part 2") signals the split is arbitrary. Find a real boundary — each epic name states *what* it delivers, not *when*.
+2. **Ordinal naming / global epic counter.** Naming epics by ordinal ("Part 1", "Part 2", "Epic 5") signals the split is arbitrary, *and* a global counter is not a stable identity: it drifts and collides as work moves between stages. Observed live: the same epic carried three different ID ranges across spec, commit, and PR (E14–E18 → E19–E23 → E31–E35), two unrelated commits both claimed "E27", and IDs were non-monotonic ([`../../.lsa/observations/2026-06-17-tripanchor-manager-implement.md:41`](../../.lsa/observations/2026-06-17-tripanchor-manager-implement.md) — *"Epic IDs are not a stable key — they drift per stage and collide across tracks"*). Find a real boundary and key the epic by a **stable slug** (see §Epic key), not a number — the name states *what* it delivers, not *when* or *which ordinal*.
 3. **Shared-state epic.** Two epics that both read and write the same new data structure cannot be verified independently. Consolidate into one epic or isolate the data structure as its own epic.
 4. **Test-only epic.** An epic that adds tests but no behavior (or behavior but no tests) violates the TDD cycle. Every epic includes both the behavior and its tests.
+
+## Epic key
+
+Every epic gets a **stable slug** assigned once at decompose time: `<feature-slug>/<short-kebab-scope>` (e.g. `agent-robustness/retry-adapter`). The slug is derived from *what the epic delivers* — never a global ordinal counter, which renumbers and collides across stages (see Anti-patterns §2).
+
+**Immutability rule.** The epic key is **immutable from decompose through commit and PR.** The same slug appears verbatim in the spec (`epic.md`), the commit message, the branch name, and the PR title — no renumbering, no per-stage re-derivation. A reader can grep one slug and find the epic across the whole trail. This is the fix for the observed three-range drift (E14–E18 spec ≠ E19–E23 commit ≠ E31–E35 PR) per [`../../.lsa/observations/2026-06-17-tripanchor-manager-implement.md:41`](../../.lsa/observations/2026-06-17-tripanchor-manager-implement.md).
 
 ## Epic format
 
 ```markdown
-### Epic <N>: <one-sentence scope>
+### Epic <feature-slug>/<short-kebab-scope>: <one-sentence scope>
 
 **Definition of done:** <observable result a human can verify>
 **Parent:** [<pitch-title>](../../pitches/<slug>.md)
 ```
+
+The slug from the heading is carried unchanged into the commit message subject and the PR title for this epic.
 
 ## Worked example [illustrative]
 
 Given a pitch "Onboarding checklist for new marketplace plugins" with a Solution sketch naming (a) a new knowledge file with checklist items, (b) a `lsa:verify` integration that traces checklist items to real files:
 
 ```markdown
-### Epic 1: Onboarding checklist knowledge file
+### Epic onboarding-checklist/knowledge-file: Onboarding checklist knowledge file
 
 **Definition of done:** `core/knowledge/new-plugin-checklist.md` exists with numbered items; each item names a file path to create. Manual walkthrough produces a scaffold that passes `lsa:verify`.
 **Parent:** [onboarding-checklist](../../pitches/onboarding-checklist.md)
 
-### Epic 2: Verify integration for checklist drift
+### Epic onboarding-checklist/verify-drift: Verify integration for checklist drift
 
 **Definition of done:** `lsa:verify` reads the checklist file and reports a finding when a listed file path does not exist in the plugin directory. Test: delete one expected file, run verify, observe the finding.
 **Parent:** [onboarding-checklist](../../pitches/onboarding-checklist.md)
 ```
 
-Epic 1 is shippable alone (the checklist works manually). Epic 2 adds automation but is not required for the checklist to deliver value.
+The `onboarding-checklist/knowledge-file` epic is shippable alone (the checklist works manually). `onboarding-checklist/verify-drift` adds automation but is not required for the checklist to deliver value. Both slugs travel unchanged into their commit subjects and PR titles.

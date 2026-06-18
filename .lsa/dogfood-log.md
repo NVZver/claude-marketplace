@@ -6,6 +6,20 @@ One section per run, newest first.
 
 ---
 
+## 2026-06-17 — `manager:implement` first live run on an external project (in progress)
+
+First use of the shipped fleet engine (`manager:implement`, manager 0.12.0) on a real, non-marketplace project. Logged live; run still in flight.
+
+### Mistake the system made (the valuable part)
+
+1. **Discoverability fumble at entry.** Claude Opus **could not initially locate what `manager:implement` is** — it searched before finding the skill, then proceeded correctly. **Impact:** wasted turns + a worse first impression on the exact entry point a fleet run starts from. **Lesson for v0.3.0:** the parallel-execution entry point needs to be findable without a hunt — candidate fixes: a clearer `manager:implement` skill `description` (trigger phrasing for "run agents in parallel" / "decompose and build"), a pointer from `manager:next`/`decompose`, or a README surfacing. *Discoverability-defect data point: 1 failed-then-recovered entry-point lookup this run.*
+
+### Dogfood success (so far)
+
+- Once found, `manager:implement` **decomposed the task correctly, identified the parallelizable work, and dispatched 2 disjoint forks running 6 LSA instances total (grouped 4 + 2)** — the disjoint-epic decomposer + dispatcher (manager 0.12.0, Epic 2) doing exactly what it shipped to do, on a real workload. Outcome of the run TBD — to be appended.
+
+---
+
 ## 2026-06-17 — parallel-agent-delivery (Epics 1–4) build + merge to `main`
 
 - **Work:** Built the `parallel-agent-delivery` pitch end-to-end — Epic 1 (safety core: `core` 0.14.0 done-predicate Rule 7, `lsa` 0.18.0 independent reconcile grader + `gate:` contract, `manager` 0.11.0 serialized-merge + roadmap-lock), Epic 2 (`manager` 0.12.0 dispatcher engine + disjoint-epic decomposer), Epic 3 (`manager` 0.13.0 + `lsa` 0.19.0 `autonomy:` semi), Epic 4 (`manager` 0.14.0 fleet roll-up + auto). Merged via PR #52 (merge `ba6f9d1`).
