@@ -2,6 +2,14 @@
 
 All notable changes to the `helper` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.5.3] – 2026-06-18
+
+Step-numbering fix from the repository quality audit (iteration 4).
+
+### Fixed
+
+- **`agents/helper.md`** — the steps used a fractional `1.5` (two lines both rendering as `1.` in markdown), violating the actor-template's sequential numbering. Renumbered to a clean 1–6 and updated every in-file step back-reference to match. No behavior change.
+
 ## [0.5.2] – 2026-06-18
 
 Doc-accuracy fix from the repository quality audit (iteration 3).
