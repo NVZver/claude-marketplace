@@ -2,6 +2,14 @@
 
 All notable changes to the `core` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.14.1] — 2026-06-18
+
+Doc-accuracy fix from the repository quality audit (iteration 2): the documented D2 probe recipe is re-synced to the executable gate.
+
+### Fixed
+
+- **`core/tests/repo-anchored.md` §D2** — the documented grep recipes had drifted from the current output-discipline vocabulary (matched only the bare `(N golden rules)` form and the comma-separated 4-name list). Updated to match the executable gate (`scripts/lint.sh` C1/C2): count probe now matches `(N format golden rules` and the extended `— <names>` form; name-list probe accepts `/` as well as `,` separators; both exclude `pitches/` (quote-to-propose, like `plans/`). Keeps doc ↔ script aligned so the invariant can't silently re-vacuum. (The gate patterns themselves were stale and could never FAIL — fixed in `scripts/lint.sh`, repo-internal, no plugin version.)
+
 ## [0.14.0] — 2026-06-17
 
 Adds **`core/ground-rules` Rule 7 *"Done is a gate-proven, cited predicate"*** — the always-on content rule that is the safety core of the parallel-agent-delivery pitch (`.lsa/pitches/parallel-agent-delivery.md`, Epic 1 / `.lsa/features/2026-06-17-parallel-agent-delivery-epic-1/`). An agent may report a completion state (`tests green`, `build passing`, `migration applied`, `merged @ <sha>`, `deployed`) only when a deterministic, agent-inaccessible gate ran and passed AND the report cites the gate artifact; anything unproven is reported `attempted`/`unknown` with evidence attached, never upgraded to "done." The structural answer to the measured S7 "Inaccurate Self-Reporting" failure mode (prompting alone does not fix it — reward-tampering generalizes despite safety training). `ground-rules` content-rule count 7 → 8.

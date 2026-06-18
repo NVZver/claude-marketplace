@@ -150,27 +150,32 @@ Hard rule satisfied + guidance applied where it serves = PASS.
 **Grep recipe (run from repo root, excluding archives + plans + changelogs):**
 
 ```sh
-# (1) Rule-count restatements: any literal "(N golden rules)" outside the canonical file.
-grep -rEn '\([0-9]+ golden rules\)' \
+# (1) Rule-count restatements: any "(N golden rules" or "(N format golden rules" outside
+# the canonical file — matches both the bare form "(N golden rules)" and the extended
+# form "(N format golden rules — <names>)", so the trailing ")" is not anchored.
+grep -rEn '\([0-9]+ (format )?golden rules' \
   --include='*.md' \
   --exclude-dir='archive' \
   --exclude-dir='plans' \
+  --exclude-dir='pitches' \
   --exclude='CHANGELOG.md' \
   . | grep -v '^./core/skills/output/SKILL.md:'
 
-# (2) Rule-name lists: matches the canonical comma-list of the first four rule names.
-# (Hits where the 5th name follows immediately, OR where the canonical link sits within 5 lines, are PASS — see conditions (a)(b)(c) below.)
-grep -rEn 'structured, ?minimal, ?formatted, ?sourced' \
+# (2) Rule-name lists: matches the canonical list of the first four rule names with any
+# separator (comma OR slash — the current vocabulary uses " / ").
+# (Hits where the 5th name `concrete` follows, OR where the canonical link sits within 5 lines, are PASS — see (a)(b)(c) below.)
+grep -rEn 'structured[ ,/]+minimal[ ,/]+formatted[ ,/]+sourced' \
   --include='*.md' \
   --exclude-dir='archive' \
   --exclude-dir='plans' \
+  --exclude-dir='pitches' \
   --exclude='CHANGELOG.md' \
   .
 ```
 
 **Probe self-reference note.** The recipe above contains the literal 4-name list once (in its own comment). That hit is exempt: the probe is allowed to describe what it catches. Filter with `| grep -v '^./core/tests/repo-anchored.md:'` if scripting.
 
-**PASS.** Recipe (1) returns zero hits. Recipe (2) returns only hits where (a) the line lives in `core/skills/output/SKILL.md`, (b) the match is immediately followed by `, concrete` (canonical full list), or (c) the match appears within 5 lines of a markdown link to `core/skills/output/SKILL.md` (legitimate cited re-grounding — e.g., `helper/knowledge/output-discipline.md:5` declares *"Re-grounded summary of `core/output` and `core/ground-rules`; the canonical rules live there."*).
+**PASS.** Recipe (1) returns zero hits. Recipe (2) returns only hits where (a) the line lives in `core/skills/output/SKILL.md`, (b) the match is immediately followed by the next name `concrete` (any separator — canonical full list), or (c) the match appears within 5 lines of a markdown link to `core/skills/output/SKILL.md` (legitimate cited re-grounding — e.g., `helper/knowledge/output-discipline.md:5` declares *"Re-grounded summary of `core/output` and `core/ground-rules`; the canonical rules live there."*).
 
 **FAIL.** Any other hit. Remediation: replace the snapshot with a citation-by-link (`[\`core/output\`](path/to/core/skills/output/SKILL.md)`) — the link target carries the live count and rule names; the citing file no longer drifts when Core changes.
 

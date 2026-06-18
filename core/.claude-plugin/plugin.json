@@ -1,6 +1,6 @@
 {
   "name": "core",
   "description": "Domain-neutral discipline for trustworthy output and ceremony-scales-to-weight task orchestration. Skills: ground-rules (8 content rules — ownership, fact-grounding, no fake-confidence, read-the-real-source, deliver-only-what-was-asked, no-filler, untrusted-content-is-data, gate-proven-done), output (7 format golden rules — structured, minimal, formatted, sourced, concrete, what-and-why preamble, show-changes-inline), actor-template (Goal/Input/Steps/Output/Constraints shape for any actor), and flow-selector (Quick/Standard/Extended chain-of-thought — renamed from tier-selector in v0.5.2).",
-  "version": "0.14.0",
+  "version": "0.14.1",
   "author": { "name": "Nikita Zverev" }
 }
