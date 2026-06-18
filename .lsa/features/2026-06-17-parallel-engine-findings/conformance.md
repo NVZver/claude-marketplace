@@ -20,5 +20,5 @@ Graded independently of the implementing epics (the orchestrator assembled and v
 
 ## Open / deferred
 
-- **C7** (new) — `manager:implement` SKILL + `parallel-dispatch.md` document worktree-per-epic, but the observed run used a single tree + file-ownership isolation. Spec-vs-behavior seam; logged in the observation log, **not** fixed this pass.
+- **C7** (new) — `manager:implement` SKILL + `parallel-dispatch.md` document worktree-per-epic, but the observed run used a single tree + file-ownership isolation. Spec-vs-behavior seam. **✅ Resolved in a follow-up pass (manager 0.15.1, PR #54), direction: enforce worktrees** — `parallel-dispatch.md` §3 + `implement/SKILL.md` *Isolation* constraint now mark a single shared tree non-conforming. See the observation log Resolution section.
 - Epic A flag — "prior-art C2" / "no-go #2" labels in `parallel-dispatch.md` collide namespace-wise with observation finding IDs; cosmetic, deferred.
