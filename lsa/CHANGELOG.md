@@ -2,6 +2,14 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.20.2] — 2026-06-18
+
+Removes a contradictory orphan knowledge file surfaced by the repository quality audit (iteration 2).
+
+### Removed
+
+- **`lsa/knowledge/spec-templates.md`** (deleted) — defined an artifact set (`requirements.md` with a Functional-Requirements priority table, plus `test-suites.md` and `design.md`) that **contradicts** the canonical templates in [`lsa/CORE.md`](./CORE.md) §8 (`requirements.md` = Summary · User Flows · EARS · Out of Scope; `<flow>.feature` Gherkin; `grounding.md`). No skill consumed it (only an index row + an illustrative example referenced it); a reader finding it would have built the wrong artifacts. The canonical templates live in `CORE.md` §8.
+
 ## [0.20.1] — 2026-06-18
 
 Doc-accuracy fixes surfaced by a repository quality audit.

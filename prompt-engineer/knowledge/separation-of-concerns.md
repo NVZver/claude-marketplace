@@ -30,7 +30,7 @@ Common locations (default category, overridden by content shape):
 | `agents/*.md` | Actor | `developer.md`, `helper.md` |
 | `commands/*.md` | Actor | `prompt-review.md`, `prompt-create.md` |
 | `skills/*/SKILL.md` | Either | Actor: `discover`, `verify`, `plan`. Knowledge: `ground-rules`, `output` |
-| `knowledge/*.md` | Knowledge | `conventions.md`, `spec-templates.md` |
+| `knowledge/*.md` | Knowledge | `conventions.md`, `quality-gate-contract.md` |
 | `rules/*.md` | Knowledge | `plugin-development.md` |
 
 ## Boundary violations (always HIGH severity)
