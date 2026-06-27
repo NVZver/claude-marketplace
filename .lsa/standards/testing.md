@@ -27,3 +27,22 @@ The three metrics — accuracy to task, proven facts with sources, only-required
 ## Run V1 first
 
 When introducing a new skill: write a stub frontmatter file, install, run V1 (does `/help` list the skill?), *then* write the body. Source: `.lsa/archive/2026-05-20-core-v1/design.md` §13 — *"Run V1 first, not last."*
+
+## Guards must be prompt-forced (adversarial dogfooding)
+
+A behavior-bearing prompt (skill, agent, or role/knowledge data) that *describes* a
+desired behavior but does not *forbid* its failure mode is not done: a guard that
+holds only because the model is generous is not a guard. Verify guards by
+**adversarial dogfooding** — generate the behavior from the prompt alone, then have an
+**independent** judge (a separate agent/session, never the author) check both (a) did
+the output honor the guard, and (b) is the guard written as an *enforceable* line, not
+riding on model good-will. Iterate until the guards are forced. This is the prompt
+analogue of `reconcile`'s *does* check (run N times; one pass is not proof — see
+[`lsa/CORE.md`](../../lsa/CORE.md) §6). Source: observer feature eval,
+[`observer/tests/eval-findings-2026-06-27.md`](../../observer/tests/eval-findings-2026-06-27.md)
+— 8/8 probes "passed" on model good-will until independent judges forced 5 guards and
+caught a silence-leak + a self-introduced regression a describe-only prompt let through.
+
+Scope note: behavioral, not statistical — this does not reintroduce the deferred
+Wilson/Elo rigor (§*"Statistical eval explicitly deferred"*); it is a pass/fail
+adversarial probe, run when a prompt's failure modes matter.
