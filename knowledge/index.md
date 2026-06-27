@@ -39,6 +39,6 @@ Rows are sorted by plugin (`core` → `helper` → `lsa` → `manager` → `prom
 This index covers `<plugin>/knowledge/**.md` only. It deliberately excludes:
 
 - **Actors** — `<plugin>/skills/<skill>/SKILL.md`, `<plugin>/agents/<agent>.md`, `<plugin>/commands/<verb>.md`. Listed in each plugin's `README.md`.
-- **Plugin manifests** — `<plugin>/.claude-plugin/plugin.json`. Listed in [`README.md#the-five-plugins`](../README.md#the-five-plugins).
+- **Plugin manifests** — `<plugin>/.claude-plugin/plugin.json`. Listed in [`README.md#the-six-plugins`](../README.md#the-six-plugins).
 - **LSA workspace** — `.lsa/VISION.md`, `.lsa/**` (specs, pitches, plans, standards, archive). Their own surface; see [`.lsa/main.spec.md`](../.lsa/main.spec.md) for the module index.
 - **Project root docs** — `README.md`, `CONTRIBUTING.md`, `CLAUDE.md`, per-plugin `README.md` and `CHANGELOG.md`. Listed in [`README.md#further-reading`](../README.md#further-reading).

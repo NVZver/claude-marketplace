@@ -2,6 +2,14 @@
 
 All notable changes to the `helper` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.5.4] – 2026-06-27
+
+Cross-reference fix from the `observer` plugin addition (reconcile).
+
+### Fixed
+
+- **`helper/knowledge/onboarding-fast-path.md`** — row 3 linked to the now-renamed README anchor `#the-five-plugins` and said "five-plugin table". The marketplace now ships six plugins (added `observer`); updated the anchor to `#the-six-plugins` and the wording to "six-plugin table". No behavior change.
+
 ## [0.5.3] – 2026-06-18
 
 Step-numbering fix from the repository quality audit (iteration 4).
