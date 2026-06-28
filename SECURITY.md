@@ -27,8 +27,8 @@ behavior you observed, and the impact you believe it has.
 
 ## What this project is (the trust boundary)
 
-This marketplace ships five plugins (`core`, `lsa`, `helper`, `manager`,
-`prompt-engineer`) that are **pure Markdown instruction files** plus **one
+This marketplace ships six plugins (`core`, `lsa`, `helper`, `manager`,
+`prompt-engineer`, `observer`) that are **pure Markdown instruction files** plus **one
 SessionStart shell hook** (described below). Per
 [`README.md`](./README.md) §*"Status + substrate"*: *"the skills are plain
 Markdown — porting to another agentic IDE is a routing exercise, not a

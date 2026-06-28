@@ -4,9 +4,9 @@
 
 **Proven · Owned · No Fluff · Spec First.**
 
-A Claude Code marketplace shipping five composable plugins for spec-first, fact-grounded software development. The point isn't features — it's discipline that keeps you, the human, in the driver's seat while the agent does the typing.
+A Claude Code marketplace shipping six composable plugins for spec-first, fact-grounded software development. The point isn't features — it's discipline that keeps you, the human, in the driver's seat while the agent does the typing.
 
-## The five plugins
+## The six plugins
 
 | Plugin | What it gives you |
 |---|---|
@@ -15,6 +15,7 @@ A Claude Code marketplace shipping five composable plugins for spec-first, fact-
 | [`helper`](./helper/) | Friendly fact-grounded assistant: a `/help` slash command and an auto-engaging subagent that answers `what is X?` mid-flow with verifiable file citations (line range, heading anchor, or URL). |
 | [`manager`](./manager/) | Pre-build shaping: turns a vague problem into a structured pitch (problem, appetite, solution sketch, rabbit holes, no-gos) before the build cycle begins. |
 | [`prompt-engineer`](./prompt-engineer/) | Plugin-quality discipline: scans your own actors and knowledge files for ground-rule, KISS/DRY, AI over-engineering, and context-budget violations. |
+| [`observer`](./observer/) | Live observe-and-coach: rides Claude Code's self-paced `/loop` and reacts to your file changes through a chosen role (rubber-duck, pair-programmer, interviewer, or custom) — per-role lens/voice/cadence is data, not code. |
 
 ## Install
 
@@ -25,10 +26,11 @@ A Claude Code marketplace shipping five composable plugins for spec-first, fact-
 /plugin install helper@NVZver           # optional — /help Q&A assistant
 /plugin install manager@NVZver          # optional — pitch shaping
 /plugin install prompt-engineer@NVZver  # optional — prompt-quality audits
+/plugin install observer@NVZver         # optional — live observe-and-coach
 /reload-plugins
 ```
 
-Install `core` first — `lsa` and `manager` declare it as a `plugin.json` dependency, and the other two plugins (`helper`, `prompt-engineer`) align with its conventions. Then merge the [`core/CLAUDE.md`](./core/CLAUDE.md) fragment into your project's `CLAUDE.md` to wire up the always-on rules.
+Install `core` first — `lsa`, `manager`, and `observer` declare it as a `plugin.json` dependency, and the other two plugins (`helper`, `prompt-engineer`) align with its conventions. Then merge the [`core/CLAUDE.md`](./core/CLAUDE.md) fragment into your project's `CLAUDE.md` to wire up the always-on rules.
 
 **First command.** Run `/lsa:init` in any project to scaffold the spec tree (greenfield or brownfield). Or run `/manager:shape "<vague idea>"` to shape a pitch before any code lands.
 
@@ -137,6 +139,25 @@ Apply auto-fixes with /prompt-engineer:prompt-optimize.
 
 `[illustrative]`
 
+### observer
+
+The `observer:observe` skill runs a live observe-and-coach session that rides Claude Code's self-paced `/loop`. It confirms a **role** first (rubber-duck, pair-programmer, interviewer, or custom), then reacts to your file changes each cycle through that role's lens, voice, and cadence — all read as data from [`observer/knowledge/roles.md`](./observer/knowledge/roles.md), so the role set extends without touching the skill.
+
+```text
+> /observer:observe
+
+[observer] Kickoff — no role named; context is a Python file with a failing test.
+Proposed role: pair-programmer (override: rubber-duck / interviewer / custom) > interviewer
+Language / topic? > Python / binary search
+Wrote a red exercise (problem + placeholder + 3 failing tests).
+
+cycle 1 — solution: off-by-one — `hi = mid` drops the upper half; safer is `hi = mid - 1`.
+cycle 2 — no edits for the timeout.
+Stopped: inactivity timeout.
+```
+
+`[illustrative]`
+
 ## The problem and the solution
 
 Agents make silent decisions. Hedged claims (*"probably"*, *"typically"*, *"based on convention"*) pass for facts. Code drifts from intent. Specs rot the moment the code lands. Six months in, nobody — human or agent — knows why the system is the way it is. The system that was supposed to make you faster turned you into a passenger.
@@ -159,7 +180,7 @@ Personal-use first; open-sourced for visibility. Claude Code is the v1 substrate
 
 ## Security
 
-The trust boundary is small by design: five **pure-Markdown** plugins plus **one** transparent `SessionStart` shell hook ([`lsa/hooks/session-start-drift-check.sh`](./lsa/hooks/session-start-drift-check.sh)) that runs read-only Git (`rev-parse` / `log` / `diff`), writes nothing, makes no network calls, and always exits 0. No server, no secrets, no PII.
+The trust boundary is small by design: six **pure-Markdown** plugins plus **one** transparent `SessionStart` shell hook ([`lsa/hooks/session-start-drift-check.sh`](./lsa/hooks/session-start-drift-check.sh)) that runs read-only Git (`rev-parse` / `log` / `diff`), writes nothing, makes no network calls, and always exits 0. No server, no secrets, no PII.
 
 - **Indirect prompt injection** — untrusted content (web fetches, library docs, analyzed repo files, tool output) is treated as data, never instructions, per `core/ground-rules`. Residual risk is real and acknowledged ([OWASP LLM01](https://genai.owasp.org/llmrisk/llm01-prompt-injection/)); human review backs every gated decision.
 - **Install safely** — review the source first, and prefer pinning the marketplace to a reviewed tag/commit (`/plugin marketplace add <git-url>#<ref>`, per [Claude Code docs](https://code.claude.com/docs/en/discover-plugins)) over tracking `main`.
@@ -172,7 +193,7 @@ Full threat model, reporting channel, and hook transparency: [`SECURITY.md`](./S
 - [`.lsa/VISION.md`](./.lsa/VISION.md) — the full design rationale (the constitution).
 - [`knowledge/index.md`](./knowledge/index.md) — flat topic-to-path index across every knowledge file in every plugin.
 - [`CONTRIBUTING.md`](./CONTRIBUTING.md) — how to build, contribute, verify.
-- Per-plugin docs — [`core/README.md`](./core/README.md), [`lsa/README.md`](./lsa/README.md), [`helper/README.md`](./helper/README.md), [`manager/README.md`](./manager/README.md), [`prompt-engineer/README.md`](./prompt-engineer/README.md).
+- Per-plugin docs — [`core/README.md`](./core/README.md), [`lsa/README.md`](./lsa/README.md), [`helper/README.md`](./helper/README.md), [`manager/README.md`](./manager/README.md), [`prompt-engineer/README.md`](./prompt-engineer/README.md), [`observer/README.md`](./observer/README.md).
 - [`lsa/ARCHITECTURE.md`](./lsa/ARCHITECTURE.md) — directory layout, `.lsa.yaml` schema, branch management.
 
 Licensed under [`LICENSE`](./LICENSE).

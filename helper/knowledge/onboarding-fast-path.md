@@ -14,7 +14,7 @@ Each row maps a plain-English intent to a concrete heading-anchor excerpt (e.g.,
 |---|---|---|---|---|
 | 1 | Install the marketplace | "how do I install", "install marketplace", "/plugin install commands", "set me up" | [`README.md#install`](../../README.md#install) | The marketplace-add + plugin-install block + the "install `core` first" caveat + the first-command pointer. |
 | 2 | Get started with LSA | "how do I get started with LSA", "where do I start with LSA", "first steps LSA" | [`README.md#install`](../../README.md#install) + [`README.md#lsa`](../../README.md#lsa) | Install the plugins, then run `/lsa:init`, then `/lsa:discover` — the spec loop (discover → specify → verify → delegate → reconcile) follows. |
-| 3 | What is the marketplace | "what is this marketplace", "what is `claude-marketplace`", "what is NVZver" | [`README.md#the-five-plugins`](../../README.md#the-five-plugins) | One-paragraph frame + the five-plugin table. |
+| 3 | What is the marketplace | "what is this marketplace", "what is `claude-marketplace`", "what is NVZver" | [`README.md#the-six-plugins`](../../README.md#the-six-plugins) | One-paragraph frame + the six-plugin table. |
 | 4 | What is `core` | "what is core", "what does core do", "what is `core/ground-rules`" | [`README.md#core`](../../README.md#core) | Always-on discipline + the `flow-selector` user flow with illustrative output. |
 | 5 | What is `lsa` | "what is LSA", "what does lsa do", "what is Living Spec Architecture" | [`README.md#lsa`](../../README.md#lsa) | Definition + the spec loop with illustrative output. |
 | 6 | What is `helper` | "what is helper", "what does helper do", "what is `/help`" | [`README.md#helper`](../../README.md#helper) | Cited Q&A user flow + auto-engage friction signals. |

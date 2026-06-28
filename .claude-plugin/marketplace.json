@@ -27,6 +27,11 @@
       "name": "prompt-engineer",
       "source": "./prompt-engineer",
       "description": "Prompt engineering discipline: an agent and commands that review, optimize, and create prompts against a shared quality rule set (ground rules, separation of concerns, KISS/DRY, AI sweep, context budget)."
+    },
+    {
+      "name": "observer",
+      "source": "./observer",
+      "description": "Live observe-and-coach: rides Claude Code's self-paced /loop and reacts to your file changes through a chosen role. One Actor skill (observer:observe) reads per-role lens/voice/cadence as data from roles.md; the role set is rubber-duck, pair-programmer, interviewer, and custom. Depends on `core` (ground-rules, output)."
     }
   ]
 }

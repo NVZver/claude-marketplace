@@ -57,3 +57,12 @@ modules:
       - prompt-engineer/README.md
       - prompt-engineer/VERIFICATION.md
       - prompt-engineer/tests/**/*.md
+  observer:
+    spec: .lsa/modules/observer/spec.md
+    artifact_paths:
+      - observer/skills/**/SKILL.md
+      - observer/knowledge/**/*.md
+      - observer/.claude-plugin/plugin.json
+      - observer/README.md
+      - observer/CHANGELOG.md
+      - observer/tests/**/*.md

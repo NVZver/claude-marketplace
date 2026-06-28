@@ -1,7 +1,7 @@
 {
   "name": "helper",
   "description": "Friendly fact-grounded assistant for the NVZver marketplace — a `/help` slash command plus an auto-engaging subagent that activates on user-friction signals (two consecutive `lsa:discover` User Verification rejections, free-form `what is X?` mid-flow, explicit `/help`). Answers with file citations (line range, heading anchor, or URL); returns pending gates + a staged Skill() seed (the dispatcher delivers the answer, runs the AskUserQuestion gates, and invokes confirmed handoffs — per the core 0.13.0 gate-delivery contract); responds \"I cannot verify this\" rather than fabricating. Knowledge scope: this repo + installed plugins + external docs via the `context7` MCP. Depends on `core` (cites `core/output` for response discipline and `core/ground-rules` for cannot-verify fallback) and `lsa` (observes `lsa:discover` User-Verification-reject answers in main-agent context).",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "author": {
     "name": "Nikita Zverev"
   }
