@@ -2,6 +2,27 @@
 
 All notable changes to the `core` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.15.0] — 2026-07-01
+
+Adds the **`core/reuse-first`** always-on skill — a 7-rung reuse ladder that runs on coding tasks *before* code is written, closing the gap between the spec ("what") and `lsa:reconcile`'s after-the-fact "only" check (`lsa/skills/reconcile/SKILL.md:33`). On a coding task the agent climbs the ladder (understand the real flow → YAGNI → existing in-codebase helper → stdlib/builtin → native platform feature → already-installed dependency → shortest working diff) and stops at the first rung that holds, so reinvention and over-delivery are caught before the diff exists; on prose/analysis tasks the skill stays silent (description-based auto-trigger). Per `.lsa/features/2026-07-01-reuse-first/` and `.lsa/pitches/reuse-first.md`. Extended flow. `core` skill count 4 → 5.
+
+### Added
+
+- **NEW skill `core/skills/reuse-first/SKILL.md`** — actor-template shape (Goal / Input / Steps / Output / Constraints, every Step with an observable result). Steps are the 7-rung ladder ("Stop at the first rung that holds"); rung 1 cross-references `ground-rules` Rule 3 (*Read the real source*) by markdown link. Carries the **root-cause-not-symptom** bug rule (grep every caller of the function you touch; fix once in the shared path). Constraints cross-reference `ground-rules` Rule 4 and `lsa:reconcile`'s "only" check by link (never restated), defer test discipline to TDD, and close with the canonical `core/output` citation line. No metaphor naming, no intensity dial, no debt ledger, no new command surface.
+- **`core/tests/repo-anchored.md` § Set E** — two anchored probes: **E1** a coding-task prompt ("add a function that dedupes a list") must walk/reference the reuse ladder (existing helper / stdlib) before hand-rolling; **E2** a prose/analysis prompt ("summarize what `core` enforces") must NOT fire the ladder (silence). Sources anchored to `core/skills/reuse-first/SKILL.md`.
+
+### Changed
+
+- **`core/CLAUDE.md`** — new *Reuse-first (always-on)* subsection wiring `core/reuse-first` into the always-on block, gated to coding tasks (implement / fix / refactor / add code), silent on prose/analysis.
+- **`core/README.md`** — new `reuse-first` bullet under "What's here"; added to the `/core:*` invoke line; stale opening count fixed ("Two domain-neutral discipline skills" → "Five domain-neutral discipline skills").
+- **`core/.claude-plugin/plugin.json`** — `description` skills list extended with `reuse-first`; version 0.14.1 → 0.15.0.
+- **`.lsa/modules/core/spec.md`** — "Ships four skills" / "Four skills:" → five; added the `core/reuse-first` bullet to the skill list; manifest version pin → v0.15.0.
+
+### Notes
+
+- **Minor bump rationale.** New always-on skill with marketplace-wide reach — every coding task inherits the pre-write ladder. User-visible discipline change; not a refactor.
+- **No-gos held (per pitch `.lsa/pitches/reuse-first.md` §No-gos, F12).** No `ponytail`/`lazy`/`caveman` metaphor naming (skill is `reuse-first`); no lite/full/ultra intensity dial (`flow-selector` already scales ceremony); no debt-comment ledger or `-debt`/`-audit`/`-gain`/`-review` command surface (`lsa:reconcile` absorbs drift into the spec); no test-strategy rules (test discipline defers to TDD).
+
 ## [0.14.1] — 2026-06-18
 
 Doc-accuracy fix from the repository quality audit (iteration 2): the documented D2 probe recipe is re-synced to the executable gate.

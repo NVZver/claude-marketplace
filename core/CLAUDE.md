@@ -2,7 +2,7 @@
 
 > **Canonical source.** This file is the single source-of-truth for the always-on rules block. Other locations (repo `CLAUDE.md`, READMEs, module specs) point here rather than restating the rules.
 
-This is an **opt-in fragment** to merge into your project's `CLAUDE.md` when you install the `core` plugin. It declares three always-on rules: ground-rules application, output discipline (one hard rule + six pieces of guidance), and flow-selector invocation. Copy the content below into your project's `CLAUDE.md`.
+This is an **opt-in fragment** to merge into your project's `CLAUDE.md` when you install the `core` plugin. It declares four always-on rules: ground-rules application, output discipline (one hard rule + six pieces of guidance), flow-selector invocation, and reuse-first on coding tasks. Copy the content below into your project's `CLAUDE.md`.
 
 ---
 
@@ -31,3 +31,7 @@ Before any non-trivial task, invoke [`core/flow-selector`](./skills/flow-selecto
 - **Quick** — single pass, no LSA ceremony. `ground-rules` + `output` still apply.
 - **Standard** — `lsa:discover` (light) → agent TDD → `lsa:verify`.
 - **Extended** — `lsa:discover` → `lsa:specify` → `lsa:verify` → `lsa:delegate` → `lsa:reconcile`.
+
+## Reuse-first (always-on)
+
+On any coding task — implement / fix / refactor / add code — invoke [`core/reuse-first`](./skills/reuse-first/SKILL.md) before writing code. It walks a 7-rung reuse ladder (understand the flow → YAGNI → existing in-codebase code → stdlib → native platform → installed dependency → shortest working diff), stopping at the first rung that holds, so the change reuses over rewrites and adds only the minimum. Silent on prose/analysis tasks that author no code.
