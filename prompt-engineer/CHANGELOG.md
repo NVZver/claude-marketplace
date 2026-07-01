@@ -2,6 +2,14 @@
 
 All notable changes to the `prompt-engineer` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.7.4] – 2026-07-01
+
+Doc-hygiene fix surfaced by the new deterministic doc-lint gate on its first full-repo run. Feature: [`.lsa/features/2026-07-01-deterministic-doc-lint-gate/requirements.md`](../.lsa/features/2026-07-01-deterministic-doc-lint-gate/requirements.md).
+
+### Fixed
+
+- **`prompt-engineer/commands/prompt-review.md`** — marked the sample review-output row citing `skills/sync/SKILL.md:42` as `[illustrative]` (non-rendering HTML comment); it is a fictional example finding, not a live reference (`skills/sync` does not exist).
+
 ## [0.7.3] – 2026-06-18
 
 Self-conformance fix from the repository quality audit (iteration 4): the `prompt-engineer` agent now follows the actor shape it enforces.

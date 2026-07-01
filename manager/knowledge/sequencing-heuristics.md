@@ -63,9 +63,9 @@ Given three backlog items:
 
 | Feature | Priority | Status | Notes |
 |---|---|---|---|
-| Plugin scaffolding command | Could | backlog | Pitch: [plugin-scaffold](pitches/plugin-scaffold.md) |
-| Onboarding checklist | Should | backlog | Pitch: [onboarding-checklist](pitches/onboarding-checklist.md) |
-| Verify coverage expansion | Must | backlog | Pitch: [verify-coverage](pitches/verify-coverage.md) |
+| Plugin scaffolding command | Could | backlog | Pitch: [plugin-scaffold](pitches/plugin-scaffold.md) | <!-- [illustrative] sample backlog rows; pitch links are fictional examples -->
+| Onboarding checklist | Should | backlog | Pitch: [onboarding-checklist](pitches/onboarding-checklist.md) | <!-- [illustrative] -->
+| Verify coverage expansion | Must | backlog | Pitch: [verify-coverage](pitches/verify-coverage.md) | <!-- [illustrative] -->
 
 **Factor 1 (dependency):** The plugin-scaffold pitch's Solution sketch references the onboarding checklist ("scaffolding command auto-applies checklist items"). Onboarding-checklist has no unmerged dependency. Verify-coverage has no dependency on either. Result: plugin-scaffold is blocked by onboarding-checklist.
 

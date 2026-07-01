@@ -2,6 +2,19 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.22.0] — 2026-07-01
+
+Wires the deterministic doc-lint gate into the grounding check. Feature: [`.lsa/features/2026-07-01-deterministic-doc-lint-gate/requirements.md`](../.lsa/features/2026-07-01-deterministic-doc-lint-gate/requirements.md). (0.21.0 lives on an unmerged branch; `main` was at 0.20.2, so this bump goes 0.20.2 → 0.22.0.)
+
+### Added
+
+- **`lsa/skills/verify/SKILL.md` now reads the `.lsa.yaml` `gate:` block.** New Step 4 runs each configured gate check and cites its command + exit code as the Rule-7 grounding evidence instead of re-deriving grep recipes by hand; a non-zero exit **blocks** the `GROUNDED` verdict (a broken citation, dangling link, or violated invariant is a real defect). Inputs table gains the optional `gate:` row and Constraints gain the blocking rule — matching the shape `reconcile` already uses.
+- **`.lsa.yaml` gains a docs-mode `gate:` block** with three repo-internal structural probes: `docs-invariants: bash scripts/lint.sh`, `citations: bash scripts/check-citations.sh`, `links: bash scripts/check-links.sh`. The scripts are repo-internal (outside every plugin's `artifact_paths`), so they carry no plugin version.
+
+### Changed
+
+- **`lsa/README.md`** — the skill table's `verify` row and the `.lsa.yaml` schema prose now note that `verify` (not only `reconcile`) consumes the `gate:` block, and name this repo's three-probe docs-mode gate.
+
 ## [0.20.2] — 2026-06-18
 
 Removes a contradictory orphan knowledge file surfaced by the repository quality audit (iteration 2).

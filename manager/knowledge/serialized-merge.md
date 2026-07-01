@@ -14,7 +14,7 @@ Two PRs can each pass their gate alone yet break when merged together — the "g
 
 Merges are **serialized** — one PR lands at a time, and each is tested against the state it will actually merge into, not the stale base it branched from.
 
-1. **Merge only the tested SHA against the up-to-date base.** Before a PR lands, its gate (the `lsa` `gate:` checks + `lsa:reconcile`) must pass against the base *as it will be after the merge* — not against the SHA the branch forked from. This is the "not-rocket-science rule" (`solution-design.md:30-36`).
+1. **Merge only the tested SHA against the up-to-date base.** Before a PR lands, its gate (the `lsa` `gate:` checks + `lsa:reconcile`) must pass against the base *as it will be after the merge* — not against the SHA the branch forked from. This is the "not-rocket-science rule" (`.lsa/research/parallel-agent-delivery-solution-design.md:30-36`).
 2. **Prefer the GitHub merge queue** (`merge_group` event) when the repo has it enabled — it tests each PR against the latest target plus any already-queued PRs and merges only the tested SHA. Requires the `merge_group` Actions wiring, or the queue stalls.
 3. **Local fallback when no merge queue:** rebase the PR onto the current integration-branch tip → re-run the gate → merge only if green → take the next PR. Re-gate immediately before each merge; never merge a PR gated only against a now-stale base.
 4. **One at a time.** No two PRs merge concurrently. A failed re-gate sends the PR back to its agent; it does not block the queue behind it from being re-evaluated.
