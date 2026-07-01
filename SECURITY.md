@@ -36,11 +36,14 @@ rewrite."*
 
 There is **no executable application** in this repo beyond shell scripts: the
 one shipped hook ([`lsa/hooks/session-start-drift-check.sh`](./lsa/hooks/session-start-drift-check.sh))
-and a repo-internal lint that is not shipped in any plugin
+plus two repo-internal scripts that are **not shipped in any plugin** — a lint
 ([`scripts/lint.sh:11-13`](./scripts/lint.sh) — *"Repo-internal only — NOT
 shipped in any plugin … it triggers no plugin version bump or CHANGELOG
-entry."*). No server, no network service, no database, no credential store, no
-PII processing.
+entry."*) and a commit-discipline PreToolUse check
+([`.claude/hooks/commit-discipline-check.sh`](./.claude/hooks/commit-discipline-check.sh),
+registered in [`.claude/settings.json`](./.claude/settings.json) — documented in
+*"The commit-discipline PreToolUse hook"* below). No server, no network service,
+no database, no credential store, no PII processing.
 
 **What you are trusting when you install:** the Markdown instructions (which
 shape how *your* Claude Code session reasons and what it proposes) and that one
@@ -213,7 +216,10 @@ Installing the `lsa` plugin registers one hook. Per
 [`lsa/hooks/hooks.json:4-11`](./lsa/hooks/hooks.json), it is a `SessionStart`
 hook with `matcher: "startup"` that runs
 `${CLAUDE_PLUGIN_ROOT}/hooks/session-start-drift-check.sh` with a 10-second
-timeout. No other plugin in this marketplace ships a hook.
+timeout. This is the **only hook any plugin ships** — no other plugin in this
+marketplace ships a hook. (There is a second, **repo-internal** PreToolUse hook
+that is *not* part of any plugin and never installs on a consumer's machine —
+see *"The commit-discipline PreToolUse hook"* below.)
 
 What the script
 ([`lsa/hooks/session-start-drift-check.sh`](./lsa/hooks/session-start-drift-check.sh))
@@ -243,6 +249,51 @@ install `lsa`.** It is roughly 170 lines of auditable Bash.
 
 ---
 
+## The commit-discipline PreToolUse hook (repo-internal — never ships)
+
+This repo registers a second hook in
+[`.claude/settings.json`](./.claude/settings.json) — a `PreToolUse` hook matching
+`Bash` that runs
+[`.claude/hooks/commit-discipline-check.sh`](./.claude/hooks/commit-discipline-check.sh).
+It is **repo-internal maintainer infrastructure**, on the same footing as
+[`scripts/lint.sh`](./scripts/lint.sh) (`SECURITY.md` *"What this project is"*
+above): it lives under `.claude/`, is **not part of any plugin**, is **not in the
+marketplace catalog**, and therefore **never installs on a consumer's machine.**
+The shipped-hook story above is unchanged — the `lsa` SessionStart hook is still
+the only hook this marketplace *ships*.
+
+What it does and does not do — read it yourself before trusting it:
+
+- **It only runs read-only Git plumbing.** It reads the PreToolUse payload on
+  stdin, and — only when the command is a `git commit` — calls
+  `git rev-parse`, `git diff --cached`, and `git show :<path>` against the staged
+  index. It inspects; it takes no action on the tree.
+- **It never writes files and never auto-fixes.** This is a detect-and-report
+  guardrail: it verifies that a commit touching a plugin's files also bumps that
+  plugin's `.claude-plugin/plugin.json` `version`, adds a `CHANGELOG.md` entry, and
+  carries the trace directive on new/edited `SKILL.md` / `agents/**/*.md` (the
+  discipline in [`.lsa/standards/code.md:22`](./.lsa/standards/code.md) and
+  [`.claude/rules/plugin-development.md`](./.claude/rules/plugin-development.md)).
+  It never writes the bump or the CHANGELOG for you.
+- **It never makes network calls.** No `curl`/`wget`/network commands — only Git
+  plumbing and standard text utilities.
+- **Block semantics.** On a violation it prints an actionable per-plugin message to
+  stderr and **exits 2 (PreToolUse BLOCK)** — the commit is stopped so the human can
+  fix it. On a compliant staged set it exits 0 silently.
+- **It is a no-op when it should not fire.** It exits 0 immediately when the tool
+  call is not a `git commit`, when the payload is unparseable, when the repo root
+  lacks the marketplace fingerprint `.claude-plugin/marketplace.json` (so it **never
+  fires in a consumer repo**), or when nothing is staged.
+- **Transparent bypass.** Only top-level directories containing
+  `.claude-plugin/plugin.json` are treated as plugins, so repo-internal infra
+  (`scripts/`, `.lsa/`, `.claude/`, `tests/`, root docs) is exempt by construction —
+  a change confined to those paths triggers no check.
+
+Its specification (EARS + Gherkin) lives at
+[`.lsa/features/2026-07-01-plugin-discipline-commit-hook/requirements.md`](./.lsa/features/2026-07-01-plugin-discipline-commit-hook/requirements.md).
+
+---
+
 ## Summary of controls
 
 | Control | Mechanism | Source |
@@ -254,3 +305,4 @@ install `lsa`.** It is roughly 170 lines of auditable Bash.
 | Human-in-the-loop gates | Level 2.5 reconcile (detect + surface, absorb not block) | [`.lsa/VISION.md:9`](./.lsa/VISION.md), [`.lsa/VISION.md:144-156`](./.lsa/VISION.md) |
 | Safe install | source review + pin to reviewed `#<ref>` | [Claude Code docs](https://code.claude.com/docs/en/discover-plugins) |
 | Hook transparency | read-only Git, no writes, no network, exits 0 | [`lsa/hooks/session-start-drift-check.sh`](./lsa/hooks/session-start-drift-check.sh) |
+| Commit-discipline guardrail (repo-internal, not shipped) | PreToolUse on `git commit`: read-only Git, detect-and-report, blocks on violation, no-op in consumer repos | [`.claude/hooks/commit-discipline-check.sh`](./.claude/hooks/commit-discipline-check.sh) |
