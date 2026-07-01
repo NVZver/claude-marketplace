@@ -64,6 +64,22 @@ A sub-agent dispatch starts a **fresh context** that reloads the `CLAUDE.md` hie
 
 Everything else — spec authoring, shaping, decomposition, recommendation, review, cited lookup — runs inline. Applied: `lsa:orchestrator` runs `discover → specify → verify` inline (lsa v0.21.0). Per-plugin application to the remaining dispatchers (`manager` shape/decompose/next/check; `helper` lookups) is tracked on the roadmap. Source: 2026-07-01 token/model assessment; grounds `lsa/agents/orchestrator.md`.
 
+## Artifact hand-off — pointer + summary, not full payload
+
+When an agent produces a sizeable artifact for another agent (a spec, a conformance report, a generated schema, a research dump), it **writes the artifact to a file and returns a pointer + a decision-relevant summary + any pending gates** — it does not round-trip the full payload back through context. The pointer is the file path; the summary is the few sentences the dispatcher needs to route the next step; the pending gates are the human decisions still owed. This is the inter-agent generalization of [`core/output`](../../core/skills/output/SKILL.md) Rule 2 *"Pull, don't push"* — that rule surfaces to a human only what they must act on next; this standard applies the same discipline to data crossing an agent boundary.
+
+Concretely:
+
+- **Intermediate-only data stays in the file.** Data that no human ever reads — scratch computations, full source excerpts, the un-summarized artifact body — lives in the file and never enters the dispatcher's context. Context carries the pointer and the summary, nothing more.
+- **Fact-grounding citations are preserved in the file, never summarized away.** The artifact keeps its full source + verbatim quote per [`core/ground-rules`](../../core/skills/ground-rules/SKILL.md) Rule 1. The summary may cite fewer of them, but the file remains the complete, grounded record — a summary must never be the only surviving copy of a citation.
+- **Human-facing content is the carve-out.** Anything the human must read or decide on is *not* left behind a pointer. Per [`core/output`](../../core/skills/output/SKILL.md) Rule 7 *Delivery test*, content counts as shown only through a channel the harness renders — a turn-final message or an `AskUserQuestion` gate; a file path or a subagent transcript does **not** count. So the dispatcher **reads the file and re-renders the human-facing content itself** before any gate. Never gate a human decision behind *"go read the file"*. This carve-out never relaxes; the file-pointer optimization applies to inter-agent data, not to the human channel.
+
+The live precedent this generalizes is [`lsa/skills/reconcile/SKILL.md`](../../lsa/skills/reconcile/SKILL.md): reconcile writes its full requirement-by-requirement mapping to `conformance.md` and returns a compact verdict line (`reconcile: PASS|FAIL @ <graded-sha>`) — the pointer + summary shape already in production. This standard promotes that pattern from one skill to a repo-wide default.
+
+This section is the complement of **Dispatch efficiency**: that section governs *when* to spawn a fresh context; this one governs *how* data crosses the boundary once a context is spawned. Per-agent rewiring to this standard (e.g. the `manager` shaping/roadmap agents that today return full content through context) is deliberate follow-on, not part of this standard's authoring.
+
+Source: [`core/skills/output/SKILL.md:42`](../../core/skills/output/SKILL.md) Rule 2 *"Pull, don't push"* + [`core/skills/output/SKILL.md:79-86`](../../core/skills/output/SKILL.md) Rule 7 *Delivery test*; precedent [`lsa/skills/reconcile/SKILL.md:37-39`](../../lsa/skills/reconcile/SKILL.md) (`conformance.md` + verdict line).
+
 ## Constitution = `.lsa/VISION.md`
 
 The configured constitution for this repo (per `/.lsa.yaml: constitution`) is `.lsa/VISION.md`, not `/CLAUDE.md`. `/CLAUDE.md` is the slimmed Claude Code entry point — it points at the constitution but is not the constitution.
