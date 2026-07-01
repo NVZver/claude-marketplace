@@ -2,6 +2,15 @@
 
 All notable changes to the `manager` plugin (formerly `management`) are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.15.3] – 2026-07-01
+
+Doc-hygiene fixes surfaced by the new deterministic doc-lint gate on its first full-repo run. Feature: [`.lsa/features/2026-07-01-deterministic-doc-lint-gate/requirements.md`](../.lsa/features/2026-07-01-deterministic-doc-lint-gate/requirements.md).
+
+### Fixed
+
+- **`manager/knowledge/serialized-merge.md`** — expanded a bare-filename citation `solution-design.md:30-36` to the resolvable repo-root path `.lsa/research/parallel-agent-delivery-solution-design.md:30-36`.
+- **`manager/knowledge/sequencing-heuristics.md`** — marked the "Given three backlog items" example rows `[illustrative]` (non-rendering HTML comment); their `pitches/*.md` links are fictional worked-example targets, not real files.
+
 ## [0.15.2] – 2026-06-18
 
 Doc-accuracy fix from the repository quality audit (iteration 5).

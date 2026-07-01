@@ -54,4 +54,4 @@ Found 4 issues in 2 files.
 | agents/deployer.md | Step 2 unverifiable: "analyze the code" | MEDIUM | 5 |
 | agents/deployer.md | Adverb: "thoroughly" in step 1 | LOW | 9 |
 | commands/deploy.md | No Example Output section | HIGH | 10 |
-| skills/sync/SKILL.md:42 | Step 4 writes config.json, no show-changes directive | WARNING | 3l |
+| skills/sync/SKILL.md:42 | Step 4 writes config.json, no show-changes directive | WARNING | 3l | <!-- [illustrative] sample review output; cited file:line is a fictional example -->

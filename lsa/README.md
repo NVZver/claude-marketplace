@@ -95,7 +95,7 @@ OpenSpec is the closest neighbour: it ships an after-the-fact `/opsx:verify` and
 |---|---|
 | **`discover`** | Extract user intent and gather the codebase facts the spec rests on. Also the universal input-resolver other skills call. |
 | **`specify`** | Draft the grounded spec — EARS requirements, user flows, and Gherkin `.feature` scenarios — show it in full, then write the files only on approval (show → approve → write). |
-| **`verify`** | **Before** delegating: ground the spec against the codebase. Output: `GROUNDED` / `NOT-GROUNDED` + `grounding.md`. |
+| **`verify`** | **Before** delegating: ground the spec against the codebase, and run the `.lsa.yaml` `gate:` block — citing each command + exit code (a non-zero gate blocks `GROUNDED`). Output: `GROUNDED` / `NOT-GROUNDED` + `grounding.md`. |
 | **`delegate`** | Hand the grounded spec + `.feature` files to your implementer; collect the returned diff. Code-writing happens outside LSA. |
 | **`reconcile`** | **After** the diff returns: check it **does · only · all**, write `conformance.md`, absorb drift. Runs as the **independent grader** — a context with no write access to the tests, `.feature` scenarios, or `.lsa.yaml` `gate:` it judges (the work cannot edit its own grader). Also surfaced by the SessionStart drift hook. |
 | **`init`** | Initialize LSA on a project (greenfield or brownfield). |
@@ -143,7 +143,7 @@ gate:                                # optional — quality-gate script contract
 autonomy: manual                     # optional — manual | semi | auto. default: manual
 ```
 
-The optional `gate:` block is the **quality-gate script contract** — per-check name → command, consumed by `reconcile` (and mapped to GitHub required-check slots in parallel runs). It is the configuration side of `core/ground-rules` Rule 7 *"done is a gate-proven, cited predicate"*; LSA hardcodes no tool. Full contract: [`knowledge/quality-gate-contract.md`](./knowledge/quality-gate-contract.md).
+The optional `gate:` block is the **quality-gate script contract** — per-check name → command, consumed by both `verify` (before — grounding) and `reconcile` (after — correctness), and mapped to GitHub required-check slots in parallel runs. It is the configuration side of `core/ground-rules` Rule 7 *"done is a gate-proven, cited predicate"*; LSA hardcodes no tool. This repo's own `gate:` (a `mode: docs` example) runs three repo-internal structural probes — `docs-invariants` (`scripts/lint.sh`), `citations` (`scripts/check-citations.sh`), `links` (`scripts/check-links.sh`). Full contract: [`knowledge/quality-gate-contract.md`](./knowledge/quality-gate-contract.md).
 
 The optional `autonomy:` knob (`manual | semi | auto`, default `manual`) sets how much human-in-the-loop a parallel `manager:implement` run uses at the merge boundary — `manual` = human merges, `semi` = auto-merge on green, `auto` = + deploy + healthcheck. The gate is identical at every level. Semantics: `manager/knowledge/autonomy-policy.md`.
 

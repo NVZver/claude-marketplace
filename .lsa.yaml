@@ -6,6 +6,17 @@ constitution: .lsa/VISION.md
 specs_root: .lsa/
 mode: docs
 
+# Quality-gate script contract (see lsa/knowledge/quality-gate-contract.md).
+# docs-mode structural probes: each key is a check name → a deterministic,
+# repo-internal command. A check passes iff its command exits 0; verify /
+# reconcile cite the command + exit code as the Rule-7 gate artifact instead of
+# re-deriving grep recipes by hand. Scripts are repo-internal (outside every
+# plugin's artifact_paths) — Pro-safe, local bash, zero model calls.
+gate:
+  docs-invariants: bash scripts/lint.sh
+  citations: bash scripts/check-citations.sh
+  links: bash scripts/check-links.sh
+
 modules:
   core:
     spec: .lsa/modules/core/spec.md

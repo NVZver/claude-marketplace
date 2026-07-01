@@ -105,8 +105,8 @@ When a single turn produces more than ~5 file changes or more than ~10 lines of 
 
 | # | file:line | type | summary (≤8 words) | pointer |
 |---|-----------|------|--------------------|---------|
-| 1 | `lsa/skills/verify/SKILL.md:67` | edit | Observable result names quoted-diff format | step 3 |
-| 2 | `lsa/skills/verify/SKILL.md:74` | edit | Observable result names quoted-diff format | step 4 |
+| 1 | `lsa/skills/verify/SKILL.md:67` | edit | Observable result names quoted-diff format | step 3 | <!-- [illustrative] sample rows; cited file:line demonstrates table format, not a live reference -->
+| 2 | `lsa/skills/verify/SKILL.md:74` | edit | Observable result names quoted-diff format | step 4 | <!-- [illustrative] -->
 
 After the table: one cluster of follow-up `file:line` pointers the human can open. **Never** *"see the files for the rest."* The table itself *is* the quote-back.
 
@@ -145,9 +145,9 @@ After the table: one cluster of follow-up `file:line` pointers the human can ope
 |---|-----------|------|---------|---------|
 | 1 | `core/skills/output/SKILL.md:42-90` | add | Rule 7 *Show changes inline* | new section |
 | 2 | `core/CLAUDE.md:18` | edit | Operational checkpoint #4 cites Rule 7 | inline |
-| 3 | `lsa/skills/verify/SKILL.md:67` | edit | Observable result names quoted-diff format | step 3 |
-| 4 | `lsa/skills/verify/SKILL.md:74` | edit | Observable result names quoted-diff format | step 4 |
-| 5 | `lsa/skills/specify/SKILL.md:99` | edit | Observable result names quoted-section format | step 4 |
+| 3 | `lsa/skills/verify/SKILL.md:67` | edit | Observable result names quoted-diff format | step 3 | <!-- [illustrative] sample rows; cited file:line demonstrates table format, not a live reference -->
+| 4 | `lsa/skills/verify/SKILL.md:74` | edit | Observable result names quoted-diff format | step 4 | <!-- [illustrative] -->
+| 5 | `lsa/skills/specify/SKILL.md:99` | edit | Observable result names quoted-section format | step 4 | <!-- [illustrative] -->
 
 *Reason: lands the `core/output` Rule 7 + LSA sweep per `.lsa/features/2026-05-22-show-changes-inline/tasks.md` step 1-2. Source: `.lsa/roadmap.md:128-132`. Type: `batch` (`add` + `edit` mix).*
 

@@ -2,6 +2,15 @@
 
 All notable changes to the `core` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.15.1] — 2026-07-01
+
+Doc-hygiene fixes surfaced by the new deterministic doc-lint gate (`scripts/check-citations.sh` + `scripts/check-links.sh`) on its first full-repo run. Feature: [`.lsa/features/2026-07-01-deterministic-doc-lint-gate/requirements.md`](../.lsa/features/2026-07-01-deterministic-doc-lint-gate/requirements.md).
+
+### Fixed
+
+- **`core/skills/output/SKILL.md`** — the two compressed-inspection-table *worked examples* cite `lsa/skills/verify|specify/SKILL.md` line numbers that drifted when those skills were refactored. Marked the sample rows `[illustrative]` (a non-rendering HTML comment) per the repo's reference-discipline rule — they demonstrate table format, not live references.
+- **`core/knowledge/fast-path-source-of-truth.md`** — removed a dead Callers-table row linking `../../lsa/skills/next/SKILL.md`; no such skill exists (the "what's next" fast-path caller is `manager/skills/next`, which the adjacent row already lists).
+
 ## [0.15.0] — 2026-07-01
 
 Adds the **`core/reuse-first`** always-on skill — a 7-rung reuse ladder that runs on coding tasks *before* code is written, closing the gap between the spec ("what") and `lsa:reconcile`'s after-the-fact "only" check (`lsa/skills/reconcile/SKILL.md:33`). On a coding task the agent climbs the ladder (understand the real flow → YAGNI → existing in-codebase helper → stdlib/builtin → native platform feature → already-installed dependency → shortest working diff) and stops at the first rung that holds, so reinvention and over-delivery are caught before the diff exists; on prose/analysis tasks the skill stays silent (description-based auto-trigger). Per `.lsa/features/2026-07-01-reuse-first/` and `.lsa/pitches/reuse-first.md`. Extended flow. `core` skill count 4 → 5.
