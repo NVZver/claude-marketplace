@@ -178,6 +178,12 @@ The single test the whole system answers: **what is the minimum ceremony that st
 
 Personal-use first; open-sourced for visibility. Claude Code is the v1 substrate; the discipline (specs, sourcing, flow gating) isn't Claude-specific and the skills are plain Markdown — porting to another agentic IDE is a routing exercise, not a rewrite.
 
+## Plans & models
+
+**Runs 100% on Claude Pro.** Every plugin is model-agnostic: no agent or skill hardcodes a model, so each one inherits your session's model ([`.lsa/standards/code.md`](./.lsa/standards/code.md) §"Model policy"). On **Pro** that's Sonnet 5 — the full marketplace works, nothing is gated behind Opus. On **Max** the same agents inherit Opus 4.8 and the reasoning-heavy stages (spec reconciliation, decomposition) get sharper for free. "Works natively on Sonnet, excels on Opus" is the default, not a setting.
+
+One caveat for Pro users watching usage: the deeper flows spawn sub-agents (each a fresh context), so a full Extended LSA cycle or a parallel `manager:implement` fleet run is token-heavy. For everyday work prefer the **Quick / Standard** flows (`core/flow-selector` picks them by task weight); the multi-agent **fleet** (`manager:implement`) is Max-oriented. Everything remains functional on Pro — this is about pacing usage, not access.
+
 ## Security
 
 The trust boundary is small by design: six **pure-Markdown** plugins plus **one** transparent `SessionStart` shell hook ([`lsa/hooks/session-start-drift-check.sh`](./lsa/hooks/session-start-drift-check.sh)) that runs read-only Git (`rev-parse` / `log` / `diff`), writes nothing, makes no network calls, and always exits 0. No server, no secrets, no PII.
