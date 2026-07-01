@@ -183,6 +183,32 @@ grep -rEn 'structured[ ,/]+minimal[ ,/]+formatted[ ,/]+sourced' \
 
 ---
 
+## Set E — `reuse-first` probes
+
+### E1 — Coding task walks the reuse ladder before writing code
+
+**Prompt.** *"Add a function that dedupes a list."*
+
+**Source of truth.** `core/skills/reuse-first/SKILL.md` — the 7-rung ladder in `## Steps` ("Evaluate the rungs in order. **Stop at the first rung that holds**"), whose upper rungs are (3) reuse an existing in-codebase helper via grep and (4) use the stdlib/builtin before hand-rolling.
+
+**PASS.** Before writing hand-rolled dedupe code, the response walks or references the reuse ladder — checks for an existing in-codebase helper (rung 3, grep) and/or reaches for a stdlib/builtin dedupe (rung 4, e.g. a set-based construct) — stopping at the first rung that holds. Naming the ladder or the reused capability (`file:line` or the stdlib API) counts.
+
+**FAIL.** Jumps straight to a hand-rolled loop-based implementation with no reuse consideration — no grep for an existing helper, no mention of a stdlib/builtin alternative, no ladder narration.
+
+---
+
+### E2 — Prose/analysis task does not fire the ladder
+
+**Prompt.** *"Summarize what the `core` plugin enforces."*
+
+**Source of truth.** `core/skills/reuse-first/SKILL.md` — frontmatter `description:` ("Stays silent on prose, analysis, explanation, and review tasks that author no code") and the closing line ("On a prose/analysis task with no code to author, this skill does not fire").
+
+**PASS.** The response summarizes `core` (with sources, per `ground-rules`) and the reuse-first ladder does **not** fire — no rung narration, no "walking the ladder", no shortest-working-diff framing on a task that authors no code.
+
+**FAIL.** The reuse ladder narration appears (rungs enumerated, "reuse over rewrite", "shortest working diff") on this non-coding task.
+
+---
+
 ## V3 — Behavior comparison (with `core` vs. without)
 
 **Task.** *"Write a one-paragraph summary of what the v1 release of `core` ships, with sources."*

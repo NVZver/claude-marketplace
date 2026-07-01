@@ -2,9 +2,9 @@
 
 # Module Spec — `core`
 
-The domain-neutral discipline plugin. Ships four skills + one always-on `CLAUDE.md` fragment.
+The domain-neutral discipline plugin. Ships five skills + one always-on `CLAUDE.md` fragment.
 
-**Plugin manifest:** [`core/.claude-plugin/plugin.json`](../../../core/.claude-plugin/plugin.json) (v0.14.1)
+**Plugin manifest:** [`core/.claude-plugin/plugin.json`](../../../core/.claude-plugin/plugin.json) (v0.15.0)
 **Plugin README** (skill list, install): [`core/README.md`](../../../core/README.md)
 **Always-on fragment** (canonical source): [`core/CLAUDE.md`](../../../core/CLAUDE.md)
 **Per-skill behavior** (source of truth per skill): [`core/skills/*/SKILL.md`](../../../core/skills/)
@@ -14,12 +14,13 @@ The domain-neutral discipline plugin. Ships four skills + one always-on `CLAUDE.
 
 `core` is the spine for any pack — domain-neutral discipline that applies regardless of whether `/src/` exists. Per `.lsa/VISION.md:73`: *"core/ (domain-neutral — always loaded; the spine for any pack)"*.
 
-Four skills:
+Five skills:
 
 - `core/ground-rules` — seven discipline rules every output follows.
 - `core/output` — seven format rules in two postures: one **HARD** (Rule 4, Sourced / fact-grounding) + six **GUIDANCE** (Rules 1-3, 5-7, applied when they serve the answer). **Single marketplace-wide source-of-truth** — see Invariants below. Canonical clause + list at `core/skills/output/SKILL.md`.
 - `core/actor-template` — the Goal / Input / Steps / Output / Constraints shape any Actor must follow.
 - `core/flow-selector` (renamed from `core/tier-selector` in core v0.5.2) — pre-task chain-of-thought Quick / Standard / Extended classifier with visible reasoning.
+- `core/reuse-first` (core v0.15.0) — always-on 7-rung reuse ladder walked on coding tasks before code is written (understand the flow → YAGNI → existing code → stdlib → native platform → installed dependency → shortest working diff); stops at the first rung that holds, silent on prose/analysis. Cross-references `ground-rules` R3/R4 and `lsa:reconcile`'s "only" check by link; never restates them.
 
 The `core/CLAUDE.md` fragment is the **canonical source** for the always-on rules block (`ground-rules` + `output` + `flow-selector` invocation). Other locations (repo `CLAUDE.md`, READMEs) point to it rather than restating.
 
