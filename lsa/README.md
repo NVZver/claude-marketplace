@@ -101,7 +101,7 @@ OpenSpec is the closest neighbour: it ships an after-the-fact `/opsx:verify` and
 | **`init`** | Initialize LSA on a project (greenfield or brownfield). |
 | **`revise-constitution`** | Promote a finished feature's lessons into permanent constitution / standards rules. |
 
-Plus the **`orchestrator`** agent — the entry point that drives the loop. Since v0.17.0 it surfaces every sub-agent's output to you verbatim before any gate (a sub-agent transcript is invisible to the human), and returns pending gates instead of attempting pickers when it runs as a subagent itself. See [`CORE.md`](./CORE.md) for the one-page contract every skill follows.
+Plus the **`orchestrator`** agent — the entry point that drives the loop. Since v0.21.0 it runs the spec-authoring stages (`discover` → `specify` → `verify`) **inline in one context**, reusing accumulated facts instead of re-reading, and crosses a context boundary only at `delegate` (the external implementer) and `reconcile` (an independent grader) — one context floor and one file-read pass instead of one per stage, so a full cycle stays affordable on Sonnet/Pro. Since v0.17.0 it surfaces every sub-agent's output to you verbatim before any gate (a sub-agent transcript is invisible to the human), and returns pending gates instead of attempting pickers when it runs as a subagent itself. See [`CORE.md`](./CORE.md) for the one-page contract every skill follows.
 
 ## The two checks — the product
 
