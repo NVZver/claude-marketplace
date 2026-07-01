@@ -2,6 +2,16 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.21.0] — 2026-07-01
+
+Token-efficiency change from the marketplace model/token assessment: the `orchestrator` now runs the spec-authoring stages **inline in one context** instead of dispatching a fresh sub-agent per stage. A full designed cycle drops from ~6 dispatched contexts to ~3 — each avoided dispatch was reloading the CLAUDE.md floor + memory and re-reading the same spec files. The saving is what keeps the full flow affordable under Claude Pro usage caps (Sonnet). Grounded in `.lsa/standards/code.md` §"Model policy" and the deferred roadmap item it resolves.
+
+### Changed
+
+- **`lsa/agents/orchestrator.md`** — the delegation loop is now an in-context loop. `discover`, `specify`, and `verify` run inline (invoked via `Skill`, artifacts written from the orchestrator context, facts carried forward and reused rather than re-read). Tools gain `Skill`, `Write`, `Edit`. A context boundary is crossed only twice: `delegate` (the implementer must be external — LSA writes no code) and `reconcile`.
+- **Independence preserved.** `reconcile` remains the one LSA-owned stage that is **dispatched, not inlined** — running it inline would give the grader write access to the `.feature` scenarios `specify` wrote in the same context, violating the *Independence must be observable* rule (`lsa/skills/reconcile/SKILL.md`). It runs in a context that is neither the implementer's nor the spec-author's, verdict in a separate commit.
+- **`lsa/CORE.md` §2**, **`.lsa/modules/lsa/spec.md`**, **`lsa/README.md`** — updated to describe the inline loop + the two boundary crossings.
+
 ## [0.20.2] — 2026-06-18
 
 Removes a contradictory orphan knowledge file surfaced by the repository quality audit (iteration 2).
