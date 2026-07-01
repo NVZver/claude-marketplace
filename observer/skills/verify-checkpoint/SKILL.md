@@ -10,7 +10,7 @@ description: "Ride the self-paced /loop as a gate: each cycle, watch for a check
 
 Grader Actor — the second Actor in the `observer` module, sibling to [`observe`](../observe/SKILL.md). Where `observe` coaches through a role, this Actor **gates**: it rides the substrate's self-paced `/loop` (omit the interval to self-pace) and, on each wake, checks for a **checkpoint signal** an implementer emits when it pauses having completed one F-requirement. On a signal it grades that single increment against the spec on two of reconcile's three checks — **does · only** — and emits a CLEAR or BLOCK verdict. It rides the existing `/loop`; it does not build a scheduler ([`../../../.lsa/VISION.md`](../../../.lsa/VISION.md) principle 9, *Substrate-native first*).
 
-This is **not** `lsa:verify`. `lsa:verify` is the *before*-delegation grounding check (is the spec ready to hand to an implementer). This Actor is an *after*-the-increment check (did the increment the implementer just finished conform), scoped to one F-requirement — the per-increment analogue of `lsa:reconcile`, which grades the whole plan at the end. It applies **does · only** only; the third check, **all** (whole-plan completeness), stays with the final `lsa:reconcile` ([`../../../lsa/skills/reconcile/SKILL.md:33-34`](../../../lsa/skills/reconcile/SKILL.md)).
+This is **not** `lsa:verify`. `lsa:verify` is the *before*-delegation grounding check (is the spec ready to hand to an implementer). This Actor is an *after*-the-increment check (did the increment the implementer just finished conform), scoped to one F-requirement — the per-increment analogue of `lsa:reconcile`, which grades the whole plan at the end. It applies **does · only** only; the third check, **all** (whole-plan completeness), stays with the final `lsa:reconcile` ([`../../../lsa/skills/reconcile/SKILL.md:34`](../../../lsa/skills/reconcile/SKILL.md)).
 
 ## The checkpoint-signal contract
 
@@ -85,7 +85,7 @@ cycle 3 — signal: target=F7, since=3aa8147 (re-graded after fix)
 ## Constraints
 
 - **Not `lsa:verify`.** This is the after-increment gate scoped to one F-requirement (the per-increment analogue of `lsa:reconcile`), never the before-delegation grounding check. State this on the surface (F1).
-- **does·only only — never all.** Apply the does and only checks; never apply the whole-plan completeness ("all") check per increment — that stays with the final `lsa:reconcile` ([`../../../lsa/skills/reconcile/SKILL.md:33-34`](../../../lsa/skills/reconcile/SKILL.md)) (F8).
+- **does·only only — never all.** Apply the does and only checks; never apply the whole-plan completeness ("all") check per increment — that stays with the final `lsa:reconcile` ([`../../../lsa/skills/reconcile/SKILL.md:34`](../../../lsa/skills/reconcile/SKILL.md)) (F8).
 - **Not-yet-built is out of scope.** A requirement after the target F is not under-delivery for this increment; do not flag it (F6, F8).
 - **No scheduler.** Ride the substrate's self-paced `/loop`; implement no polling, timer, or wake scheduler ([`../../../.lsa/VISION.md`](../../../.lsa/VISION.md) principle 9) (F2).
 - **Silence on no signal.** A signal-less cycle produces zero user-facing output — no marker, token, placeholder, status line, parenthetical, or narration (mirrors [`../observe/SKILL.md:37`](../observe/SKILL.md) step 6d) (F4).
