@@ -5,7 +5,7 @@ Epic: paired-verify/observer-verifier · Parent: [paired-verify](../../pitches/p
 - Increment = an implementer's changes for ONE F-requirement, read as "changes since a marker"
   (reuses observe's pattern, `observer/skills/observe/SKILL.md:37`).
 - does·only = two of reconcile's three checks (`lsa/skills/reconcile/SKILL.md:30-34`); the third
-  ("all"/completeness) is deferred to the final reconcile (`lsa/skills/reconcile/SKILL.md:33`).
+  ("all"/completeness) is deferred to the final reconcile (`lsa/skills/reconcile/SKILL.md:34`).
 - Checkpoint signal = the record the implementer emits on pause, declaring it finished F-K
   (contract defined here; the writer ships in epic `paired-verify/lsa-delegate-wiring`).
 
@@ -34,11 +34,11 @@ Epic: paired-verify/observer-verifier · Parent: [paired-verify](../../pitches/p
   F-requirement it names and scope grading to the changes since the previous checkpoint marker.
 - F6 (does — scoped). When grading, the system shall run the acceptance scenarios mapped to the
   target F-requirement and treat scenarios of not-yet-built requirements as out of scope for this
-  increment (`lsa/skills/reconcile/SKILL.md:31`).
+  increment (`lsa/skills/reconcile/SKILL.md:32`).
 - F7 (only). When grading, the system shall verify every changed hunk traces to a requirement and
-  flag any untraced hunk as over-delivery (`lsa/skills/reconcile/SKILL.md:32`).
+  flag any untraced hunk as over-delivery (`lsa/skills/reconcile/SKILL.md:33`).
 - F8 (no all). The system shall NOT apply a whole-plan completeness check per increment;
-  completeness remains the final reconcile's responsibility (`lsa/skills/reconcile/SKILL.md:33`).
+  completeness remains the final reconcile's responsibility (`lsa/skills/reconcile/SKILL.md:34`).
 - F9 (Clear). If an increment passes does AND only, then the system shall emit a CLEAR verdict that
   auto-clears the boundary without interrupting the human.
 - F10 (Block). If an increment fails does OR only, then the system shall emit a BLOCK verdict
