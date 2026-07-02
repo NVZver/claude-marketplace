@@ -4,7 +4,7 @@
 
 Live observe-and-coach + checkpoint-gate discipline. Rides Claude Code's self-paced `/loop` through two Actors: `observe` reacts to the user's file changes through a chosen role, emitting role-appropriate feedback (or silence) each cycle until stopped; `verify-checkpoint` grades an implementer's increment does·only on a checkpoint signal, emitting a CLEAR or BLOCK verdict.
 
-**Plugin manifest:** [`observer/.claude-plugin/plugin.json`](../../../observer/.claude-plugin/plugin.json) (v0.3.0)
+**Plugin manifest:** [`observer/.claude-plugin/plugin.json`](../../../observer/.claude-plugin/plugin.json) (v0.3.1)
 **Plugin README** (install, dependencies, roles): [`observer/README.md`](../../../observer/README.md)
 **Feature requirements** (EARS + Gherkin, flows F1–F5): [`../../features/observer/requirements.md`](../../features/observer/requirements.md)
 **Feature requirements** (`verify-checkpoint`, F1–F17): [`../../features/2026-07-01-paired-verify-observer-verifier/requirements.md`](../../features/2026-07-01-paired-verify-observer-verifier/requirements.md)

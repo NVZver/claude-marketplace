@@ -4,7 +4,7 @@
 
 Prompt-engineering discipline for the marketplace's own prompt files. An agent + commands enforce quality rules across Actors (agents, commands) and Knowledge files; the knowledge files hold the rule categories.
 
-**Plugin manifest:** [`prompt-engineer/.claude-plugin/plugin.json`](../../../prompt-engineer/.claude-plugin/plugin.json) (v0.8.0)
+**Plugin manifest:** [`prompt-engineer/.claude-plugin/plugin.json`](../../../prompt-engineer/.claude-plugin/plugin.json) (v0.8.1)
 **Plugin README** (install, command table, rule categories): [`prompt-engineer/README.md`](../../../prompt-engineer/README.md)
 **Per-agent behavior** (source of truth): [`prompt-engineer/agents/prompt-engineer.md`](../../../prompt-engineer/agents/prompt-engineer.md)
 **Per-command behavior** (source of truth): [`prompt-engineer/commands/`](../../../prompt-engineer/commands/) — `prompt-review`, `prompt-optimize`, `prompt-create`

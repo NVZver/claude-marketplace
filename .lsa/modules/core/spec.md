@@ -4,7 +4,7 @@
 
 The domain-neutral discipline plugin. Ships six skills + one always-on `CLAUDE.md` fragment.
 
-**Plugin manifest:** [`core/.claude-plugin/plugin.json`](../../../core/.claude-plugin/plugin.json) (v0.16.1)
+**Plugin manifest:** [`core/.claude-plugin/plugin.json`](../../../core/.claude-plugin/plugin.json) (v0.16.2)
 **Plugin README** (skill list, install): [`core/README.md`](../../../core/README.md)
 **Always-on fragment** (canonical source): [`core/CLAUDE.md`](../../../core/CLAUDE.md)
 **Per-skill behavior** (source of truth per skill): [`core/skills/*/SKILL.md`](../../../core/skills/)
