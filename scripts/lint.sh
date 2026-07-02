@@ -87,7 +87,7 @@ fi
 # Plugin dirs that ship Actors (SKILL.md + agents). Kept as a single list so C4
 # and C5 scan the same surface. A literal `find` over these avoids globbing
 # surprises and is bash 3.2 (macOS) safe.
-PLUGIN_DIRS="core lsa helper manager prompt-engineer"
+PLUGIN_DIRS="core lsa helper manager prompt-engineer observer"
 
 # ---------------------------------------------------------------------------
 # C4 — every Actor file (*/skills/**/SKILL.md and */agents/*.md) carries the
