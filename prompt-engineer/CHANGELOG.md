@@ -2,6 +2,25 @@
 
 All notable changes to the `prompt-engineer` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.8.0] – 2026-07-02
+
+Course-driven improvement session: named the prompt-engineering paradigms the plugin already embodies (in-context learning, prompt elements, chain-of-thought — its own AI Over-Engineering check 5 applied to itself) and added two new behaviors: a demonstration-consistency rule and a self-consistency stability bar for judgment-based findings.
+
+### Added
+
+- **`knowledge/actor-ground-rules.md`** — rule 11: an actor's Example Output must match its declared Output spec (format + length); a mismatched demonstration teaches the model the wrong shape. New §"Why examples: in-context learning" names the paradigm behind rules 4/10/11 (few-shot prompting, Brown et al. 2020) — the plugin's own AI Over-Engineering check 5 (cite adapted paradigms) applied to itself. §Scope notes rule 11 applies only where an Example Output section exists (leaner contracts stay exempt).
+- **`commands/prompt-review.md`** — step 3 check `m`: where an `## Example Output` section exists, verify it matches the declared Output format and length → mismatch = MEDIUM (rule 11).
+- **`tests/repo-anchored.md`** — probe B5: a planted Output-spec/Example-Output mismatch (table declared, prose demonstrated) surfaces as the sole MEDIUM, cited to rule 11 / check `3m`.
+- **`knowledge/actor-ground-rules.md`** — mapping note under the actor format template naming its paradigm: the template refines the four standard prompt elements (instruction / context / input data / output indicator, [Prompt Engineering Guide](https://www.promptingguide.ai/introduction/elements)) — Goal+Steps+Constraints = instruction, Role + cited knowledge files = context (referenced, never inlined), Input = input data, Output + Example Output = output indicator. Provenance only; completeness of the slots was already enforced by rules 1 + 3.
+- **`knowledge/actor-ground-rules.md`** — two more paradigm names: the shot ladder in §Why examples (zero-shot = the §Scope leaner contracts, one-shot = the template default, few-shot = AI Over-Engineering-4-governed escalation), and chain-of-thought ([Wei et al. 2022](https://www.promptingguide.ai/techniques/cot)) as the paradigm behind the Steps arrow notation (rule 5's observable intermediate steps).
+- **`knowledge/quality-checks.md`** — self-consistency stability bar after the Severity Levels table ([Wang et al. 2022](https://www.promptingguide.ai/techniques/consistency)): a judgment-based finding (vague step, formalized common sense, padding) that would not recur on an independent re-derivation is dropped, not reported; deterministic checks exempt; re-derive only contested calls (no blanket multi-sampling — Pro-tier cost). Wired into `commands/prompt-review.md` step 4 and noted in the README `prompt-review` row.
+
+### Changed
+
+- **`knowledge/quality-checks.md`** — AI Over-Engineering 4 and Context Budget 3 now cite the in-context-learning note in `actor-ground-rules.md` (demonstration coverage / demonstration bias); severity table MEDIUM row covers the new Example-Output-mismatch finding.
+- **`agents/prompt-engineer.md`** — step 3 checks actor rules 1-11 (was 1-10).
+- **`README.md`** — actor ground rules tally 10 → 11; KISS/DRY tally corrected 5 → 6 (rule 6 shipped in 0.6.0 but the rule-categories table was never updated); lede now states the craft's premise (*how* you ask — clear, specific, context-backed — determines what the model returns) so the opening explains the discipline before the mechanism.
+
 ## [0.7.5] – 2026-07-02
 
 Consistency-sweep minor (Fork 2d of [`.lsa/pitches/sonnet-robustness-consistency-sweep.md`](../.lsa/pitches/sonnet-robustness-consistency-sweep.md)): the agent-description examples now follow the Claude Code agent convention.

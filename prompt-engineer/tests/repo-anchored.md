@@ -130,6 +130,36 @@ Synced 12 records to output.json.
 
 **FAIL.** No WARNING (the marquee v0.3.0 check is dead), or it fires as a HIGH/MEDIUM.
 
+### B5 — Example/Output-spec mismatch is caught (rule 11, behavioral)
+
+**Prompt.** Save this block to `/tmp/report.md`, then: *"Run `prompt-review` on `/tmp/report.md`."*
+```markdown
+---
+name: report
+description: Summarize test results
+allowed-tools: Read
+---
+# Report
+Goal: Summarize a test-run log as a results table.
+Input: $ARGUMENTS (path to the log)
+Constraints:
+- Do NOT include passing tests in the detail rows
+## Steps
+1. Read the log → failure list extracted
+2. Count totals → pass/fail tally computed
+## Output
+Format: Summary line + markdown table, one row per failure.
+Length: 1 line + table.
+## Example Output
+Two failures in 214 tests. The auth suite failed twice on token refresh; checkout timed out once.
+```
+
+**Source of truth.** [`commands/prompt-review.md:40`](../commands/prompt-review.md) — check `m`: where an `## Example Output` section exists, it must match the declared Output format and length ([`actor-ground-rules.md`](../knowledge/actor-ground-rules.md) rule 11). The Output spec declares a markdown table; the example is prose with no table. The sample is otherwise compliant, so the MEDIUM is the only finding.
+
+**PASS.** One MEDIUM on the Example Output section, cited rule 11 (check `3m`).
+
+**FAIL.** No finding (a mismatched demonstration ships), or the mismatch lands as HIGH/LOW.
+
 ---
 
 ## Set C — `prompt-optimize`
