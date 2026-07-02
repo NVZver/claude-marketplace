@@ -205,7 +205,7 @@ Personal-use first; open-sourced for visibility. Claude Code is the v1 substrate
 | **Pro** | Sonnet 5 | The full marketplace — every plugin, every loop; nothing is gated behind Opus. |
 | **Max** | Opus 4.8 | The same artifacts — the reasoning-heavy stages (spec reconciliation, decomposition) get sharper for free. |
 
-One caveat for Pro users watching usage: the deeper flows spawn sub-agents (each a fresh context), so a full Extended LSA cycle or a parallel `manager:implement` fleet run is token-heavy. For everyday work prefer the **Quick / Standard** flows (`core/flow-selector` picks them by task weight); the multi-agent **fleet** (`manager:implement`) is Max-oriented. Everything remains functional on Pro — this is about pacing usage, not access.
+One caveat for Pro users watching usage: the deeper flows spawn sub-agents (each a fresh context), so a full Extended LSA cycle or a parallel `manager:implement` run is token-heavy. For everyday work prefer the **Quick / Standard** flows (`core/flow-selector` picks them by task weight); the multi-agent parallel engine (`manager:implement`) is Max-oriented. Everything remains functional on Pro — this is about pacing usage, not access.
 
 ## Security
 

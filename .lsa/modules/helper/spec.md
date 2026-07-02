@@ -4,7 +4,7 @@
 
 The fact-grounded assistant plugin. A subagent + a slash command + knowledge files.
 
-**Plugin manifest:** [`helper/.claude-plugin/plugin.json`](../../../helper/.claude-plugin/plugin.json) (v0.5.3)
+**Plugin manifest:** [`helper/.claude-plugin/plugin.json`](../../../helper/.claude-plugin/plugin.json) (v0.6.1)
 **Plugin README** (install, default flow, status): [`helper/README.md`](../../../helper/README.md)
 **Per-agent behavior** (source of truth): [`helper/agents/helper.md`](../../../helper/agents/helper.md)
 **Per-command behavior** (source of truth): [`helper/commands/help.md`](../../../helper/commands/help.md)
