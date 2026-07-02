@@ -26,7 +26,7 @@ you ▶ discover ▶ specify ▶ verify ──────▶ delegate ▶ [ age
 4. **Delegate** — hand the spec + `.feature` files to any implementer. Out of the system.
 5. **Reconcile (after)** — run the scenarios against the returned diff; pass → done; drift → the spec absorbs reality. ← *differentiator 2*
 
-The **orchestrator** drives this loop (§9). It runs the spec-authoring hops — `discover`, `specify`, `verify` — **inline in one context**, reusing accumulated facts rather than re-reading; it crosses a context boundary only at `delegate` (the external implementer) and `reconcile` (an independent grader). One context floor and one file-read pass instead of N — the flow stays affordable on Sonnet.
+The **orchestrator** drives this loop (§9). It runs the spec-authoring hops — `discover`, `specify`, `verify` — **inline in one context**, reusing accumulated facts rather than re-reading; it crosses a context boundary only at `delegate` (the external implementer) and `reconcile` (an independent grader). One context floor and one file-read pass instead of N — the flow stays affordable on the Pro-tier model (see `.lsa/standards/code.md` §"Model policy").
 
 **Ceremony scales to weight.** Not every task runs the full loop — the orchestrator picks by the size of the change:
 - **Quick** (typo, rename, a question): skip the spec — ground the change, reconcile after.
