@@ -1,7 +1,6 @@
 # Living Spec Architecture (LSA)
-**Version:** 0.20.1 (plugin)
 **Author:** Nikita Zverev
-**Status:** 0.4.0 — Vision-aligned; dogfooded on `claude-marketplace`; each skill cites `core/output` for output discipline. See [`../.lsa/2026-05-20-lsa-v0.2.0-design.md`](../.lsa/2026-05-20-lsa-v0.2.0-design.md) for the earlier baseline and [`../.lsa/plans/2026-05-20-credo-rollout-plan.md`](../.lsa/plans/2026-05-20-credo-rollout-plan.md) for the credo-rollout restructure.
+**Status:** Vision-aligned; dogfooded on `claude-marketplace`; each skill cites `core/output` for output discipline. The current plugin version lives in [`.claude-plugin/plugin.json`](./.claude-plugin/plugin.json); its history in [`CHANGELOG.md`](./CHANGELOG.md). See [`../.lsa/2026-05-20-lsa-v0.2.0-design.md`](../.lsa/2026-05-20-lsa-v0.2.0-design.md) for the earlier baseline and [`../.lsa/plans/2026-05-20-credo-rollout-plan.md`](../.lsa/plans/2026-05-20-credo-rollout-plan.md) for the credo-rollout restructure.
 
 ---
 

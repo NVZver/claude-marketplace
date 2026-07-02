@@ -2,7 +2,7 @@
 
 Product and project management discipline for the NVZver marketplace. Two roles:
 
-1. **Product manager** — shapes vague ideas into structured, buildable pitches before the build cycle begins. The shaping conversation follows a 5-section pitch format (defined in [`knowledge/pitch-structure.md`](./knowledge/pitch-structure.md)) inspired by Basecamp's Shape Up methodology [unverified]. The product-manager agent dynamically adapts its domain-expert role per invocation.
+1. **Product manager** — shapes vague ideas into structured, buildable pitches before the build cycle begins. The shaping conversation follows a 5-section pitch format (defined in [`knowledge/pitch-structure.md`](./knowledge/pitch-structure.md)) whose sections — Problem, Appetite, Solution sketch, Rabbit holes, No-gos — are the five pitch ingredients from Basecamp's [Shape Up](https://basecamp.com/shapeup/1.5-chapter-06) (*"Problem, Appetite, Solution, Rabbit holes, No-gos"*). The product-manager agent dynamically adapts its domain-expert role per invocation.
 
 2. **Project manager** — stewards the roadmap after pitches are approved. Recommends what to build next using dependency/risk/value reasoning, decomposes chosen pitches into focused epics, and hands each epic to LSA for technical refinement. The project-manager agent reads the roadmap, pitches, branches, and spec state to ground every recommendation. Its commands follow the function-like naming convention in [`knowledge/command-naming.md`](./knowledge/command-naming.md) — verbs you call with arguments, not nouns you browse.
 
@@ -39,6 +39,25 @@ Install `core` first — `manager` cites `core/ground-rules` for fact-grounding 
 |---|---|
 | `product-manager` | Shaping agent. Adapts domain-expert role per invocation, drafts the pitch and returns its full content + pending human gates for `manager:shape` to deliver and run — writes no files (since v0.6.0). |
 | `project-manager` | Roadmap steward. Recommends next backlog item (dependency/risk/value reasoning), decomposes pitches into independently-shippable epics, proposes roadmap hygiene updates, stages the first-epic LSA handoff for `manager:decompose` to invoke. The three roadmap verbs (`manager:next` / `manager:decompose` / `manager:check`) dispatch it with a distinct intent; the shared dispatch → gate → re-render contract lives at [`knowledge/roadmap-orchestration.md`](./knowledge/roadmap-orchestration.md). |
+
+## Example
+
+A shaping run, end to end — the snippet is `[illustrative]` (constructed for readability, not copied from a live session):
+
+```text
+> /manager:shape "users complain onboarding takes too long"
+
+[product-manager] Shaping into a pitch.
+Adopting role — onboarding-funnel product manager.
+Q1 — what's the most-recent concrete onboarding complaint you've heard?
+Q2 — how long is "too long" (in minutes), and who measured it?
+
+(… interactive Q&A grounded in the codebase and existing specs …)
+
+PROPOSED — pitch at .lsa/pitches/onboarding-friction.md.
+Appetite: small batch (~1 week).
+Approve to hand off to /manager:decompose, or reshape.
+```
 
 ## How it fits
 

@@ -2,6 +2,14 @@
 
 All notable changes to the `prompt-engineer` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.8.2] – 2026-07-02
+
+Public-readiness documentation pass (docs only, no agent/command behavior change).
+
+### Added
+
+- **`README.md`** — an `[illustrative]` `prompt-review` usage example showing the severity/rule/finding output table.
+
 ## [0.8.1] – 2026-07-02
 
 Self-conformance fixes surfaced by the repo-wide prompt review the 0.8.0 discipline itself ran (2 MEDIUM in this plugin, 5 of 7 files clean).

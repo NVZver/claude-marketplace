@@ -2,6 +2,14 @@
 
 All notable changes to the `manager` plugin (formerly `management`) are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.16.2] – 2026-07-02
+
+Public-readiness documentation pass (docs only, no skill behavior change).
+
+### Changed
+
+- **`README.md`** — the Shape Up claim in the lede is now cited (the five pitch sections map 1:1 to basecamp.com/shapeup/1.5-chapter-06's pitch ingredients) instead of carrying an `[unverified]` tag; added an `[illustrative]` `manager:shape` usage example.
+
 ## [0.16.1] – 2026-07-02
 
 Fixes from the repo-wide prompt review (run with `prompt-engineer` 0.8.0 discipline; 1 HIGH + 4 MEDIUM in this plugin, 12 of 16 files clean).

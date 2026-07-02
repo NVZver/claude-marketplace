@@ -2,6 +2,14 @@
 
 All notable changes to the `core` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.16.3] — 2026-07-02
+
+Public-readiness documentation pass (docs only, no skill behavior change).
+
+### Changed
+
+- **`README.md`** — the `ground-rules`, `output`, `reuse-first`, and `doctor` bullets in "What's here" rewritten to describe present-state behavior in a few sentences each; the accumulated "Since vX.Y" release history those bullets carried now lives only here in the CHANGELOG (linked once from the README).
+
 ## [0.16.2] — 2026-07-02
 
 Fix from the repo-wide prompt review (run with `prompt-engineer` 0.8.0 discipline; 1 MEDIUM finding in this plugin, 8 of 9 files clean).

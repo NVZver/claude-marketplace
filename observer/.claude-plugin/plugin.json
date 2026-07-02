@@ -1,7 +1,7 @@
 {
   "name": "observer",
   "description": "Live observe-and-coach discipline for the NVZver marketplace. Rides Claude Code's self-paced /loop through two Actors. observer:observe reacts to your file changes through a chosen role (rubber-duck, pair-programmer, interviewer, custom), read as data from one Knowledge file (roles.md). observer:verify-checkpoint gates an implementer's increment: on a checkpoint signal it grades that one F-requirement does·only (not the whole-plan all check — that stays with lsa:reconcile) and emits CLEAR (auto-clears) or BLOCK (surfaced to the human), read-only to the graded artifacts. Depends on core (ground-rules, output).",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "author": {
     "name": "Nikita Zverev"
   },

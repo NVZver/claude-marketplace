@@ -2,6 +2,14 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.24.4] — 2026-07-02
+
+Public-readiness documentation pass (docs only, no skill behavior change).
+
+### Fixed
+
+- **`ARCHITECTURE.md`** — the header's hardcoded `**Version:** 0.20.1 (plugin)` had drifted from `plugin.json` (0.24.3), and the adjacent `**Status:** 0.4.0` read as a second, conflicting version. Both numbers removed; the header now points at `.claude-plugin/plugin.json` and `CHANGELOG.md` so it cannot drift again.
+
 ## [0.24.3] — 2026-07-02
 
 Fixes from the repo-wide prompt review (run with `prompt-engineer` 0.8.0 discipline; 5 MEDIUM findings in this plugin — stale anchors + duplication, no behavior change).

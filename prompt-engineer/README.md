@@ -18,6 +18,22 @@ Prompt engineering discipline for Claude Code plugins: *how* you ask — clear, 
 | `prompt-engineer:prompt-optimize` | Apply fixes for issues found by prompt-review. Groups by severity, re-verifies after fixes. |
 | `prompt-engineer:prompt-create` | Scaffold a new agent or command file with all required sections — shows the full generated content for approval and writes the file only on approve (show → approve → write, since v0.7.0) — then verify compliance. |
 
+## Example
+
+A review run — the snippet is `[illustrative]` (constructed for readability, not copied from a live session):
+
+```text
+> /prompt-engineer:prompt-review helper/agents/helper.md
+
+| Severity | Rule                            | Finding                                                |
+|----------|---------------------------------|--------------------------------------------------------|
+| HIGH     | Actor rule 10 (Example Output)  | Section missing — actors must show their output shape. |
+| MED      | KISS rule 2 (no duplication)    | Step 3 restates Step 1's input check.                  |
+| LOW      | Context budget                  | Low-density framing paragraph adds no actionable info. |
+
+Apply auto-fixes with /prompt-engineer:prompt-optimize.
+```
+
 ## Agent
 
 | Agent | What it does |

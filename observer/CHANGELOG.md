@@ -5,6 +5,14 @@ All notable changes to the `observer` plugin are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.2] - 2026-07-02
+
+Public-readiness documentation pass (docs only, no skill behavior change).
+
+### Changed
+
+- **`README.md`** — lede jargon glossed inline for first-time readers (`does·only` expanded to its two checks; "F-requirement" → "one requirement"; "Actor skills" → "skills"); added an `[illustrative]` `observer:observe` usage example.
+
 ## [0.3.1] - 2026-07-02
 
 Fixes from the repo-wide prompt review (run with `prompt-engineer` 0.8.0 discipline; 5 MEDIUM findings in this plugin — anchor drift + silence-definition duplication, no behavior change).
