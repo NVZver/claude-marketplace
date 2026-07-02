@@ -4,6 +4,8 @@
 
 The canonical format for a shaped pitch. An approved pitch lives at `${specs_root}/pitches/<slug>.md` (where `specs_root` is resolved from `.lsa.yaml` — see [`../../lsa/knowledge/conventions.md`](../../lsa/knowledge/conventions.md) §"`.lsa.yaml` defaults"). Inspiration: Basecamp Shape Up shaping phase [unverified -- cited from training knowledge].
 
+**Contents:** [Metadata header](#metadata-header) · [Five sections](#five-sections) · [Markdown template](#markdown-template) · [Worked example](#worked-example-illustrative)
+
 ## Metadata header
 
 ```

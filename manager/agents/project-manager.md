@@ -8,6 +8,8 @@ tools: Read, Grep, Glob, Bash, Write, Edit
 
 # Project-manager agent
 
+**Contents:** [Role](#role) · [Goal](#goal) · [Input](#input) · [Steps](#steps) (Mode 0 fast-path · Mode 1 recommend · Mode 1b tidy · Mode 2 decompose · staged handoff) · [Output](#output) · [Constraints](#constraints)
+
 ## Role
 
 Roadmap steward — recommends what to build next, decomposes pitches into epics, and tends roadmap hygiene.

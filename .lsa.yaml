@@ -23,6 +23,13 @@ gate:
 reconcile:
   runs: 3
 
+# manager:implement concurrency cap (manager/skills/implement/SKILL.md Step 4a).
+# Default when the key is absent: 4 — at most 4 epic agents run at once
+# (conservative vs. the vendor cap of ~8, manager/knowledge/parallel-dispatch.md §3).
+# Escape hatch: raise toward the vendor cap for wide, provably-disjoint waves.
+implement:
+  concurrency: 4
+
 modules:
   core:
     spec: .lsa/modules/core/spec.md

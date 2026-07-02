@@ -31,17 +31,17 @@ A single `manager:implement` run can produce **many PRs back-to-back** — one p
 - **The checkpoint is the merge prompt, not the build.** At `manual`, the parallel *build* still runs unattended within a wave; what `manual` reserves for the human is every **merge** — so no feature reaches the integration branch without a human button-press, and the engine cannot silently churn the whole backlog. The plan-proposal gate ([`../skills/implement/SKILL.md`](../skills/implement/SKILL.md) Step 3) is an additional, earlier human checkpoint at every level, before any dispatch.
 - **Multi-PR churn is opt-in, never the silent default.** Because the default is `manual` and `semi`/`auto` sit behind the Enablement gate above, an unattended PR-after-PR run only happens after the human has explicitly raised the level past `manual`. A bare run on the default config checkpoints at every merge.
 
-## `semi` — auto-merge on green (this epic)
+## `semi` — auto-merge on green
 
 Under `semi`, when an epic's PR passes the gate (independent `lsa:reconcile` + the `.lsa.yaml` `gate:` checks) against the up-to-date base, the serialized-merge step ([`serialized-merge.md`](./serialized-merge.md)) lands the tested SHA **without asking the human** — one PR at a time, still serialized, still merging only the tested SHA. Only the serialized-merge step writes roadmap status (the roadmap-write lock is unchanged). The human is not prompted per-merge but still:
 
 - owns the **final merge of the integration branch to `main`** (pitch no-go #2 — `semi` auto-merges *into the integration branch*, not into `main`);
-- owns **deploy** (that is `auto`, Epic 4);
+- owns **deploy** (that is `auto` — next section);
 - can set `autonomy: manual` to restore the per-merge prompt at any time.
 
 A `semi` run still reports each merge `merged @ <sha>` with its cited gate artifact (`core/ground-rules` Rule 7) — auto-merge does not mean unreported.
 
-## `auto` — full SDLC: deploy + healthcheck (Epic 4)
+## `auto` — full SDLC: deploy + healthcheck
 
 `auto` extends `semi`: after a PR auto-merges on green, the engine runs the project's **deploy** command and then a **healthcheck**, and may report `deployed` only after the healthcheck passes (`core/ground-rules` Rule 7 — e.g. `/healthz` returns 200). Like `gate:`, no deploy/healthcheck tool is hardcoded — the repo supplies the commands (a `deploy` and a `healthcheck` entry alongside the `gate:` checks, run only at `auto`).
 

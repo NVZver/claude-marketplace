@@ -2,7 +2,7 @@
 
 # Serialized merge + shared-ledger lock — knowledge
 
-The convergence contract for parallel runs: how N per-epic PRs land on the integration branch without ever turning it red, and who is allowed to write the **shared ledgers** every epic touches — `CHANGELOG.md`, `plugin.json` version, and `${specs_root}/roadmap.md` (content + status). Owned by `manager` (the orchestrator); consumed by the `manager:implement` execution engine (built in the `parallel-agent-delivery` Epic 2 — this file is the contract that engine follows). The independent grade each PR must pass is `lsa:reconcile` + the [`lsa` quality-gate contract](../../lsa/knowledge/quality-gate-contract.md); the always-on rule that a merge may be *reported* only when proven is [`core/ground-rules`](../../core/skills/ground-rules/SKILL.md) Rule 7.
+The convergence contract for parallel runs: how N per-epic PRs land on the integration branch without ever turning it red, and who is allowed to write the **shared ledgers** every epic touches — `CHANGELOG.md`, `plugin.json` version, and `${specs_root}/roadmap.md` (content + status). Owned by `manager` (the orchestrator); consumed by the `manager:implement` execution engine (built by the `parallel-agent-delivery` dispatcher epic — this file is the contract that engine follows). The independent grade each PR must pass is `lsa:reconcile` + the [`lsa` quality-gate contract](../../lsa/knowledge/quality-gate-contract.md); the always-on rule that a merge may be *reported* only when proven is [`core/ground-rules`](../../core/skills/ground-rules/SKILL.md) Rule 7.
 
 Source: `.lsa/pitches/parallel-agent-delivery.md:20,38,43` (no-go #2 `:48`, rabbit-hole 8 `:43`); `.lsa/research/parallel-agent-delivery-solution-design.md:30-36`.
 
