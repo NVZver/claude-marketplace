@@ -2,6 +2,14 @@
 
 All notable changes to the `helper` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.6.3] – 2026-07-02
+
+Public-readiness documentation pass (docs only, no agent behavior change).
+
+### Changed
+
+- **`README.md`** — the internal `## Status` release table (stale at v0.6.1, referencing archived epics, PR numbers, and commit SHAs) replaced with a short "How it behaves" summary plus an `[illustrative]` `/help` usage example; per-release history lives only here in the CHANGELOG. "Probes — after this commit" reframed as "Verify it works".
+
 ## [0.6.2] – 2026-07-02
 
 Fixes from the repo-wide prompt review (run with `prompt-engineer` 0.8.0 discipline; 1 HIGH + 1 MEDIUM in this plugin, 5 of 6 files clean).

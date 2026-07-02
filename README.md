@@ -12,14 +12,16 @@ A Claude Code marketplace shipping six composable plugins for spec-first, fact-g
 
 | Plugin | Version | What it gives you |
 |---|---|---|
-| [`core`](./core/) | 0.16.2 | Always-on discipline: eight content rules, seven output rules, flow classification (Quick / Standard / Extended), the `/core:doctor` install self-check, and the Goal/Input/Steps/Output/Constraints shape every skill follows. |
-| [`lsa`](./lsa/) | 0.24.3 | **L**iving **S**pec **A**rchitecture — technology-agnostic spec layer: authors a grounded spec (EARS + Gherkin), verifies it against the codebase *before* you build and against the diff *after*, then delegates code-writing to any implementer. Not the coder; hand-edits are *absorbed* into the spec instead of forbidden. |
-| [`helper`](./helper/) | 0.6.2 | Friendly fact-grounded assistant: a `/help` slash command and an auto-engaging subagent that answers `what is X?` mid-flow with verifiable file citations (line range, heading anchor, or URL). |
-| [`manager`](./manager/) | 0.16.1 | Pre-build shaping: turns a vague problem into a structured pitch (problem, appetite, solution sketch, rabbit holes, no-gos) before the build cycle begins. |
-| [`prompt-engineer`](./prompt-engineer/) | 0.8.1 | Plugin-quality discipline: scans your own actors and knowledge files for ground-rule, KISS/DRY, AI over-engineering, and context-budget violations. |
-| [`observer`](./observer/) | 0.3.1 | Live observe-and-coach + increment gate: `observe` rides Claude Code's self-paced `/loop` and coaches your file changes through a chosen role (rubber-duck, pair-programmer, interviewer, or custom); `verify-checkpoint` gates delegation increments — grades one finished requirement **does·only** and emits `CLEAR` or `BLOCK`. |
+| [`core`](./core/) | 0.16.3 | Always-on discipline: eight content rules, one hard output rule plus six pieces of output guidance, flow classification (Quick / Standard / Extended), the `/core:doctor` install self-check, and the Goal/Input/Steps/Output/Constraints shape every skill follows. |
+| [`lsa`](./lsa/) | 0.24.4 | **L**iving **S**pec **A**rchitecture — technology-agnostic spec layer: authors a grounded spec (EARS + Gherkin), verifies it against the codebase *before* you build and against the diff *after*, then delegates code-writing to any implementer. Not the coder; hand-edits are *absorbed* into the spec instead of forbidden. |
+| [`helper`](./helper/) | 0.6.3 | Friendly fact-grounded assistant: a `/help` slash command and an auto-engaging subagent that answers `what is X?` mid-flow with verifiable file citations (line range, heading anchor, or URL). |
+| [`manager`](./manager/) | 0.16.2 | Pre-build shaping: turns a vague problem into a structured pitch (problem, appetite, solution sketch, rabbit holes, no-gos) before the build cycle begins. |
+| [`prompt-engineer`](./prompt-engineer/) | 0.8.2 | Plugin-quality discipline: scans your own actors and knowledge files for ground-rule, KISS/DRY, AI over-engineering, and context-budget violations. |
+| [`observer`](./observer/) | 0.3.2 | Live observe-and-coach + increment gate: `observe` rides Claude Code's self-paced `/loop` and coaches your file changes through a chosen role (rubber-duck, pair-programmer, interviewer, or custom); `verify-checkpoint` gates delegation increments — grades one finished requirement **does·only** and emits `CLEAR` or `BLOCK`. |
 
 ## Install
+
+**Prerequisites.** [Claude Code](https://code.claude.com/docs/en/overview) on any plan (see [Plans & models](#plans--models) below — nothing is gated behind a specific model). The `plugin.json` `dependencies` field the install order relies on is functional since Claude Code v2.1.110 (per the [plugins reference](https://code.claude.com/docs/en/plugins-reference)); on older versions, installing in the listed order achieves the same result.
 
 1. Add the marketplace and install the plugins — `core` first, because `lsa`, `manager`, and `observer` declare it as a `plugin.json` dependency, and the other two plugins (`helper`, `prompt-engineer`) align with its conventions:
 
@@ -36,7 +38,16 @@ A Claude Code marketplace shipping six composable plugins for spec-first, fact-g
 
 2. Merge the [`core/CLAUDE.md`](./core/CLAUDE.md) fragment into your project's `CLAUDE.md`. This is the step that activates the always-on rules — skip it and the discipline layer silently never engages.
 
-3. Run [`/core:doctor`](./core/skills/doctor/SKILL.md) to verify the wiring: four read-only checks (required plugins installed, fragment merged, plugin versions consistent, gate scripts) reported as a per-check PASS / WARN / FAIL / SKIP table with evidence and a one-line fix per failure.
+3. Run [`/core:doctor`](./core/skills/doctor/SKILL.md) to verify the wiring: four read-only checks (required plugins installed, fragment merged, plugin versions consistent, gate scripts) reported as a per-check PASS / WARN / FAIL / SKIP table with evidence and a one-line fix per failure. A healthy install looks like (`[illustrative]`):
+
+   ```text
+   | Check                          | Verdict | Evidence                                  |
+   |--------------------------------|---------|-------------------------------------------|
+   | Required plugins (core + lsa)  | PASS    | both listed by /plugin                    |
+   | CLAUDE.md fragment merged      | PASS    | all four rule anchors found               |
+   | Plugin versions consistent     | PASS    | installed == source manifests             |
+   | Gate scripts                   | SKIP    | not the marketplace source repo           |
+   ```
 
 **First command.** Run `/lsa:init` in any project to scaffold the spec tree (greenfield or brownfield). Or run `/manager:shape "<vague idea>"` to shape a pitch before any code lands.
 

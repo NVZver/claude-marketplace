@@ -1,6 +1,6 @@
 # Observer
 
-Live observe-and-coach for the NVZver marketplace. `observer` rides Claude Code's self-paced **`/loop`** — the substrate's built-in repeat-this-prompt cycle — through two Actor skills. **`observer:observe`** reacts to your file changes through a chosen **role**, the persona whose lens, voice, and cadence shape the feedback; all per-role behavior is data read from one Knowledge file ([`knowledge/roles.md`](./knowledge/roles.md)), so the Actor holds zero per-role branching. **`observer:verify-checkpoint`** gates an implementer's work: on a checkpoint signal it grades one finished F-requirement **does·only** and emits `CLEAR` (auto-clears) or `BLOCK` (surfaced to you). One coaches, one gates; both ride the same substrate `/loop` and build no scheduler.
+Live observe-and-coach for the NVZver marketplace. `observer` rides Claude Code's self-paced **`/loop`** — the built-in repeat-this-prompt cycle — through two skills. **`observer:observe`** watches you code and reacts to your file changes through a chosen **role**, the persona whose lens, voice, and cadence shape the feedback (rubber-duck, pair-programmer, interviewer, or custom); all per-role behavior is data read from one Knowledge file ([`knowledge/roles.md`](./knowledge/roles.md)), so the skill holds zero per-role branching. **`observer:verify-checkpoint`** gates an implementer's work: when the implementer signals it has finished one requirement, the skill grades that increment on two checks — *does* the work pass its acceptance scenarios, and does it change *only* what the requirement covers (**does·only**) — and emits `CLEAR` (auto-clears) or `BLOCK` (surfaced to you). One coaches, one gates; both ride the same `/loop` and build no scheduler.
 
 Spec: [`.lsa/modules/observer/spec.md`](../.lsa/modules/observer/spec.md).
 
@@ -25,6 +25,23 @@ Install `core` first — `observer` cites `core/ground-rules` for fact-grounding
 |---|---|
 | `observer:observe` | Start a live observe-and-coach session. Confirms a role at kickoff — adopts the one you name, or infers a candidate from a **signal→role table** (failing tests + stub → interviewer; feature-in-progress with tests → pair-programmer; exploratory, no tests → rubber-duck) and proposes it for confirmation. Gates a custom role on a one-line lens, optionally scaffolds an interviewer exercise (problem + placeholder + a failing test suite; in any other role it declines and offers a switch), then rides the self-paced `/loop`: each cycle it reads your changes and emits feedback — or silence — shaped by the **active role's** lens/voice/cadence read from [`knowledge/roles.md`](./knowledge/roles.md). Switches role mid-session without restarting the loop, and stops on request / self-conclusion / the inactivity limit — **2 consecutive no-change `/loop` cycles** by default, overridable at kickoff — with a stated reason. |
 | `observer:verify-checkpoint` | Gate an implementer's increment. Its core unit is **grading one signalled increment**, run in either of two invocation modes with identical grading: **per-increment dispatch** (how [`lsa:delegate`](../lsa/skills/delegate/SKILL.md) drives it — dispatched once per increment) or a standalone **self-paced `/loop` rider** (each cycle it watches for a **checkpoint signal** the implementer emits when it pauses having finished one F-requirement; no signal → silent no-op). The note's file path is owned by the delegating context and shared by writer + reader (ephemeral, not committed). On a signal it scopes to the changes since the previous checkpoint and grades **does·only**: do the scenarios mapped to the target F pass (treating not-yet-built requirements as out of scope), and does every changed hunk trace to a requirement (untraced = over-delivery). It does **not** apply the whole-plan **all** completeness check — that stays with `lsa:reconcile`. Pass both → `CLEAR` (auto-clears without interrupting you); fail either → `BLOCK` naming the failing check, surfaced before the next task. Read-only to the graded artifacts. **Not `lsa:verify`** — that is the *before*-delegation grounding check; this is the *after*-increment gate, the per-increment analogue of `lsa:reconcile`. |
+
+## Example
+
+An observe session — the snippet is `[illustrative]` (constructed for readability, not copied from a live session):
+
+```text
+> /observer:observe
+
+[observer] Kickoff — no role named; context is a Python file with a failing test.
+Proposed role: pair-programmer (override: rubber-duck / interviewer / custom) > interviewer
+Language / topic? > Python / binary search
+Wrote a red exercise (problem + placeholder + 3 failing tests).
+
+cycle 1 — solution: off-by-one — `hi = mid` drops the upper half; safer is `hi = mid - 1`.
+cycle 2 — no edits for the timeout.
+Stopped: inactivity timeout.
+```
 
 ## Roles
 
