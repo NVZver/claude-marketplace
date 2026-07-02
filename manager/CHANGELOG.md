@@ -2,6 +2,15 @@
 
 All notable changes to the `manager` plugin (formerly `management`) are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.15.4] – 2026-07-02
+
+Trims the `manager:implement` frontmatter description under Anthropic's 1,024-char skill-description limit. Epic `deterministic-enforcement-gates/manager-description-trim`; pitch: [`.lsa/pitches/deterministic-enforcement-gates.md`](../.lsa/pitches/deterministic-enforcement-gates.md) (Problem 2 + Solution component 3).
+
+### Changed
+
+- **`manager/skills/implement/SKILL.md`** — frontmatter `description` trimmed 1,041 → 985 chars (limit 1,024; truncation risk on the triggering surface). Behavior-preserving: keeps third-person voice, the what-it-does + when-to-trigger phrases ('run agents in parallel', 'implement the backlog in parallel', 'parallel implementation', 'ship epics to PR in parallel'), the Input/Output statement, and the `${specs_root}/roadmap.md` read. Cuts the redundant 'build these epics in parallel' trigger, the 'fleet' term (a follow-up epic removes it repo-wide), and filler phrasing. Skill body unchanged.
+- **`manager/.claude-plugin/plugin.json`** — version 0.15.3 → 0.15.4.
+
 ## [0.15.3] – 2026-07-01
 
 Doc-hygiene fixes surfaced by the new deterministic doc-lint gate on its first full-repo run. Feature: [`.lsa/features/2026-07-01-deterministic-doc-lint-gate/requirements.md`](../.lsa/features/2026-07-01-deterministic-doc-lint-gate/requirements.md).
