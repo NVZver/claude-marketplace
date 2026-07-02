@@ -63,7 +63,7 @@ Every skill and agent is written as **Role · Goal · Inputs (each sourced `user
 - Every claim cited; every `[ASSUMPTION]` visible.
 
 **Reconcile — after the implementer returns (correctness). Three questions — does · only · all:**
-- **Does** it work — run each Gherkin scenario against the diff. Agents are stochastic — run **N times**; pass = ≥95% of runs.
+- **Does** it work — run each Gherkin scenario against the diff. Agents are stochastic — run **N times**, N = 3 by default (`.lsa.yaml` `reconcile.runs` raises it for high-stakes epics); pass = ≥95% of runs — at the default N = 3 that is all 3 runs.
 - **Only** what's needed — every changed hunk traces to a requirement (untraced = over-delivery).
 - **All** of the plan — every requirement, including non-scenario ones, maps to a change or a covering test (uncovered = under-delivery).
 - Output `conformance.md` (requirement → satisfying change/test). Any check fails or the code diverged → the spec absorbs reality (edit in place); never silently accept, never revert the code.

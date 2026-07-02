@@ -2,6 +2,22 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.24.0] — 2026-07-02
+
+Reconcile deterministic backstop — the `reconcile-deterministic-backstop` epic of the `eval-coverage-tracks-complexity` pitch (`.lsa/pitches/eval-coverage-tracks-complexity.md`, Decisions Forks 4+5): the merge gate stops riding on model judgment for run count, coverage, and gate execution.
+
+### Added
+
+- **N is defined: 3 runs by default.** `lsa/skills/reconcile/SKILL.md` (Step 1, Inputs, Constraints) and `lsa/CORE.md` §6 now state N = 3 wherever "run each Gherkin scenario N times" appeared, with the integer arithmetic spelled out — at N = 3, "≥95% of runs" means **all 3 runs pass** (a 2/3 scenario fails); at a larger N, pass = ≥95% of runs.
+- **`.lsa.yaml` escape hatch `reconcile.runs`** — raises N for high-stakes epics; **default 3 when the key (or the file) is absent**. Documented in the reconcile Inputs table, this repo's `.lsa.yaml` (key + comment), and the README schema block.
+- **Requirement ↔ hunk coverage table is the `conformance.md` contract.** Step 4 + Output now require one row per requirement ID (F1…Fn from `requirements.md`) × implementing diff hunks/files × proving scenario runs × verdict, plus an orphan-hunk list — the *only* check reads the table in reverse (every hunk appears in a requirement row; an orphan hunk is drift) and the *all* check reads it forward (a row with no hunk and no covering test fails). The judge cites the table; prose-only verdicts are out. Output carries a synthetic table example.
+
+### Changed
+
+- **The `gate:` step is unconditional.** Step 1's "Where `.lsa.yaml` defines a `gate:` block…" became: the `gate:` block is **required input**; when a repo defines none, reconcile reports an explicit `gate: NOT-RUNNABLE — no gate: block in .lsa.yaml` status in `conformance.md` and alongside the verdict, instead of silently skipping. No new machinery — only the skip is now impossible to hide.
+- **`lsa/README.md`** — the `reconcile` skill row, the "two checks" section, and the OpenSpec comparison now state N = 3 (default) and the coverage-table contract; the `.lsa.yaml` schema block gains `reconcile.runs`.
+- **`.lsa/standards/testing.md`** — gains the "Evals run on Sonnet" clause (cites `.lsa/standards/code.md` §Model policy) and states the N = 3 default in the adversarial-dogfooding section.
+
 ## [0.23.0] — 2026-07-02
 
 Wires checkpoint-mode paired verification into `lsa:delegate` — the writer half of the `paired-verify` pitch (the reader half, `observer:verify-checkpoint`, shipped in observer 0.2.0). Feature: [`.lsa/features/2026-07-02-paired-verify-lsa-delegate-wiring/requirements.md`](../.lsa/features/2026-07-02-paired-verify-lsa-delegate-wiring/requirements.md).

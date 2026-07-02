@@ -87,7 +87,7 @@ LSA deliberately does **less** than a full SDD toolkit — it owns the two groun
 
 *LSA's read of the landscape — see [Spec Kit](https://github.com/github/spec-kit), [OpenSpec](https://github.com/Fission-AI/OpenSpec), [Kiro](https://kiro.dev). You can run LSA's `verify` / `reconcile` on top of any of them.*
 
-OpenSpec is the closest neighbour: it ships an after-the-fact `/opsx:verify` and a living `specs/` set merged via deltas, so it is no more drift-prone than LSA. LSA's edge is narrower and specific — `reconcile` is a **blocking PASS gate** (`/opsx:verify` "won't block archive, but it surfaces issues"), its `only` check maps **every changed hunk to a requirement**, and its `does` check runs each Gherkin scenario **N times for ≥95%**. OpenSpec's verify is single-pass and non-blocking with no hunk→requirement trace.
+OpenSpec is the closest neighbour: it ships an after-the-fact `/opsx:verify` and a living `specs/` set merged via deltas, so it is no more drift-prone than LSA. LSA's edge is narrower and specific — `reconcile` is a **blocking PASS gate** (`/opsx:verify` "won't block archive, but it surfaces issues"), its `only` check maps **every changed hunk to a requirement**, and its `does` check runs each Gherkin scenario **N times for ≥95%** (N = 3 by default — all 3 runs must pass). OpenSpec's verify is single-pass and non-blocking with no hunk→requirement trace.
 
 ## Skills
 
@@ -97,7 +97,7 @@ OpenSpec is the closest neighbour: it ships an after-the-fact `/opsx:verify` and
 | **`specify`** | Draft the grounded spec — EARS requirements, user flows, and Gherkin `.feature` scenarios — show it in full, then write the files only on approval (show → approve → write). |
 | **`verify`** | **Before** delegating: ground the spec against the codebase, and run the `.lsa.yaml` `gate:` block — citing each command + exit code (a non-zero gate blocks `GROUNDED`). Output: `GROUNDED` / `NOT-GROUNDED` + `grounding.md`. |
 | **`delegate`** | Hand the grounded spec + `.feature` files to your implementer; collect the returned diff. Code-writing happens outside LSA. Optionally gates the build **per-increment** via `.lsa.yaml paired_verify` — `off` (default, unchanged), `checkpoint` (inject a pause+signal protocol and dispatch `observer:verify-checkpoint` after each plan task; CLEAR auto-proceeds, BLOCK surfaces), or `async` (not yet implemented — errors). |
-| **`reconcile`** | **After** the diff returns: check it **does · only · all**, write `conformance.md`, absorb drift. Runs as the **independent grader** — a context with no write access to the tests, `.feature` scenarios, or `.lsa.yaml` `gate:` it judges (the work cannot edit its own grader). Also surfaced by the SessionStart drift hook. |
+| **`reconcile`** | **After** the diff returns: check it **does · only · all** — each Gherkin scenario run **3 times** by default (`.lsa.yaml` `reconcile.runs`; pass at the default = all 3 runs) — and write `conformance.md` around a **requirement ↔ hunk coverage table** (one row per requirement ID × the hunks that implement it × the runs that prove it × verdict; orphan hunks are drift), then absorb drift. The `.lsa.yaml` `gate:` block is required input — a repo with no `gate:` block gets an explicit `NOT-RUNNABLE` gate status, never a silent skip. Runs as the **independent grader** — a context with no write access to the tests, `.feature` scenarios, or `.lsa.yaml` `gate:` it judges (the work cannot edit its own grader). Also surfaced by the SessionStart drift hook. |
 | **`init`** | Initialize LSA on a project (greenfield or brownfield). |
 | **`revise-constitution`** | Promote a finished feature's lessons into permanent constitution / standards rules. |
 
@@ -110,11 +110,11 @@ Everything else is table stakes; these two are why LSA exists.
 **`verify` — before you build (grounding).** Every module / function / type the spec names resolves to real code (cited `file:line`) or is explicitly `new`; every flow is buildable. An ungrounded spec is **blocked** — you never delegate a fantasy.
 
 **`reconcile` — after the diff returns (correctness).** Three questions:
-- **does** — every Gherkin scenario passes, run N times (agents are stochastic; ≥95%).
+- **does** — every Gherkin scenario passes, run **3 times** by default (`.lsa.yaml` `reconcile.runs`; agents are stochastic; ≥95% — at the default, all 3 runs must pass).
 - **only** — every changed hunk traces to a requirement (no scope creep).
 - **all** — every requirement maps to a change or a covering test (nothing skipped).
 
-Output is `conformance.md` — a requirement-by-requirement record of *what actually changed vs. the plan*. Drift → the spec absorbs reality; the code is never reverted.
+Output is `conformance.md` — a **requirement ↔ hunk coverage table**: one row per requirement ID mapping the diff hunks that implement it, the scenario runs that prove it, and a verdict — *what actually changed vs. the plan*, with orphan hunks (in the diff, in no row) surfaced as drift. Drift → the spec absorbs reality; the code is never reverted.
 
 ## Standards
 
@@ -140,11 +140,16 @@ modules:
 gate:                                # optional — quality-gate script contract
   test: <command>                    # check name → command; passes iff exit 0, cited as the gate artifact
 
+reconcile:
+  runs: 3                            # optional — scenario-run count N for reconcile's "does" check. default: 3 (pass at 3 = all 3 runs; at a larger N = ≥95% of runs)
+
 autonomy: manual                     # optional — manual | semi | auto. default: manual
 paired_verify: off                   # optional — off | checkpoint | async. default: off
 ```
 
 The optional `gate:` block is the **quality-gate script contract** — per-check name → command, consumed by both `verify` (before — grounding) and `reconcile` (after — correctness), and mapped to GitHub required-check slots in parallel runs. It is the configuration side of `core/ground-rules` Rule 7 *"done is a gate-proven, cited predicate"*; LSA hardcodes no tool. This repo's own `gate:` (a `mode: docs` example) runs three repo-internal structural probes — `docs-invariants` (`scripts/lint.sh`), `citations` (`scripts/check-citations.sh`), `links` (`scripts/check-links.sh`). Full contract: [`knowledge/quality-gate-contract.md`](./knowledge/quality-gate-contract.md).
+
+The optional `reconcile.runs` knob sets N for `reconcile`'s *does* check — default **3** when absent (pass = all 3 runs succeed); raise it for high-stakes epics, where pass = ≥95% of runs. Note that `reconcile` treats the `gate:` block itself as required input: when a repo defines none, it reports an explicit `NOT-RUNNABLE` gate status instead of silently skipping the gate step.
 
 The optional `autonomy:` knob (`manual | semi | auto`, default `manual`) sets how much human-in-the-loop a parallel `manager:implement` run uses at the merge boundary — `manual` = human merges, `semi` = auto-merge on green, `auto` = + deploy + healthcheck. The gate is identical at every level. Semantics: `manager/knowledge/autonomy-policy.md`.
 
