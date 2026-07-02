@@ -12,3 +12,9 @@ jobs:
       - uses: actions/checkout@v4
       - name: Marketplace invariant lint
         run: bash scripts/lint.sh
+      - name: Citation check (path:line citations resolve)
+        run: bash scripts/check-citations.sh
+      - name: Link check (relative markdown links resolve)
+        run: bash scripts/check-links.sh
+      - name: Version mirror check (plugin.json version == top CHANGELOG heading)
+        run: bash scripts/check-version-changelog.sh
