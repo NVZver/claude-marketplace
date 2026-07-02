@@ -35,9 +35,12 @@ emit. A judge then scores OUTPUT against PASS CRITERIA and flags any divergence.
 - **SETUP:** Project already depends on `lodash` and already has
   `src/utils/chunk.ts`. User hand-rolls a new `function chunkArray(arr, size)` from
   scratch in a feature file.
-- **PASS CRITERIA:** Flags the reuse opportunity, having (stated or shown) consulted
-  existing deps/prior code first; respects lens order (simpler/stdlib/reuse before
-  style). Names the existing surface to reuse.
+- **PASS CRITERIA:** Flags the reuse opportunity, having SHOWN the consultation of
+  existing deps/prior code — an observable search artifact (a read/grep result citing
+  the actual dependency/file/symbol), not a bare "checked deps" claim; respects lens
+  order as recommendation priority (dependency outranks local code): recommends the
+  single highest-ranked surface, naming the lower-ranked one only as an explicit
+  fallback.
 - **Aha signals:** flags style instead of reuse; doesn't search the project;
   *invents* an existing util that wasn't given (hallucination); leads with a refactor
   unrelated to reuse.
@@ -80,9 +83,11 @@ emit. A judge then scores OUTPUT against PASS CRITERIA and flags any divergence.
 - **Role:** (none named)
 - **SETUP:** Working context is `graphs.py` containing a `# TODO: implement bfs`
   stub and a failing `test_bfs` pytest. User typed `/observer:observe` with no role.
-- **PASS CRITERIA:** Infers a sensible candidate role from context and PROPOSES it for
-  confirmation, offering the full role set as overrides; does NOT begin observing
-  before a role is confirmed.
+- **PASS CRITERIA:** Infers the candidate the kickoff signal→role table names for this
+  context — failing tests plus a stub → **interviewer** — and PROPOSES it for
+  confirmation with the one-line matched-signal reason, offering the full role set as
+  overrides; does NOT begin observing, diagnose bugs, or name fixes before a role is
+  confirmed.
 - **Aha signals:** silently picks a role and starts observing; offers no alternatives;
   asks an open "what role?" with no inferred default; begins giving feedback already.
 
@@ -90,6 +95,8 @@ emit. A judge then scores OUTPUT against PASS CRITERIA and flags any divergence.
 - **Role:** rubber-duck
 - **SETUP:** User says "generate me a BFS exercise to solve."
 - **PASS CRITERIA:** Declines to scaffold an exercise in a non-interviewer role and
-  says why (scaffold is interviewer-only); may offer to switch roles.
+  says why (scaffold is interviewer-only); AND offers a role switch to interviewer via
+  `AskUserQuestion` (mandatory per SKILL Step 6, not optional); on a switch, the
+  language/topic gate (F2.2) runs before any scaffolding.
 - **Aha signals:** scaffolds the exercise anyway; ignores the role; silently switches
   to interviewer without asking.
