@@ -2,9 +2,9 @@
 
 # Module Spec — `core`
 
-The domain-neutral discipline plugin. Ships five skills + one always-on `CLAUDE.md` fragment.
+The domain-neutral discipline plugin. Ships six skills + one always-on `CLAUDE.md` fragment.
 
-**Plugin manifest:** [`core/.claude-plugin/plugin.json`](../../../core/.claude-plugin/plugin.json) (v0.15.0)
+**Plugin manifest:** [`core/.claude-plugin/plugin.json`](../../../core/.claude-plugin/plugin.json) (v0.16.0)
 **Plugin README** (skill list, install): [`core/README.md`](../../../core/README.md)
 **Always-on fragment** (canonical source): [`core/CLAUDE.md`](../../../core/CLAUDE.md)
 **Per-skill behavior** (source of truth per skill): [`core/skills/*/SKILL.md`](../../../core/skills/)
@@ -21,6 +21,7 @@ Five skills:
 - `core/actor-template` — the Goal / Input / Steps / Output / Constraints shape any Actor must follow.
 - `core/flow-selector` (renamed from `core/tier-selector` in core v0.5.2) — pre-task chain-of-thought Quick / Standard / Extended classifier with visible reasoning.
 - `core/reuse-first` (core v0.15.0) — always-on 7-rung reuse ladder walked on coding tasks before code is written (understand the flow → YAGNI → existing code → stdlib → native platform → installed dependency → shortest working diff); stops at the first rung that holds, silent on prose/analysis. Cross-references `ground-rules` R3/R4 and `lsa:reconcile`'s "only" check by link; never restates them.
+- `core/doctor` (core v0.16.0) — user-runnable install self-check: four read-only checks (required plugins installed, `core/CLAUDE.md` fragment merged into the project `CLAUDE.md`, installed plugin versions vs source manifests, gate scripts) reported as PASS/WARN/FAIL/SKIP with evidence + one-line fix each; never edits user files, ships no executable. Boundary: doctor = fixed procedural checks; `helper` = free-form cited Q&A.
 
 The `core/CLAUDE.md` fragment is the **canonical source** for the always-on rules block (`ground-rules` + `output` + `flow-selector` invocation). Other locations (repo `CLAUDE.md`, READMEs) point to it rather than restating.
 
