@@ -2,6 +2,23 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.23.0] — 2026-07-02
+
+Wires checkpoint-mode paired verification into `lsa:delegate` — the writer half of the `paired-verify` pitch (the reader half, `observer:verify-checkpoint`, shipped in observer 0.2.0). Feature: [`.lsa/features/2026-07-02-paired-verify-lsa-delegate-wiring/requirements.md`](../.lsa/features/2026-07-02-paired-verify-lsa-delegate-wiring/requirements.md).
+
+### Added
+
+- **`lsa/skills/delegate/SKILL.md` reads `.lsa.yaml paired_verify`** (`off` \| `checkpoint` \| `async`, default `off`) and branches:
+  - **`off` / absent** — byte-for-byte today's delegation: package → dispatch → await, no pause instruction, no verifier (backward compatible).
+  - **`async`** — errors `not yet implemented` (concurrent-interrupt model reserved for a later pitch) and does **not** fall back — no silent degradation.
+  - **`checkpoint`** — when the implementer is agent-dispatched, injects a pause+signal protocol so the implementer, after each plan task F-K, writes a checkpoint-signal note carrying exactly `target`/`since`/`spec`/`status` (matching the reader contract at [`observer/skills/verify-checkpoint/SKILL.md:22-37`](../observer/skills/verify-checkpoint/SKILL.md)) and stops; delegate dispatches `observer:verify-checkpoint` per increment and gates on the verdict (CLEAR auto-proceeds with no human interrupt; BLOCK surfaces to the human before the next task). The verifier stays read-only and independent — its verdict is never folded into the implementer's authoring context ([`lsa/skills/reconcile/SKILL.md:44-45`](./skills/reconcile/SKILL.md)). For a non-agent/human/Cursor implementer the pause-protocol is stated as **advisory** (no silent claim of enforcement). The final whole-diff `lsa:reconcile` still runs after delegation — checkpoint mode does not replace it.
+- **`.lsa.yaml` gains an optional `paired_verify` key** — documented in [`ARCHITECTURE.md`](./ARCHITECTURE.md) §3 (schema block + per-key bullet) and the [`knowledge/conventions.md`](./knowledge/conventions.md) `.lsa.yaml` defaults (default `off`).
+- **Checkpoint-note path is delegate-owned and shared** (harmonized with observer 0.2.1). `delegate` Step 4/5 now states delegate OWNS the checkpoint-signal note path and passes the SAME **ephemeral** (scratchpad / gitignored, not committed) path to both the implementer (writer) and `observer:verify-checkpoint` (reader). The four contract fields (`target`/`since`/`spec`/`status`) are unchanged — the path locates the note, the fields are its contents. Step 5 also aligns wording to dispatch `verify-checkpoint` in its **per-increment invocation mode** (its first-class entry point, distinct from its standalone `/loop` mode).
+
+### Changed
+
+- **`lsa/README.md`** — the `delegate` skill row and Configuration section now document the `paired_verify` modes (`off` / `checkpoint` / `async`).
+
 ## [0.22.0] — 2026-07-01
 
 Wires the deterministic doc-lint gate into the grounding check. Feature: [`.lsa/features/2026-07-01-deterministic-doc-lint-gate/requirements.md`](../.lsa/features/2026-07-01-deterministic-doc-lint-gate/requirements.md). (Atop 0.21.0 from the orchestrator-inline change; 0.21.0 → 0.22.0.)

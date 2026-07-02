@@ -1,7 +1,7 @@
 {
   "name": "lsa",
   "description": "Living Spec Architecture — a technology-agnostic spec layer that authors a grounded spec and verifies it before and after an external implementer builds it. LSA is NOT the implementer: any coding agent (Claude Code, Cursor, Copilot) or human writes the code. Skills: discover (extract intent + gather codebase facts; also the universal input-resolver), specify (EARS requirements + user flows + Gherkin .feature scenarios), verify (ground the spec against the codebase BEFORE delegating), delegate (hand the grounded spec to any implementer), reconcile (run the Gherkin scenarios against the returned diff N times; absorb drift), init, revise-constitution. Agent: orchestrator (entry point — drives discover → specify → verify → delegate → reconcile; reads each sub-agent's Inputs, resolves them via discover, delegates, collects output). Standards: EARS + Gherkin (Specification by Example) — interoperable with Spec Kit / Kiro / Cursor. Every instruction follows one pattern (Role/Goal/Inputs/Steps/Output) — see lsa/CORE.md. Path-configurable via .lsa.yaml.",
-  "version": "0.22.0",
+  "version": "0.23.0",
   "author": {
     "name": "Nikita Zverev"
   },
