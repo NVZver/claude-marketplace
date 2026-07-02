@@ -201,7 +201,7 @@ while IFS= read -r f; do
     }
     infm && /^description:/ {
       v=$0; sub(/^description:[[:space:]]*/, "", v)
-      if (v ~ /^[|>][+-]?[[:space:]]*$/) { indesc=1; dlen=0; next }
+      if (v ~ /^[|>][0-9+-]{0,2}[[:space:]]*$/) { indesc=1; dlen=0; next }
       if (v ~ /^".*"$/ || v ~ /^'\''.*'\''$/) v=substr(v, 2, length(v)-2)
       dlen=length(v); next
     }
@@ -249,7 +249,7 @@ while IFS= read -r f; do
   hit="$(awk '
     NR==1 && /^---[[:space:]]*$/ { infm=1; next }
     infm && /^---[[:space:]]*$/  { exit }
-    infm && /^model:[[:space:]]*["'\'']?(opus|haiku|fable)/ { print NR ": " $0; exit }
+    infm && /^model:/ { v=tolower($0); if (v ~ /(opus|haiku|fable)/) { print NR ": " $0; exit } }
   ' "${f}" 2>/dev/null)"
   if [[ -n "${hit}" ]]; then
     c8_viol="${c8_viol}${f}:${hit}"$'\n'
@@ -317,7 +317,7 @@ else
     if [[ ! -f "${rel}" ]]; then
       c10_viol="${c10_viol}${KIDX}: dangling link ../${rel}"$'\n'
     fi
-  done < <(grep -oE '\]\(\.\./[A-Za-z0-9_-]+/knowledge/[^)#]+' "${KIDX}" 2>/dev/null \
+  done < <(grep -oE '\]\(\.\./[A-Za-z0-9_-]+/knowledge/[^)#]*' "${KIDX}" 2>/dev/null \
     | sed 's|^](\.\./||' | sort -u || true)
 fi
 if [[ -z "${c10_viol}" ]]; then
