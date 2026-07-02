@@ -150,6 +150,19 @@ for plugin in "${plugins[@]}"; do
   plugin_files="$(printf '%s\n' "${staged}" | grep -E "^${plugin}/" || true)"
   [[ -n "${plugin_files}" ]] || continue   # plugin untouched → skip
 
+  # Test artifacts do not trigger the version discipline: `<plugin>/tests/**`
+  # and `<plugin>/VERIFICATION.md` sit outside the behavior surface (lsa's
+  # `artifact_paths` in .lsa.yaml exclude `lsa/tests/**`; helper/VERIFICATION.md
+  # and core/tests/ landed bump-free as precedent). A commit staging ONLY such
+  # files skips the bump/CHANGELOG checks. The trace-directive check below is
+  # unaffected — it walks every staged skill/agent file regardless.
+  # Authorized 2026-07-02 (maintainer decision after the drill-suite epics were
+  # false-positive blocked); see SECURITY.md §commit-discipline hook.
+  behavior_files="$(printf '%s\n' "${plugin_files}" | grep -Ev "^${plugin}/(tests/|VERIFICATION\.md$)" || true)"
+  if [[ -z "${behavior_files}" ]]; then
+    continue
+  fi
+
   msgs=()
 
   version_bumped "${plugin}" \

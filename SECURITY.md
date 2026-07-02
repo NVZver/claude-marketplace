@@ -286,8 +286,12 @@ What it does and does not do — read it yourself before trusting it:
   call is not a `git commit`, when the payload is unparseable, when the repo root
   lacks the marketplace fingerprint `.claude-plugin/marketplace.json` (so it **never
   fires in a consumer repo**), when a merge is in progress (`$GIT_DIR/MERGE_HEAD`
-  exists — the bump + CHANGELOG discipline already held on the merged branch), or
-  when nothing is staged.
+  exists — the bump + CHANGELOG discipline already held on the merged branch),
+  when nothing is staged, or when a plugin's staged files are all **test
+  artifacts** (`<plugin>/tests/**`, `<plugin>/VERIFICATION.md`) — those sit
+  outside the behavior surface (`.lsa.yaml` `artifact_paths` exclude them;
+  maintainer-authorized exemption, 2026-07-02). The trace-directive check still
+  covers every staged skill/agent file.
 - **It fails open — by design, and that is a real tradeoff.** An unparseable hook
   payload, a broken `git` invocation, or any unexpected script error silently
   no-ops (`exit 0`, via the `trap 'exit 0' ERR` fail-open trap): the commit
