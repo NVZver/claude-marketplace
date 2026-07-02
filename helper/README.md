@@ -9,7 +9,7 @@ Inherits [`core/output`](../core/skills/output/SKILL.md) discipline: ≤1.5 scre
 
 Spec (absorbed into the module spec): [`.lsa/modules/helper/spec.md`](../.lsa/modules/helper/spec.md). Rationale: [`.lsa/VISION.md`](../.lsa/VISION.md).
 
-## Status — v0.6.0
+## Status — v0.6.1
 
 Built from the original 4-step helper-agent spec (since absorbed into [`.lsa/modules/helper/spec.md`](../.lsa/modules/helper/spec.md)). All three invocation paths are wired: (c) explicit `/help`, (a) two consecutive `[c] reject` selections at an `lsa:discover` User Verification, (b) free-form `?` / `what is X?` mid-flow. Per-signal-type cooldown prevents nag. Later releases adopted the `core` gate-delivery contract (agent proposes, dispatcher gates). The per-release history is the table below + [`CHANGELOG.md`](./CHANGELOG.md).
 
@@ -29,6 +29,7 @@ Built from the original 4-step helper-agent spec (since absorbed into [`.lsa/mod
 | v0.5.3 | Step-numbering fix (quality audit, iteration 4) — [`./agents/helper.md`](./agents/helper.md)'s fractional `1.5` step renumbered to a clean 1–6; in-file back-references updated. No behavior change. | ✓ |
 | v0.5.4 | Cross-reference fix from the `observer` plugin addition — [`./knowledge/onboarding-fast-path.md`](./knowledge/onboarding-fast-path.md) row 3 repointed to the renamed `#the-six-plugins` anchor; "five-plugin table" → "six-plugin table". | ✓ |
 | v0.6.0 | **Catalog-surface sweep** (per the `catalog-surface-drift` pitch, `.lsa/pitches/catalog-surface-drift.md`) — `plugin.json` declares `"dependencies": ["core", "lsa"]` (the manifest field exists and is functional; see "Depends on" below); onboarding fast-path catalog grows **8 → 9 rows** (adds *what is `observer`*, covering all six shipped plugins); this README's status header + release table brought current. | ✓ |
+| v0.6.1 | One-action-per-step restructure (epic `sonnet-robustness-consistency-sweep/helper-step-splits`) — [`./agents/helper.md`](./agents/helper.md) Steps 1 and 4 split into sub-steps 1a–1e / 4a–4e, each with its own `Observable result:` line, matching the `reuse-first` / `verify-checkpoint` house style. Top-level step numbers 1–6 preserved; no behavior change. | ✓ |
 
 ## Install on Claude Code
 
