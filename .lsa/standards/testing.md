@@ -37,7 +37,7 @@ holds only because the model is generous is not a guard. Verify guards by
 **independent** judge (a separate agent/session, never the author) check both (a) did
 the output honor the guard, and (b) is the guard written as an *enforceable* line, not
 riding on model good-will. Iterate until the guards are forced. This is the prompt
-analogue of `reconcile`'s *does* check (run N times; one pass is not proof — see
+analogue of `reconcile`'s *does* check (run N times, default 3; one pass is not proof — see
 [`lsa/CORE.md`](../../lsa/CORE.md) §6). Source: observer feature eval,
 [`observer/tests/eval-findings-2026-06-27.md`](../../observer/tests/eval-findings-2026-06-27.md)
 — 8/8 probes "passed" on model good-will until independent judges forced 5 guards and
@@ -46,3 +46,11 @@ caught a silence-leak + a self-introduced regression a describe-only prompt let 
 Scope note: behavioral, not statistical — this does not reintroduce the deferred
 Wilson/Elo rigor (§*"Statistical eval explicitly deferred"*); it is a pass/fail
 adversarial probe, run when a prompt's failure modes matter.
+
+## Evals run on Sonnet
+
+Behavioral evals — the adversarial probes above and their independent judges — run on
+**Sonnet**, the Pro-tier model every shipped prompt must hold on per
+[`.lsa/standards/code.md`](./code.md) §*"Model policy — Pro-safe by default,
+Opus-opportunistic"*: a guard verified only on a stronger model is untested on the model
+the marketplace guarantees.

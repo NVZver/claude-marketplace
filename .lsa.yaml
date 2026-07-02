@@ -17,6 +17,12 @@ gate:
   citations: bash scripts/check-citations.sh
   links: bash scripts/check-links.sh
 
+# Reconcile scenario-run count (lsa/skills/reconcile/SKILL.md Step 1).
+# Default when the key is absent: 3 — pass = all 3 runs succeed (≥95% of 3 ⇒ 3/3).
+# Escape hatch: raise for high-stakes epics; at a larger N, pass = ≥95% of runs.
+reconcile:
+  runs: 3
+
 modules:
   core:
     spec: .lsa/modules/core/spec.md
