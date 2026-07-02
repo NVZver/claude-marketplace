@@ -2,6 +2,19 @@
 
 All notable changes to the `helper` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.6.1] – 2026-07-02
+
+One-action-per-step restructure of the agent body's two bundled steps — epic `sonnet-robustness-consistency-sweep/helper-step-splits`, workstream 2 of the pitch ([`.lsa/pitches/sonnet-robustness-consistency-sweep.md`](../.lsa/pitches/sonnet-robustness-consistency-sweep.md) § *Solution sketch*). Behavior-preserving: every rule, threshold, and decision-sequence position is unchanged; only the step granularity moves to the house style (one action per step + `Observable result:` line, per `core/skills/reuse-first/SKILL.md` and `observer/skills/verify-checkpoint/SKILL.md`).
+
+### Changed
+
+- **`agents/helper.md` Step 1** — the single bundled paragraph (recognise signal + cooldown check + exit-or-proceed + goal derivation + bare-`/help` case) split into sub-steps **1a–1e**, each with its own `Observable result:` line: 1a recognise the invoking signal-type, 1b check cooldown (signal (c) still always proceeds and still resets (a)/(b) cooldowns), 1c exit-or-proceed (silent exit on cooldown, unchanged), 1d derive the goal sentence, 1e bare-`/help` inline prompt (no picker — the v0.3.0 removal stands). Top-level step numbers 1–6 are preserved so every existing cross-reference (`VERIFICATION.md` probes, `commands/help.md`, the Output section) stays valid.
+- **`agents/helper.md` Step 4** — the bundled compose paragraph split into sub-steps **4a–4e**, each with its own `Observable result:` line: 4a compose the cited answer opening with the goal restatement (half-sentence collapse rule intact), 4b gloss jargon on first turn-use, 4c apply the ≤1.5-screen budget, 4d the cannot-verify honesty path (exact `"I cannot verify this."` wording + named sources + skip to Step 6, unchanged), 4e return the signal-(a) opening fork as a pending gate for the dispatcher (gate-delivery contract unchanged — the agent still runs no pickers).
+
+### Notes
+
+- **Patch bump rationale.** Pure restructure — no new behavior, no removed constraints, same decision sequence. `VERIFICATION.md` stays scoped to 0.6.x untouched; all probes 1–10 and A1–A3 remain valid against the split text.
+
 ## [0.6.0] – 2026-07-02
 
 Catalog-surface sweep — part of the `catalog-surface-drift` pitch (`.lsa/pitches/catalog-surface-drift.md`): refresh every discovery surface to one current story.
