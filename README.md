@@ -1,5 +1,7 @@
 # claude-marketplace
 
+[![lint](https://github.com/NVZver/claude-marketplace/actions/workflows/lint.yml/badge.svg)](https://github.com/NVZver/claude-marketplace/actions/workflows/lint.yml)
+
 > **Ownership over automation.** A personal, agentic engineering system whose single job is **trustworthy output** — every fact traces to a source, every line of code traces to a spec — and whose **ceremony scales to the weight of the task**.
 
 **Proven · Owned · No Fluff · Spec First.**
@@ -8,31 +10,45 @@ A Claude Code marketplace shipping six composable plugins for spec-first, fact-g
 
 ## The six plugins
 
-| Plugin | What it gives you |
-|---|---|
-| [`core`](./core/) | Always-on discipline: eight content rules, seven output rules, flow classification (Quick / Standard / Extended), and the Goal/Input/Steps/Output/Constraints shape every skill follows. |
-| [`lsa`](./lsa/) | **L**iving **S**pec **A**rchitecture — technology-agnostic spec layer: authors a grounded spec (EARS + Gherkin), verifies it against the codebase *before* you build and against the diff *after*, then delegates code-writing to any implementer. Not the coder; hand-edits are *absorbed* into the spec instead of forbidden. |
-| [`helper`](./helper/) | Friendly fact-grounded assistant: a `/help` slash command and an auto-engaging subagent that answers `what is X?` mid-flow with verifiable file citations (line range, heading anchor, or URL). |
-| [`manager`](./manager/) | Pre-build shaping: turns a vague problem into a structured pitch (problem, appetite, solution sketch, rabbit holes, no-gos) before the build cycle begins. |
-| [`prompt-engineer`](./prompt-engineer/) | Plugin-quality discipline: scans your own actors and knowledge files for ground-rule, KISS/DRY, AI over-engineering, and context-budget violations. |
-| [`observer`](./observer/) | Live observe-and-coach + increment gate: `observe` rides Claude Code's self-paced `/loop` and coaches your file changes through a chosen role (rubber-duck, pair-programmer, interviewer, or custom); `verify-checkpoint` gates delegation increments — grades one finished requirement **does·only** and emits `CLEAR` or `BLOCK`. |
+| Plugin | Version | What it gives you |
+|---|---|---|
+| [`core`](./core/) | 0.16.0 | Always-on discipline: eight content rules, seven output rules, flow classification (Quick / Standard / Extended), the `/core:doctor` install self-check, and the Goal/Input/Steps/Output/Constraints shape every skill follows. |
+| [`lsa`](./lsa/) | 0.23.0 | **L**iving **S**pec **A**rchitecture — technology-agnostic spec layer: authors a grounded spec (EARS + Gherkin), verifies it against the codebase *before* you build and against the diff *after*, then delegates code-writing to any implementer. Not the coder; hand-edits are *absorbed* into the spec instead of forbidden. |
+| [`helper`](./helper/) | 0.6.0 | Friendly fact-grounded assistant: a `/help` slash command and an auto-engaging subagent that answers `what is X?` mid-flow with verifiable file citations (line range, heading anchor, or URL). |
+| [`manager`](./manager/) | 0.15.4 | Pre-build shaping: turns a vague problem into a structured pitch (problem, appetite, solution sketch, rabbit holes, no-gos) before the build cycle begins. |
+| [`prompt-engineer`](./prompt-engineer/) | 0.7.5 | Plugin-quality discipline: scans your own actors and knowledge files for ground-rule, KISS/DRY, AI over-engineering, and context-budget violations. |
+| [`observer`](./observer/) | 0.2.1 | Live observe-and-coach + increment gate: `observe` rides Claude Code's self-paced `/loop` and coaches your file changes through a chosen role (rubber-duck, pair-programmer, interviewer, or custom); `verify-checkpoint` gates delegation increments — grades one finished requirement **does·only** and emits `CLEAR` or `BLOCK`. |
 
 ## Install
 
-```
-/plugin marketplace add NVZver/claude-marketplace
-/plugin install core@NVZver
-/plugin install lsa@NVZver
-/plugin install helper@NVZver           # optional — /help Q&A assistant
-/plugin install manager@NVZver          # optional — pitch shaping
-/plugin install prompt-engineer@NVZver  # optional — prompt-quality audits
-/plugin install observer@NVZver         # optional — live observe-and-coach
-/reload-plugins
-```
+1. Add the marketplace and install the plugins — `core` first, because `lsa`, `manager`, and `observer` declare it as a `plugin.json` dependency, and the other two plugins (`helper`, `prompt-engineer`) align with its conventions:
 
-Install `core` first — `lsa`, `manager`, and `observer` declare it as a `plugin.json` dependency, and the other two plugins (`helper`, `prompt-engineer`) align with its conventions. Then merge the [`core/CLAUDE.md`](./core/CLAUDE.md) fragment into your project's `CLAUDE.md` to wire up the always-on rules.
+   ```
+   /plugin marketplace add NVZver/claude-marketplace
+   /plugin install core@NVZver
+   /plugin install lsa@NVZver
+   /plugin install helper@NVZver           # optional — /help Q&A assistant
+   /plugin install manager@NVZver          # optional — pitch shaping
+   /plugin install prompt-engineer@NVZver  # optional — prompt-quality audits
+   /plugin install observer@NVZver         # optional — live observe-and-coach
+   /reload-plugins
+   ```
+
+2. Merge the [`core/CLAUDE.md`](./core/CLAUDE.md) fragment into your project's `CLAUDE.md`. This is the step that activates the always-on rules — skip it and the discipline layer silently never engages.
+
+3. Run [`/core:doctor`](./core/skills/doctor/SKILL.md) to verify the wiring: four read-only checks (required plugins installed, fragment merged, plugin versions consistent, gate scripts) reported as a per-check PASS / WARN / FAIL / SKIP table with evidence and a one-line fix per failure.
 
 **First command.** Run `/lsa:init` in any project to scaffold the spec tree (greenfield or brownfield). Or run `/manager:shape "<vague idea>"` to shape a pitch before any code lands.
+
+## Troubleshooting
+
+Symptom → fix; when in doubt, [`/core:doctor`](./core/skills/doctor/SKILL.md) diagnoses all four wiring checks with evidence.
+
+- **Install failed** — re-run install step 1; `/plugin` lists what actually landed, then `/reload-plugins`.
+- **A skill won't trigger** — run `/reload-plugins`, then invoke it explicitly (e.g. `/core:doctor`, `/lsa:discover`); if it's still missing, step 1 didn't complete.
+- **Always-on rules not applying** — the `core/CLAUDE.md` fragment isn't merged: do install step 2, then `/core:doctor` reports which rule anchors are still missing.
+- **`NOT-GROUNDED` from `lsa:verify`** — not a breakage: fix the flagged spec references before building, per [`lsa/README.md` § Quick start step 4](./lsa/README.md#quick-start).
+- **Lint red** — run the failing gate locally: `scripts/lint.sh`, `scripts/check-citations.sh`, `scripts/check-links.sh`, `scripts/check-version-changelog.sh` — each prints the offending line.
 
 ## User flows
 
@@ -182,7 +198,12 @@ Personal-use first; open-sourced for visibility. Claude Code is the v1 substrate
 
 ## Plans & models
 
-**Runs 100% on Claude Pro.** Every plugin is model-agnostic: no agent or skill hardcodes a model, so each one inherits your session's model ([`.lsa/standards/code.md`](./.lsa/standards/code.md) §"Model policy"). On **Pro** that's Sonnet 5 — the full marketplace works, nothing is gated behind Opus. On **Max** the same agents inherit Opus 4.8 and the reasoning-heavy stages (spec reconciliation, decomposition) get sharper for free. "Works natively on Sonnet, excels on Opus" is the default, not a setting.
+**Runs 100% on Claude Pro.** Every plugin is model-agnostic: no agent or skill hardcodes a model, so each one inherits your session's model ([`.lsa/standards/code.md`](./.lsa/standards/code.md) §"Model policy"). "Works natively on Sonnet, excels on Opus" is the default, not a setting:
+
+| Plan | Session model | What runs |
+|---|---|---|
+| **Pro** | Sonnet 5 | The full marketplace — every plugin, every loop; nothing is gated behind Opus. |
+| **Max** | Opus 4.8 | The same artifacts — the reasoning-heavy stages (spec reconciliation, decomposition) get sharper for free. |
 
 One caveat for Pro users watching usage: the deeper flows spawn sub-agents (each a fresh context), so a full Extended LSA cycle or a parallel `manager:implement` fleet run is token-heavy. For everyday work prefer the **Quick / Standard** flows (`core/flow-selector` picks them by task weight); the multi-agent **fleet** (`manager:implement`) is Max-oriented. Everything remains functional on Pro — this is about pacing usage, not access.
 
@@ -202,6 +223,7 @@ Full threat model, reporting channel, and hook transparency: [`SECURITY.md`](./S
 - [`knowledge/index.md`](./knowledge/index.md) — flat topic-to-path index across every knowledge file in every plugin.
 - [`CONTRIBUTING.md`](./CONTRIBUTING.md) — how to build, contribute, verify.
 - Per-plugin docs — [`core/README.md`](./core/README.md), [`lsa/README.md`](./lsa/README.md), [`helper/README.md`](./helper/README.md), [`manager/README.md`](./manager/README.md), [`prompt-engineer/README.md`](./prompt-engineer/README.md), [`observer/README.md`](./observer/README.md).
+- Changelogs — [`core`](./core/CHANGELOG.md), [`lsa`](./lsa/CHANGELOG.md), [`helper`](./helper/CHANGELOG.md), [`manager`](./manager/CHANGELOG.md), [`prompt-engineer`](./prompt-engineer/CHANGELOG.md), [`observer`](./observer/CHANGELOG.md).
 - [`lsa/ARCHITECTURE.md`](./lsa/ARCHITECTURE.md) — directory layout, `.lsa.yaml` schema, branch management.
 
 Licensed under [`LICENSE`](./LICENSE).
