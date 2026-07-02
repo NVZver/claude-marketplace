@@ -2,15 +2,15 @@
 
 # Knowledge index — marketplace
 
-Flat table of every knowledge file across the five marketplace plugins. Agents consult this index by **structure** (topic → path) instead of grepping. Heading-anchor citations elsewhere (notably [`helper/knowledge/onboarding-fast-path.md`](../helper/knowledge/onboarding-fast-path.md)) assume the rows here are current; a stale row breaks navigation silently.
+Flat table of every knowledge file across the six marketplace plugins. Agents consult this index by **structure** (topic → path) instead of grepping. Heading-anchor citations elsewhere (notably [`helper/knowledge/onboarding-fast-path.md`](../helper/knowledge/onboarding-fast-path.md)) assume the rows here are current; a stale row breaks navigation silently.
 
 Maintained manually. When a knowledge file is added, moved, or removed, update this index in the same commit. Per [`.lsa/pitches/readme-and-knowledge-base.md`](../.lsa/pitches/readme-and-knowledge-base.md) "Solution sketch".
 
-## Catalog — 21 knowledge files
+## Catalog — 22 knowledge files
 
 | Topic | Plugin | Path | One-sentence description |
 |---|---|---|---|
-| Fast-path source of truth | `core` | [`core/knowledge/fast-path-source-of-truth.md`](../core/knowledge/fast-path-source-of-truth.md) | The shared single-source-of-truth navigation fast-path contract — direct read + cited quote, exact-phrase detection, fall-through-on-failure — cited by `lsa:next`, `manager:next`, and Helper's onboarding catalog. |
+| Fast-path source of truth | `core` | [`core/knowledge/fast-path-source-of-truth.md`](../core/knowledge/fast-path-source-of-truth.md) | The shared single-source-of-truth navigation fast-path contract — direct read + cited quote, exact-phrase detection, fall-through-on-failure — cited by `manager:next` and Helper's onboarding catalog. |
 | Output vocabulary | `core` | [`core/knowledge/output-vocabulary.md`](../core/knowledge/output-vocabulary.md) | The canonical marketplace verdict labels (PROPOSED, DRIFT, APPLIED, PASS, FAIL, etc.) cited by `core/output`. |
 | Friction signals | `helper` | [`helper/knowledge/friction-signals.md`](../helper/knowledge/friction-signals.md) | When Helper auto-engages and when it stays out of the way; canonical spec for friction patterns the main agent matches against. |
 | Knowledge scope | `helper` | [`helper/knowledge/knowledge-scope.md`](../helper/knowledge/knowledge-scope.md) | What Helper is allowed to read when answering, and in what scope order (in-repo → installed plugins → external via `context7`). |
@@ -28,11 +28,12 @@ Maintained manually. When a knowledge file is added, moved, or removed, update t
 | Role adaptation | `manager` | [`manager/knowledge/role-adaptation.md`](../manager/knowledge/role-adaptation.md) | The self-selected domain-expert role the `product-manager` agent adopts per invocation, with visible chain-of-thought. |
 | Sequencing heuristics | `manager` | [`manager/knowledge/sequencing-heuristics.md`](../manager/knowledge/sequencing-heuristics.md) | Three factors for ordering backlog items — dependency, then risk, then value — grounded in roadmap and codebase state. |
 | Serialized merge | `manager` | [`manager/knowledge/serialized-merge.md`](../manager/knowledge/serialized-merge.md) | The serialized-merge convergence contract + shared-ledger lock — who writes `CHANGELOG.md` / version / roadmap during a parallel run, and how N per-epic PRs land without turning the branch red. |
+| Observe roles | `observer` | [`observer/knowledge/roles.md`](../observer/knowledge/roles.md) | Per-role lens / voice / cadence bundles (rubber-duck, pair-programmer, interviewer, custom) that the `observer:observe` Actor reads as data — role behavior lives here, not in the skill. |
 | Actor ground rules | `prompt-engineer` | [`prompt-engineer/knowledge/actor-ground-rules.md`](../prompt-engineer/knowledge/actor-ground-rules.md) | Ten ground rules for agents and commands, plus the actor format template (Goal / Input / Steps / Output / Constraints). |
 | Quality checks | `prompt-engineer` | [`prompt-engineer/knowledge/quality-checks.md`](../prompt-engineer/knowledge/quality-checks.md) | Knowledge-file quality checks, KISS/DRY audit, AI over-engineering sweep, context-budget ceiling, severity levels. |
 | Separation of concerns | `prompt-engineer` | [`prompt-engineer/knowledge/separation-of-concerns.md`](../prompt-engineer/knowledge/separation-of-concerns.md) | Classification table and boundary violations for plugin file categories — Knowledge vs Actor. |
 
-Rows are sorted by plugin (`core` → `helper` → `lsa` → `manager` → `prompt-engineer`) so per-plugin contributions are countable from the table directly.
+Rows are sorted by plugin (`core` → `helper` → `lsa` → `manager` → `observer` → `prompt-engineer`) so per-plugin contributions are countable from the table directly.
 
 ## Scope
 
