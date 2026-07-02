@@ -19,7 +19,7 @@ Install `core` first — `lsa` cites it for fact-grounding and flow-selection (s
 
 ## Always-on rules
 
-The canonical always-on fragment lives at [`core/CLAUDE.md`](./core/CLAUDE.md): apply `core/ground-rules` to every substantive task (8 content rules); apply [`core/output`](./core/skills/output/SKILL.md) to every human-facing output (format discipline — one hard rule plus guidance; see the skill); invoke `core/flow-selector` (renamed from `core/tier-selector` in `core` v0.5.2) before any non-trivial task. The flow types (Quick / Standard / Extended — was T1/T2/T3) and boundary signals are at [`.lsa/VISION.md`](./.lsa/VISION.md) §4. The operating credo is **ownership over automation** — see [`core/CLAUDE.md`](./core/CLAUDE.md) Rule 0.
+The canonical always-on fragment lives at [`core/CLAUDE.md`](./core/CLAUDE.md): apply `core/ground-rules` to every substantive task (8 content rules); apply [`core/output`](./core/skills/output/SKILL.md) to every human-facing output (format discipline — one hard rule plus guidance; see the skill); invoke `core/flow-selector` before any non-trivial task. The flow types (Quick / Standard / Extended) and boundary signals are at [`.lsa/VISION.md`](./.lsa/VISION.md) §4. The operating credo is **ownership over automation** — see [`core/CLAUDE.md`](./core/CLAUDE.md) Rule 0.
 
 ## Discipline (sourced)
 

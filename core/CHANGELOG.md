@@ -2,6 +2,24 @@
 
 All notable changes to the `core` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.16.1] — 2026-07-02
+
+Behavior-preserving cleanup: strips version scaffolding from instructional bodies, per the sonnet-robustness sweep (`.lsa/pitches/sonnet-robustness-consistency-sweep.md` §Problem *"Version scaffolding rotting in instructional bodies"*; epic `sonnet-robustness-consistency-sweep/core-version-scaffolding`). History lives here in the CHANGELOG, not in skill descriptions or bodies. No rule content changed.
+
+### Removed
+
+- **`core/skills/flow-selector/SKILL.md` frontmatter `description`** — dropped the trailing *"Renamed from `tier-selector` in `core` v0.5.2; the three flows were `T1` / `T2` / `T3`."* The rename is recorded in this file's [0.5.2] entry. No alias kept: no active doc invokes the old name (all remaining `tier-selector` occurrences are CHANGELOG/plan/archive history), so old-name lookups resolve via the CHANGELOG.
+- **`core/.claude-plugin/plugin.json` `description`** — the flow-selector clause dropped *"— renamed from tier-selector in v0.5.2"*.
+- **`core/README.md`** — the `flow-selector` bullet dropped *"Renamed from `tier-selector` (T1 / T2 / T3) in `core` v0.5.2."*; the invoke line dropped *"(renamed from `/core:tier-selector` in `core` v0.5.2)"*.
+- **Repo-root `CLAUDE.md` § Always-on rules** — dropped *"(renamed from `core/tier-selector` in `core` v0.5.2)"* and *"— was T1/T2/T3"* from the flow-selector sentence.
+- **`core/skills/output/SKILL.md` Rule 7 intro (~:71)** — dropped the dated endorsement *"which the user endorsed as the gold standard: 'Good! Love it!' (2026-05-22)"*; the intro now credits `reconcile`'s drift block as the absorbed origin without the changelog note. For the record (not previously quoted verbatim in this CHANGELOG): the user endorsed the reconcile 8-element drift block as the gold standard with *"Good! Love it!"* on 2026-05-22; Rule 7 (v0.8.0) generalizes it.
+- **`core/skills/output/SKILL.md` § "How this gets enforced" (~:184)** — dropped the parenthetical *"(a claim that `lsa:verify` performed one was removed in v0.13.0 as unimplemented)"*; that removal is already recorded in the [0.13.0] *Fixed* entry. The body keeps the substantive claim (no automated PR-time check exists; the human is the runtime backstop).
+
+### Notes
+
+- **Verified, not changed:** the `.claude-plugin/marketplace.json` `core` entry and `core/.claude-plugin/plugin.json` already use the current output framing ("one hard Sourced rule plus guidance", fixed in 0.15.2/0.16.0) — no "7 format golden rules" wording remains in either manifest. `core/CLAUDE.md` carries no rename scaffolding.
+- **Out of this patch's scope:** `CONTRIBUTING.md:69` and `core/VERIFICATION.md` Probe C still carry the rename note — repo-level/verification surfaces outside this epic's file set.
+
 ## [0.16.0] — 2026-07-02
 
 Adds the **`core/doctor`** install self-check — the marketplace's first user-runnable diagnostic, per the onboarding-diagnostics pitch (`.lsa/pitches/onboarding-diagnostics.md`, Fork A: home is `core`; Fork B: explicit command + description-matched trigger). Four fixed read-only checks — required plugins installed, `core/CLAUDE.md` fragment merged into the project `CLAUDE.md`, installed plugin versions vs source manifests, gate scripts — reported as a per-check PASS/WARN/FAIL/SKIP table with observed evidence and a one-line fix per failure. The Steps were derived from a by-hand run of all four checks against this repo first (manual-before-automate, pitch rabbit hole 4). `core` skill count 5 → 6.

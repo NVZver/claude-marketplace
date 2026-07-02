@@ -1,6 +1,6 @@
 ---
 name: flow-selector
-description: Apply before any non-trivial task — when the work touches behavior, adds a new module, changes an API or data model, exceeds ~5 files, or lacks an existing spec. Outputs a flow (Quick / Standard / Extended) with visible chain-of-thought reasoning over boundary signals, then waits for human confirmation. Renamed from `tier-selector` in `core` v0.5.2; the three flows were `T1` / `T2` / `T3`.
+description: Apply before any non-trivial task — when the work touches behavior, adds a new module, changes an API or data model, exceeds ~5 files, or lacks an existing spec. Outputs a flow (Quick / Standard / Extended) with visible chain-of-thought reasoning over boundary signals, then waits for human confirmation.
 ---
 
 > **Trace.** On load, print first: `=============== [core/skills/flow-selector/SKILL.md] [core] ===============`
