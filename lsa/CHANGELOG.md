@@ -2,6 +2,15 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.24.1] — 2026-07-02
+
+Manifest + model-name alignment — the `lsa-manifest-and-pro-tier` epic of the `sonnet-robustness-consistency-sweep` pitch (`.lsa/pitches/sonnet-robustness-consistency-sweep.md`, Decision 2a + Problem "Manifest drift" / "A model name in instructional bodies"). Prose-only; no behavior change.
+
+### Changed
+
+- **`plugin.json` description matches the inline orchestrator.** The manifest still advertised the pre-0.21 dispatch-per-stage framing ("reads each sub-agent's Inputs, resolves them via discover, delegates, collects output"); it now states the orchestrator runs discover → specify → verify inline in one context and crosses a context boundary only at delegate (the external implementer) and reconcile (an independent grader) — consistent with the refreshed `marketplace.json` entry and `lsa/agents/orchestrator.md:3`. The skill list is tightened in the same pass to keep the description ≤1,024 characters (1,020) — no skill added or removed.
+- **Bare "Sonnet" generalized to "the Pro-tier model" (Decision 2a).** The token-efficiency rationale in `lsa/CORE.md` §2, `lsa/agents/orchestrator.md` (Steps preamble + Constraints), and `lsa/README.md` (orchestrator paragraph) now says "the Pro-tier model (see `.lsa/standards/code.md` §"Model policy")" instead of naming a specific model — the policy the sentence cites is the one meant to keep model names out of instructional bodies. Sentence meaning unchanged. CHANGELOG history entries keep their original wording.
+
 ## [0.24.0] — 2026-07-02
 
 Reconcile deterministic backstop — the `reconcile-deterministic-backstop` epic of the `eval-coverage-tracks-complexity` pitch (`.lsa/pitches/eval-coverage-tracks-complexity.md`, Decisions Forks 4+5): the merge gate stops riding on model judgment for run count, coverage, and gate execution.
