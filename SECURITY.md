@@ -270,9 +270,11 @@ What it does and does not do — read it yourself before trusting it:
   index. It inspects; it takes no action on the tree.
 - **It never writes files and never auto-fixes.** This is a detect-and-report
   guardrail: it verifies that a commit touching a plugin's files also bumps that
-  plugin's `.claude-plugin/plugin.json` `version`, adds a `CHANGELOG.md` entry, and
-  carries the trace directive on new/edited `SKILL.md` / `agents/**/*.md` (the
-  discipline in [`.lsa/standards/code.md:22`](./.lsa/standards/code.md) and
+  plugin's `.claude-plugin/plugin.json` `version`, keeps the top `## [x.y.z]`
+  release heading of its `CHANGELOG.md` equal to that version (`## [Unreleased]`
+  is skipped), and carries the trace directive on new/edited `SKILL.md` /
+  `agents/**/*.md` (the discipline in
+  [`.lsa/standards/code.md:22`](./.lsa/standards/code.md) and
   [`.claude/rules/plugin-development.md`](./.claude/rules/plugin-development.md)).
   It never writes the bump or the CHANGELOG for you.
 - **It never makes network calls.** No `curl`/`wget`/network commands — only Git
@@ -283,7 +285,19 @@ What it does and does not do — read it yourself before trusting it:
 - **It is a no-op when it should not fire.** It exits 0 immediately when the tool
   call is not a `git commit`, when the payload is unparseable, when the repo root
   lacks the marketplace fingerprint `.claude-plugin/marketplace.json` (so it **never
-  fires in a consumer repo**), or when nothing is staged.
+  fires in a consumer repo**), when a merge is in progress (`$GIT_DIR/MERGE_HEAD`
+  exists — the bump + CHANGELOG discipline already held on the merged branch), or
+  when nothing is staged.
+- **It fails open — by design, and that is a real tradeoff.** An unparseable hook
+  payload, a broken `git` invocation, or any unexpected script error silently
+  no-ops (`exit 0`, via the `trap 'exit 0' ERR` fail-open trap): the commit
+  proceeds unchecked rather than blocking your work on hook infrastructure
+  failure. That means this hook alone cannot *guarantee* the discipline — a
+  malformed payload gets through silently, and a PR merged via the GitHub UI
+  never runs the hook at all. The deterministic backstop is the CI mirror of the
+  version↔CHANGELOG check (being wired in the sibling
+  `deterministic-enforcement-gates/ci-gate-wiring` epic), which runs on every PR
+  regardless of how the commit was produced.
 - **Transparent bypass.** Only top-level directories containing
   `.claude-plugin/plugin.json` are treated as plugins, so repo-internal infra
   (`scripts/`, `.lsa/`, `.claude/`, `tests/`, root docs) is exempt by construction —
