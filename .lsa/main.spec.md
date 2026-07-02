@@ -16,7 +16,7 @@ The marketplace ships six plugins (`core`, `lsa`, `helper`, `manager`, `prompt-e
 |---|---|---|
 | `core` | [`.lsa/modules/core/spec.md`](./modules/core/spec.md) | active — v0.14.1 |
 | `lsa` | [`.lsa/modules/lsa/spec.md`](./modules/lsa/spec.md) | active — v0.20.2 |
-| `helper` | [`.lsa/modules/helper/spec.md`](./modules/helper/spec.md) | active — v0.5.4 |
+| `helper` | [`.lsa/modules/helper/spec.md`](./modules/helper/spec.md) | active — v0.6.0 |
 | `manager` | [`.lsa/modules/manager/spec.md`](./modules/manager/spec.md) | active — v0.15.2 |
 | `prompt-engineer` | [`.lsa/modules/prompt-engineer/spec.md`](./modules/prompt-engineer/spec.md) | active — v0.7.3 |
 | `observer` | [`.lsa/modules/observer/spec.md`](./modules/observer/spec.md) | active — v0.1.1 |
@@ -26,7 +26,7 @@ The marketplace ships six plugins (`core`, `lsa`, `helper`, `manager`, `prompt-e
 - **`lsa` depends on `core`.** Documented in [`lsa/README.md`](../lsa/README.md) "Depends on". Specifically:
   - `core/ground-rules` is the source of LSA's fact-grounding policy (`lsa/ARCHITECTURE.md` §2 P4 and §7).
   - `core/flow-selector` (added as `core/tier-selector` in core v0.2.0; renamed to `core/flow-selector` in core v0.5.2) is invoked upstream of `discover` for every Standard / Extended task (was `T2 / T3`) — its confirmed flow hand-off is the input to `discover`.
-  - Claude Code's plugin manifest does not (as of this release) expose a `dependencies` field; the dependency is prose-only in `lsa/README.md` and `lsa/.claude-plugin/plugin.json`'s `description`. Adopt the field when Claude Code adds it.
+  - Claude Code's plugin manifest exposes a `dependencies` field (documented in the official plugins-reference — *"Other plugins this plugin requires, optionally with semver version constraints"*, code.claude.com/docs/en/plugins-reference; functional since Claude Code v2.1.110). Declared as `"dependencies": ["core"]` in `lsa/.claude-plugin/plugin.json`, alongside the prose in `lsa/README.md` and the manifest `description`.
 - **`core/actor-template` is the shape any actor in this repo must follow.** Every LSA skill body in `lsa/skills/*/SKILL.md` matches Goal / Input / Steps / Output / Constraints. Boundary violation = highest-severity defect (`.lsa/VISION.md:61`).
 - **`manager` depends on `core`.** Cites `core/ground-rules` for fact-grounding and `core/output` for format discipline. Declared in `manager/.claude-plugin/plugin.json` `dependencies` field. Reads `lsa` artifacts (roadmap, specs) but `lsa` does not depend on `manager`.
 - **`observer` depends on `core`.** Inherits `core/ground-rules` (content) and `core/output` (format) for its observe Actor and feedback. Declared in `observer/.claude-plugin/plugin.json` `dependencies` field. Rides the substrate self-paced `/loop` rather than building a scheduler (`.lsa/VISION.md:66`, principle 9); role behavior is Knowledge (`observer/knowledge/roles.md`), separated from the `observe` Actor per NFR5.

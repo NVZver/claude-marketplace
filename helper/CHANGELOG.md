@@ -2,7 +2,22 @@
 
 All notable changes to the `helper` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
-## [0.5.4] – 2026-06-27
+## [0.6.0] – 2026-07-02
+
+Catalog-surface sweep — part of the `catalog-surface-drift` pitch (`.lsa/pitches/catalog-surface-drift.md`): refresh every discovery surface to one current story.
+
+### Added
+
+- **`.claude-plugin/plugin.json`** — declares `"dependencies": ["core", "lsa"]` (bare-name form, matching the `lsa`/`manager`/`observer` manifests). The field is documented in the official plugins-reference (*"Other plugins this plugin requires, optionally with semver version constraints"*, code.claude.com/docs/en/plugins-reference) and functional since Claude Code v2.1.110; helper was the only dependent manifest still missing it.
+- **`knowledge/onboarding-fast-path.md`** — catalog row 9: *what is `observer`* → [`README.md#observer`](../README.md#observer). Catalog grows **8 → 9 rows** (v3); *what-is* coverage now spans all six shipped plugins. Canonical-subjects list gains `observer` (matching rules + negative examples).
+
+### Changed
+
+- **`README.md`** — `## Status` header brought to the current version; release table extended with one-line rows for v0.5.1–v0.5.4 and v0.6.0 (it stopped at v0.5.0); the "Depends on" claim that *"Claude Code's plugin manifest does not yet expose a `dependencies` field"* corrected — the field exists and this manifest now declares it.
+
+### Notes
+
+- **Minor bump rationale.** New manifest field (`dependencies`) plus a user-visible knowledge-surface expansion (new fast-path catalog row). No agent/command behavior change.
 
 Cross-reference fix from the `observer` plugin addition (reconcile).
 

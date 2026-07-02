@@ -9,7 +9,7 @@ Inherits [`core/output`](../core/skills/output/SKILL.md) discipline: ≤1.5 scre
 
 Spec (absorbed into the module spec): [`.lsa/modules/helper/spec.md`](../.lsa/modules/helper/spec.md). Rationale: [`.lsa/VISION.md`](../.lsa/VISION.md).
 
-## Status — v0.5.2
+## Status — v0.6.0
 
 Built from the original 4-step helper-agent spec (since absorbed into [`.lsa/modules/helper/spec.md`](../.lsa/modules/helper/spec.md)). All three invocation paths are wired: (c) explicit `/help`, (a) two consecutive `[c] reject` selections at an `lsa:discover` User Verification, (b) free-form `?` / `what is X?` mid-flow. Per-signal-type cooldown prevents nag. Later releases adopted the `core` gate-delivery contract (agent proposes, dispatcher gates). The per-release history is the table below + [`CHANGELOG.md`](./CHANGELOG.md).
 
@@ -24,6 +24,11 @@ Built from the original 4-step helper-agent spec (since absorbed into [`.lsa/mod
 | v0.3.2 | Prompt audit remediation — dead spec-links fixed across [`./agents/helper.md`](./agents/helper.md), [`./knowledge/friction-signals.md`](./knowledge/friction-signals.md), [`./knowledge/knowledge-scope.md`](./knowledge/knowledge-scope.md), this README, and [`./VERIFICATION.md`](./VERIFICATION.md); restated knowledge removed from the agent's Steps + Constraints (cooldown, onboarding matching, genuine-fork test) — now cited by path. Per PR #32 (commit f39ec4a, 2026-05-27). | ✓ |
 | v0.4.0 | Onboarding fast-path catalog expansion + heading-anchor citation migration (Stage 1 / Epic 2 of `readme-and-knowledge-base`). Catalog grows **6 → 8 rows** — adds *what is `management`* + *what is `prompt-engineer`*, covering all five shipped plugins. Citation format migrated from `file:line-range` to `file#heading-anchor` (anchors survive line shifts; line ranges broke silently on every edit); new repo-root [`knowledge/index.md`](../knowledge/index.md) is the heading-name source of truth. `plugin.json` description updated to match. Per [`.lsa/pitches/readme-and-knowledge-base.md`](../.lsa/pitches/readme-and-knowledge-base.md). | ✓ |
 | v0.5.0 | **Gate-delivery inversion** (adopts `core` 0.13.0 Rule 5 *Self-contained gates* + Rule 7 *Delivery test*). Helper as a subagent cannot run `AskUserQuestion`/`Skill` — the agent now returns its answer + pending gates + a staged `Skill()` seed; the dispatcher ([`./commands/help.md`](./commands/help.md) or the main agent on friction signals) delivers the answer through a rendered channel, runs the pickers, and invokes confirmed handoffs. Also fixes `/help`'s dangling `Skill(helper)` dispatch (helper is an agent, not a skill). | ✓ |
+| v0.5.1 | Inherited-ground-rules count synced to `core` 0.14.0 — [`./agents/helper.md`](./agents/helper.md) now cites **eight** content rules (added *done is a gate-proven cited predicate*). | ✓ |
+| v0.5.2 | Doc-accuracy fix (quality audit, iteration 3) — this README's `## Status` header and lede updated to describe current state instead of a stale `v0.2.0` snapshot. | ✓ |
+| v0.5.3 | Step-numbering fix (quality audit, iteration 4) — [`./agents/helper.md`](./agents/helper.md)'s fractional `1.5` step renumbered to a clean 1–6; in-file back-references updated. No behavior change. | ✓ |
+| v0.5.4 | Cross-reference fix from the `observer` plugin addition — [`./knowledge/onboarding-fast-path.md`](./knowledge/onboarding-fast-path.md) row 3 repointed to the renamed `#the-six-plugins` anchor; "five-plugin table" → "six-plugin table". | ✓ |
+| v0.6.0 | **Catalog-surface sweep** (per the `catalog-surface-drift` pitch, `.lsa/pitches/catalog-surface-drift.md`) — `plugin.json` declares `"dependencies": ["core", "lsa"]` (the manifest field exists and is functional; see "Depends on" below); onboarding fast-path catalog grows **8 → 9 rows** (adds *what is `observer`*, covering all six shipped plugins); this README's status header + release table brought current. | ✓ |
 
 ## Install on Claude Code
 
@@ -43,7 +48,7 @@ Install `core` and `lsa` first — `helper` cites `core/output` for response dis
 - **`lsa`** — `lsa:discover` for auto-engage signal (a). One-way: `lsa:discover` stays unaware of `helper`. Signals (b) and (c) work without `lsa:discover` active.
 - **`context7` MCP server** (optional) — external library docs when subject is outside repo + installed-plugin scope.
 
-Claude Code's plugin manifest does not yet expose a `dependencies` field; dependencies are prose-only here and in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) `description`. Adopt the field when Claude Code adds it (per `.lsa/main.spec.md:23`).
+Claude Code's plugin manifest exposes a `dependencies` field — the official plugins-reference documents it (*"Other plugins this plugin requires, optionally with semver version constraints"*, code.claude.com/docs/en/plugins-reference), functional since Claude Code v2.1.110 — and [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) declares `"dependencies": ["core", "lsa"]` (bare-name form, matching the `lsa`/`manager`/`observer` manifests). The `context7` MCP server stays prose-only (optional, not a marketplace plugin).
 
 ## Probes — after this commit
 
