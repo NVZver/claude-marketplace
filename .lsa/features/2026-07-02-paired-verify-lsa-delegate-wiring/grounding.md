@@ -7,7 +7,7 @@ Verdict: **GROUNDED**. Spec `requirements.md` (G1–G14) + `delegate-paired-veri
 | Spec reference | Status |
 |---|---|
 | delegate skill to modify (G2,G4,G6,G7,G10) | exists @ `lsa/skills/delegate/SKILL.md` (3 steps; `allowed-tools: Read, Write, Bash, Agent, AskUserQuestion`) |
-| checkpoint-signal contract, 4 fields (G5) | exists @ `observer/skills/verify-checkpoint/SKILL.md:15-28` (target/since/spec/status) — epic 1, now on main |
+| checkpoint-signal contract, 4 fields (G5) | exists @ `observer/skills/verify-checkpoint/SKILL.md:22-37` (target/since/spec/status) — epic 1, now on main |
 | verify-checkpoint verifier to dispatch (G6) | exists @ `observer/skills/verify-checkpoint/SKILL.md` (observer 0.2.0 present at base) |
 | independence constraint (G8) | exists @ `lsa/skills/reconcile/SKILL.md:44-45` |
 | schema block to extend (G1,G13) | exists @ `lsa/ARCHITECTURE.md:79-120` (`gate:` + `autonomy:` pattern: YAML block + per-key bullet) |
