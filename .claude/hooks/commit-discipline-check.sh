@@ -8,7 +8,8 @@
 # .claude/rules/plugin-development.md (version bump + CHANGELOG + trace):
 #
 #   (a) <plugin>/.claude-plugin/plugin.json has a staged-changed "version:" line
-#   (b) <plugin>/CHANGELOG.md has at least one staged added line
+#   (b) the top real-SemVer `## [x.y.z]` heading in <plugin>/CHANGELOG.md
+#       (skipping `## [Unreleased]`) equals the staged plugin.json "version"
 #   (c) every staged new/edited SKILL.md and agents/**/*.md carries the
 #       `> **Trace.** On load, print first:` directive
 #
@@ -23,6 +24,9 @@
 #   - not in a git repo
 #   - the marketplace catalog (.claude-plugin/marketplace.json) is absent
 #   - the tool call is not a `git commit`
+#   - a merge is in progress ($GIT_DIR/MERGE_HEAD exists) — the version bump +
+#     CHANGELOG entry landed on the merged branch, so re-demanding them on the
+#     merge commit itself would be a false positive
 #
 # BYPASS (transparent, documented in SECURITY.md): non-artifact paths never
 # trigger the check. Only top-level directories that contain
@@ -69,6 +73,17 @@ cd "${repo_root}" || exit 0
 # merely installed the plugins has no such file — so we no-op there.
 [[ -f "${repo_root}/.claude-plugin/marketplace.json" ]] || exit 0
 
+# --- Skip merge commits -----------------------------------------------------
+# MERGE_HEAD in the git dir marks an in-progress merge. The bump + CHANGELOG
+# discipline was enforced when the change landed on the branch being merged;
+# skip it here. `git rev-parse --git-dir` can return a cwd-relative path
+# (".git") — safe because we cd'd to ${repo_root} above; in a linked worktree
+# it returns the absolute per-worktree git dir.
+git_dir="$(git rev-parse --git-dir 2>/dev/null || true)"
+if [[ -n "${git_dir}" && -f "${git_dir}/MERGE_HEAD" ]]; then
+  exit 0
+fi
+
 # --- Gather the staged file set -------------------------------------------
 staged="$(git diff --cached --name-only 2>/dev/null || true)"
 [[ -n "${staged}" ]] || exit 0   # nothing staged → nothing to enforce
@@ -88,12 +103,38 @@ version_bumped() {
     | grep -Eq '^\+[[:space:]]*"version"[[:space:]]*:'
 }
 
-# Returns 0 if the named plugin's CHANGELOG.md has ≥1 staged added line.
-changelog_added() {
-  local plugin="$1"
-  local added
-  added="$(git diff --cached --numstat -- "${plugin}/CHANGELOG.md" 2>/dev/null | awk '{print $1; exit}')"
-  [[ -n "${added}" && "${added}" != "-" && "${added}" -gt 0 ]] 2>/dev/null
+# Prints the staged (index) "version" value of the plugin's plugin.json.
+# Empty output when the file or field is absent. Never returns nonzero — a
+# parse failure must not trip the fail-open ERR trap.
+staged_plugin_version() {
+  local plugin="$1" json
+  json="$(git show ":${plugin}/.claude-plugin/plugin.json" 2>/dev/null || true)"
+  if command -v jq >/dev/null 2>&1; then
+    printf '%s' "${json}" | jq -r '.version // ""' 2>/dev/null || true
+    return 0
+  fi
+  printf '%s' "${json}" | tr -d '\n' \
+    | sed -n 's/.*"version"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' || true
+  return 0
+}
+
+# Prints the version of the first `## [x.y.z]` release heading in the staged
+# (index) CHANGELOG.md — the first `## [` heading whose bracket starts with a
+# digit, so `## [Unreleased]` is skipped. Empty output when no such heading
+# exists. Plain read loop (no pipefail-sensitive pipeline) keeps a missing
+# CHANGELOG from tripping the fail-open ERR trap.
+staged_changelog_top_version() {
+  local plugin="$1" line
+  while IFS= read -r line; do
+    case "${line}" in
+      '## ['[0-9]*']'*)
+        line="${line#\#\# [}"
+        printf '%s' "${line%%]*}"
+        return 0
+        ;;
+    esac
+  done < <(git show ":${plugin}/CHANGELOG.md" 2>/dev/null || true)
+  return 0
 }
 
 # Returns 0 if the staged content of $1 contains the trace directive.
@@ -114,8 +155,13 @@ for plugin in "${plugins[@]}"; do
   version_bumped "${plugin}" \
     || msgs+=("bump \"version\" in ${plugin}/.claude-plugin/plugin.json")
 
-  changelog_added "${plugin}" \
-    || msgs+=("add a ${plugin}/CHANGELOG.md entry (Keep a Changelog)")
+  plugin_version="$(staged_plugin_version "${plugin}")"
+  changelog_version="$(staged_changelog_top_version "${plugin}")"
+  if [[ -z "${changelog_version}" ]]; then
+    msgs+=("add a ${plugin}/CHANGELOG.md release heading \`## [${plugin_version:-x.y.z}]\` (Keep a Changelog) — no SemVer heading found")
+  elif [[ "${changelog_version}" != "${plugin_version}" ]]; then
+    msgs+=("align ${plugin}/CHANGELOG.md with ${plugin}/.claude-plugin/plugin.json — expected top heading \`## [${plugin_version:-?}]\`, found \`## [${changelog_version}]\`")
+  fi
 
   # Trace check: staged, non-deleted SKILL.md and agents/**/*.md files.
   while IFS=$'\t' read -r status path; do
@@ -141,7 +187,7 @@ if [[ "${#violations[@]}" -gt 0 ]]; then
   {
     echo "BLOCKED: plugin commit-discipline check failed."
     echo "This commit touches plugin files but does not satisfy the same-commit"
-    echo "discipline (version bump + CHANGELOG entry + trace directive)."
+    echo "discipline (version bump + matching CHANGELOG heading + trace directive)."
     echo "Source: .lsa/standards/code.md:22, .claude/rules/plugin-development.md."
     echo ""
     printf '%s\n' "${violations[@]}"
