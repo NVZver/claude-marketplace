@@ -6,7 +6,7 @@
     {
       "name": "core",
       "source": "./core",
-      "description": "Domain-neutral discipline, five skills: ground-rules (8 content rules), output (format discipline — one hard Sourced rule plus guidance), actor-template (Goal/Input/Steps/Output/Constraints shape), flow-selector (Quick/Standard/Extended classification), reuse-first (7-rung reuse ladder on coding tasks)."
+      "description": "Domain-neutral discipline, six skills: ground-rules (8 content rules), output (format discipline — one hard Sourced rule plus guidance), actor-template (Goal/Input/Steps/Output/Constraints shape), flow-selector (Quick/Standard/Extended classification), reuse-first (7-rung reuse ladder on coding tasks), doctor (read-only install health check — PASS/WARN/FAIL/SKIP per check with evidence and a one-line fix)."
     },
     {
       "name": "lsa",
