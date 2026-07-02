@@ -5,10 +5,20 @@ description: |
 
   <example>
   user: "create a prompt in lsa"
+  </example>
+  <example>
   user: "review the prompts in core"
+  </example>
+  <example>
   user: "optimize this agent's system prompt"
+  </example>
+  <example>
   user: "improve the skill instructions"
+  </example>
+  <example>
   user: "analyze prompt quality across plugins"
+  </example>
+  <example>
   user: "make this command prompt more effective"
   </example>
 tools: Read, Write, Edit, Grep, Glob, Agent

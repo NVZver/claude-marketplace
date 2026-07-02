@@ -2,6 +2,14 @@
 
 All notable changes to the `prompt-engineer` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.7.5] – 2026-07-02
+
+Consistency-sweep minor (Fork 2d of [`.lsa/pitches/sonnet-robustness-consistency-sweep.md`](../.lsa/pitches/sonnet-robustness-consistency-sweep.md)): the agent-description examples now follow the Claude Code agent convention.
+
+### Fixed
+
+- **`agents/prompt-engineer.md`** — frontmatter description examples restructured from one `<example>` block wrapping six `user:` lines into six `<example>` blocks, one per example (the Claude Code agent-description convention). Example text unchanged; description parses to 515 characters (limit 1,024). No behavior change — structure only.
+
 ## [0.7.4] – 2026-07-01
 
 Doc-hygiene fix surfaced by the new deterministic doc-lint gate on its first full-repo run. Feature: [`.lsa/features/2026-07-01-deterministic-doc-lint-gate/requirements.md`](../.lsa/features/2026-07-01-deterministic-doc-lint-gate/requirements.md).
