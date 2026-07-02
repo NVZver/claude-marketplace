@@ -12,11 +12,11 @@ Run each probe in a fresh Claude Code session at this repo root, with `core@NVZv
 
 **Prompt.** *"What version is the `core` plugin?"*
 
-**Source of truth.** `core/.claude-plugin/plugin.json:4` → `  "version": "0.1.0",`
+**Source of truth.** `core/.claude-plugin/plugin.json:4` → the current `"version": "<X>"` line (whatever value it holds now — version-agnostic; do not hardcode a number in this probe).
 
-**PASS.** Response states `0.1.0` and cites `core/.claude-plugin/plugin.json` with a quote of the version line.
+**PASS.** Response states the version value read from `core/.claude-plugin/plugin.json:4` and cites the file with a verbatim quote of the version line.
 
-**FAIL.** "Probably 0.1.0", an unsourced number, or a hallucinated path.
+**FAIL.** A hedged or unsourced number ("probably …"), a hallucinated path, or a value that does not match the current file.
 
 ---
 

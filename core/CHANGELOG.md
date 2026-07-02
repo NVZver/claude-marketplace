@@ -2,6 +2,15 @@
 
 All notable changes to the `core` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.15.2] — 2026-07-02
+
+Two doc-hygiene fixes surfaced by the repo-anchored probe run (loose threads, not regressions).
+
+### Fixed
+
+- **`core/.claude-plugin/plugin.json`** — the `description` no longer enumerates the output rule count + rule-name list ("7 format golden rules — structured, minimal, …"); it now reads "output (format discipline — one hard Sourced rule plus guidance; the marketplace-wide source-of-truth for output rules)". Closes a latent gap in the D2 canonical-source invariant: the manifest is JSON so the `*.md`-scoped D2 grep never caught the name-list restatement, which would drift when the output rules change.
+- **`core/tests/repo-anchored.md`** — probe A1's expected version is de-hardcoded (was frozen at `0.1.0` from when core shipped at that version). The probe now checks that the agent cites *whatever* the current `version` line holds, with a verbatim quote — testing the sourcing behavior, not a stale number.
+
 ## [0.15.1] — 2026-07-01
 
 Doc-hygiene fixes surfaced by the new deterministic doc-lint gate (`scripts/check-citations.sh` + `scripts/check-links.sh`) on its first full-repo run. Feature: [`.lsa/features/2026-07-01-deterministic-doc-lint-gate/requirements.md`](../.lsa/features/2026-07-01-deterministic-doc-lint-gate/requirements.md).
