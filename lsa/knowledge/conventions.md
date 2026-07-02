@@ -17,6 +17,7 @@ constitution: .lsa/VISION.md
 specs_root: .lsa/
 mode: code
 modules: {}
+paired_verify: off
 ```
 
 The default workspace lives entirely under `.lsa/` so a user can `rm -rf .lsa/` to fully detach from LSA. The constitution sits inside that workspace as `.lsa/VISION.md`. Projects with a pre-existing `/CLAUDE.md` constitution or a `/specs/` spec tree should set `constitution` and `specs_root` explicitly in `.lsa.yaml`.
