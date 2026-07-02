@@ -2,6 +2,15 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.24.2] — 2026-07-02
+
+Cross-plugin link fix following the manager 0.16.0 rename of `manager/knowledge/fleet-rollup.md` → `parallel-rollup.md` (`sonnet-robustness-consistency-sweep` pitch, workstream 3). No behavior change.
+
+### Fixed
+
+- **`lsa/knowledge/quality-gate-contract.md`** — the roll-up cross-reference now points at [`manager/knowledge/parallel-rollup.md`](../manager/knowledge/parallel-rollup.md) ("the `manager` parallel-implementation roll-up"); the old `fleet-rollup.md` target no longer exists.
+- **`lsa/.claude-plugin/plugin.json`** — version 0.24.1 → 0.24.2.
+
 ## [0.24.1] — 2026-07-02
 
 Manifest + model-name alignment — the `lsa-manifest-and-pro-tier` epic of the `sonnet-robustness-consistency-sweep` pitch (`.lsa/pitches/sonnet-robustness-consistency-sweep.md`, Decision 2a + Problem "Manifest drift" / "A model name in instructional bodies"). Prose-only; no behavior change.

@@ -2,7 +2,7 @@
 
 # Command naming — knowledge
 
-Commands are **functions you call**, not nouns you browse. A command name plus its arguments must tell a new reader what the command *does* — without opening the file. Zero metaphor: reject abstract or evocative names (`fleet`, `swarm`, `orchestra`) that name a *thing* instead of an *action*.
+Commands are **functions you call**, not nouns you browse. A command name plus its arguments must tell a new reader what the command *does* — without opening the file. Zero metaphor: reject abstract or evocative names (`swarm`, `orchestra`, `armada`) that name a *thing* instead of an *action*.
 
 ## The convention
 
