@@ -5,6 +5,29 @@ All notable changes to the `observer` plugin are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.1] - 2026-07-02
+
+Cross-epic harmonization with `lsa:delegate` (epic 2, `paired-verify/lsa-delegate-wiring`):
+reconciles two LOW seams `lsa:reconcile` flagged between the two halves of the `paired-verify`
+pitch. No grading behavior (F1–F13) changes.
+
+### Changed
+
+- **`skills/verify-checkpoint/SKILL.md` — invocation model reframed.** The core unit is now stated
+  as **grading one signalled increment**, run via **two invocation modes with identical grading**:
+  (a) **per-increment dispatch** — the delegating context (`lsa:delegate`) dispatches this Actor once
+  per signalled increment via the `Agent` tool (first-class, how `delegate` drives it); and (b) the
+  original **standalone `/loop` rider**. The intro, Goal, Input, Step 1 (was "start the /loop"), and
+  Step 2 now frame grading as the spine and the mode as the entry point. The `/loop` mode is retained
+  in full; the no-scheduler guard still applies to it.
+- **`skills/verify-checkpoint/SKILL.md` — checkpoint-note PATH pinned.** The contract section now
+  states the note's file **path** is owned by the delegating context and passed as the SAME path to
+  both the implementer (writer) and this Actor (reader) at dispatch; the path is **ephemeral**
+  (scratchpad / gitignored) and **NOT committed**. The four contract fields (`target` / `since` /
+  `spec` / `status`) are unchanged — the path locates the note, the fields are its contents.
+- **`README.md` / `.lsa/modules/observer/spec.md`** — reflect the two invocation modes and the
+  delegate-owned, shared, ephemeral note path.
+
 ## [0.2.0] - 2026-07-01
 
 `observer` becomes a two-Actor module: the existing `observe` coach gains a

@@ -37,3 +37,18 @@ Feature: Checkpoint-mode delegation wiring
     Given paired_verify: checkpoint but the implementer is external/human
     When lsa:delegate runs
     Then it states the pause-protocol is advisory and does not claim to enforce pausing
+
+  Scenario: writer and reader share the delegate-owned note path # G15
+    Given a checkpoint delegation with an agent implementer
+    When lsa:delegate injects the protocol and dispatches the verifier
+    Then it provides the same checkpoint-signal note path to both the implementer (writer) and
+      observer:verify-checkpoint (reader)
+    And the note path is ephemeral (scratchpad / gitignored) and is not committed
+    And the four fields target, since, spec, status are unchanged
+
+  Scenario: verifier is dispatched per-increment, not as a loop  # G16
+    Given a checkpoint delegation and a signalled increment for F-K
+    When lsa:delegate gates the increment
+    Then it dispatches observer:verify-checkpoint in its per-increment invocation mode to grade that
+      one increment
+    And it does not require the verifier to start a standalone /loop

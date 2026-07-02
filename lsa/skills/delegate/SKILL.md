@@ -42,8 +42,10 @@ Get a grounded spec built by the implementer the developer already uses, and col
 
 4. **Inject the checkpoint protocol into the handoff (G4, G5, G10).**
 
+   **Delegate OWNS the checkpoint-signal note path.** Before injecting, delegate picks one **ephemeral** note path (a scratchpad / gitignored location — **not** committed) and passes the **same** path to both the implementer (the writer, in this step) and `observer:verify-checkpoint` (the reader, Step 5). The path locates the note; its contents are the four contract fields below, matching the reader contract in [`observer/skills/verify-checkpoint/SKILL.md:22-37`](../../../observer/skills/verify-checkpoint/SKILL.md).
+
    - **Agent-dispatched implementer** (delegate dispatches it via the `Agent` tool): inject into the handoff prompt an instruction that, **after each plan task F-K**, the implementer MUST:
-     1. **Write a checkpoint-signal note** carrying **exactly** these four fields, matching the reader contract in [`observer/skills/verify-checkpoint/SKILL.md:15-28`](../../../observer/skills/verify-checkpoint/SKILL.md):
+     1. **Write a checkpoint-signal note** at the delegate-provided path, carrying **exactly** these four fields:
 
         | Field | Value the implementer writes |
         |---|---|
@@ -53,12 +55,12 @@ Get a grounded spec built by the implementer the developer already uses, and col
         | `status` | the pause marker meaning "stopped, awaiting a verdict" |
      2. **Stop and await conformance clearance** — do not begin the next task until the verifier's verdict clears the boundary.
 
-     Observable result: the handoff prompt contains the after-each-F-K write-note-then-stop instruction naming all four fields.
+     Observable result: the handoff prompt names the delegate-owned note path and contains the after-each-F-K write-note-then-stop instruction naming all four fields.
 
    - **Non-agent implementer** (human / Cursor / Copilot — not dispatched via the `Agent` tool) (G10): state that the pause-protocol is **ADVISORY** — delegate cannot enforce a pause on an implementer it does not drive. Emit the same four-field note protocol as guidance, but make **no** claim of enforcement. Do not silently assert the boundary is gated.
 
 5. **Gate each signalled increment (G6, G7, G8).** For each checkpoint the agent implementer signals:
-   - **Dispatch `observer:verify-checkpoint`** (via the `Agent` tool) to grade that one signalled increment (does · only, scoped to the note's `target`).
+   - **Dispatch `observer:verify-checkpoint` in its per-increment mode** (via the `Agent` tool) to grade that one signalled increment (does · only, scoped to the note's `target`). Pass it the **same** ephemeral note path delegate provided the writer in Step 4, so the reader reads the file the writer wrote — this is `verify-checkpoint`'s first-class per-increment invocation mode ([`../../../observer/skills/verify-checkpoint/SKILL.md`](../../../observer/skills/verify-checkpoint/SKILL.md)), not its standalone `/loop` mode.
    - **Gate on the verdict (G7):**
      - **CLEAR** → the implementer proceeds to the next task with **no human interrupt** (no picker, no question, no wait).
      - **BLOCK** → **surface the block to the human before the next task begins** (turn-final delivery, not buried in a subagent transcript — [`../../../core/skills/output/SKILL.md`](../../../core/skills/output/SKILL.md) Rule 7).
@@ -80,6 +82,7 @@ The implementer's diff, ready for `reconcile`. In `checkpoint` mode, additionall
 - **Checkpoint does not replace reconcile** — the final whole-diff `lsa:reconcile` still runs after delegation (G9).
 - **The verifier is independent** — its verdict is never folded into the implementer's authoring context ([`../reconcile/SKILL.md:44-45`](../reconcile/SKILL.md)) (G8).
 - **No silent enforcement claim** — for a non-agent implementer the pause-protocol is advisory only (G10).
+- **Delegate owns the note path** — the checkpoint-signal note path is chosen by delegate and passed as the SAME ephemeral (scratchpad / gitignored, not committed) path to both the writer (implementer) and the reader (`observer:verify-checkpoint`); the four fields are unchanged.
 
 ---
 

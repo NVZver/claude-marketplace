@@ -15,7 +15,7 @@ How a probe is run: an agent is told its ONLY behavioural guidance is the `deleg
 given the SETUP (a `.lsa.yaml paired_verify` value, a GROUNDED spec, and the chosen implementer) and
 must produce what `delegate` would do for that dispatch. A judge then scores OUTPUT against PASS
 CRITERIA and flags any divergence. The checkpoint-signal contract the injected protocol must match is
-[`../../../observer/skills/verify-checkpoint/SKILL.md:15-28`](../../../observer/skills/verify-checkpoint/SKILL.md).
+[`../../../observer/skills/verify-checkpoint/SKILL.md:22-37`](../../../observer/skills/verify-checkpoint/SKILL.md).
 
 ---
 
@@ -40,7 +40,7 @@ CRITERIA and flags any divergence. The checkpoint-signal contract the injected p
   the `Agent` tool). A GROUNDED multi-task spec (F-K, F-L, …) is given.
 - **PASS CRITERIA:** The handoff prompt instructs the implementer that, after each plan task F-K, it
   MUST (a) write a checkpoint-signal note carrying **exactly** `target`, `since`, `spec`, `status`
-  (matching `observer/skills/verify-checkpoint/SKILL.md:15-28`), then (b) stop and await conformance
+  (matching `observer/skills/verify-checkpoint/SKILL.md:22-37`), then (b) stop and await conformance
   clearance. All four field names appear; none is dropped, renamed, or added to.
 - **Aha signals:** omits a field (e.g., no `since`); invents extra fields; renames `status` to `state`;
   tells the implementer to keep going without stopping; writes the note itself instead of instructing
@@ -82,6 +82,31 @@ CRITERIA and flags any divergence. The checkpoint-signal contract the injected p
   whole-diff **does · only · all** reconcile still runs after delegation, exactly as in `off` mode.
 - **Aha signals:** claims per-increment CLEARs make the final reconcile unnecessary; skips reconcile;
   substitutes the checkpoint verdicts for the whole-diff `all` check.
+
+## D8 — writer and reader share the delegate-owned note path  (feature: writer and reader share the delegate-owned note path; G15)
+- **SETUP:** `.lsa.yaml` has `paired_verify: checkpoint` and an **agent** implementer. A GROUNDED
+  multi-task spec is given. The agent must produce both what it injects into the handoff (Step 4) and
+  how it dispatches the verifier (Step 5).
+- **PASS CRITERIA:** Delegate names ONE checkpoint-signal note **path** it owns and passes the **same**
+  path to both sides — the implementer is told to *write* the note there, and
+  `observer:verify-checkpoint` is dispatched to *read* it there. The path is **ephemeral** (scratchpad
+  / gitignored) and stated as **not committed**. The four fields (`target`/`since`/`spec`/`status`)
+  are unchanged — a path is added, no field is added, renamed, or dropped
+  (matches `observer/skills/verify-checkpoint/SKILL.md:22-37`).
+- **Aha signals:** gives the writer one path and the reader a different (or unspecified) path; commits
+  the note / puts it on a tracked path; lets the implementer choose the path; adds a fifth field or
+  renames a field to carry the path; leaves the reader to guess where the note is.
+
+## D9 — verifier is dispatched per-increment, not as a standalone loop  (feature: verifier is dispatched per-increment; G16)
+- **SETUP:** A `checkpoint` delegation; the agent implementer has signalled a finished increment for
+  F-K.
+- **PASS CRITERIA:** Delegate dispatches `observer:verify-checkpoint` in its **per-increment
+  invocation mode** (one dispatch grades one signalled increment and returns the verdict), citing that
+  this is the verifier's first-class mode — distinct from its standalone `/loop` rider mode. It does
+  **not** instruct the verifier to start or ride a `/loop`, nor build any scheduler.
+- **Aha signals:** tells the verifier to "start the `/loop`" / ride a self-paced loop; spins up a
+  standalone verifier loop instead of a per-increment dispatch; claims the two skills disagree on the
+  invocation model; grades the increment itself instead of dispatching the verifier.
 
 ## Suite gaps to harden (improve the test, not the prompt)
 - D3's field-integrity check should rotate which single field is omitted/renamed across runs so

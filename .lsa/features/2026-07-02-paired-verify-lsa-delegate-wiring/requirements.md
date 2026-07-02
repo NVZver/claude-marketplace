@@ -2,7 +2,7 @@
 Epic: paired-verify/lsa-delegate-wiring · Parent: [paired-verify](../../pitches/paired-verify.md) · Module: lsa
 
 ## Grounding
-- Signal contract (reader): `observer/skills/verify-checkpoint/SKILL.md:15-28` — fields target/since/spec/status.
+- Signal contract (reader): `observer/skills/verify-checkpoint/SKILL.md:22-37` — fields target/since/spec/status + delegate-owned shared note path.
 - delegate today: `lsa/skills/delegate/SKILL.md` (package → dispatch → await).
 - schema pattern: `lsa/ARCHITECTURE.md:79-120` (`gate:` / `autonomy:`); defaults in `lsa/knowledge/conventions.md`.
 
@@ -26,7 +26,7 @@ Epic: paired-verify/lsa-delegate-wiring · Parent: [paired-verify](../../pitches
   instruction: after each plan task F-K, (a) write the checkpoint-signal note, (b) stop and await
   conformance clearance.
 - G5 (signal fields). The injected note protocol emits exactly target/since/spec/status per the
-  verify-checkpoint contract (`observer/skills/verify-checkpoint/SKILL.md:15-28`).
+  verify-checkpoint contract (`observer/skills/verify-checkpoint/SKILL.md:22-37`).
 - G6 (dispatch verifier). When checkpoint, delegate dispatches `observer:verify-checkpoint` to grade
   each signalled increment.
 - G7 (gate on verdict). CLEAR → implementer proceeds to the next task with no human interrupt;
@@ -39,6 +39,14 @@ Epic: paired-verify/lsa-delegate-wiring · Parent: [paired-verify](../../pitches
 - G10 (non-agent implementer). When checkpoint but the implementer is external/human, delegate
   states the pause-protocol is advisory (it cannot enforce a pause on a non-agent) — no silent claim
   of enforcement.
+- G15 (note-path interlock). The checkpoint-signal note's file PATH is owned by the delegating
+  context (delegate) and passed as the SAME path to BOTH the writer (implementer) and the reader
+  (`observer:verify-checkpoint`). The path is ephemeral (scratchpad / gitignored) and NOT committed;
+  the four contract fields (target/since/spec/status) are unchanged — the path locates the note, the
+  fields are its contents.
+- G16 (invocation model reconciled). `observer:verify-checkpoint` documents two invocation modes with
+  identical grading — (a) per-increment dispatch (how delegate drives it) and (b) standalone `/loop`
+  rider; delegate dispatches it per-increment (its first-class mode), not as a standalone loop.
 
 ## Non-scenario requirements
 - G11 (version). lsa `plugin.json` 0.22.0 → 0.23.0 + CHANGELOG entry (Keep a Changelog), same commit.
