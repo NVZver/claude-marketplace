@@ -99,6 +99,7 @@ gate:                                # optional; the quality-gate script contrac
   <check-name>: <command>            # e.g. test: npm test
 
 autonomy: manual                     # manual | semi | auto. default: manual
+paired_verify: off                   # off | checkpoint | async. default: off
 ```
 
 - `constitution` — every LSA skill reads this first.
@@ -111,6 +112,7 @@ autonomy: manual                     # manual | semi | auto. default: manual
 - `modules.<name>.artifact_paths` — globs (repo-root-relative) that implement this module; consumed by verify (doc-mode), reconcile (drift diff), and the SessionStart hook.
 - `gate` — per-check name → command; each check passes iff its command exits `0`, and a completion state may be reported only with the command + output cited (`core/ground-rules` Rule 7). Consumed by `reconcile` and, in parallel runs, mapped to GitHub required-check slots. LSA hardcodes no tool. Full contract: [`knowledge/quality-gate-contract.md`](./knowledge/quality-gate-contract.md).
 - `autonomy` — `manual | semi | auto` (default `manual`); how much human-in-the-loop a parallel `manager:implement` run uses at the merge/deploy boundary. `manual` = the human merges; `semi` = auto-merge on green into the integration branch; `auto` = + deploy + healthcheck. The gate is identical at every level — autonomy removes only the prompt after green, never the gate. Consumed by `manager:implement`; semantics in `manager/knowledge/autonomy-policy.md`.
+- `paired_verify` — `off | checkpoint | async` (default `off`); whether `lsa:delegate` gates the build increment-by-increment. `off` = today's package → dispatch → await, no verifier injected; `checkpoint` = delegate injects a pause+signal protocol so the implementer, after each plan task F-K, writes a checkpoint-signal note and stops, and delegate dispatches [`observer:verify-checkpoint`](../observer/skills/verify-checkpoint/SKILL.md) to grade each increment (CLEAR auto-proceeds, BLOCK surfaces to the human); `async` = **not yet implemented** (the concurrent-interrupt model is reserved for a later pitch; delegate errors rather than degrading). Consumed by `lsa:delegate`; the checkpoint-signal contract (fields `target`/`since`/`spec`/`status`) is [`observer/skills/verify-checkpoint/SKILL.md:15-28`](../observer/skills/verify-checkpoint/SKILL.md).
 
 **When absent**, LSA applies the defaults documented in [`knowledge/conventions.md`](./knowledge/conventions.md) §"`.lsa.yaml` defaults": `constitution: .lsa/VISION.md`, `specs_root: .lsa/`, `mode: code`, `modules: {}`. A fresh `lsa:init` scaffolds the spec tree under `.lsa/` so the entire LSA workspace is one removable directory.
 
