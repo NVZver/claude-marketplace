@@ -15,7 +15,7 @@ A Claude Code marketplace shipping six composable plugins for spec-first, fact-g
 | [`helper`](./helper/) | Friendly fact-grounded assistant: a `/help` slash command and an auto-engaging subagent that answers `what is X?` mid-flow with verifiable file citations (line range, heading anchor, or URL). |
 | [`manager`](./manager/) | Pre-build shaping: turns a vague problem into a structured pitch (problem, appetite, solution sketch, rabbit holes, no-gos) before the build cycle begins. |
 | [`prompt-engineer`](./prompt-engineer/) | Plugin-quality discipline: scans your own actors and knowledge files for ground-rule, KISS/DRY, AI over-engineering, and context-budget violations. |
-| [`observer`](./observer/) | Live observe-and-coach: rides Claude Code's self-paced `/loop` and reacts to your file changes through a chosen role (rubber-duck, pair-programmer, interviewer, or custom) — per-role lens/voice/cadence is data, not code. |
+| [`observer`](./observer/) | Live observe-and-coach + increment gate: `observe` rides Claude Code's self-paced `/loop` and coaches your file changes through a chosen role (rubber-duck, pair-programmer, interviewer, or custom); `verify-checkpoint` gates delegation increments — grades one finished requirement **does·only** and emits `CLEAR` or `BLOCK`. |
 
 ## Install
 
@@ -157,6 +157,8 @@ Stopped: inactivity timeout.
 ```
 
 `[illustrative]`
+
+`observer`'s second skill, `observer:verify-checkpoint`, is the gating counterpart: one coaches, one gates. It is a read-only grader that, on a checkpoint signal from an implementer, grades that one finished increment **does·only** — do the target requirement's scenarios pass, and does every changed hunk trace to a requirement — emitting `CLEAR` (auto-clears) or `BLOCK` (surfaced to you). It runs either dispatched per increment by `lsa:delegate` or as a standalone rider on the same self-paced `/loop`. Detail: [`observer/README.md`](./observer/README.md).
 
 ## The problem and the solution
 
