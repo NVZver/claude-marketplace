@@ -2,6 +2,14 @@
 
 All notable changes to the `core` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.16.2] — 2026-07-02
+
+Fix from the repo-wide prompt review (run with `prompt-engineer` 0.8.0 discipline; 1 MEDIUM finding in this plugin, 8 of 9 files clean).
+
+### Fixed
+
+- **`skills/reuse-first/SKILL.md`** — Goal no longer restates the frontmatter description clause-for-clause (Context Budget check 1); it now carries only the success criterion (stop at the first holding rung; shortest working diff, or no code at all). The ladder enumeration stays in the description (trigger surface) and Steps.
+
 ## [0.16.1] — 2026-07-02
 
 Behavior-preserving cleanup: strips version scaffolding from instructional bodies, per the sonnet-robustness sweep (`.lsa/pitches/sonnet-robustness-consistency-sweep.md` §Problem *"Version scaffolding rotting in instructional bodies"*; epic `sonnet-robustness-consistency-sweep/core-version-scaffolding`). History lives here in the CHANGELOG, not in skill descriptions or bodies. No rule content changed.

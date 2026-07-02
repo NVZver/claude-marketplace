@@ -37,7 +37,8 @@ Constraints:
    j. Apply AI Over-Engineering checks per knowledge/quality-checks.md → formalized common sense, reinvented paradigms, arbitrary thresholds = MEDIUM; example bloat, missing paradigm provenance = LOW
    k. Apply Context Budget checks per knowledge/quality-checks.md → restating/mergeable = MEDIUM, padding = LOW
    l. Show-changes-inline (author-time, `core/output` Rule 7) — WARNING-ONLY: in prompt SOURCE files (`**/SKILL.md`, `**/agents/*.md`), flag any step body that describes a write/edit/mark action (verbs: write/edit/append/replace/mark/update/create a file) WITHOUT an accompanying show-changes-inline directive (an instruction to quote the changed content inline, or a `file:line` cite of `core/output` Rule 7 / its *Single-change template*). This catches the omission in the prompt source before the skill ships (see [`../../core/skills/output/SKILL.md`](../../core/skills/output/SKILL.md) §"How this gets enforced"). Each hit = WARNING (signal, not gate), cited as `<file>:<line>` + the write-verb + "no show-changes directive". Steps that only read, dispatch, or present (no artifact write) are exempt.
-4. Compile all findings → output table
+   m. Example Output consistency (rule 11): where an `## Example Output` section exists, the example matches the declared Output format and length → mismatch = MEDIUM
+4. Compile all findings — re-derive contested judgment calls per [`../knowledge/quality-checks.md`](../knowledge/quality-checks.md) §Severity Levels (self-consistency: drop findings that do not recur) → output table
 
 ## Output
 

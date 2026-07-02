@@ -2,6 +2,15 @@
 
 All notable changes to the `helper` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.6.2] – 2026-07-02
+
+Fixes from the repo-wide prompt review (run with `prompt-engineer` 0.8.0 discipline; 1 HIGH + 1 MEDIUM in this plugin, 5 of 6 files clean).
+
+### Fixed
+
+- **`agents/helper.md` (HIGH, actor rule 10)** — the agent now cites the leaner contract it actually follows (`core/actor-template` — Goal/Input/Steps/Output/Constraints, no Example Output section), so the missing-Example-Output exemption applies by its own terms instead of silently. Chosen over adding a synthetic Example Output: the three-variant dispatcher payload would be over-constrained by one demonstration (in-context-learning bias, `prompt-engineer` rule 11 rationale).
+- **`agents/helper.md` (MEDIUM, actor rule 3 / KISS-DRY 2)** — constraint dedup: the jargon-re-grounding and fast-path-first constraints are dropped (owned by Steps 4b/2 + their knowledge files); the cooldown constraint is trimmed to the must-not boundary (mechanics stay in `friction-signals.md` §Cooldown rule / Step 1b); Step 5's parenthetical duplicating the *Show changes / actions inline* constraint is removed (the constraint keeps the single copy).
+
 ## [0.6.1] – 2026-07-02
 
 One-action-per-step restructure of the agent body's two bundled steps — epic `sonnet-robustness-consistency-sweep/helper-step-splits`, workstream 2 of the pitch ([`.lsa/pitches/sonnet-robustness-consistency-sweep.md`](../.lsa/pitches/sonnet-robustness-consistency-sweep.md) § *Solution sketch*). Behavior-preserving: every rule, threshold, and decision-sequence position is unchanged; only the step granularity moves to the house style (one action per step + `Observable result:` line, per `core/skills/reuse-first/SKILL.md` and `observer/skills/verify-checkpoint/SKILL.md`).

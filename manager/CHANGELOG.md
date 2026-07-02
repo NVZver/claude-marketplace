@@ -2,6 +2,21 @@
 
 All notable changes to the `manager` plugin (formerly `management`) are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.16.1] – 2026-07-02
+
+Fixes from the repo-wide prompt review (run with `prompt-engineer` 0.8.0 discipline; 1 HIGH + 4 MEDIUM in this plugin, 12 of 16 files clean).
+
+### Added
+
+- **`skills/implement/SKILL.md` (HIGH, actor rule 10)** — `## Example Output` section (marked `[illustrative]`): a synthetic approved wave plan + per-epic gated roll-up table matching the declared Output spec, aligning `implement` with its four sibling skills.
+
+### Fixed
+
+- **`skills/implement/SKILL.md`** — the autonomy-ladder level behaviors are enumerated once, at the execution point (Step 5b); the intro, Input, and Constraints now reference `knowledge/autonomy-policy.md` instead of re-listing `manual`/`semi`/`auto` (was stated 4×; KISS/DRY 2). The constraint keeps only the boundaries (no auto-merge into `main`; `deployed` only after healthcheck; gate green at every level).
+- **`skills/decompose/SKILL.md`** — the stable-slug/immutability rule is stated once (Goal, citing `epic-decomposition.md` §"Epic key"); Output references it.
+- **`skills/check/SKILL.md`** — Step 1 references `project-manager.md` Steps 6-7 for the four hygiene-scan conditions instead of re-enumerating them (was contradicting its own "no hygiene-scan logic here" constraint).
+- **`knowledge/roadmap-orchestration.md`** — the three contract items recast from imperative actor-steps (with `Observable result:` markers) to declarative rules the citing skills apply (boundary violation 4 / knowledge check 6). Semantics unchanged.
+
 ## [0.16.0] – 2026-07-02
 
 Consistency + determinism sweep for the parallel engine — the `manager-consistency-and-thresholds` epic of the `sonnet-robustness-consistency-sweep` pitch (`.lsa/pitches/sonnet-robustness-consistency-sweep.md`, Problem "Naming laws violated" + "Undefined thresholds" + "Bundled multi-action steps", Solution workstreams 1–3), plus the two prompt gaps (G1, G2) logged by the 2026-07-02 adversarial eval (`manager/tests/eval-findings-2026-07-02.md`).

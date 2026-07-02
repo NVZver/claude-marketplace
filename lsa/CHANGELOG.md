@@ -2,6 +2,17 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.24.3] — 2026-07-02
+
+Fixes from the repo-wide prompt review (run with `prompt-engineer` 0.8.0 discipline; 5 MEDIUM findings in this plugin — stale anchors + duplication, no behavior change).
+
+### Fixed
+
+- **`skills/delegate/SKILL.md`** — both independence cites repointed `../reconcile/SKILL.md:44-45` → `:58` (the old anchor landed on the coverage-table markdown example, not the *Independence must be observable* constraint); the four-field checkpoint-signal table is no longer restated — the field names remain, their meanings are cited from the single owner, `observer/skills/verify-checkpoint/SKILL.md` §"The checkpoint-signal contract" (KISS/DRY 2).
+- **`skills/reconcile/SKILL.md`** — the independence rationale + verbatim TripAnchor-1 observation quote now live only in `knowledge/quality-gate-contract.md` §"Independence rule"; the two constraints keep the behavioral boundaries and cite it (was circular duplication). The N-runs pass threshold is stated once (Step 1); the constraint references it instead of re-deriving the 3/3 arithmetic.
+- **`agents/orchestrator.md`** — the Steps preamble no longer restates the Pro-tier/inline-execution rationale; it points to the *Run spec-authoring inline* constraint that owns it (Context Budget 2).
+- **`knowledge/quality-gate-contract.md`** — back-pointer tightened to "Enforced by `reconcile` §Constraints" now that this file is the single owner of the independence rationale.
+
 ## [0.24.2] — 2026-07-02
 
 Cross-plugin link fix following the manager 0.16.0 rename of `manager/knowledge/fleet-rollup.md` → `parallel-rollup.md` (`sonnet-robustness-consistency-sweep` pitch, workstream 3). No behavior change.

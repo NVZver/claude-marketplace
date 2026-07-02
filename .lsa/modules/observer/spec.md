@@ -4,7 +4,7 @@
 
 Live observe-and-coach + checkpoint-gate discipline. Rides Claude Code's self-paced `/loop` through two Actors: `observe` reacts to the user's file changes through a chosen role, emitting role-appropriate feedback (or silence) each cycle until stopped; `verify-checkpoint` grades an implementer's increment does·only on a checkpoint signal, emitting a CLEAR or BLOCK verdict.
 
-**Plugin manifest:** [`observer/.claude-plugin/plugin.json`](../../../observer/.claude-plugin/plugin.json) (v0.2.1)
+**Plugin manifest:** [`observer/.claude-plugin/plugin.json`](../../../observer/.claude-plugin/plugin.json) (v0.3.0)
 **Plugin README** (install, dependencies, roles): [`observer/README.md`](../../../observer/README.md)
 **Feature requirements** (EARS + Gherkin, flows F1–F5): [`../../features/observer/requirements.md`](../../features/observer/requirements.md)
 **Feature requirements** (`verify-checkpoint`, F1–F17): [`../../features/2026-07-01-paired-verify-observer-verifier/requirements.md`](../../features/2026-07-01-paired-verify-observer-verifier/requirements.md)
@@ -32,8 +32,8 @@ Depends on `core` ([`observer/README.md`](../../../observer/README.md) *"Depends
 - **Substrate-native.** `observe` rides the existing self-paced `/loop`; `verify-checkpoint` in its standalone `/loop` mode does the same. Neither implements a scheduler, timer, or poll. Per `.lsa/VISION.md:66` (principle 9).
 - **Two invocation modes, one grading spine.** `verify-checkpoint`'s core unit is grading one signalled increment; it runs via per-increment dispatch (how `lsa:delegate` drives it) OR as a standalone self-paced `/loop` rider, with identical grading logic. The mode is only the entry point.
 - **Checkpoint-note path is delegate-owned and shared.** The note carries exactly four fields (`target`/`since`/`spec`/`status`); its file **path** is owned by the delegating context (`lsa:delegate`) and passed as the SAME path to both the implementer (writer) and `verify-checkpoint` (reader). The path is ephemeral (scratchpad / gitignored) and not committed.
-- **Per-increment grader is does·only, never all.** `verify-checkpoint` applies only the **does** and **only** checks per increment; the whole-plan **all** completeness check stays with the final `lsa:reconcile` (`lsa/skills/reconcile/SKILL.md:34`). Not-yet-built requirements are out of scope for a given increment.
-- **Independent, read-only grader.** `verify-checkpoint` never writes to the artifacts it grades (tests, `.feature` scenarios, `.lsa.yaml` `gate:` config); its verdict is an artifact the implementer could not author (`lsa/skills/reconcile/SKILL.md:44-45`). It is distinct from `lsa:verify` (the before-delegation grounding check).
+- **Per-increment grader is does·only, never all.** `verify-checkpoint` applies only the **does** and **only** checks per increment; the whole-plan **all** completeness check stays with the final `lsa:reconcile` (`lsa/skills/reconcile/SKILL.md:35`). Not-yet-built requirements are out of scope for a given increment.
+- **Independent, read-only grader.** `verify-checkpoint` never writes to the artifacts it grades (tests, `.feature` scenarios, `.lsa.yaml` `gate:` config); its verdict is an artifact the implementer could not author (`lsa/skills/reconcile/SKILL.md:58`). It is distinct from `lsa:verify` (the before-delegation grounding check).
 - **Actor separation.** `verify-checkpoint` does not read or modify `observer/knowledge/roles.md`; its behavior is independent of `observe`'s role bundles. Per `.lsa/VISION.md:61` (principle 4).
 - **Role confirmed before observing.** Kickoff resolves to one confirmed role before the loop starts; no role, no observing (F1.5).
 - **Scaffold is interviewer-only.** No exercise is generated in any non-interviewer role (F2.3).
