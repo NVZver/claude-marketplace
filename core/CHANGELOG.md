@@ -2,6 +2,20 @@
 
 All notable changes to the `core` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.16.0] — 2026-07-02
+
+Adds the **`core/doctor`** install self-check — the marketplace's first user-runnable diagnostic, per the onboarding-diagnostics pitch (`.lsa/pitches/onboarding-diagnostics.md`, Fork A: home is `core`; Fork B: explicit command + description-matched trigger). Four fixed read-only checks — required plugins installed, `core/CLAUDE.md` fragment merged into the project `CLAUDE.md`, installed plugin versions vs source manifests, gate scripts — reported as a per-check PASS/WARN/FAIL/SKIP table with observed evidence and a one-line fix per failure. The Steps were derived from a by-hand run of all four checks against this repo first (manual-before-automate, pitch rabbit hole 4). `core` skill count 5 → 6.
+
+### Added
+
+- **NEW skill `core/skills/doctor/SKILL.md`** — actor-template shape (Goal / Input / Steps / Output / Constraints; every Step with an observable result). Invoked as `/core:doctor` or by description match ("health check", "doctor", "is my install wired", "something's broken", "verify install"). Step 1 detects the environment (marketplace source repo vs consumer project), which picks the version source-of-truth and gates the gate-script check (run vs honest SKIP). Constraints: read-only (reports and instructs, never repairs — auto-repair is a pitch no-go), no new shipped executable (checks run through existing agent tools + the existing `scripts/*.sh`; the trust boundary stays pure Markdown), honest WARN/SKIP when a check isn't determinable in the current environment, and the helper boundary (doctor = fixed procedural checks; `helper` = free-form cited Q&A — stated in both places).
+
+### Changed
+
+- **`core/README.md`** — opening count "Five" → "Six"; new `doctor` bullet under "What's here" (carrying the helper-boundary note and the command-surface note: skills are directly invocable as `/core:doctor`, so no separate command file exists); `/core:doctor` added to the invoke line.
+- **`core/.claude-plugin/plugin.json`** — `description` skills list extended with `doctor`; version 0.15.2 → 0.16.0.
+- **`.claude-plugin/marketplace.json`** — `core` entry description "five skills" → "six skills", adding `doctor`.
+
 ## [0.15.2] — 2026-07-02
 
 Two doc-hygiene fixes surfaced by the repo-anchored probe run (loose threads, not regressions).

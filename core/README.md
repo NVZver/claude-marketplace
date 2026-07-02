@@ -1,6 +1,6 @@
 # Core
 
-Five domain-neutral discipline skills that make output trustworthy and any actor (skill / slash command / workflow) follow a single, observable shape. For the "why" behind this package, see [`../.lsa/VISION.md`](../.lsa/VISION.md).
+Six domain-neutral discipline skills that make output trustworthy and any actor (skill / slash command / workflow) follow a single, observable shape. For the "why" behind this package, see [`../.lsa/VISION.md`](../.lsa/VISION.md).
 
 ## What's here
 
@@ -9,6 +9,7 @@ Five domain-neutral discipline skills that make output trustworthy and any actor
 - **`actor-template`** — Apply when authoring or editing a Skill, slash command, or workflow. Enforces the Goal / Input / Steps / Output / Constraints shape and demands every Step produce an observable result.
 - **`flow-selector`** — Apply before any non-trivial task. Classifies the work as Quick / Standard / Extended by chain-of-thought reasoning over Vision §4 boundary signals, then waits for human confirmation before any LSA ceremony fires. Renamed from `tier-selector` (T1 / T2 / T3) in `core` v0.5.2.
 - **`reuse-first`** — Apply on any coding task before writing code. Walks a 7-rung reuse ladder — understand the real flow → YAGNI → existing in-codebase helper (grep first) → stdlib/builtin → native platform feature → already-installed dependency → shortest working diff — and stops at the first rung that holds, so the change reuses over rewrites and adds only the minimum. Carries the root-cause-not-symptom bug rule (fix once in the shared path, not per-symptom). Silent on prose/analysis tasks that author no code. **New in v0.15.0.**
+- **`doctor`** — Run after install, or whenever something seems broken ("is my install wired?", "health check"). Four fixed read-only diagnostic checks — required plugins installed (`core` + `lsa`), the [`core/CLAUDE.md`](./CLAUDE.md) always-on fragment merged into the project `CLAUDE.md` (partial merge = WARN, reported per-anchor), installed plugin versions vs their source manifests, and the marketplace gate scripts (marketplace source repo only — SKIP elsewhere, with the reason) — reported as a per-check PASS / WARN / FAIL / SKIP table with the evidence actually observed and a one-line fix per failure. A check that isn't determinable in the current environment reports an honest WARN/SKIP, never a guessed PASS. Read-only: it reports and instructs, never repairs. **Boundary vs `helper`:** the doctor runs fixed procedural checks and never answers open questions; free-form cited Q&A ("what is X?", "how do I Y?") is [`helper`](../helper/README.md)'s `/help`, and helper never runs an install check. Surfaced as `/core:doctor` — skills are directly invocable as slash commands (see the invoke line below), so no separate command file exists. **New in v0.16.0.**
 
 ## Knowledge
 
@@ -23,7 +24,7 @@ Five domain-neutral discipline skills that make output trustworthy and any actor
 /reload-plugins
 ```
 
-Invoke directly via `/core:ground-rules`, `/core:output`, `/core:actor-template`, `/core:flow-selector` (renamed from `/core:tier-selector` in `core` v0.5.2), or `/core:reuse-first`, or let Claude trigger them automatically by description match. Run `/reload-plugins` after editing skill files to pick up changes without restart.
+Invoke directly via `/core:ground-rules`, `/core:output`, `/core:actor-template`, `/core:flow-selector` (renamed from `/core:tier-selector` in `core` v0.5.2), `/core:reuse-first`, or `/core:doctor`, or let Claude trigger them automatically by description match. Run `/reload-plugins` after editing skill files to pick up changes without restart.
 
 ### Merge the CLAUDE.md fragment
 
