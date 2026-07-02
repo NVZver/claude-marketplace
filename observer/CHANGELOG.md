@@ -5,6 +5,19 @@ All notable changes to the `observer` plugin are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.1] - 2026-07-02
+
+Fixes from the repo-wide prompt review (run with `prompt-engineer` 0.8.0 discipline; 5 MEDIUM findings in this plugin — anchor drift + silence-definition duplication, no behavior change).
+
+### Added
+
+- **`knowledge/roles.md`** — §"Silence — the zero-output rule": the single source for what *silent / emits nothing* means (no marker, token, placeholder, status line, parenthetical, or narration). Previously enumerated in full in four places.
+
+### Fixed
+
+- **`skills/verify-checkpoint/SKILL.md`** — seven stale line-anchors into `lsa/skills/reconcile/SKILL.md` corrected (`:32`→`:33`, `:33`→`:34`, `:34`→`:35` — off-by-one drift — and `:44-45`→`:58` ×2, which pointed at the coverage-table example instead of the independence constraint); the *Silence on no signal* constraint now references Step 2's definition instead of re-enumerating (the skill keeps one self-contained copy because constraint F13 forbids it reading `roles.md`).
+- **`skills/observe/SKILL.md`** — step 8(d) references `roles.md` §"Silence — the zero-output rule" instead of enumerating; **`knowledge/roles.md`** pair-programmer cadence likewise.
+
 ## [0.3.0] - 2026-07-02
 
 Observer remediation (epic `eval-coverage-tracks-complexity/observer-remediation`):

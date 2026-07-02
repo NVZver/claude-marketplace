@@ -2,6 +2,15 @@
 
 All notable changes to the `prompt-engineer` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.8.1] – 2026-07-02
+
+Self-conformance fixes surfaced by the repo-wide prompt review the 0.8.0 discipline itself ran (2 MEDIUM in this plugin, 5 of 7 files clean).
+
+### Fixed
+
+- **`agents/prompt-engineer.md`** — step 4 now applies "KISS/DRY 1-6" (said "1-5"; rule 6 shipped in 0.6.0 and the agent silently skipped it — same stale-tally family as the 0.8.0 README/manifest count fixes).
+- **`knowledge/quality-checks.md`** — Knowledge File Quality check 6 (no execution logic) cites `separation-of-concerns.md` §Boundary violations instead of restating the same normative rule (its own KISS/DRY 2 pattern applied to itself).
+
 ## [0.8.0] – 2026-07-02
 
 Course-driven improvement session: named the prompt-engineering paradigms the plugin already embodies (in-context learning, prompt elements, chain-of-thought — its own AI Over-Engineering check 5 applied to itself) and added two new behaviors: a demonstration-consistency rule and a self-consistency stability bar for judgment-based findings.

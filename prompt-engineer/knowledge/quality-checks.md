@@ -14,7 +14,7 @@ Skills, rules, and pattern files are reference material — loaded into context,
 3. Cross-references resolve — "follow the `X` skill" points to an existing file
 4. Correct/incorrect examples match the rules they illustrate — no contradictions
 5. Clear, concise wording — no adverbs, hedging, or filler
-6. No execution logic — no steps, goals, or output formats (that belongs in actors)
+6. No execution logic — knowledge containing steps, a Goal, or an Output format is the boundary violation defined in [separation-of-concerns.md](./separation-of-concerns.md) §Boundary violations; flag it there, once
 
 # KISS / DRY Audit
 

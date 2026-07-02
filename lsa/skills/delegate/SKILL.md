@@ -42,17 +42,10 @@ Get a grounded spec built by the implementer the developer already uses, and col
 
 4. **Inject the checkpoint protocol into the handoff (G4, G5, G10).**
 
-   **Delegate OWNS the checkpoint-signal note path.** Before injecting, delegate picks one **ephemeral** note path (a scratchpad / gitignored location — **not** committed) and passes the **same** path to both the implementer (the writer, in this step) and `observer:verify-checkpoint` (the reader, Step 5). The path locates the note; its contents are the four contract fields below, matching the reader contract in [`observer/skills/verify-checkpoint/SKILL.md:22-37`](../../../observer/skills/verify-checkpoint/SKILL.md).
+   **Delegate OWNS the checkpoint-signal note path.** Before injecting, delegate picks one **ephemeral** note path (a scratchpad / gitignored location — **not** committed) and passes the **same** path to both the implementer (the writer, in this step) and `observer:verify-checkpoint` (the reader, Step 5). The path locates the note; its contents are the four contract fields — `target` · `since` · `spec` · `status` — defined once in the reader contract, [`observer/skills/verify-checkpoint/SKILL.md:22-37`](../../../observer/skills/verify-checkpoint/SKILL.md) §"The checkpoint-signal contract".
 
    - **Agent-dispatched implementer** (delegate dispatches it via the `Agent` tool): inject into the handoff prompt an instruction that, **after each plan task F-K**, the implementer MUST:
-     1. **Write a checkpoint-signal note** at the delegate-provided path, carrying **exactly** these four fields:
-
-        | Field | Value the implementer writes |
-        |---|---|
-        | `target` | the F-id just completed (e.g., `F-K`), matching an id in `requirements.md` |
-        | `since` | the previous checkpoint marker (commit SHA / change cursor / timestamp) bounding the increment |
-        | `spec` | path to the spec dir (`requirements.md` + the `<flow>.feature` scenarios) |
-        | `status` | the pause marker meaning "stopped, awaiting a verdict" |
+     1. **Write a checkpoint-signal note** at the delegate-provided path, carrying **exactly** the four contract fields with the meanings the reader contract defines (link above) — no extra fields, none omitted.
      2. **Stop and await conformance clearance** — do not begin the next task until the verifier's verdict clears the boundary.
 
      Observable result: the handoff prompt names the delegate-owned note path and contains the after-each-F-K write-note-then-stop instruction naming all four fields.
@@ -64,7 +57,7 @@ Get a grounded spec built by the implementer the developer already uses, and col
    - **Gate on the verdict (G7):**
      - **CLEAR** → the implementer proceeds to the next task with **no human interrupt** (no picker, no question, no wait).
      - **BLOCK** → **surface the block to the human before the next task begins** (turn-final delivery, not buried in a subagent transcript — [`../../../core/skills/output/SKILL.md`](../../../core/skills/output/SKILL.md) Rule 7).
-   - **Keep the verifier independent (G8):** it runs read-only per its own contract; **never fold its verdict into the implementer's authoring context** — the verdict lands as a distinct artifact the implementer could not author ([`../reconcile/SKILL.md:44-45`](../reconcile/SKILL.md)). Delegate orchestrates the loop; it writes no code and grades nothing itself.
+   - **Keep the verifier independent (G8):** it runs read-only per its own contract; **never fold its verdict into the implementer's authoring context** — the verdict lands as a distinct artifact the implementer could not author ([`../reconcile/SKILL.md:58`](../reconcile/SKILL.md)). Delegate orchestrates the loop; it writes no code and grades nothing itself.
 
 6. **Await and return the diff.** Collect the implementer's returned diff, ready for `reconcile`. (→ diff)
 
@@ -80,7 +73,7 @@ The implementer's diff, ready for `reconcile`. In `checkpoint` mode, additionall
 - Only delegate a `GROUNDED` spec (CORE §6).
 - **`async` never degrades** — it errors and stops; it does not fall back to `checkpoint` or `off` (G3).
 - **Checkpoint does not replace reconcile** — the final whole-diff `lsa:reconcile` still runs after delegation (G9).
-- **The verifier is independent** — its verdict is never folded into the implementer's authoring context ([`../reconcile/SKILL.md:44-45`](../reconcile/SKILL.md)) (G8).
+- **The verifier is independent** — its verdict is never folded into the implementer's authoring context ([`../reconcile/SKILL.md:58`](../reconcile/SKILL.md)) (G8).
 - **No silent enforcement claim** — for a non-agent implementer the pause-protocol is advisory only (G10).
 - **Delegate owns the note path** — the checkpoint-signal note path is chosen by delegate and passed as the SAME ephemeral (scratchpad / gitignored, not committed) path to both the writer (implementer) and the reader (`observer:verify-checkpoint`); the four fields are unchanged.
 

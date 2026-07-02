@@ -10,7 +10,7 @@ description: "Plan and run parallel implementation of roadmap epics — the para
 
 Run a set of roadmap epics in parallel, safely. The engine computes which epics can run at the same time (the **disjoint-epic decomposer**), proposes a **wave plan**, and on approval dispatches one agent per epic into an isolated git worktree, gates each with the independent-reconcile safety core (`parallel-agent-delivery/safety-core` — the independent `lsa:reconcile` + the `.lsa.yaml` `gate:` checks), and converges via the serialized merge. The orchestration logic lives in [`../../knowledge/parallel-dispatch.md`](../../knowledge/parallel-dispatch.md) and [`../../knowledge/serialized-merge.md`](../../knowledge/serialized-merge.md); this skill is the actor that drives them.
 
-**Autonomy.** The full ladder is implemented (per [`../../knowledge/autonomy-policy.md`](../../knowledge/autonomy-policy.md)): `manual` (default — the human merges), `semi` (auto-merge on green), `auto` (+ deploy + healthcheck, rollback on failure). The gate is identical at every level; no level auto-merges into `main`. The run ends with the parallel-implementation roll-up ([`../../knowledge/parallel-rollup.md`](../../knowledge/parallel-rollup.md)).
+**Autonomy.** The full ladder (`manual` / `semi` / `auto`, default `manual`) is implemented per [`../../knowledge/autonomy-policy.md`](../../knowledge/autonomy-policy.md); level behaviors are enumerated once at Step 5b. The run ends with the parallel-implementation roll-up ([`../../knowledge/parallel-rollup.md`](../../knowledge/parallel-rollup.md)).
 
 ## Goal
 
@@ -20,7 +20,7 @@ Take a set of epics and get each one built, gated, and ready to merge in paralle
 
 - **`[epics]`** — a list of epic slugs or paths to run. **When absent, the skill runs the read-only preview** (Step 1a) instead of dispatching — it lists the most recent `backlog` / `not started` roadmap rows with an indicative parallel note, so the bare form does something useful (per [`../../knowledge/command-naming.md`](../../knowledge/command-naming.md) §"The no-arg form does something useful").
 - **`--parallel` / `--sequential`** — optional overrides. `--sequential` forces one epic per wave (one-at-a-time). `--parallel` forces a single wave (the user asserts disjointness, overriding the decomposer — and takes responsibility for it).
-- **`.lsa.yaml` autonomy** — `manual | semi | auto`, default `manual`, per [`../../knowledge/autonomy-policy.md`](../../knowledge/autonomy-policy.md). `manual` = human merges; `semi` = auto-merge on green; `auto` = + deploy + healthcheck (with rollback on failure). All three are implemented; the gate is identical at every level.
+- **`.lsa.yaml` autonomy** — `manual | semi | auto`, default `manual`; level behaviors per [`../../knowledge/autonomy-policy.md`](../../knowledge/autonomy-policy.md) (applied at Step 5b).
 - The `.lsa.yaml` `gate:` contract ([`../../../lsa/knowledge/quality-gate-contract.md`](../../../lsa/knowledge/quality-gate-contract.md)) and the fast-path read contract ([`../../../core/knowledge/fast-path-source-of-truth.md`](../../../core/knowledge/fast-path-source-of-truth.md)).
 
 ## Steps
@@ -54,10 +54,24 @@ Take a set of epics and get each one built, gated, and ready to merge in paralle
 
 An approved wave plan; per-epic isolated-worktree dispatch with independent gating; a serialized, human-performed merge (manual autonomy); and a per-epic status report in which every completion state is gate-proven and cited. The no-arg form is a read-only preview. The skill never claims execution or a merge it did not prove.
 
+## Example Output
+
+*[illustrative]*
+
+Wave plan (approved): wave 1 = `epic-auth-tokens` + `epic-docs-index` (disjoint — no file overlap); wave 2 = `epic-auth-ui` (depends on wave-1 output).
+
+| Epic | Agent | Wave | Gate | State | Proof |
+|---|---|---|---|---|---|
+| epic-auth-tokens | agent-1 | 1 | PASS | merged @ `a1b2c3d` | independent reconcile PASS + `gate:` 12/12 green |
+| epic-docs-index | agent-2 | 1 | PASS | pending (manual merge) | `gate:` 12/12 green, PR #71 awaiting human |
+| epic-auth-ui | — | 2 | — | queued | wave boundary — waiting on wave-1 merges |
+
+Open items: none. Roadmap row written for `epic-auth-tokens` only (post-merge).
+
 ## Constraints
 
 - **Propose before dispatch.** No worktree is created and no agent is spawned before the human approves the wave plan (Step 3). Approval binds to the presented plan — an advance or blanket approval given before the plan was shown does not count (Step 3). The smart default is propose; the human owns the go.
-- **Autonomy ladder.** `manual` (human merges), `semi` (auto-merge on green), `auto` (+ deploy + healthcheck, with rollback on healthcheck failure) — all implemented; default `manual`. No level auto-merges into `main`; the human always owns the final integration → `main` merge. `deployed` is reported only after the healthcheck passes. The gate must be green at every level.
+- **Autonomy ladder boundaries.** No level auto-merges into `main` — the human always owns the final integration → `main` merge; `deployed` is reported only after the healthcheck passes; the gate must be green at every level. Level behaviors: Step 5b + [`../../knowledge/autonomy-policy.md`](../../knowledge/autonomy-policy.md).
 - **Done is a gate-proven, cited predicate.** Report `merged @ <sha>` only when the serialized merge landed and the gate proved it, citing the artifact; everything else is `attempted` / `not gated` / `pending` with evidence. Per [`../../../core/skills/ground-rules/SKILL.md`](../../../core/skills/ground-rules/SKILL.md) Rule 7 + pitch Definition of success #1.
 - **Isolation + teardown are mandatory.** One worktree/branch/PR per epic, each dispatched with `isolation: worktree` — a single shared tree with convention-only file-ownership is **non-conforming** (no OS-level isolation; a stray edit corrupts a peer — finding C7, [`../../knowledge/parallel-dispatch.md`](../../knowledge/parallel-dispatch.md) §3). If a worktree cannot be created, hold the epic back as an open item rather than running it single-tree. Tear every worktree down; report any that survive.
 - **Disjointness is conservative.** When unsure, serialize. `--parallel` overrides the decomposer but shifts the disjointness responsibility to the user; it does not lower the gate.

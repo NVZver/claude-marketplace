@@ -27,7 +27,7 @@ Turn an approved pitch into a list of independently-shippable epics — each key
 
 ## Output
 
-The agent's epic list — each epic carrying its **stable slug** key (`<feature-slug>/<short-kebab-scope>`, per [`../../knowledge/epic-decomposition.md`](../../knowledge/epic-decomposition.md) §"Epic key") — is delivered and the approve/reject/adjust gate is resolved. On approval `lsa:discover` is executing with the first epic's seed (slug included verbatim, so it survives unchanged into the eventual commit and PR) and the remaining epics are surfaced; on reject no handoff runs. The agent proposes; this skill runs the gate and the `lsa:discover` invocation.
+The agent's epic list — each epic keyed by its stable slug (see Goal) — is delivered and the approve/reject/adjust gate is resolved. On approval `lsa:discover` is executing with the first epic's seed (slug included verbatim) and the remaining epics are surfaced; on reject no handoff runs. The agent proposes; this skill runs the gate and the `lsa:discover` invocation.
 
 ### Example Output
 

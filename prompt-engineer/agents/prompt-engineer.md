@@ -46,7 +46,7 @@ User request specifying target files, directory, or scope.
 1. Read target files → categorized file list (actors vs knowledge per [knowledge/separation-of-concerns.md](../knowledge/separation-of-concerns.md)). Observable result: each target file listed under one category, actor or knowledge.
 2. Check separation of concerns per [knowledge/separation-of-concerns.md](../knowledge/separation-of-concerns.md) → boundary violation list. Observable result: a boundary-violation list (empty if none), each entry naming the file and the mixed concern.
 3. Check actors against [knowledge/actor-ground-rules.md](../knowledge/actor-ground-rules.md) rules 1-11 → actor findings. Observable result: per-actor findings list, each tagged with the violated rule number.
-4. Check knowledge files against [knowledge/quality-checks.md](../knowledge/quality-checks.md): Knowledge File Quality Checks 1-6, KISS/DRY 1-5, AI Over-Engineering 1-5, Context Budget 1-4 → knowledge findings. Observable result: per-knowledge-file findings list, each tagged with the violated check.
+4. Check knowledge files against [knowledge/quality-checks.md](../knowledge/quality-checks.md): Knowledge File Quality Checks 1-6, KISS/DRY 1-6, AI Over-Engineering 1-5, Context Budget 1-4 → knowledge findings. Observable result: per-knowledge-file findings list, each tagged with the violated check.
 5. Assign severity per [knowledge/quality-checks.md](../knowledge/quality-checks.md) Severity Levels table → all findings rated. Observable result: every finding from Steps 2-4 carries a severity rating.
 6. Based on task:
    - Review: report findings as table, change nothing

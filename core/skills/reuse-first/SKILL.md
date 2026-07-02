@@ -12,7 +12,7 @@ The reuse ladder catches reinvention and over-delivery *before* the diff exists,
 
 ## Goal
 
-On a coding task, climb a 7-rung reuse ladder before writing code and stop at the first rung that holds — so the change reuses existing capability where available and adds only the minimum: reuse over rewrite, shortest working diff (or no code at all).
+Stop at the first ladder rung that holds — so the change reuses existing capability and adds only the minimum: shortest working diff, or no code at all.
 
 ## Input
 

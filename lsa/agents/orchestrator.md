@@ -27,7 +27,7 @@ Take a user request through the loop to a reconciled result, delegating each ste
 
 ## Steps — the loop, run in one context
 
-Run the LSA-owned stages **inline in this context** — invoke each stage's skill via `Skill`, write its artifact (`grounding.md`, `requirements.md`/`<flow>.feature`, `conformance.md`) from here, and carry facts forward so each stage **reuses** what the last read instead of re-reading it. Cross a context boundary only at the two hops that require it. This is the token-efficiency posture that keeps the full flow affordable on the Pro-tier model (per [`.lsa/standards/code.md`](../../.lsa/standards/code.md) §"Model policy"; ceremony scales to weight, CORE §2).
+Run the LSA-owned stages **inline in this context** — invoke each stage's skill via `Skill`, write its artifact (`grounding.md`, `requirements.md`/`<flow>.feature`, `conformance.md`) from here, and carry facts forward so each stage **reuses** what the last read instead of re-reading it. Cross a context boundary only at the two hops that require it (rationale: Constraints, *Run spec-authoring inline*).
 
 1. **Extract** intent from the user — what changes, for which module. Ask only what isn't derivable. (→ task)
 2. **Discover, inline.** Run `lsa:discover` here — read `.lsa.yaml`, the constitution, and the code the request touches; cite each fact. Never guess (CORE §1). (→ intent + cited facts, held in context)
