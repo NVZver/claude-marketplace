@@ -5,6 +5,63 @@ All notable changes to the `observer` plugin are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2026-07-02
+
+Observer remediation (epic `eval-coverage-tracks-complexity/observer-remediation`):
+ships the five MEDIUM findings the 2026-06-27 eval left open (M1–M5,
+[`tests/eval-findings-2026-06-27.md`](./tests/eval-findings-2026-06-27.md) — each now
+carries a Resolution line) and folds in the `sonnet-robustness-consistency-sweep`
+pitch's observer thresholds, so a Pro-tier model resolves every threshold without
+inventing one. Re-verified by a fresh 8-probe adversarial run
+([`tests/eval-findings-2026-07-02.md`](./tests/eval-findings-2026-07-02.md)).
+
+### Changed
+
+- **`skills/observe/SKILL.md` kickoff split + signal→role table (M3, M4).** The bundled
+  kickoff step is now three one-action steps, each with an `Observable result:` line
+  (verify-checkpoint house style): read context / adopt a named role → infer one candidate
+  from a **signal→role table** (failing tests + stub → interviewer; feature-in-progress
+  with tests → pair-programmer; exploratory, no tests → rubber-duck; user names a role →
+  that role) → propose via `AskUserQuestion`. Pre-confirmation output is bounded to the
+  one-line matched-signal reason — no diagnosing bugs or naming fixes before confirmation.
+  The Example Output is reconciled with the table: its failing-pytest-plus-stub context
+  now proposes **interviewer**, not pair-programmer (the self-contradiction M3 caught).
+- **`skills/observe/SKILL.md` inactivity limit defined (was "the timeout").** Stop
+  condition F5.2 is now **2 consecutive `/loop` cycles with no file changes** since the
+  last-cycle marker (cycle-based — the loop is self-paced, no wall clock), overridable at
+  kickoff (escape hatch) and recorded in the session-state note. Input, Step 5, Step 10,
+  and the Example Output carry the same figure.
+- **`skills/observe/SKILL.md` scaffold decline mandates the recovery path (M5).** A
+  scaffold request in a non-interviewer role now forces: decline + stated reason + a
+  switch offer via `AskUserQuestion`; on switch, the language/topic gate (F2.2) runs
+  before any scaffolding.
+- **`knowledge/roles.md` interviewer "persistently stuck" quantified.** Persistently
+  stuck = **3 consecutive cycles** with no forward progress on the same blocker (the
+  figure `tests/scenarios.md` S5 already used, now in the data file the Actor reads).
+- **`knowledge/roles.md` pair-programmer lens order disambiguated (M2).** The lens order
+  is recommendation priority, not scan order: recommend the single highest-ranked target
+  (dependency outranks local code); lower-ranked targets are named only as an explicit
+  fallback, never an unranked menu.
+- **`knowledge/roles.md` custom role gains a Scope field (M1).** Emit only in-lens
+  findings — whether or not the lens line says "only"; out-of-lens findings are dropped,
+  not deferred; the non-destructive backstop is stated; in-lens-empty cycles emit nothing.
+- **`skills/verify-checkpoint/SKILL.md`** — the three `../observe/SKILL.md` line citations
+  updated for the renumbered steps (session-state note now Step 5 @ :45; silence discipline
+  now step 8d @ :51).
+- **`tests/scenarios.md` PASS criteria tightened** (the 06-27 "Suite gaps to harden" list):
+  S3 requires a *shown* search artifact (was "stated or shown") and the single
+  highest-ranked recommendation; S7 names the signal→role table route (interviewer) and
+  bans pre-confirmation diagnosis; S8 makes the switch offer mandatory (was "may offer")
+  with the F2.2 fall-through.
+
+### Added
+
+- **`tests/eval-findings-2026-07-02.md`** — fresh adversarial re-run of all 8 probes
+  against the 0.3.0 prompts (per `.lsa/standards/testing.md` "Guards must be
+  prompt-forced"), with per-scenario forced/generous verdicts.
+- **`tests/eval-findings-2026-06-27.md`** — Resolution lines for H1–H5 (shipped in 0.1.1)
+  and M1–M5 (shipped in 0.3.0), closing the open findings loop.
+
 ## [0.2.1] - 2026-07-02
 
 Cross-epic harmonization with `lsa:delegate` (epic 2, `paired-verify/lsa-delegate-wiring`):

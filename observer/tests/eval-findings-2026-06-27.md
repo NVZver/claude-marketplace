@@ -22,6 +22,8 @@ gap breaks the role's core promise.
 | H4 | Silence is undefined — the agent invented a `<SILENT>` token that, if rendered, is itself visible noise, violating "emits nothing." | S2 | `SKILL.md` Step 6(d) + Constraints | "Silence = produce NO user-facing text this cycle — no marker, token, or placeholder; the cycle ends with only the last-cycle marker updated." |
 | H5 | Interviewer lens levels (solution>bugs>perf>style) are ordered but never *defined*; agent labeled a bug as "solution" and passed by luck. Ordering is unenforceable. | S4 | `roles.md` §interviewer Lens | Add a one-line gloss per level (solution=wrong approach; bugs=defect in a right approach; performance=correct-but-suboptimal; style=naming/types) + "name a level only when it has a catch." |
 
+Resolution (H1–H5): shipped in observer 0.1.1 (see `../CHANGELOG.md` [0.1.1] — prompt-hardening from this eval).
+
 ## MEDIUM
 
 | # | Gap | Scenario | Target | Fix |
@@ -31,6 +33,16 @@ gap breaks the role's core promise.
 | M3 | Kickoff role-inference has no heuristic — nondeterministic. The under-test picked `interviewer`; SKILL's own Example Output picks `pair-programmer` for a near-identical context (self-contradiction). | S7 | `SKILL.md` Step 1 (+ fix Example) | Add a signal→role map: stub + red test → interviewer; in-progress edit to working code → pair-programmer; reasoning aloud / no catch → rubber-duck. Reconcile the Example. |
 | M4 | No bound on pre-proposal narration at kickoff — could slide into diagnosing bugs before a role is confirmed (F1.5 spirit). | S7 | `SKILL.md` Step 1 | "State only the one-line reason for the inferred role; do not diagnose bugs or name fixes before confirmation." |
 | M5 | Scaffold decline doesn't mandate the recovery offer, how to surface it, or carry the F2.2 language gate into the switch pitch. | S8 | `SKILL.md` Step 4 | "Decline + offer a switch via AskUserQuestion; on switch, fall through to the language/topic gate before scaffolding." |
+
+Resolutions (epic `eval-coverage-tracks-complexity/observer-remediation`, 2026-07-02):
+
+- M1 — Resolution: shipped in observer 0.3.0 — `roles.md` §custom gained a **Scope** field (in-lens only, "whether or not the line says 'only'"; out-of-lens findings dropped, not deferred; non-destructive backstop stated) and a quiet-cadence clause for in-lens-empty cycles.
+- M2 — Resolution: shipped in observer 0.3.0 — `roles.md` §pair-programmer Lens now states the order is recommendation priority, not scan order: recommend the single highest-ranked target (dependency outranks local code), lower-ranked named only as explicit fallback, never an unranked menu.
+- M3 — Resolution: shipped in observer 0.3.0 — `observe/SKILL.md` kickoff gained a signal→role table (failing tests + stub → interviewer; feature-in-progress with tests → pair-programmer; exploratory/no tests → rubber-duck; user names a role → that role), and the Example Output was reconciled: its failing-pytest-plus-stub context now proposes **interviewer**, not pair-programmer.
+- M4 — Resolution: shipped in observer 0.3.0 — kickoff Step 2 + Constraints bound pre-confirmation output to the one-line matched-signal reason; no diagnosing bugs or naming fixes before the role is confirmed.
+- M5 — Resolution: shipped in observer 0.3.0 — scaffold step (now Step 6) mandates decline + reason + switch offer via `AskUserQuestion`, and on switch falls through to the F2.2 language/topic gate before scaffolding.
+
+Re-run: `eval-findings-2026-07-02.md` (same 8 probes against the 0.3.0 prompts).
 
 ## LOW
 
