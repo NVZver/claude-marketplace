@@ -1,12 +1,42 @@
 # claude-marketplace
 
 [![lint](https://github.com/NVZver/claude-marketplace/actions/workflows/lint.yml/badge.svg)](https://github.com/NVZver/claude-marketplace/actions/workflows/lint.yml)
+[![release](https://img.shields.io/github/v/release/NVZver/claude-marketplace)](https://github.com/NVZver/claude-marketplace/releases)
+[![license: MIT](https://img.shields.io/badge/license-MIT-green)](./LICENSE)
+[![Claude Code marketplace](https://img.shields.io/badge/Claude%20Code-plugin%20marketplace-d97757)](https://code.claude.com/docs/en/discover-plugins)
+
+**Six Claude Code plugins that make agent output trustworthy** — every claim cites a source, every line of code traces to a spec, and ceremony scales to the weight of the task.
+
+**6 plugins · 20 skills · 5 agents · 4 slash commands.** Pure Markdown plus one transparent read-only hook ([Security](#security)). MIT-licensed.
+
+```text
+/plugin marketplace add NVZver/claude-marketplace
+/plugin install core@NVZver
+/plugin install lsa@NVZver
+/reload-plugins
+```
+
+Then merge the [`core/CLAUDE.md`](./core/CLAUDE.md) fragment into your project's `CLAUDE.md` — the step that switches the always-on rules on — and run `/core:doctor` to verify the wiring. Prerequisites, the four optional plugins, and the doctor's output shape: [Install](#install).
 
 > **Ownership over automation.** A personal, agentic engineering system whose single job is **trustworthy output** — every fact traces to a source, every line of code traces to a spec — and whose **ceremony scales to the weight of the task**.
 
 **Proven · Owned · No Fluff · Spec First.**
 
-A Claude Code marketplace shipping six composable plugins for spec-first, fact-grounded software development. The point isn't features — it's discipline that keeps you, the human, in the driver's seat while the agent does the typing.
+## Why this exists
+
+Agents make silent decisions. Hedged claims (*"probably"*, *"typically"*, *"based on convention"*) pass for facts. Code drifts from intent. Specs rot the moment the code lands. Six months in, nobody — human or agent — knows why the system is the way it is. The system that was supposed to make you faster turned you into a passenger.
+
+The solution is discipline, not magic. `core` constrains output to grounded, sourced, decision-first prose on every task. `lsa` chains every code line to a human-owned requirement and absorbs drift instead of forbidding it. `helper` and `manager` keep you from typing yourself into a corner before the code starts. `prompt-engineer` keeps the discipline files themselves honest.
+
+## How it works in 30 seconds
+
+1. **`core` is always-on.** Every task fires `ground-rules` + `output` automatically. The one hard output rule is *sourced* — every claim carries a source + quote; the rest (structured, minimal, verdict-first, …) is guidance the agent applies when it serves the answer, so simple questions get short prose instead of a six-block template.
+2. **Got a vague idea?** `/manager:shape` shapes it into a pitch with clear scope before you commit to building.
+3. **Non-trivial tasks classify first.** `core/flow-selector` proposes Quick / Standard / Extended with chain-of-thought reasoning; you confirm.
+4. **Standard and Extended run through LSA.** `lsa:discover` → `lsa:specify` → `lsa:verify` → `lsa:delegate` → `lsa:reconcile`. Every line of code traces back to a requirement; code-writing is delegated to your implementer.
+5. **Hand-edited code?** `lsa:reconcile` offers to update the spec — it never blocks the edit.
+
+The single test the whole system answers: **what is the minimum ceremony that still guarantees grounded, spec-anchored output for *this* task?**
 
 ## The six plugins
 
@@ -187,21 +217,14 @@ Stopped: inactivity timeout.
 
 `observer`'s second skill, `observer:verify-checkpoint`, is the gating counterpart: one coaches, one gates. It is a read-only grader that, on a checkpoint signal from an implementer, grades that one finished increment **does·only** — do the target requirement's scenarios pass, and does every changed hunk trace to a requirement — emitting `CLEAR` (auto-clears) or `BLOCK` (surfaced to you). It runs either dispatched per increment by `lsa:delegate` or as a standalone rider on the same self-paced `/loop`. Detail: [`observer/README.md`](./observer/README.md).
 
-## The problem and the solution
+## Field reports
 
-Agents make silent decisions. Hedged claims (*"probably"*, *"typically"*, *"based on convention"*) pass for facts. Code drifts from intent. Specs rot the moment the code lands. Six months in, nobody — human or agent — knows why the system is the way it is. The system that was supposed to make you faster turned you into a passenger.
+Early evidence from real projects — self-reported by their owners, not independently audited:
 
-The solution is discipline, not magic. `core` constrains output to grounded, sourced, decision-first prose on every task. `lsa` chains every code line to a human-owned requirement and absorbs drift instead of forbidding it. `helper` and `manager` keep you from typing yourself into a corner before the code starts. `prompt-engineer` keeps the discipline files themselves honest.
+- **Greenfield service, June 2026** — `core` + `lsa` layered onto an existing agent setup; the first delegated build came back green with **98% test coverage on the first try**.
+- **Side-project MVP, June 2026** — idea to a deployed MVP on Google Cloud in **2 days**, run through the full loop (pitch → epics → one LSA cycle per epic).
 
-## How it works in 30 seconds
-
-1. **`core` is always-on.** Every task fires `ground-rules` + `output` automatically. The one hard output rule is *sourced* — every claim carries a source + quote; the rest (structured, minimal, verdict-first, …) is guidance the agent applies when it serves the answer, so simple questions get short prose instead of a six-block template.
-2. **Got a vague idea?** `/manager:shape` shapes it into a pitch with clear scope before you commit to building.
-3. **Non-trivial tasks classify first.** `core/flow-selector` proposes Quick / Standard / Extended with chain-of-thought reasoning; you confirm.
-4. **Standard and Extended run through LSA.** `lsa:discover` → `lsa:specify` → `lsa:verify` → `lsa:delegate` → `lsa:reconcile`. Every line of code traces back to a requirement; code-writing is delegated to your implementer.
-5. **Hand-edited code?** `lsa:reconcile` offers to update the spec — it never blocks the edit.
-
-The single test the whole system answers: **what is the minimum ceremony that still guarantees grounded, spec-anchored output for *this* task?**
+Ran it on your own project? Share the outcome — good or bad — in [Discussions](https://github.com/NVZver/claude-marketplace/discussions).
 
 ## Status + substrate
 
