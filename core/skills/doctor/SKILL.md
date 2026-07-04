@@ -1,6 +1,6 @@
 ---
 name: doctor
-description: Run when the user asks for a health check of their NVZver marketplace install — "doctor", "health check", "verify install", "is my install wired", "something's broken", a skill that should have triggered didn't, or right after installing or updating plugins. Runs four fixed read-only diagnostic checks — required plugins installed (core + lsa), the core/CLAUDE.md always-on fragment merged into the project CLAUDE.md, installed plugin versions consistent with their source manifests, and the marketplace gate scripts passing — and reports a per-check PASS/WARN/FAIL/SKIP table with the evidence found and a one-line fix per failure. Never edits anything. Not for free-form questions ("what is X?", "how do I Y?") — those belong to helper's /help; the doctor only runs its fixed checks.
+description: Run when the user asks for a health check of their NVZver marketplace install — "doctor", "health check", "verify install", "is my install wired", "something's broken", a skill that should have triggered didn't, or right after installing or updating plugins. Runs four fixed read-only diagnostic checks — required plugins installed (core + lsa), the core/CLAUDE.md always-on fragment merged into the project CLAUDE.md, installed plugin versions consistent with their source manifests, and the marketplace gate scripts passing — and reports a per-check PASS/WARN/FAIL/SKIP table with the evidence found and a one-line fix per failure. Never edits anything. Not for free-form questions ("what is X?", "how do I Y?") — the doctor only runs its fixed checks.
 ---
 
 > **Trace.** On load, print first: `=============== [core/skills/doctor/SKILL.md] [core] ===============`
@@ -8,7 +8,7 @@ description: Run when the user asks for a health check of their NVZver marketpla
 
 # Doctor
 
-A user-runnable self-check for the marketplace install: four fixed, read-only diagnostic checks, each reporting PASS / WARN / FAIL / SKIP with the evidence it actually observed and a one-line fix when it fails — so a broken or half-wired install reports itself instead of failing silently (per [`.lsa/pitches/onboarding-diagnostics.md`](../../../.lsa/pitches/onboarding-diagnostics.md)). Free-form cited Q&A ("what is X?", "how do I Y?") is [`helper`](../../../helper/README.md)'s job (`/help`); the doctor never answers open questions — it only runs the checks below.
+A user-runnable self-check for the marketplace install: four fixed, read-only diagnostic checks, each reporting PASS / WARN / FAIL / SKIP with the evidence it actually observed and a one-line fix when it fails — so a broken or half-wired install reports itself instead of failing silently (per [`.lsa/pitches/onboarding-diagnostics.md`](../../../.lsa/pitches/onboarding-diagnostics.md)). Free-form cited Q&A ("what is X?", "how do I Y?") is out of scope; the doctor never answers open questions — it only runs the checks below.
 
 ## Goal
 
@@ -42,7 +42,7 @@ The environment line, a four-row per-check table (`# | Check | Verdict | Evidenc
 - **Read-only.** Never create, edit, or delete any user file; never install, update, or remove a plugin; never fetch the network. The doctor reports and instructs — the human fixes (the Step 5 scripts are the repo's own detect-and-report-only checks; auto-repair is a pitch no-go).
 - **No new shipped executable.** Every check runs through the agent's existing tools (Read / Grep / read-only Bash) and the repo's already-existing `scripts/*.sh`; this skill ships no script or hook of its own — the trust boundary stays pure Markdown.
 - **Honest verdicts only.** A check whose evidence is not observable in the current environment reports WARN or SKIP with the reason — never a guessed PASS, never a fabricated FAIL. Per [`ground-rules` Rule 7 *Done is a gate-proven, cited predicate*](../ground-rules/SKILL.md).
-- **Fixed procedure, not Q&A.** The doctor runs exactly the checks above — it never answers open questions. Free-form cited Q&A is [`helper`](../../../helper/README.md)'s `/help`; helper never runs an install check. The boundary is stated in both READMEs.
+- **Fixed procedure, not Q&A.** The doctor runs exactly the checks above — it never answers open questions.
 - Outputs follow [`../output/SKILL.md`](../output/SKILL.md) — citation by link, never restated.
 
 ---

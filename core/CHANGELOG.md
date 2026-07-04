@@ -2,6 +2,14 @@
 
 All notable changes to the `core` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.16.4] — 2026-07-04
+
+Docs-only cleanup following the `helper` plugin's removal from the marketplace (docs only, no skill behavior change).
+
+### Removed
+
+- **`README.md`** — the `doctor` bullet's `helper` cross-reference (free-form Q&A boundary note); **`knowledge/fast-path-source-of-truth.md`** — the "Helper's onboarding catalog" worked-reference sentence, the onboarding-fast-path question-shape row, and the Callers table row pointing at `helper/knowledge/onboarding-fast-path.md`; **`skills/doctor/SKILL.md`** — the three `helper`/`/help` cross-references (frontmatter description, body intro, Constraints); **`skills/output/SKILL.md`** — the canonical-source clause's citation of `helper/knowledge/output-discipline.md` as the adherent example; **`tests/repo-anchored.md`** — probe D2's PASS-condition example generalized off the now-deleted `helper` file.
+
 ## [0.16.3] — 2026-07-02
 
 Public-readiness documentation pass (docs only, no skill behavior change).

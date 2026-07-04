@@ -175,7 +175,7 @@ grep -rEn 'structured[ ,/]+minimal[ ,/]+formatted[ ,/]+sourced' \
 
 **Probe self-reference note.** The recipe above contains the literal 4-name list once (in its own comment). That hit is exempt: the probe is allowed to describe what it catches. Filter with `| grep -v '^./core/tests/repo-anchored.md:'` if scripting.
 
-**PASS.** Recipe (1) returns zero hits. Recipe (2) returns only hits where (a) the line lives in `core/skills/output/SKILL.md`, (b) the match is immediately followed by the next name `concrete` (any separator — canonical full list), or (c) the match appears within 5 lines of a markdown link to `core/skills/output/SKILL.md` (legitimate cited re-grounding — e.g., `helper/knowledge/output-discipline.md:5` declares *"Re-grounded summary of `core/output` and `core/ground-rules`; the canonical rules live there."*).
+**PASS.** Recipe (1) returns zero hits. Recipe (2) returns only hits where (a) the line lives in `core/skills/output/SKILL.md`, (b) the match is immediately followed by the next name `concrete` (any separator — canonical full list), or (c) the match appears within 5 lines of a markdown link to `core/skills/output/SKILL.md` (legitimate cited re-grounding — a plugin knowledge file summarizing the four names right next to a link to canonical, instead of restating them uncited).
 
 **FAIL.** Any other hit. Remediation: replace the snapshot with a citation-by-link (`[\`core/output\`](path/to/core/skills/output/SKILL.md)`) — the link target carries the live count and rule names; the citing file no longer drifts when Core changes.
 

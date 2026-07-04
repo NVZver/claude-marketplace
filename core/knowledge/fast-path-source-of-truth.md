@@ -4,7 +4,7 @@
 
 A navigation-class question maps deterministically to **one** source-of-truth file at a known path with **one** canonical answer (e.g., "what's next" → the roadmap's Feature Backlog table; "how do I get started" → a named README section). For these, the agent reads the file directly and quotes the answer back with a citation — it does **not** spawn a sub-agent, run a `context7` lookup, or do multi-round `Grep`. This is the shared contract every fast-path caller cites.
 
-This file is the canonical statement of the pattern. The first shipped instance — Helper's onboarding catalog at [`../../helper/knowledge/onboarding-fast-path.md`](../../helper/knowledge/onboarding-fast-path.md) — predates this file and is the worked reference for the matching/fall-through discipline below.
+This file is the canonical statement of the pattern, worked from the matching/fall-through discipline below.
 
 ## The pattern shape
 
@@ -21,7 +21,6 @@ If any step cannot complete, fall through (see §"Fall-through rule"). Never fab
 Match on the **shape of the question**, anchored to a small set of exact phrases, before any semantic interpretation:
 
 - "what's next" / "what should I work on next" / "what's the next backlog item" → roadmap fast-path.
-- "how do I get started" / "what is X" (for a canonical subject) → onboarding fast-path (Helper).
 
 The discipline is: **a near-miss falls through; it does not get force-fit.** Misclassifying a deep-research question as a fast-path returns a cheap wrong answer, which is worse than a slow correct one. When the phrasing is unknown, ambiguous, or carries extra intent the source-of-truth file cannot answer ("what's next **and why that order**", "recommend an ordering"), do not fast-path — fall through to the deep-research path. One bounded classification pass: match or no-match, no chain-of-thought scaffolding.
 
@@ -46,4 +45,3 @@ Every fast-path answer carries the source inline: a verbatim quote of the answer
 |---|---|---|
 | [`../../manager/skills/next/SKILL.md`](../../manager/skills/next/SKILL.md) | `${specs_root}/roadmap.md` §`## Feature Backlog` | "what's next" (reserves full dispatch for "recommend an order") |
 | [`../../manager/agents/project-manager.md`](../../manager/agents/project-manager.md) | `${specs_root}/roadmap.md` §`## Feature Backlog` | "what's next" (early-exit on direct invocation) |
-| [`../../helper/knowledge/onboarding-fast-path.md`](../../helper/knowledge/onboarding-fast-path.md) | named `README.md` heading anchors | install / start / what-is-X |

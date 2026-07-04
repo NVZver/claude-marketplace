@@ -6,30 +6,28 @@
 
 **Proven · Owned · No Fluff · Spec First.**
 
-A Claude Code marketplace shipping six composable plugins for spec-first, fact-grounded software development. The point isn't features — it's discipline that keeps you, the human, in the driver's seat while the agent does the typing.
+A Claude Code marketplace shipping five composable plugins for spec-first, fact-grounded software development. The point isn't features — it's discipline that keeps you, the human, in the driver's seat while the agent does the typing.
 
-## The six plugins
+## The five plugins
 
 | Plugin | Version | What it gives you |
 |---|---|---|
-| [`core`](./core/) | 0.16.3 | Always-on discipline: eight content rules, one hard output rule plus six pieces of output guidance, flow classification (Quick / Standard / Extended), the `/core:doctor` install self-check, and the Goal/Input/Steps/Output/Constraints shape every skill follows. |
+| [`core`](./core/) | 0.16.4 | Always-on discipline: eight content rules, one hard output rule plus six pieces of output guidance, flow classification (Quick / Standard / Extended), the `/core:doctor` install self-check, and the Goal/Input/Steps/Output/Constraints shape every skill follows. |
 | [`lsa`](./lsa/) | 0.24.4 | **L**iving **S**pec **A**rchitecture — technology-agnostic spec layer: authors a grounded spec (EARS + Gherkin), verifies it against the codebase *before* you build and against the diff *after*, then delegates code-writing to any implementer. Not the coder; hand-edits are *absorbed* into the spec instead of forbidden. |
-| [`helper`](./helper/) | 0.6.3 | Friendly fact-grounded assistant: a `/help` slash command and an auto-engaging subagent that answers `what is X?` mid-flow with verifiable file citations (line range, heading anchor, or URL). |
 | [`manager`](./manager/) | 0.16.2 | Pre-build shaping: turns a vague problem into a structured pitch (problem, appetite, solution sketch, rabbit holes, no-gos) before the build cycle begins. |
-| [`prompt-engineer`](./prompt-engineer/) | 0.8.2 | Plugin-quality discipline: scans your own actors and knowledge files for ground-rule, KISS/DRY, AI over-engineering, and context-budget violations. |
+| [`prompt-engineer`](./prompt-engineer/) | 0.8.3 | Plugin-quality discipline: scans your own actors and knowledge files for ground-rule, KISS/DRY, AI over-engineering, and context-budget violations. |
 | [`observer`](./observer/) | 0.3.2 | Live observe-and-coach + increment gate: `observe` rides Claude Code's self-paced `/loop` and coaches your file changes through a chosen role (rubber-duck, pair-programmer, interviewer, or custom); `verify-checkpoint` gates delegation increments — grades one finished requirement **does·only** and emits `CLEAR` or `BLOCK`. |
 
 ## Install
 
 **Prerequisites.** [Claude Code](https://code.claude.com/docs/en/overview) on any plan (see [Plans & models](#plans--models) below — nothing is gated behind a specific model). The `plugin.json` `dependencies` field the install order relies on is functional since Claude Code v2.1.110 (per the [plugins reference](https://code.claude.com/docs/en/plugins-reference)); on older versions, installing in the listed order achieves the same result.
 
-1. Add the marketplace and install the plugins — `core` first, because `lsa`, `manager`, and `observer` declare it as a `plugin.json` dependency, and the other two plugins (`helper`, `prompt-engineer`) align with its conventions:
+1. Add the marketplace and install the plugins — `core` first, because `lsa`, `manager`, and `observer` declare it as a `plugin.json` dependency, and `prompt-engineer` aligns with its conventions:
 
    ```
    /plugin marketplace add NVZver/claude-marketplace
    /plugin install core@NVZver
    /plugin install lsa@NVZver
-   /plugin install helper@NVZver           # optional — /help Q&A assistant
    /plugin install manager@NVZver          # optional — pitch shaping
    /plugin install prompt-engineer@NVZver  # optional — prompt-quality audits
    /plugin install observer@NVZver         # optional — live observe-and-coach
@@ -61,137 +59,29 @@ Symptom → fix; when in doubt, [`/core:doctor`](./core/skills/doctor/SKILL.md) 
 - **`NOT-GROUNDED` from `lsa:verify`** — not a breakage: fix the flagged spec references before building, per [`lsa/README.md` § Quick start step 4](./lsa/README.md#quick-start).
 - **Lint red** — run the failing gate locally: `scripts/lint.sh`, `scripts/check-citations.sh`, `scripts/check-links.sh`, `scripts/check-version-changelog.sh` — each prints the offending line.
 
-## User flows
+## Quick start
 
-One primary flow per plugin. Each example uses an illustrative prompt and a representative output snippet — labeled `[illustrative]` because the snippet is constructed for readability rather than copied from a live run.
-
-### core
-
-The always-on `flow-selector` skill classifies every non-trivial task before work begins. You see the reasoning and confirm a flow type — **Quick** (one-pass change), **Standard** (discover → specify → verify → delegate → reconcile, lightweight), or **Extended** (full spec lifecycle).
+The core loop, one slash command per step. `core` has no command of its own — its ground-rules/output/flow-selector discipline runs underneath every step below:
 
 ```text
-> claude "add a /lint slash command to the prompt-engineer plugin"
+(core: always-on)
+  /manager:shape "<vague idea>"    -> approved pitch
+  /manager:decompose <pitch>       -> epics
 
-[core/flow-selector] Classifying this task.
-Signals — adds new surface (slash command), touches 1 plugin, no existing spec.
-Verdict — Extended flow: discover → specify → verify → delegate → reconcile.
+  /lsa:discover -> /lsa:specify -> /lsa:verify   (per epic)
+  /lsa:delegate         -> (delegation) an external implementer writes the code
+  /lsa:reconcile        -> verify the diff against the spec; absorb drift
 
-Approve [Extended], or pick [Quick] / [Standard].
+  /manager:next         -> what's next on the roadmap
 ```
 
-`[illustrative]`
-
-### lsa
-
-**LSA** — Living Spec Architecture — is a technology-agnostic spec layer: it authors a grounded spec and verifies it *before and after* an external implementer builds it. LSA is not the coder — any agent (Claude Code, Cursor, Copilot) or a human writes the code. The loop is `discover → specify → verify → delegate → reconcile`.
-
-```text
-> /lsa:discover "analytics dashboard for spec-vs-code drift"
-[lsa:discover] Intent + facts — roadmap.md exists @ .lsa/roadmap.md; one new module.
-
-> /lsa:specify
-[lsa:specify] F1 (EARS-Event): WHEN a feature spec is merged, the dashboard SHALL list it within 60 s.
-drift.feature: Given a merged feature spec / When the dashboard refreshes / Then it lists the feature within 60 s.
-
-> /lsa:verify
-[lsa:verify] GROUNDED — every reference resolves; flow buildable on the existing roadmap reader.
-
-> /lsa:delegate
-[lsa:delegate] Spec + drift.feature handed to your implementer. Awaiting the diff.
-
-> /lsa:reconcile
-[lsa:reconcile] PASS — drift.feature passes 5/5 runs; every changed hunk traces to F1.
-```
-
-`[illustrative]`
-
-When the spec and the code diverge — because you hand-edited code without updating the spec — `/lsa:reconcile` detects the delta and offers to update the spec to match. Drift becomes a conversation, not a violation.
-
-### helper
-
-A cited Q&A assistant. The default reply leads with the answer and the source — never a multiple-choice picker. Auto-engages on friction signals (two consecutive `lsa:discover` User Verification rejections, free-form `what is X?` mid-flow) and on explicit `/help`.
-
-```text
-> /help what is LSA?
-
-LSA = Living Spec Architecture: a spec-first development methodology where specs
-are the permanent source of truth and every code change traces to a spec
-requirement. The loop is `lsa:discover` → `lsa:specify` → `lsa:verify` →
-`lsa:delegate` → `lsa:reconcile`; code-writing is delegated to any implementer.
-
-Sources: README.md#lsa (the loop and its five steps), lsa/README.md
-(skill table + credo quote).
-```
-
-`[illustrative]`
-
-### manager
-
-The `manager:shape` skill drives an interactive shaping conversation that turns a vague problem into a structured pitch. The `product-manager` agent self-selects a domain-expert role per invocation, asks the questions the codebase can't answer, gates on your explicit approval, and hands the approved pitch off to `manager:decompose` for epic decomposition. Each item then enters the LSA loop (`lsa:discover` → `lsa:specify` → `lsa:verify` → `lsa:delegate` → `lsa:reconcile`).
-
-```text
-> /manager:shape "users complain onboarding takes too long"
-
-[product-manager] Shaping into a pitch.
-Adopting role — onboarding-funnel product manager.
-Signal: friction reported, no quantified evidence yet.
-
-Q1 — what's the most-recent concrete onboarding complaint you've heard?
-Q2 — how long is "too long" (in minutes), and who measured it?
-
-(… interactive Q&A grounded in the codebase and existing specs …)
-
-PROPOSED — pitch at .lsa/pitches/onboarding-friction.md.
-Appetite: small batch (~1 week).
-Approve to hand off to /manager:decompose for epic decomposition, or reshape.
-```
-
-`[illustrative]`
-
-### prompt-engineer
-
-Audit your own plugin prompts against the marketplace's quality rules. The agent enforces actor structure (Goal / Input / Steps / Output / Constraints), Knowledge-vs-Actor separation, KISS/DRY hygiene, an AI-over-engineering sweep, a context-budget ceiling, and a warning-only show-changes-inline check that flags any step writing/editing/marking an artifact without a directive to quote the change.
-
-```text
-> /prompt-engineer:prompt-review helper/agents/helper.md
-
-| Severity | Rule                            | Finding                                                |
-|----------|---------------------------------|--------------------------------------------------------|
-| HIGH     | Actor rule 10 (Example Output)  | Section missing — actors must show their output shape. |
-| MED      | KISS rule 2 (no duplication)    | Step 3 restates Step 1's input check.                  |
-| LOW      | Context budget                  | Low-density framing paragraph adds no actionable info. |
-
-Apply auto-fixes with /prompt-engineer:prompt-optimize.
-```
-
-`[illustrative]`
-
-### observer
-
-The `observer:observe` skill runs a live observe-and-coach session that rides Claude Code's self-paced `/loop`. It confirms a **role** first (rubber-duck, pair-programmer, interviewer, or custom), then reacts to your file changes each cycle through that role's lens, voice, and cadence — all read as data from [`observer/knowledge/roles.md`](./observer/knowledge/roles.md), so the role set extends without touching the skill.
-
-```text
-> /observer:observe
-
-[observer] Kickoff — no role named; context is a Python file with a failing test.
-Proposed role: pair-programmer (override: rubber-duck / interviewer / custom) > interviewer
-Language / topic? > Python / binary search
-Wrote a red exercise (problem + placeholder + 3 failing tests).
-
-cycle 1 — solution: off-by-one — `hi = mid` drops the upper half; safer is `hi = mid - 1`.
-cycle 2 — no edits for the timeout.
-Stopped: inactivity timeout.
-```
-
-`[illustrative]`
-
-`observer`'s second skill, `observer:verify-checkpoint`, is the gating counterpart: one coaches, one gates. It is a read-only grader that, on a checkpoint signal from an implementer, grades that one finished increment **does·only** — do the target requirement's scenarios pass, and does every changed hunk trace to a requirement — emitting `CLEAR` (auto-clears) or `BLOCK` (surfaced to you). It runs either dispatched per increment by `lsa:delegate` or as a standalone rider on the same self-paced `/loop`. Detail: [`observer/README.md`](./observer/README.md).
+`prompt-engineer` audits the marketplace's own prompt files; `observer` rides alongside as a live pairing coach (`observer:observe`) or a per-increment gate (`observer:verify-checkpoint`). Per-plugin detail and skill tables: [`core`](./core/README.md), [`lsa`](./lsa/README.md), [`manager`](./manager/README.md), [`prompt-engineer`](./prompt-engineer/README.md), [`observer`](./observer/README.md).
 
 ## The problem and the solution
 
 Agents make silent decisions. Hedged claims (*"probably"*, *"typically"*, *"based on convention"*) pass for facts. Code drifts from intent. Specs rot the moment the code lands. Six months in, nobody — human or agent — knows why the system is the way it is. The system that was supposed to make you faster turned you into a passenger.
 
-The solution is discipline, not magic. `core` constrains output to grounded, sourced, decision-first prose on every task. `lsa` chains every code line to a human-owned requirement and absorbs drift instead of forbidding it. `helper` and `manager` keep you from typing yourself into a corner before the code starts. `prompt-engineer` keeps the discipline files themselves honest.
+The solution is discipline, not magic. `core` constrains output to grounded, sourced, decision-first prose on every task. `lsa` chains every code line to a human-owned requirement and absorbs drift instead of forbidding it. `manager` keeps you from typing yourself into a corner before the code starts. `prompt-engineer` keeps the discipline files themselves honest.
 
 ## How it works in 30 seconds
 
@@ -220,7 +110,7 @@ One caveat for Pro users watching usage: the deeper flows spawn sub-agents (each
 
 ## Security
 
-The trust boundary is small by design: six **pure-Markdown** plugins plus **one** transparent `SessionStart` shell hook ([`lsa/hooks/session-start-drift-check.sh`](./lsa/hooks/session-start-drift-check.sh)) that runs read-only Git (`rev-parse` / `log` / `diff`), writes nothing, makes no network calls, and always exits 0. No server, no secrets, no PII.
+The trust boundary is small by design: five **pure-Markdown** plugins plus **one** transparent `SessionStart` shell hook ([`lsa/hooks/session-start-drift-check.sh`](./lsa/hooks/session-start-drift-check.sh)) that runs read-only Git (`rev-parse` / `log` / `diff`), writes nothing, makes no network calls, and always exits 0. No server, no secrets, no PII.
 
 - **Indirect prompt injection** — untrusted content (web fetches, library docs, analyzed repo files, tool output) is treated as data, never instructions, per `core/ground-rules`. Residual risk is real and acknowledged ([OWASP LLM01](https://genai.owasp.org/llmrisk/llm01-prompt-injection/)); human review backs every gated decision.
 - **Install safely** — review the source first, and prefer pinning the marketplace to a reviewed tag/commit (`/plugin marketplace add <git-url>#<ref>`, per [Claude Code docs](https://code.claude.com/docs/en/discover-plugins)) over tracking `main`.
@@ -233,8 +123,8 @@ Full threat model, reporting channel, and hook transparency: [`SECURITY.md`](./S
 - [`.lsa/VISION.md`](./.lsa/VISION.md) — the full design rationale (the constitution).
 - [`knowledge/index.md`](./knowledge/index.md) — flat topic-to-path index across every knowledge file in every plugin.
 - [`CONTRIBUTING.md`](./CONTRIBUTING.md) — how to build, contribute, verify.
-- Per-plugin docs — [`core/README.md`](./core/README.md), [`lsa/README.md`](./lsa/README.md), [`helper/README.md`](./helper/README.md), [`manager/README.md`](./manager/README.md), [`prompt-engineer/README.md`](./prompt-engineer/README.md), [`observer/README.md`](./observer/README.md).
-- Changelogs — [`core`](./core/CHANGELOG.md), [`lsa`](./lsa/CHANGELOG.md), [`helper`](./helper/CHANGELOG.md), [`manager`](./manager/CHANGELOG.md), [`prompt-engineer`](./prompt-engineer/CHANGELOG.md), [`observer`](./observer/CHANGELOG.md).
+- Per-plugin docs — [`core/README.md`](./core/README.md), [`lsa/README.md`](./lsa/README.md), [`manager/README.md`](./manager/README.md), [`prompt-engineer/README.md`](./prompt-engineer/README.md), [`observer/README.md`](./observer/README.md).
+- Changelogs — [`core`](./core/CHANGELOG.md), [`lsa`](./lsa/CHANGELOG.md), [`manager`](./manager/CHANGELOG.md), [`prompt-engineer`](./prompt-engineer/CHANGELOG.md), [`observer`](./observer/CHANGELOG.md).
 - [`lsa/ARCHITECTURE.md`](./lsa/ARCHITECTURE.md) — directory layout, `.lsa.yaml` schema, branch management.
 
 Licensed under [`LICENSE`](./LICENSE).

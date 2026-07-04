@@ -27,7 +27,7 @@ Common locations (default category, overridden by content shape):
 
 | File location | Default | Examples |
 |--------------|---------|----------|
-| `agents/*.md` | Actor | `developer.md`, `helper.md` |
+| `agents/*.md` | Actor | `product-manager.md`, `orchestrator.md` |
 | `commands/*.md` | Actor | `prompt-review.md`, `prompt-create.md` |
 | `skills/*/SKILL.md` | Either | Actor: `discover`, `verify`, `plan`. Knowledge: `ground-rules`, `output` |
 | `knowledge/*.md` | Knowledge | `conventions.md`, `quality-gate-contract.md` |

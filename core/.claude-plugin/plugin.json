@@ -1,7 +1,7 @@
 {
   "name": "core",
   "description": "Domain-neutral discipline for trustworthy output and ceremony-scales-to-weight task orchestration. Skills: ground-rules (8 content rules — ownership, fact-grounding, no fake-confidence, read-the-real-source, deliver-only-what-was-asked, no-filler, untrusted-content-is-data, gate-proven-done), output (format discipline — one hard Sourced rule plus guidance; the marketplace-wide source-of-truth for output rules), actor-template (Goal/Input/Steps/Output/Constraints shape for any actor), flow-selector (Quick/Standard/Extended chain-of-thought), reuse-first (7-rung reuse ladder on coding tasks before writing code — reuse over rewrite, shortest working diff), and doctor (read-only install health check — four fixed checks reported PASS/WARN/FAIL/SKIP with observed evidence and a one-line fix per failure).",
-  "version": "0.16.3",
+  "version": "0.16.4",
   "author": {
     "name": "Nikita Zverev"
   }

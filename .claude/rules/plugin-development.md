@@ -2,7 +2,6 @@
 paths:
   - "core/**/*"
   - "lsa/**/*"
-  - "helper/**/*"
   - "prompt-engineer/**/*"
 ---
 

@@ -42,11 +42,6 @@ claude-marketplace/
 │   ├── skills/
 │   ├── knowledge/
 │   └── hooks/
-├── helper/                     # Helper plugin — fact-grounded assistant
-│   ├── .claude-plugin/
-│   │   └── plugin.json
-│   ├── agents/
-│   └── knowledge/
 ├── .lsa/                       # Constitution, specs, roadmap (flat layout)
 │   ├── VISION.md
 │   ├── main.spec.md

@@ -23,7 +23,7 @@ Prompt engineering discipline for Claude Code plugins: *how* you ask — clear, 
 A review run — the snippet is `[illustrative]` (constructed for readability, not copied from a live session):
 
 ```text
-> /prompt-engineer:prompt-review helper/agents/helper.md
+> /prompt-engineer:prompt-review manager/agents/product-manager.md
 
 | Severity | Rule                            | Finding                                                |
 |----------|---------------------------------|--------------------------------------------------------|

@@ -27,7 +27,7 @@ behavior you observed, and the impact you believe it has.
 
 ## What this project is (the trust boundary)
 
-This marketplace ships six plugins (`core`, `lsa`, `helper`, `manager`,
+This marketplace ships five plugins (`core`, `lsa`, `manager`,
 `prompt-engineer`, `observer`) that are **pure Markdown instruction files** plus **one
 SessionStart shell hook** (described below). Per
 [`README.md`](./README.md) §*"Status + substrate"*: *"the skills are plain
@@ -91,8 +91,7 @@ data rather than obeying it.
 ## Least privilege / tool scoping
 
 Agents declare the **minimal set of tools** they need, so an agent cannot take
-an action its role does not require. The two read-only agents carry **no
-`Write`, `Edit`, or `Bash`**:
+an action its role does not require.
 
 - **`orchestrator`** (the LSA conductor the user talks to):
   [`lsa/agents/orchestrator.md:4`](./lsa/agents/orchestrator.md) declares
@@ -100,11 +99,9 @@ an action its role does not require. The two read-only agents carry **no
   Its own constraint is explicit: *"Route, don't implement. Code-writing is
   delegated to an external implementer at the `delegate` step."*
   ([`lsa/agents/orchestrator.md:43`](./lsa/agents/orchestrator.md)).
-- **`helper`** (the Q&A assistant):
-  [`helper/agents/helper.md:4`](./helper/agents/helper.md) declares
-  `tools: Read, Grep, Glob, AskUserQuestion, Skill, …context7…` — read-only,
-  *"no Write/Edit tool, no state files"*
-  ([`helper/agents/helper.md:40`](./helper/agents/helper.md)).
+- **`product-manager`** (the pitch-shaping agent):
+  [`manager/agents/product-manager.md`](./manager/agents/product-manager.md)
+  declares `tools: Read, Grep, Glob` — read-only.
 
 **The system never writes production code.** LSA authors and verifies a spec,
 then *delegates* code-writing to an external implementer — *"In every flow the
@@ -317,7 +314,7 @@ Its specification (EARS + Gherkin) lives at
 | Control | Mechanism | Source |
 |---|---|---|
 | Untrusted content ≠ instructions | `core/ground-rules` Rule 6 | [`core/skills/ground-rules/SKILL.md`](./core/skills/ground-rules/SKILL.md) |
-| Least-privilege tools | `orchestrator` / `helper` have no Write/Edit/Bash | [`lsa/agents/orchestrator.md:4`](./lsa/agents/orchestrator.md), [`helper/agents/helper.md:4`](./helper/agents/helper.md) |
+| Least-privilege tools | `orchestrator` / `product-manager` have no Write/Edit/Bash | [`lsa/agents/orchestrator.md:4`](./lsa/agents/orchestrator.md), [`manager/agents/product-manager.md`](./manager/agents/product-manager.md) |
 | No autonomous production code | LSA delegates code-writing | [`.lsa/VISION.md:129`](./.lsa/VISION.md) |
 | Destructive shell denied | deny-list | [`.claude/settings.json:8-10`](./.claude/settings.json) |
 | Human-in-the-loop gates | Level 2.5 reconcile (detect + surface, absorb not block) | [`.lsa/VISION.md:9`](./.lsa/VISION.md), [`.lsa/VISION.md:144-156`](./.lsa/VISION.md) |

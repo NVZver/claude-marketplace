@@ -14,11 +14,6 @@
       "description": "Living Spec Architecture: a technology-agnostic spec layer — skills that discover intent, author a grounded spec (EARS + Gherkin), verify it before build and reconcile the diff after. The orchestrator agent runs the spec-authoring stages (discover → specify → verify) inline in one context and crosses a context boundary only twice: delegate (the external implementer) and reconcile (an independent grader). The implementer (Claude Code, Cursor, a human) is external. Loop: discover → specify → verify → delegate → reconcile. Depends on `core`."
     },
     {
-      "name": "helper",
-      "source": "./helper",
-      "description": "Friendly fact-grounded assistant: `/help` slash command + auto-engaging subagent on user-friction signals (consecutive discover User Verification rejections, free-form `what is X?` mid-flow), with per-signal-type cooldown to prevent nag. Depends on `core` (output discipline) and `lsa` (User Verification reject signal)."
-    },
-    {
       "name": "manager",
       "source": "./manager",
       "description": "Product and project management discipline: two agents (product-manager shapes vague ideas into pitches; project-manager stewards the roadmap) behind five skills — manager:shape (idea → pitch), manager:next (recommend what to work on next), manager:decompose (pitch → LSA-ready epics), manager:check (roadmap hygiene), manager:implement (parallel execution of roadmap epics with worktree isolation and a serialized merge). Depends on `core` (ground-rules, output)."

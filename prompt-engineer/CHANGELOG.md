@@ -2,6 +2,15 @@
 
 All notable changes to the `prompt-engineer` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.8.3] – 2026-07-04
+
+Docs-only cleanup following the `helper` plugin's removal from the marketplace (docs only, no agent/command behavior change).
+
+### Changed
+
+- **`README.md`** — the `prompt-review` usage example now targets `manager/agents/product-manager.md` instead of the now-deleted `helper/agents/helper.md`.
+- **`knowledge/separation-of-concerns.md`** — the `agents/*.md` classification-table example now names `product-manager.md` / `orchestrator.md` instead of `helper.md`.
+
 ## [0.8.2] – 2026-07-02
 
 Public-readiness documentation pass (docs only, no agent/command behavior change).

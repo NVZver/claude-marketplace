@@ -54,15 +54,6 @@ modules:
       - lsa/README.md
       - lsa/CORE.md
       - lsa/CHANGELOG.md
-  helper:
-    spec: .lsa/modules/helper/spec.md
-    artifact_paths:
-      - helper/agents/**/*.md
-      - helper/commands/**/*.md
-      - helper/knowledge/**/*.md
-      - helper/.claude-plugin/plugin.json
-      - helper/README.md
-      - helper/VERIFICATION.md
   manager:
     spec: .lsa/modules/manager/spec.md
     artifact_paths:

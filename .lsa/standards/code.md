@@ -62,7 +62,7 @@ A sub-agent dispatch starts a **fresh context** that reloads the `CLAUDE.md` hie
 2. **An independent grader** — must have no write access to what it grades, so it cannot run in the context that authored the tests/spec (`lsa:reconcile`, *Independence must be observable*).
 3. **Parallel work that would collide in one tree** — worktree-isolated fan-out (`manager:implement`).
 
-Everything else — spec authoring, shaping, decomposition, recommendation, review, cited lookup — runs inline. Applied: `lsa:orchestrator` runs `discover → specify → verify` inline (lsa v0.21.0). Per-plugin application to the remaining dispatchers (`manager` shape/decompose/next/check; `helper` lookups) is tracked on the roadmap. Source: 2026-07-01 token/model assessment; grounds `lsa/agents/orchestrator.md`.
+Everything else — spec authoring, shaping, decomposition, recommendation, review, cited lookup — runs inline. Applied: `lsa:orchestrator` runs `discover → specify → verify` inline (lsa v0.21.0). Per-plugin application to the remaining dispatchers (`manager` shape/decompose/next/check) is tracked on the roadmap. Source: 2026-07-01 token/model assessment; grounds `lsa/agents/orchestrator.md`.
 
 ## Artifact hand-off — pointer + summary, not full payload
 
