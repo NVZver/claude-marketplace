@@ -75,4 +75,3 @@ Found 3 issues in 2 files.
 - Do NOT assume intent — verify against file content
 - Do NOT add content beyond what ground rules require
 - Do NOT modify files during review tasks
-- **Model tier when dispatched.** When this agent is dispatched via the `Agent` tool for a **mechanical scan** intent (Review — Step 6 first branch), the caller resolves surface-key `prompt-engineer.mechanical` per [`../../lsa/knowledge/model-routing.md`](../../lsa/knowledge/model-routing.md) (`sonnet` in this repo's `.lsa.yaml`) and passes it as the `model` parameter; **authoring** intents (Optimize / Create) resolve `inherit`. Absent map entry ⇒ `inherit`, never a hard error. Direct application of [`../../.lsa/standards/code.md:53`](../../.lsa/standards/code.md).

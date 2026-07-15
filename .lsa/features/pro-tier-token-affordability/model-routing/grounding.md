@@ -20,7 +20,7 @@ Verdict: **GROUNDED**
 | lint C8 (no opus/haiku/fable frontmatter pin) | exists @ `scripts/lint.sh` C8 |
 | `lsa/knowledge/model-routing.md` (F1 contract + table) | **new** |
 | `.lsa.yaml routing:` map (F2, D3) | **new** — repo config, non-`inherit` entries only |
-| routing cite in roadmap-orchestration / delegate / reconcile / implement / prompt-engineer agent | **new** — additive; absent map ⇒ inherit ⇒ today's behavior |
+| routing cite in roadmap-orchestration / delegate / reconcile / implement | **new** — additive; absent map ⇒ inherit ⇒ today's behavior (prompt-engineer surface: table row 9 + map entry only, no in-repo dispatcher — resolved at the Agent boundary like `manager:shape`) |
 
 ## Feasibility
 

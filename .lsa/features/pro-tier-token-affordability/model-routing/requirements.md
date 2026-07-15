@@ -1,7 +1,7 @@
 # Epic pro-tier-token-affordability/model-routing — Requirements
 
 Parent: ../../../pitches/pro-tier-token-affordability.md (WS4) · Status: approved · Date: 2026-07-15
-Modules: lsa (routing contract + delegate/reconcile), manager (roadmap-orchestration + implement), prompt-engineer (agent). Grounding: lsa:discover 2026-07-15.
+Modules: lsa (routing contract + delegate/reconcile), manager (roadmap-orchestration + implement), prompt-engineer (table row 9 only — no artifact change; resolved at the Agent boundary). Grounding: lsa:discover 2026-07-15.
 
 ## Functional requirements (EARS)
 

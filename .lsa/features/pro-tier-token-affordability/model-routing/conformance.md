@@ -21,7 +21,7 @@ Verdict: the after-check that the diff satisfies the spec and only the spec. **r
 |---|---|---|---|
 | F1 (shipped tier-table knowledge file) | `lsa/knowledge/model-routing.md` (contract + 9-row table) | flow-1 (inspection) | ✅ |
 | F2 (`.lsa.yaml routing:` map; zero frontmatter pins) | `.lsa.yaml` `routing:` block; lint **C8 PASS** | flow-2 §3, AC5 — C8 green | ✅ |
-| F3 (resolve tier, pass as Agent `model`) | `manager/knowledge/roadmap-orchestration.md` §1; `lsa/skills/delegate/SKILL.md:56`; `prompt-engineer/agents/prompt-engineer.md` Constraints | flow-2 §1 (inspection) | ✅ |
+| F3 (resolve tier, pass as Agent `model`) | `manager/knowledge/roadmap-orchestration.md` §1; `lsa/skills/delegate/SKILL.md:56` (the two in-repo dispatching-skill surfaces) | flow-2 §1 (inspection) | ✅ |
 | F4 (absent/unavailable ⇒ inherit, no hard error) | `lsa/knowledge/model-routing.md` §resolution 3; each wiring cite | flow-2 §2, AC3 | ✅ |
 | F5 (floored graders/implementer/fan-out) | `model-routing.md` §resolution 1; `reconcile/SKILL.md` Constraints; `delegate` Step 3; `implement` Step 4a | flow-3 §1-2, AC4 | ✅ |
 | F6 (echo resolved tier in dispatch line) | `roadmap-orchestration.md` §1; `delegate/SKILL.md:56` | flow-2 §1 (inspection) | ✅ |
@@ -39,9 +39,9 @@ Verdict: the after-check that the diff satisfies the spec and only the spec. **r
 
 ## Consequential + discipline hunks (traced, not orphan)
 
-- `lsa/.claude-plugin/plugin.json` (0.26.0), `manager/...` (0.17.0), `prompt-engineer/...` (0.9.0);
-  `lsa/CHANGELOG.md`, `manager/CHANGELOG.md`, `prompt-engineer/CHANGELOG.md`; `README.md` version column —
-  per-plugin SemVer + CHANGELOG + "READMEs are living documents" (`.lsa/standards/code.md:18-22`).
+- `lsa/.claude-plugin/plugin.json` (0.26.0), `manager/...` (0.17.0); `lsa/CHANGELOG.md`,
+  `manager/CHANGELOG.md`; `README.md` version column — per-plugin SemVer + CHANGELOG +
+  "READMEs are living documents" (`.lsa/standards/code.md:18-22`).
 - `lsa/README.md` (`routing:` in the schema block + paragraph), `lsa/ARCHITECTURE.md` §3 (`routing:` key +
   bullet) — living-doc consistency for the new `.lsa.yaml` key.
 - `knowledge/index.md` (count 18→19 + new row) — lint C10 registration for the new knowledge file.
@@ -50,6 +50,17 @@ Verdict: the after-check that the diff satisfies the spec and only the spec. **r
 Orphan hunks: none.
 
 Gate: `bash scripts/lint.sh` ✓ (exit 0, C1–C12) · `bash scripts/check-citations.sh` ✓ (exit 0, 75) · `bash scripts/check-links.sh` ✓ (exit 0, 455).
+
+## Audit correction (2026-07-15, post-merge-review)
+
+The original grading counted a `prompt-engineer/agents/prompt-engineer.md` Constraints hunk (+ a
+`prompt-engineer` 0.9.0 bump) toward F3. Audit removed it: `prompt-review` runs **inline** (no in-repo
+Agent-dispatch of the agent), so the bullet was neither a behavioral boundary (actor-ground-rule 3) nor
+live wiring, and it restated `model-routing.md` row 9 (SoC/DRY). The prompt-engineer surface is now
+documented in row 9 + the `.lsa.yaml prompt-engineer.mechanical: sonnet` map entry only — status
+identical to `manager:shape` (documented, resolved at the dispatch boundary, no skill wiring). F3 is
+satisfied by the two in-repo dispatching-skill surfaces; the prompt-engineer plugin is unchanged by
+this epic (reverted to 0.8.3).
 
 ## Remaining (pitch-level, not this epic)
 
