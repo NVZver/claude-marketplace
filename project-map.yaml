@@ -1,226 +1,107 @@
 # GENERATED — DO NOT EDIT. Regenerate: bash lsa/scripts/project-map-build.sh
-version: 1
+version: 2
 depth: 3
-tree:
+tree:  # directories only (depth ≤ 3)
   ".claude":
     agents:
-      claude-dev.md: file
     hooks:
-      commit-discipline-check.sh: file
     rules:
-      plugin-development.md: file
-    settings.json: file
   ".claude-plugin":
-    marketplace.json: file
   ".github":
     workflows:
-      lint.yml: file
-  ".gitignore": file
   ".lsa":
-    2026-05-20-lsa-v0.2.0-design.md: file
-    VISION-digest.md: file
-    VISION.md: file
     archive:
-      2026-05-20-core-v1: dir
-      2026-05-21-diagonal-cross-artifact-analysis: dir
-      2026-05-21-ears-journey-shape-ac: dir
-      2026-05-22-helper-assistant-refactor: dir
-      2026-05-22-helper-onboarding-fast-path: dir
-      2026-05-22-lsa-what-why-preamble: dir
-    dogfood-log.md: file
+      2026-05-20-core-v1:
+      2026-05-21-diagonal-cross-artifact-analysis:
+      2026-05-21-ears-journey-shape-ac:
+      2026-05-22-helper-assistant-refactor:
+      2026-05-22-helper-onboarding-fast-path:
+      2026-05-22-lsa-what-why-preamble:
     features:
-      2026-05-22-askuserquestion-audit: dir
-      2026-05-22-custom-inventions-sweep: dir
-      2026-05-22-lint-command: dir
-      2026-05-22-show-changes-inline: dir
-      2026-06-14-parallel-agent-delivery-epic-0: dir
-      2026-06-16-command-naming-convention: dir
-      2026-06-16-manager-implement-stub: dir
-      2026-06-16-manager-rename: dir
-      2026-06-16-roadmap-verb-split: dir
-      2026-06-17-parallel-agent-delivery-epic-1: dir
-      2026-06-17-parallel-agent-delivery-epic-2: dir
-      2026-06-17-parallel-agent-delivery-epic-3: dir
-      2026-06-17-parallel-agent-delivery-epic-4: dir
-      2026-06-17-parallel-engine-findings: dir
-      2026-07-01-artifact-handoff-standard: dir
-      2026-07-01-deterministic-doc-lint-gate: dir
-      2026-07-01-paired-verify-observer-verifier: dir
-      2026-07-01-plugin-discipline-commit-hook: dir
-      2026-07-01-reuse-first: dir
-      2026-07-02-paired-verify-lsa-delegate-wiring: dir
-      observer: dir
-      pro-tier-token-affordability: dir
-    main.spec.md: file
-    metrics.md: file
+      2026-05-22-askuserquestion-audit:
+      2026-05-22-custom-inventions-sweep:
+      2026-05-22-lint-command:
+      2026-05-22-show-changes-inline:
+      2026-06-14-parallel-agent-delivery-epic-0:
+      2026-06-16-command-naming-convention:
+      2026-06-16-manager-implement-stub:
+      2026-06-16-manager-rename:
+      2026-06-16-roadmap-verb-split:
+      2026-06-17-parallel-agent-delivery-epic-1:
+      2026-06-17-parallel-agent-delivery-epic-2:
+      2026-06-17-parallel-agent-delivery-epic-3:
+      2026-06-17-parallel-agent-delivery-epic-4:
+      2026-06-17-parallel-engine-findings:
+      2026-07-01-artifact-handoff-standard:
+      2026-07-01-deterministic-doc-lint-gate:
+      2026-07-01-paired-verify-observer-verifier:
+      2026-07-01-plugin-discipline-commit-hook:
+      2026-07-01-reuse-first:
+      2026-07-02-paired-verify-lsa-delegate-wiring:
+      observer:
+      pro-tier-token-affordability:
     modules:
-      core: dir
-      lsa: dir
-      manager: dir
-      observer: dir
-      prompt-engineer: dir
+      core:
+      lsa:
+      manager:
+      observer:
+      prompt-engineer:
     observations:
-      2026-06-17-tripanchor-manager-implement.md: file
     pitches:
-      ".gitkeep": file
-      catalog-surface-drift.md: file
-      deterministic-enforcement-gates.md: file
-      enforce-show-changes-inline.md: file
-      eval-coverage-tracks-complexity.md: file
-      fast-path-navigation-questions.md: file
-      function-command-naming-and-manager-rename.md: file
-      lsa-stage-reports.md: file
-      onboarding-diagnostics.md: file
-      paired-verify.md: file
-      parallel-agent-delivery.md: file
-      plugin-onboarding-checklist.md: file
-      pro-tier-token-affordability.md: file
-      prompt-engineer-plugin.md: file
-      readme-and-knowledge-base.md: file
-      relax-core-output-to-advisory.md: file
-      reuse-first.md: file
-      self-healing-escape-loop.md: file
-      sonnet-robustness-consistency-sweep.md: file
-      strip-process-narration-from-code.md: file
-      verification-checklist.md: file
     plans:
-      2026-05-20-credo-rollout-plan.md: file
-      2026-05-20-lsa-v0.2.0-plan.md: file
-      2026-05-20-simplification-refactor-plan.md: file
     research:
-      parallel-agent-delivery-prior-art.md: file
-      parallel-agent-delivery-solution-design.md: file
-    research-backlog.md: file
-    roadmap.md: file
     standards:
-      code.md: file
-      testing.md: file
-  ".lsa.yaml": file
-  CLAUDE.md: file
-  CONTRIBUTING.md: file
-  LICENSE: file
-  README.md: file
-  SECURITY.md: file
   core:
     ".claude-plugin":
-      plugin.json: file
-    CHANGELOG.md: file
-    CLAUDE.md: file
-    README.md: file
-    VERIFICATION.md: file
     knowledge:
-      fast-path-source-of-truth.md: file
-      output-vocabulary.md: file
     skills:
-      actor-template: dir
-      doctor: dir
-      flow-selector: dir
-      ground-rules: dir
-      output: dir
-      reuse-first: dir
+      actor-template:
+      doctor:
+      flow-selector:
+      ground-rules:
+      output:
+      reuse-first:
     tests:
-      repo-anchored.md: file
   knowledge:
-    index.md: file
   lsa:
     ".claude-plugin":
-      plugin.json: file
-    ARCHITECTURE.md: file
-    CHANGELOG.md: file
-    CORE.md: file
-    README.md: file
     agents:
-      orchestrator.md: file
     hooks:
-      hooks.json: file
-      session-start-drift-check.sh: file
     knowledge:
-      conventions.md: file
-      model-routing.md: file
-      quality-gate-contract.md: file
     scripts:
-      project-map-build.sh: file
-      project-map-check.sh: file
-      tests: dir
+      tests:
     skills:
-      delegate: dir
-      discover: dir
-      init: dir
-      reconcile: dir
-      revise-constitution: dir
-      specify: dir
-      verify: dir
+      delegate:
+      discover:
+      init:
+      reconcile:
+      revise-constitution:
+      specify:
+      verify:
     tests:
-      eval-findings-2026-07-02.md: file
-      scenarios.md: file
   manager:
     ".claude-plugin":
-      plugin.json: file
-    CHANGELOG.md: file
-    README.md: file
     agents:
-      product-manager.md: file
-      project-manager.md: file
     knowledge:
-      autonomy-policy.md: file
-      command-naming.md: file
-      epic-decomposition.md: file
-      parallel-dispatch.md: file
-      parallel-rollup.md: file
-      pitch-structure.md: file
-      roadmap-orchestration.md: file
-      role-adaptation.md: file
-      sequencing-heuristics.md: file
-      serialized-merge.md: file
     skills:
-      check: dir
-      decompose: dir
-      implement: dir
-      next: dir
-      shape: dir
+      check:
+      decompose:
+      implement:
+      next:
+      shape:
     tests:
-      eval-findings-2026-07-02.md: file
-      scenarios.md: file
   observer:
     ".claude-plugin":
-      plugin.json: file
-    CHANGELOG.md: file
-    README.md: file
     knowledge:
-      roles.md: file
     skills:
-      observe: dir
-      verify-checkpoint: dir
+      observe:
+      verify-checkpoint:
     tests:
-      eval-findings-2026-06-27.md: file
-      eval-findings-2026-07-02.md: file
-      scenarios.md: file
-      verify-checkpoint-scenarios.md: file
   prompt-engineer:
     ".claude-plugin":
-      plugin.json: file
-    CHANGELOG.md: file
-    README.md: file
-    VERIFICATION.md: file
     agents:
-      prompt-engineer.md: file
     commands:
-      prompt-create.md: file
-      prompt-optimize.md: file
-      prompt-review.md: file
     knowledge:
-      actor-ground-rules.md: file
-      quality-checks.md: file
-      separation-of-concerns.md: file
     tests:
-      repo-anchored.md: file
   scripts:
-    build-vision-digest.sh: file
-    check-citations.sh: file
-    check-links.sh: file
-    check-version-changelog.sh: file
-    gate.sh: file
-    lint.sh: file
-    roadmap-row.sh: file
   tests:
-    prompt-injection-probe.md: file

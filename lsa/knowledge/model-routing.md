@@ -25,9 +25,17 @@ routing:
 ```
 
 Surface-key format:
-- `<plugin>:<skill>` — e.g. `manager:check`
+- `<plugin>:<skill>` — e.g. `manager:next`
 - `<plugin>:<skill>.<sub>` — a sub-dispatch inside a skill, e.g. `lsa:delegate.verify-checkpoint`
 - `<plugin>.<intent>` — a command-intent dispatch, e.g. `prompt-engineer.mechanical`
+
+**Wiring rule — the map lists only surfaces a dispatcher actually reads.** A tier is
+real only when the dispatching skill resolves this map and passes the result as the
+`Agent` `model` parameter. Today exactly one surface does so: `lsa:delegate` resolves
+`lsa:delegate.verify-checkpoint` (`../skills/delegate/SKILL.md` §5). Every other surface
+below runs `inherit` — either floored by design, or transitional and never wired. Do not
+add a key for a surface no dispatcher reads: that is dead config that reads as a saving
+which never happens.
 
 ## Resolution algorithm
 
@@ -52,18 +60,24 @@ Durable routing surface = the three isolation classes of `.lsa/standards/code.md
 implementer · independent graders · worktree fan-out). Transitional = slated for inline removal by
 `.lsa/roadmap.md:62`; once inline, the surface inherits the session model and has no routing lever.
 
-| # | Dispatch surface | Cite | Survives inline rollout? | Tier | Rationale |
-|---|------------------|------|--------------------------|------|-----------|
-| 1 | `manager:shape` → product-manager | `manager/skills/shape/SKILL.md:26` | No — transitional | inherit | Shaping is judgment-heavy; inline removal beats routing here |
-| 2 | `manager:decompose` → project-manager | `manager/skills/decompose/SKILL.md:24` | No — transitional | inherit | Epic boundaries / risk ordering = judgment |
-| 3 | `manager:next` → project-manager | `manager/skills/next/SKILL.md:26` | No — transitional; fast-path answers without dispatch | sonnet | Bounded sequencing over one roadmap file |
-| 4 | `manager:check` → project-manager | `manager/skills/check/SKILL.md:23` | No — transitional | **haiku** | Mechanical hygiene scan (staleness rows, drift inventory) — the flagship cheapest-tier dispatch |
-| 5 | `manager:implement` per-epic fan-out | `manager/skills/implement/SKILL.md:38` | Yes — worktree isolation load-bearing | inherit — **floored** | Writes production artifacts; a downgrade recreates the hallucinated-completion failure the engine exists to prevent |
-| 6 | `lsa:delegate` → external implementer | `lsa/skills/delegate/SKILL.md:37` | Yes | inherit — **floored** | Code quality is load-bearing; outside the LSA boundary |
-| 7 | `lsa:delegate` → `observer:verify-checkpoint` | `lsa/skills/delegate/SKILL.md:56` | Yes — independent per-increment grader | sonnet | Scoped does·only grading of ONE increment; bounded inputs. NOT haiku — grading is judgment |
-| 8 | `lsa:reconcile` independent grader | `lsa/skills/reconcile/SKILL.md:33` | Yes — independence is the point | inherit — **floored, not a downgrade candidate** | The regression harness; grader quality is the safety floor of the whole system |
-| 9 | prompt-engineer agent dispatches | `prompt-engineer/agents/prompt-engineer.md` | Per-command | sonnet for mechanical scan intents, inherit for authoring | Direct application of `.lsa/standards/code.md:53` |
+The **Tier** column is the tier each surface runs on *today* — not an aspiration. A surface
+is `inherit` unless a dispatcher reads the map for it (per the wiring rule above). The
+**Wired?** column says whether that resolution actually exists.
 
-Haiku candidates are deliberately few: row 4, plus any future model-side mechanical extraction. As the
-inline rollout (`.lsa/roadmap.md:62`) completes, transitional rows 1-4 are **deleted, never re-tiered**
-— once inline they inherit the session model. The durable routing surface is exactly rows 5-9.
+| # | Dispatch surface | Cite | Wired? | Tier today | Notes |
+|---|------------------|------|--------|-----------|-------|
+| 1 | `manager:shape` → product-manager | `manager/skills/shape/SKILL.md:26` | — | inherit | Transitional (inline rollout); judgment-heavy — not a routing candidate |
+| 2 | `manager:decompose` → project-manager | `manager/skills/decompose/SKILL.md:24` | — | inherit | Transitional; epic boundaries = judgment |
+| 3 | `manager:next` → project-manager | `manager/skills/next/SKILL.md:26` | No | inherit | Transitional; a `sonnet` down-route was scoped but never wired. Fast-path answers most calls without any dispatch |
+| 4 | `manager:check` → project-manager | `manager/skills/check/SKILL.md:23` | No | inherit | Transitional; a `haiku` down-route was scoped but never wired. Left inherit rather than shipped as dead config |
+| 5 | `manager:implement` per-epic fan-out | `manager/skills/implement/SKILL.md:38` | Floored | inherit | Writes production artifacts; a downgrade recreates the hallucinated-completion failure the engine exists to prevent |
+| 6 | `lsa:delegate` → external implementer | `lsa/skills/delegate/SKILL.md:37` | Floored | inherit | Code quality is load-bearing; outside the LSA boundary |
+| 7 | `lsa:delegate` → `observer:verify-checkpoint` | `lsa/skills/delegate/SKILL.md:56` | **Yes** | **sonnet** | The one live down-route. Scoped does·only grading of ONE increment; bounded inputs. NOT haiku — grading is judgment |
+| 8 | `lsa:reconcile` independent grader | `lsa/skills/reconcile/SKILL.md:33` | Floored | inherit | The regression harness; grader quality is the safety floor of the whole system — never a downgrade candidate |
+| 9 | prompt-engineer agent dispatches | `prompt-engineer/agents/prompt-engineer.md` | — | inherit | A `sonnet` mechanical-scan route was reverted (kept at 0.8.3); re-add only if actually wired |
+
+The durable routing surface is exactly the three isolation classes of `.lsa/standards/code.md:59-63`
+(external implementer · independent graders · worktree fan-out). Of those, only the per-increment
+grader (row 7) is a live down-route; the rest are floored to `inherit`. Transitional rows 1–4 are
+**deleted, never re-tiered** as the inline rollout (`.lsa/roadmap.md:62`) completes. New down-route =
+wire the dispatcher first, then add the map key — never the reverse.

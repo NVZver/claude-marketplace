@@ -37,11 +37,14 @@ implement:
 # surfaces (lsa:reconcile grader, lsa:delegate implementer, manager:implement
 # fan-out) always resolve inherit even if named here. Only non-inherit entries are
 # listed; every omitted surface runs inherit (= the session model, today's behavior).
+#
+# ONLY list a surface whose dispatcher actually reads this map and passes the
+# model parameter. Today that is exactly one: lsa:delegate resolves the
+# verify-checkpoint sub-dispatch (lsa/skills/delegate/SKILL.md §5). The
+# transitional manager:* surfaces are slated for inline removal (.lsa/roadmap.md)
+# and were never wired — do not re-add them as dead config.
 routing:
-  manager:next: sonnet
-  manager:check: haiku
   lsa:delegate.verify-checkpoint: sonnet
-  prompt-engineer.mechanical: sonnet
 
 modules:
   core:

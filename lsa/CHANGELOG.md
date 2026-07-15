@@ -2,6 +2,20 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.30.0] — 2026-07-15
+
+Make `project-map.yaml` a navigational **directory map**, not a file catalog, and make the model-routing knowledge reflect what is actually wired.
+
+### Changed
+
+- **`scripts/project-map-build.sh`** — emit **directories only** (depth ≤ 3), schema `version: 2`. A file-level catalog overshot its 1k-token budget (~1,570 tokens) and could not scope reads past depth 3; the directory map is ~600 tokens and locates *where* things live, then discovery reads the files under the chosen directory. A root-file add no longer dirties the map (only directory changes do).
+- **`knowledge/model-routing.md`** — the tier table now states the tier each surface runs on **today** with a `Wired?` column. Only `lsa:delegate.verify-checkpoint` (→ `sonnet`) is a live down-route; `manager:next`/`manager:check`/`prompt-engineer.mechanical` were scoped but never wired and now correctly read as `inherit`. Added a wiring rule: list a map key only when a dispatcher actually reads it.
+- **`knowledge/conventions.md`**, **`skills/discover/SKILL.md`**, **`skills/init/SKILL.md`**, **`README.md`**, **`ARCHITECTURE.md`** — describe the map as a directory tree.
+
+### Removed
+
+- Dead routing config in repo `.lsa.yaml` — the three unwired `routing:` entries (`manager:next`, `manager:check`, `prompt-engineer.mechanical`). Only the one wired surface remains.
+
 ## [0.29.0] — 2026-07-15
 
 Ship `project-map.yaml` out of the box (epic `pro-tier-token-affordability/project-index` amended; breaking vs 0.27.0's markdown index).

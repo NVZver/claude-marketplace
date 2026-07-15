@@ -62,7 +62,7 @@ else
   bad "two builds differ"
 fi
 rm -f /tmp/pm-a-$$.yaml
-if grep -q 'version: 1' project-map.yaml && grep -q 'depth: 3' project-map.yaml; then
+if grep -q 'version: 2' project-map.yaml && grep -q 'depth: 3' project-map.yaml; then
   ok "header has version + depth"
 else
   bad "missing version/depth header"
@@ -73,42 +73,36 @@ else
   ok "map does not list itself"
 fi
 
-echo "Flow 2 — depth ≤ 3"
+echo "Flow 2 — directories only, depth ≤ 3"
 r2="$(new_repo)"
 cd "${r2}"
 bash "${BUILD}" >/dev/null
-if grep -q 'deep.txt' project-map.yaml; then
-  bad "depth-4 file deep.txt must not appear"
+# No files anywhere: this is a directory map, not a file catalog.
+if grep -qE 'deep\.txt|mid\.txt|SKILL\.md|README\.md' project-map.yaml; then
+  bad "no filenames may appear in a dirs-only map"
+  cat project-map.yaml >&2
 else
-  ok "depth-4 file deep.txt absent"
+  ok "no filenames listed (dirs-only)"
 fi
-if awk '
-  /^  a:/ { ina=1; next }
-  ina && /^  [^ ]/ { ina=0 }
-  ina && /^    b:/ { inb=1; next }
-  inb && /^    [^ ]/ { inb=0 }
-  inb && /c: dir/ { found=1 }
-  END { exit !found }
-' project-map.yaml; then
-  ok "depth-3 parent of deeper path is dir"
+# Depth-3 directory (a/b/c) is present as a key.
+if grep -qE '^      c:' project-map.yaml; then
+  ok "depth-3 directory a/b/c present"
 else
-  bad "expected a.b.c: dir for truncated path"
+  bad "expected depth-3 dir a/b/c"
   cat project-map.yaml >&2
 fi
-if grep -q 'mid.txt: file' project-map.yaml; then
-  ok "depth-3 file mid.txt listed as file"
+# Depth-4 directory (a/b/c/d) is truncated away.
+if grep -qE '^\s+d:' project-map.yaml; then
+  bad "depth-4 directory d must not appear"
 else
-  bad "mid.txt missing as file"
+  ok "depth-4 directory d truncated"
 fi
-if grep -q 'README.md: file' project-map.yaml; then
-  ok "root README.md listed"
+# A dir that holds only files (nothing deeper) still appears as a leaf key.
+if grep -qE '^      demo:' project-map.yaml; then
+  ok "leaf directory core/skills/demo present"
 else
-  bad "root README.md missing"
-fi
-if grep -q 'SKILL.md' project-map.yaml; then
-  bad "SKILL.md at depth 4 must not appear"
-else
-  ok "depth-4 SKILL.md absent"
+  bad "expected leaf dir core/skills/demo"
+  cat project-map.yaml >&2
 fi
 
 echo "Flow 3 — project-map-check.sh"
@@ -123,11 +117,13 @@ else
   bad "check should PASS on fresh committed map"
   bash "${CHECK}" 2>&1 || true
 fi
-printf 'new\n' > new-root.txt
-git add new-root.txt
-git commit -q -m "add file"
+# A dirs-only map changes when a *directory* appears — not on a root file add.
+mkdir -p newpkg
+printf 'new\n' > newpkg/thing.txt
+git add newpkg/thing.txt
+git commit -q -m "add dir"
 if bash "${CHECK}" >/dev/null 2>&1; then
-  bad "check should FAIL when tree changed without map commit"
+  bad "check should FAIL when a new directory is uncommitted in the map"
 else
   ok "check FAIL when rebuild dirties project-map.yaml"
 fi

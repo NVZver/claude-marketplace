@@ -36,7 +36,7 @@ This document is the design-rationale narrative for `lsa`. For other concerns, s
 ```
 /
 ├── CLAUDE.md                          ← Slim Claude Code entry point.
-├── project-map.yaml                   ← GENERATED 3-level repo atlas (lsa/scripts/project-map-build.sh; discovery scoping)
+├── project-map.yaml                   ← GENERATED 3-level directory map (lsa/scripts/project-map-build.sh; discovery scoping)
 ├── .lsa.yaml                          ← LSA configuration (optional; defaults applied if absent)
 ├── scripts/                           ← Repo-internal gates (outside every plugin's artifact_paths)
 │   ├── lint.sh                        ← the C1–C12 invariant lint (CI-enforced)

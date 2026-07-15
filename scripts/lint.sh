@@ -383,6 +383,28 @@ else
   fi
 fi
 
+# ---------------------------------------------------------------------------
+# C13 — project-map.yaml token budget. The pitch (pro-tier-token-affordability,
+# WS2 + rabbit-hole 2) caps the script-generated map at 1k tokens — an
+# unbudgeted map is the next context-killer. Enforced here, not advisory, using
+# the chars/4 token heuristic (1024 tokens ≈ 4096 chars). Freshness is a
+# separate gate (lsa/scripts/project-map-check.sh); this checks size only.
+# Repo-internal: the shipped plugin carries the freshness check, not this cap.
+# ---------------------------------------------------------------------------
+PMAP="project-map.yaml"
+PMAP_CHAR_LIMIT=4096
+if [[ ! -f "${PMAP}" ]]; then
+  pass_line "C13 no ${PMAP} to size (skipped)"
+else
+  pm_chars="$(wc -c < "${PMAP}" | tr -d ' ')"
+  pm_tokens=$(( pm_chars / 4 ))
+  if [[ "${pm_chars}" -gt "${PMAP_CHAR_LIMIT}" ]]; then
+    fail_line "C13 ${PMAP} over budget: ~${pm_tokens} tokens (${pm_chars} chars > ${PMAP_CHAR_LIMIT}) — a map, not a catalog; keep it to directories (bash lsa/scripts/project-map-build.sh)"
+  else
+    pass_line "C13 ${PMAP} within 1k-token budget (~${pm_tokens} tokens)"
+  fi
+fi
+
 echo
 if [[ "${fail}" -eq 0 ]]; then
   echo "All invariants hold."
