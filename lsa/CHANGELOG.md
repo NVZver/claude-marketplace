@@ -2,6 +2,17 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.27.0] — 2026-07-15
+
+Project-index read scoping (epic `pro-tier-token-affordability/project-index`, `.lsa/features/pro-tier-token-affordability/project-index/requirements.md` F6; parent pitch WS2). Wiring only — the index is a scoping map, not a mandatory read; an absent index falls back to today's tree-walk (backward-compatible).
+
+### Changed
+
+- **`knowledge/conventions.md`** — §"Read protocol" now names the script-generated project index [`.lsa/PROJECT-index.md`](../.lsa/PROJECT-index.md) as the ≤1k-token scoping map to consult (headings are the descriptions) before walking the tree, with a graceful fall-back when it is absent.
+- **`skills/discover/SKILL.md`** — Step 1 consults the project index to locate the files a request touches before reading them.
+
+> Repo-internal infra shipped with this epic but **not** part of any plugin (lives in `scripts/`, outside `artifact_paths`): `scripts/build-index.sh` (the deterministic generator), `.lsa/PROJECT-index.md` (the generated index), and `scripts/lint.sh` C13 (freshness) + C14 (≤1k-token budget) gates.
+
 ## [0.26.0] — 2026-07-15
 
 Model-routing contract (epic `pro-tier-token-affordability/model-routing`, `.lsa/features/pro-tier-token-affordability/model-routing/requirements.md` F1–F8; parent pitch WS4). Wiring only — no rule, gate, or behavior profile changed; an absent `routing:` map is byte-for-byte today's behavior (`inherit` everywhere).

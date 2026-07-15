@@ -93,7 +93,7 @@ OpenSpec is the closest neighbour: it ships an after-the-fact `/opsx:verify` and
 
 | Skill | Purpose |
 |---|---|
-| **`discover`** | Extract user intent and gather the codebase facts the spec rests on. Also the universal input-resolver other skills call. |
+| **`discover`** | Extract user intent and gather the codebase facts the spec rests on — consulting the script-generated project index ([`.lsa/PROJECT-index.md`](../.lsa/PROJECT-index.md), ≤1k tokens) to scope reads before walking the tree. Also the universal input-resolver other skills call. |
 | **`specify`** | Draft the grounded spec — EARS requirements, user flows, and Gherkin `.feature` scenarios — show it in full, then write the files only on approval (show → approve → write). |
 | **`verify`** | **Before** delegating: ground the spec against the codebase, and run the `.lsa.yaml` `gate:` block — citing each command + exit code (a non-zero gate blocks `GROUNDED`). Output: `GROUNDED` / `NOT-GROUNDED` + `grounding.md`. |
 | **`delegate`** | Hand the grounded spec + `.feature` files to your implementer; collect the returned diff. Code-writing happens outside LSA. Optionally gates the build **per-increment** via `.lsa.yaml paired_verify` — `off` (default, unchanged), `checkpoint` (inject a pause+signal protocol and dispatch `observer:verify-checkpoint` after each plan task; CLEAR auto-proceeds, BLOCK surfaces), or `async` (not yet implemented — errors). |

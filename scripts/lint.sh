@@ -383,6 +383,55 @@ else
   fi
 fi
 
+# ---------------------------------------------------------------------------
+# C13 — project index exists and is fresh. .lsa/PROJECT-index.md is generated
+# by scripts/build-index.sh from the tracked markdown surface. Because the index
+# derives from a SET of files (not one input), freshness is checked by
+# regenerate-and-diff: regenerate into a temp file and compare. Any drift —
+# added/removed/renamed *.md, changed H1 — makes the committed index stale, and
+# a stale index silently mis-scopes every LSA discovery read (the read protocol
+# consults it: lsa/knowledge/conventions.md §"Read protocol"). FAIL names the
+# regeneration command. (The generator writes .lsa/PROJECT-index.md in place, so
+# the check saves the current file, regenerates, diffs, and restores.)
+# ---------------------------------------------------------------------------
+INDEX=".lsa/PROJECT-index.md"
+if [[ ! -f "${INDEX}" ]]; then
+  fail_line "C13 project index missing: ${INDEX} — generate it: bash scripts/build-index.sh"
+else
+  # Non-mutating: save the committed index, regenerate in place, diff, then
+  # restore — a check reports staleness, it does not silently fix the tree.
+  idx_saved="$(mktemp)"; cp "${INDEX}" "${idx_saved}"
+  if bash scripts/build-index.sh >/dev/null 2>&1; then
+    if diff -q "${idx_saved}" "${INDEX}" >/dev/null 2>&1; then
+      pass_line "C13 ${INDEX} is fresh (matches a regeneration from the tracked markdown surface)"
+    else
+      fail_line "C13 stale project index: ${INDEX} does not match a fresh build — regenerate: bash scripts/build-index.sh"
+    fi
+  else
+    fail_line "C13 could not regenerate ${INDEX} (scripts/build-index.sh failed) — run it manually to see the error"
+  fi
+  cp "${idx_saved}" "${INDEX}"   # restore committed content regardless of outcome
+  rm -f "${idx_saved}"
+fi
+
+# ---------------------------------------------------------------------------
+# C14 — project index token budget. The index is the always-consulted scoping
+# map; an unbudgeted index is the next context-killer (pitch
+# pro-tier-token-affordability rabbit hole 2). Hard cap: 1000 tokens, estimated
+# chars/4 (English rule-of-thumb ~1 token per 4 chars). This is a GATE, not
+# advisory — FAIL names the estimate and the cap.
+# ---------------------------------------------------------------------------
+INDEX_TOKEN_CAP=1000
+if [[ -f "${INDEX}" ]]; then
+  idx_chars="$(wc -c < "${INDEX}" | tr -d ' ')"
+  idx_tokens=$((idx_chars / 4))
+  if [[ "${idx_tokens}" -le "${INDEX_TOKEN_CAP}" ]]; then
+    pass_line "C14 ${INDEX} within budget (~${idx_tokens} tokens ≤ ${INDEX_TOKEN_CAP}; ${idx_chars} chars / 4)"
+  else
+    fail_line "C14 ${INDEX} over budget: ~${idx_tokens} tokens > ${INDEX_TOKEN_CAP} (${idx_chars} chars / 4) — tighten scripts/build-index.sh (collapse more of the tree)"
+  fi
+fi
+
 echo
 if [[ "${fail}" -eq 0 ]]; then
   echo "All invariants hold."
