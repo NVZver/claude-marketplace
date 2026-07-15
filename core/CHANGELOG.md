@@ -2,6 +2,20 @@
 
 All notable changes to the `core` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.17.0] — 2026-07-15
+
+Always-on card — read-floor compression, packaging only (epic `pro-tier-token-affordability/always-on-card`, `.lsa/features/pro-tier-token-affordability/always-on-card/requirements.md` F1–F3, F7–F8; parent pitch WS1). No rule added, removed, weakened, or renumbered; canon stays the linked SKILL.md files.
+
+### Changed
+
+- **`CLAUDE.md` rewritten as the ONE always-on card (38 lines, budget ≤45).** The fragment no longer mandates loading four skills on every task; the card itself carries the discipline: the eight ground-rule names each with a one-line essence, the hard output rule stated in full (source + searchable quote, plus the file-load trace print obligation), the three flow labels with the five boundary signals, a one-line reuse-first ladder pointer, the cite-without-loading convention, `reconcile.runs` guidance (default 3; `runs: 1` for low-stakes work on constrained plans, `.lsa.yaml:20-24`), and the escalation triggers (authoring/editing a marketplace instructional file, adjudicating a disputed rule, prompt review → load that ONE full skill). Every section cites its full skill by markdown link, under the re-grounded-summary licence at `core/skills/output/SKILL.md:8`. The card carries its own trace directive.
+- **`skills/flow-selector/SKILL.md` Step 4** — the `AskUserQuestion` substrate cite retargeted from the removed "`core/CLAUDE.md` operational checkpoint #1" to its canon, `.lsa/VISION.md` §2 principle 9 (*"Substrate-native first"*). Same rule, canonical owner.
+- **`README.md` § "Merge the CLAUDE.md fragment"** — now describes the card (discipline applied from the card alone; full skills load only on a card-listed escalation trigger) instead of the four load-mandates.
+
+### Removed
+
+- **`CLAUDE.md`** — the four "apply/invoke this skill" load-mandates and the four operational-checkpoint restatements. Their content is unchanged and still owned by `core/skills/output/SKILL.md` (Rules 2, 4, 5, 7) and `.lsa/VISION.md` §2 principle 9; the card links them instead of restating them.
+
 ## [0.16.4] — 2026-07-04
 
 Docs-only cleanup following the `helper` plugin's removal from the marketplace (docs only, no skill behavior change).

@@ -2,6 +2,15 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.25.0] — 2026-07-15
+
+Constitution-digest read protocol (epic `pro-tier-token-affordability/always-on-card`, `.lsa/features/pro-tier-token-affordability/always-on-card/requirements.md` F4–F6, D1–D2; parent pitch WS1).
+
+### Changed
+
+- **`knowledge/conventions.md` § "Read protocol" step 2** — the mandatory constitution read is now the script-generated digest `.lsa/VISION-digest.md` (built by the repo-internal `scripts/build-vision-digest.sh`, staleness-gated by `scripts/lint.sh` C12); the full `${constitution}` loads only for constitutional tasks — `lsa:init`, `lsa:revise-constitution`, or an explicit user request.
+- **`knowledge/conventions.md` § "AskUserQuestion convention"** — the substrate cite retargeted from the removed "`core/CLAUDE.md` operational checkpoint #1" (dropped in `core` 0.17.0's always-on card) to its canon, `.lsa/VISION.md` §2 principle 9 (*"Substrate-native first"*). Same rule, canonical owner.
+
 ## [0.24.4] — 2026-07-02
 
 Public-readiness documentation pass (docs only, no skill behavior change).

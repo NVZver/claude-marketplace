@@ -12,8 +12,8 @@ A Claude Code marketplace shipping five composable plugins for spec-first, fact-
 
 | Plugin | Version | What it gives you |
 |---|---|---|
-| [`core`](./core/) | 0.16.4 | Always-on discipline: eight content rules, one hard output rule plus six pieces of output guidance, flow classification (Quick / Standard / Extended), the `/core:doctor` install self-check, and the Goal/Input/Steps/Output/Constraints shape every skill follows. |
-| [`lsa`](./lsa/) | 0.24.4 | **L**iving **S**pec **A**rchitecture — technology-agnostic spec layer: authors a grounded spec (EARS + Gherkin), verifies it against the codebase *before* you build and against the diff *after*, then delegates code-writing to any implementer. Not the coder; hand-edits are *absorbed* into the spec instead of forbidden. |
+| [`core`](./core/) | 0.17.0 | Always-on discipline: eight content rules, one hard output rule plus six pieces of output guidance, flow classification (Quick / Standard / Extended), the `/core:doctor` install self-check, and the Goal/Input/Steps/Output/Constraints shape every skill follows. |
+| [`lsa`](./lsa/) | 0.25.0 | **L**iving **S**pec **A**rchitecture — technology-agnostic spec layer: authors a grounded spec (EARS + Gherkin), verifies it against the codebase *before* you build and against the diff *after*, then delegates code-writing to any implementer. Not the coder; hand-edits are *absorbed* into the spec instead of forbidden. |
 | [`manager`](./manager/) | 0.16.2 | Pre-build shaping: turns a vague problem into a structured pitch (problem, appetite, solution sketch, rabbit holes, no-gos) before the build cycle begins. |
 | [`prompt-engineer`](./prompt-engineer/) | 0.8.3 | Plugin-quality discipline: scans your own actors and knowledge files for ground-rule, KISS/DRY, AI over-engineering, and context-budget violations. |
 | [`observer`](./observer/) | 0.3.2 | Live observe-and-coach + increment gate: `observe` rides Claude Code's self-paced `/loop` and coaches your file changes through a chosen role (rubber-duck, pair-programmer, interviewer, or custom); `verify-checkpoint` gates delegation increments — grades one finished requirement **does·only** and emits `CLEAR` or `BLOCK`. |
@@ -85,7 +85,7 @@ The solution is discipline, not magic. `core` constrains output to grounded, sou
 
 ## How it works in 30 seconds
 
-1. **`core` is always-on.** Every task fires `ground-rules` + `output` automatically. The one hard output rule is *sourced* — every claim carries a source + quote; the rest (structured, minimal, verdict-first, …) is guidance the agent applies when it serves the answer, so simple questions get short prose instead of a six-block template.
+1. **`core` is always-on.** Every task applies the `ground-rules` + `output` discipline automatically, straight from the merged [`core/CLAUDE.md`](./core/CLAUDE.md) card (full skill files load only on the card's escalation triggers). The one hard output rule is *sourced* — every claim carries a source + quote; the rest (structured, minimal, verdict-first, …) is guidance the agent applies when it serves the answer, so simple questions get short prose instead of a six-block template.
 2. **Got a vague idea?** `/manager:shape` shapes it into a pitch with clear scope before you commit to building.
 3. **Non-trivial tasks classify first.** `core/flow-selector` proposes Quick / Standard / Extended with chain-of-thought reasoning; you confirm.
 4. **Standard and Extended run through LSA.** `lsa:discover` → `lsa:specify` → `lsa:verify` → `lsa:delegate` → `lsa:reconcile`. Every line of code traces back to a requirement; code-writing is delegated to your implementer.

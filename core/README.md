@@ -30,7 +30,7 @@ Invoke directly via `/core:ground-rules`, `/core:output`, `/core:actor-template`
 
 ### Merge the CLAUDE.md fragment
 
-Copy the content of [`core/CLAUDE.md`](./CLAUDE.md) into your project's `/CLAUDE.md` (or whichever path your `.lsa.yaml` configures as the constitution). The fragment declares four always-on rules: `ground-rules` application, `output` discipline, `flow-selector` invocation before non-trivial tasks, and `reuse-first` on coding tasks.
+Copy the content of [`core/CLAUDE.md`](./CLAUDE.md) into your project's `/CLAUDE.md` (or whichever path your `.lsa.yaml` configures as the constitution). The fragment is the ONE always-on card (≤45 lines): the eight `ground-rules` one-liners, the hard `core/output` rule (source + quote, plus the file-load trace), `flow-selector`'s three flows with the five boundary signals, a `reuse-first` ladder pointer, and the loading discipline (cite-without-loading + escalation triggers). Discipline applies from the card alone; the full SKILL.md files load only on a card-listed escalation trigger.
 
 ## Install on Claude.ai
 
