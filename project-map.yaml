@@ -10,13 +10,6 @@ tree:  # directories only (depth ≤ 3)
   ".github":
     workflows:
   ".lsa":
-    archive:
-      2026-05-20-core-v1:
-      2026-05-21-diagonal-cross-artifact-analysis:
-      2026-05-21-ears-journey-shape-ac:
-      2026-05-22-helper-assistant-refactor:
-      2026-05-22-helper-onboarding-fast-path:
-      2026-05-22-lsa-what-why-preamble:
     features:
       2026-05-22-askuserquestion-audit:
       2026-05-22-custom-inventions-sweep:

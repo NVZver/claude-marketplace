@@ -2,6 +2,15 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.31.0] — 2026-07-15
+
+Raise the project map's value-per-token and make the agent that runs discovery actually reach it.
+
+### Changed
+
+- **`scripts/project-map-build.sh`** — exclude historical subtrees (`EXCLUDE_GLOBS`, currently `.lsa/archive/*`) so the token budget buys navigable signal, not archive noise (~534 tokens, down from ~599). A glob matching nothing in a given repo is a harmless no-op.
+- **`agents/orchestrator.md`** §"Discover, inline" — the conductor now names `project-map.yaml` in its discovery step, so the agent that actually runs discovery is told to consult the map instead of relying on a soft, skippable instruction buried in `discover`.
+
 ## [0.30.0] — 2026-07-15
 
 Make `project-map.yaml` a navigational **directory map**, not a file catalog, and make the model-routing knowledge reflect what is actually wired.

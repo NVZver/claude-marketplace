@@ -7,7 +7,9 @@
 # the actual files under the chosen directory. Deeper dirs truncate at level 3.
 # STRUCTURAL ONLY — no model calls; same tracked tree ⇒ byte-identical output.
 #
-# Skip: node_modules (any path segment). .git is never in git ls-files.
+# Skip: node_modules (any path segment); historical subtrees in EXCLUDE_GLOBS
+# below (archive dirs are low-navigation-value and waste the token budget).
+# .git is never in git ls-files.
 #
 # Consumed by lsa:discover / conventions §"Read protocol". Freshness:
 # lsa/scripts/project-map-check.sh (rebuild + porcelain must be clean).
@@ -23,6 +25,12 @@ export LC_ALL=C
 
 DEPTH=3
 OUT="project-map.yaml"
+
+# Historical / low-navigation-value subtrees excluded from the map so the token
+# budget buys signal, not archive noise. Space-separated globs matched against
+# the repo-relative path; extend as needed. A glob that matches nothing in a
+# given repo is a harmless no-op.
+EXCLUDE_GLOBS=".lsa/archive/*"
 
 repo_root="$(git rev-parse --show-toplevel 2>/dev/null || true)"
 if [[ -z "${repo_root}" ]]; then
@@ -48,6 +56,14 @@ while IFS= read -r f; do
   case "/${f}/" in
     */node_modules/*) continue ;;
   esac
+  excluded=""
+  set -f  # word-split EXCLUDE_GLOBS without pathname-expanding it into real files
+  for g in ${EXCLUDE_GLOBS}; do
+    # shellcheck disable=SC2254 — intentional glob match against the path
+    case "${f}" in ${g}) excluded=1; break ;; esac
+  done
+  set +f
+  [[ -n "${excluded}" ]] && continue
   [[ "${f}" == */* ]] || continue   # root file: no directory to record
 
   dir="${f%/*}"                      # strip filename → directory path

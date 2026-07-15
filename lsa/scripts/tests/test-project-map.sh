@@ -37,11 +37,13 @@ new_repo() {
     git init -q
     git config user.email "test@example.com"
     git config user.name "test"
-    mkdir -p a/b/c/d core/skills/demo
+    mkdir -p a/b/c/d core/skills/demo .lsa/archive/2026-01-01-old .lsa/modules/core
     printf 'root\n' > README.md
     printf 'x\n' > a/b/c/d/deep.txt
     printf 'skill\n' > core/skills/demo/SKILL.md
     printf 'mid\n' > a/b/mid.txt
+    printf 'old\n' > .lsa/archive/2026-01-01-old/note.md
+    printf 'spec\n' > .lsa/modules/core/spec.md
     git add -A
     git commit -q -m "seed"
   )
@@ -102,6 +104,19 @@ if grep -qE '^      demo:' project-map.yaml; then
   ok "leaf directory core/skills/demo present"
 else
   bad "expected leaf dir core/skills/demo"
+  cat project-map.yaml >&2
+fi
+# .lsa/archive is excluded (historical noise); other .lsa subtrees remain.
+if grep -qE '^    archive:' project-map.yaml; then
+  bad ".lsa/archive must be excluded from the map"
+  cat project-map.yaml >&2
+else
+  ok ".lsa/archive excluded"
+fi
+if grep -qE '^    modules:' project-map.yaml; then
+  ok ".lsa/modules retained (only archive excluded)"
+else
+  bad ".lsa/modules should remain in the map"
   cat project-map.yaml >&2
 fi
 
