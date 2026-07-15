@@ -3,7 +3,7 @@
 
 # Project index — claude-marketplace
 
-Script-generated map of the tracked markdown surface (`git ls-files '*.md'`, 211 files). Consult this to locate where a topic lives **before** walking the tree; headings are the descriptions. Regenerate: `bash scripts/build-index.sh`.
+Script-generated map of the tracked markdown surface (`git ls-files '*.md'`, 212 files). Consult this to locate where a topic lives **before** walking the tree; headings are the descriptions. Regenerate: `bash scripts/build-index.sh`.
 
 ## Plugins (counts → per-plugin README)
 - `core/` — 6 skills, 2 knowledge → `core/README.md`
