@@ -2,6 +2,27 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.29.0] — 2026-07-15
+
+Ship `project-map.yaml` out of the box (epic `pro-tier-token-affordability/project-index` amended; breaking vs 0.27.0's markdown index).
+
+### Added
+
+- **`scripts/project-map-build.sh`** — deterministic 3-level repo atlas → repo-root `project-map.yaml` (dirs + files; depth ≤ 3; no model calls).
+- **`scripts/project-map-check.sh`** — rebuild then fail if `project-map.yaml` is dirty in git (ownership stays with the human).
+- **`scripts/tests/test-project-map.sh`** — real-flow harness (idempotent build, depth truncation, check PASS/FAIL, not-a-git-repo).
+
+### Changed
+
+- **`knowledge/conventions.md`** §"Read protocol" — consult `project-map.yaml` (not `.lsa/PROJECT-index.md`).
+- **`skills/discover/SKILL.md`** Step 1 — same.
+- **`skills/init/SKILL.md`** — Step 4 runs the builder when available so new projects get a map.
+- **`ARCHITECTURE.md` / `README.md`** — document shipped scripts + root `project-map.yaml`.
+
+### Removed
+
+- Consumer reliance on marketplace-only `scripts/build-index.sh` + `.lsa/PROJECT-index.md` (deleted from this repo).
+
 ## [0.28.0] — 2026-07-15
 
 Gate pre-pass offload (epic `pro-tier-token-affordability/script-offload`, `.lsa/features/pro-tier-token-affordability/script-offload/requirements.md` F4; parent pitch WS3). Wiring only — the aggregate runner is used where the repo provides one; absent it, verify/reconcile run each `gate:` command as before (backward-compatible).
@@ -11,6 +32,10 @@ Gate pre-pass offload (epic `pro-tier-token-affordability/script-offload`, `.lsa
 - **`skills/verify/SKILL.md`** (Step 4) and **`skills/reconcile/SKILL.md`** (Step 1) — where the repo provides an aggregate gate runner (this repo: `bash scripts/gate.sh`, which reads the `.lsa.yaml` `gate:` block and prints each check's command + exit), run the block in one pass and cite its consolidated output; absent a runner, run each configured command. The cited artifact stays per-check command + exit.
 
 > Repo-internal infra shipped with this epic but **not** part of any plugin (lives in `scripts/`, outside `artifact_paths`): `scripts/gate.sh` (aggregate `.lsa.yaml gate:` runner) and `scripts/roadmap-row.sh` (first-backlog-row extractor, used by `manager:next`).
+
+### Docs
+
+- **`ARCHITECTURE.md`** (§2 Directory Structure) — the tree now shows the `scripts/` gate+generator layer and the two generated `${specs_root}` artifacts (`VISION-digest.md`, `PROJECT-index.md`) added across this pitch, plus `pitches/` and per-feature `conformance.md`; the `core/skills/` line points at `core/README.md` instead of enumerating a stale three-skill subset.
 
 ## [0.27.0] — 2026-07-15
 

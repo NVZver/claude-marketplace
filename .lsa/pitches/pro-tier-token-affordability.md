@@ -1,7 +1,7 @@
 Shaped by: product-manager agent (role lens: agent-platform cost-efficiency PM — reshape v2, owner amendments A1-A4 + model-routing direction incorporated)
 Date: 2026-07-15
 Status: approved
-Gate decisions: role confirmed (agent-platform cost-efficiency PM); Fork A/C confirmed as amended (index 100% script-generated, no model description pass; constitution digest inside WS1); Fork B = all four workstreams (~4 small-batch epics, lever-ordered WS1→WS4→WS2→WS3); Fork D = commit hook + CI mirror auto-rebuild the index (superseded at the project-index spec gate → a lint freshness-gate that detects staleness rather than a hook that auto-rebuilds, per `.lsa/features/pro-tier-token-affordability/project-index/requirements.md` D3: no git-hook infra exists, and a silent auto-rebuild conflicts with the ownership-over-automation credo); Fork E = routing lives as a `routing:` map in `.lsa.yaml` read at dispatch time (zero shipped pins; absent key = inherit; reconcile grader never routable down).
+Gate decisions: role confirmed (agent-platform cost-efficiency PM); Fork A/C confirmed as amended (index 100% script-generated, no model description pass; constitution digest inside WS1); Fork B = all four workstreams (~4 small-batch epics, lever-ordered WS1→WS4→WS2→WS3); Fork D = commit hook + CI mirror auto-rebuild the index (superseded → `lsa/scripts/project-map-check.sh` rebuild+porcelain gate on repo-root `project-map.yaml`, shipped with lsa — see `.lsa/features/pro-tier-token-affordability/project-index/requirements.md` D1–D6); Fork E = routing lives as a `routing:` map in `.lsa.yaml` read at dispatch time (zero shipped pins; absent key = inherit; reconcile grader never routable down).
 Why now: the constitution's own standard declares the marketplace "must run 100% on the Claude Pro plan" (.lsa/standards/code.md:49) and today it does not; the in-progress inline-dispatch rollout (.lsa/roadmap.md:62) makes this the moment to decide model routing for the dispatches that legitimately remain.
 
 # Pro-tier token affordability
@@ -88,12 +88,12 @@ weakening of hard rules or gates; model-written index descriptions.
   discovery consults the ≤1k-token index instead of walking 121 files; dispatching skills
   read a routing entry and pass the model at the Agent-tool boundary; the owner sees
   which tier each dispatch ran on in the dispatch line.
-- **Main components:** `core/CLAUDE.md` + the three core skills (WS1 card); a new
-  `scripts/build-index.sh` + committed index file with a lint-enforced 1k-token cap
-  (WS2); `scripts/` additions (WS3); a routing knowledge file + `.lsa.yaml` `routing:`
+- **Main components:** `core/CLAUDE.md` + the three core skills (WS1 card); shipped
+  `lsa/scripts/project-map-build.sh` + `project-map-check.sh` + repo-root `project-map.yaml`
+  (WS2, 3-level atlas); `scripts/` additions (WS3); a routing knowledge file + `.lsa.yaml` `routing:`
   key (WS4, per Fork E decision).
 - **Critical path:** WS1 card ships → a Pro session's per-turn floor drops ~85% → WS4
-  routing table ships against the surviving dispatch surfaces → WS2 index bounds
+  routing table ships against the surviving dispatch surfaces → WS2 map bounds
   discovery → dogfood a full Standard flow on a Pro session and record the token delta.
 
 ### Model-routing tier table (WS4 deliverable — inventory verified 2026-07-15)

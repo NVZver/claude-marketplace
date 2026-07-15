@@ -34,9 +34,9 @@ Every LSA skill begins with the same protocol — read in this order, print a on
 2. The constitution **digest** — [`.lsa/VISION-digest.md`](../../.lsa/VISION-digest.md), script-generated from the configured `${constitution}` (mandatory; never hand-edited — regenerate with `bash scripts/build-vision-digest.sh`). Load the full `${constitution}` only for constitutional tasks: `lsa:init`, `lsa:revise-constitution`, or an explicit user request.
 3. The skill-specific source list — each skill names its own list under its Steps.
 
-To locate *which* files a request touches (skill lists that resolve to "the code/specs the request touches", e.g. `discover` Step 1), consult the **project index** — [`.lsa/PROJECT-index.md`](../../.lsa/PROJECT-index.md), a script-generated ≤1k-token structural map of the tracked markdown surface (headings are the descriptions) — **before** walking the tree. It is a scoping map, not a mandatory full read; script-generated, never hand-edited (regenerate with `bash scripts/build-index.sh`).
+To locate *which* files a request touches (skill lists that resolve to "the code/specs the request touches", e.g. `discover` Step 1), consult the **project map** — [`project-map.yaml`](../../project-map.yaml) at the repo root, a script-generated 3-level tree of dirs and files — **before** walking the tree. It is a scoping atlas, not a mandatory full read; script-generated, never hand-edited (regenerate with `bash lsa/scripts/project-map-build.sh`, or `${CLAUDE_PLUGIN_ROOT}/scripts/project-map-build.sh` when the plugin is installed). Freshness gate: `bash lsa/scripts/project-map-check.sh`.
 
-If a source does not exist — including the project index — note the gap and fall back to a direct tree-walk rather than guessing. Per `core/skills/ground-rules/SKILL.md` Rule 3.
+If a source does not exist — including the project map — note the gap and fall back to a direct tree-walk rather than guessing. Per `core/skills/ground-rules/SKILL.md` Rule 3.
 
 Observable result: per-source one-liner printed back to the human.
 

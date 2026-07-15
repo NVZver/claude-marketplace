@@ -7,15 +7,15 @@ specs_root: .lsa/
 mode: docs
 
 # Quality-gate script contract (see lsa/knowledge/quality-gate-contract.md).
-# docs-mode structural probes: each key is a check name → a deterministic,
-# repo-internal command. A check passes iff its command exits 0; verify /
-# reconcile cite the command + exit code as the Rule-7 gate artifact instead of
-# re-deriving grep recipes by hand. Scripts are repo-internal (outside every
-# plugin's artifact_paths) — Pro-safe, local bash, zero model calls.
+# docs-mode structural probes: each key is a check name → a deterministic
+# command. A check passes iff its command exits 0; verify / reconcile cite the
+# command + exit code as the Rule-7 gate artifact instead of re-deriving grep
+# recipes by hand. Pro-safe, local bash, zero model calls.
 gate:
   docs-invariants: bash scripts/lint.sh
   citations: bash scripts/check-citations.sh
   links: bash scripts/check-links.sh
+  project-map: bash lsa/scripts/project-map-check.sh
 
 # Reconcile scenario-run count (lsa/skills/reconcile/SKILL.md Step 1).
 # Default when the key is absent: 3 — pass = all 3 runs succeed (≥95% of 3 ⇒ 3/3).
@@ -62,6 +62,7 @@ modules:
       - lsa/knowledge/**/*.md
       - lsa/hooks/hooks.json
       - lsa/hooks/**/*.sh
+      - lsa/scripts/**/*.sh
       - lsa/.claude-plugin/plugin.json
       - lsa/ARCHITECTURE.md
       - lsa/README.md

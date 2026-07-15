@@ -1,17 +1,12 @@
-Feature: The project index is deterministically script-generated
-  Scenario: Same input produces byte-identical output
-    Given the repo's tracked markdown surface is unchanged                 # F1
-    When bash scripts/build-index.sh runs twice                            # F1
-    Then both runs write byte-identical .lsa/PROJECT-index.md              # F1, AC1
-    And no model call is made                                              # F1, No-go 6
+Feature: Deterministic project-map.yaml generation
+  As an LSA user on any repo
+  I want a script-generated 3-level project-map.yaml
+  So discover can scope reads without walking the whole tree
 
-  Scenario: Headings are the descriptions
-    Given the .lsa/ live spine files each carry an H1                      # F4
-    When the index is generated                                           # F1
-    Then each spine file appears with its verbatim H1                      # F4, AC1
-    And features/ pitches/ archive/ are collapsed to counts + slug lists   # F4, AC1
-
-  Scenario: The index announces itself as generated
-    Given the generator wrote .lsa/PROJECT-index.md                        # F2
-    Then it opens with a trace directive and a GENERATED — DO NOT EDIT banner  # F2, AC5
-    And loading it prints the file-load trace line                         # F8, AC5
+  Scenario: Build is deterministic and depth-bounded
+    When I run bash lsa/scripts/project-map-build.sh twice
+    Then both outputs are byte-identical                                    # F1, AC1
+    And paths deeper than 3 levels do not appear as leaves                 # F3, AC1
+    And depth-3 parents of deeper paths are tagged dir                     # F3, AC1
+    And the map opens with GENERATED — DO NOT EDIT                         # F2, AC5
+    And the map does not list project-map.yaml in tree                     # F2, AC5

@@ -37,9 +37,10 @@ How to build and contribute. Operating rules live in [`.lsa/VISION.md`](./.lsa/V
 - [ ] **README updated** if any user-visible surface changed (living docs) — root [`README.md`](./README.md) and/or the plugin README.
 - [ ] **Spec reflects reality** — the module spec, the `.lsa/main.spec.md` index (its versions match each `plugin.json`), and any affected NFR are updated (spec-grounding).
 - [ ] **Counts synced** — adding or removing a rule updates *every* count reference across the repo, or makes the reference count-free (prevents the "six content rules" drift class).
+- [ ] **[CI · C12 + project-map]** Generated artifacts regenerated — editing `.lsa/VISION.md` requires `bash scripts/build-vision-digest.sh` (refreshes `.lsa/VISION-digest.md`); any tracked tree change at depth ≤ 3 requires `bash lsa/scripts/project-map-build.sh` (refreshes `project-map.yaml`). C12 and `lsa/scripts/project-map-check.sh` fail otherwise — §"Verifying before merge".
 
 **Verify before merge**
-- [ ] **[CI]** `bash scripts/lint.sh` prints `All invariants hold.` (C1–C6 all PASS).
+- [ ] **[CI]** The mechanical gate suite is green — `bash scripts/lint.sh` prints `All invariants hold.` (C1–C12 all PASS), and `scripts/check-citations.sh`, `scripts/check-links.sh`, `scripts/check-version-changelog.sh`, `lsa/scripts/project-map-check.sh`, and `lsa/scripts/tests/test-project-map.sh` all pass.
 - [ ] **`prompt-engineer:prompt-review`** is clean on every changed skill / agent / command — no open HIGH or MED finding.
 - [ ] **V1 / V2 / V3** — installs / triggers / behaves — §"Verifying before merge".
 - [ ] **`lsa:verify` GROUNDED** before delegating and **`lsa:reconcile` PASS** (does · only · all) after — for LSA-tracked changes (anything under `artifact_paths`).
@@ -127,13 +128,13 @@ SemVer mapping for this repo:
 | Minor (`0.X.0`) | New skill, new Knowledge surface, or material change to a skill body. |
 | Major (`X.0.0`) | Breaking change to a skill's contract or to `.lsa.yaml` schema. |
 
-Repo-level files (root `CLAUDE.md`, `CONTRIBUTING.md`, `SECURITY.md`, `scripts/lint.sh`, `tests/`, plan files under `.lsa/plans/`) live outside per-plugin `artifact_paths` and do not trigger plugin version bumps.
+Repo-level files (root `CLAUDE.md`, `CONTRIBUTING.md`, `SECURITY.md`, `project-map.yaml`, everything under `scripts/` — the lint, gate runners, digest generator — the generated `.lsa/VISION-digest.md`, and plan files under `.lsa/plans/`) live outside per-plugin `artifact_paths` and do not trigger plugin version bumps. The project-map **builder/checker** live under `lsa/scripts/` and **do** ship with the `lsa` plugin (they bump `lsa` when changed).
 
 ---
 
 ## Verifying before merge
 
-**Mechanical gate (CI-enforced) — run first.** `bash scripts/lint.sh` must print `All invariants hold.` It runs on every PR and push to `main` via [`.github/workflows/lint.yml`](./.github/workflows/lint.yml); a red lint blocks merge. The six invariants are defined in [`scripts/lint.sh`](./scripts/lint.sh): output rule-count (C1) and rule-name list (C2) stated only in `core`; the `prompt-engineer` actor ground-rules list defined once (C3); the load-time trace directive present in every `SKILL.md` / `agents/*.md` (C4); every agent declaring `tools:` (C5); and the anti-injection ground rule intact (C6).
+**Mechanical gate (CI-enforced) — run first.** `bash scripts/lint.sh` must print `All invariants hold.` It runs on every PR and push to `main` via [`.github/workflows/lint.yml`](./.github/workflows/lint.yml); a red lint blocks merge. The invariants are defined in [`scripts/lint.sh`](./scripts/lint.sh) (**C1–C12**): the single-source checks — output rule-count (C1) and rule-name list (C2) stated only in `core`, the `prompt-engineer` actor ground-rules list defined once (C3); the load-time trace directive in every `SKILL.md` / `agents/*.md` (C4); every agent declaring `tools:` (C5); the anti-injection ground rule intact (C6); frontmatter description ≤ 1024 chars + skill `name:` matching its directory (C7); no hardcoded `model:` pin in shipped Actor frontmatter (C8); Actor body ≤ 500 lines (C9); [`knowledge/index.md`](./knowledge/index.md) header count matching on-disk files with every link resolving (C10); each `VERIFICATION.md` `Scope:` matching its `plugin.json` major.minor (C11); and `.lsa/VISION-digest.md` freshness (C12). Repo-atlas freshness is a separate gate: [`lsa/scripts/project-map-check.sh`](./lsa/scripts/project-map-check.sh) (rebuild then porcelain must be clean for `project-map.yaml`). A C12 failure → `bash scripts/build-vision-digest.sh`. A project-map failure → `bash lsa/scripts/project-map-build.sh` then commit `project-map.yaml`. The same CI job also runs `scripts/check-citations.sh`, `scripts/check-links.sh`, `scripts/check-version-changelog.sh`, and [`lsa/scripts/tests/test-project-map.sh`](./lsa/scripts/tests/test-project-map.sh).
 
 **Prompt-source review.** Run `prompt-engineer:prompt-review` on every changed skill / agent / command; resolve every HIGH and MED finding before merge.
 

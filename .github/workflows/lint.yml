@@ -18,5 +18,7 @@ jobs:
         run: bash scripts/check-links.sh
       - name: Version mirror check (plugin.json version == top CHANGELOG heading)
         run: bash scripts/check-version-changelog.sh
-      - name: Index generator tests (real-flow, scripts/build-index.sh)
-        run: bash scripts/tests/test-build-index.sh
+      - name: Project-map tests (real-flow, lsa/scripts/project-map-*.sh)
+        run: bash lsa/scripts/tests/test-project-map.sh
+      - name: Project-map freshness gate
+        run: bash lsa/scripts/project-map-check.sh

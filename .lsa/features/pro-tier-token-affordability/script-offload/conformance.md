@@ -46,6 +46,7 @@ Verdict: the after-check that the diff satisfies the spec and only the spec. **r
   living-doc versions (`.lsa/standards/code.md:18-22`).
 - `.lsa/PROJECT-index.md` regenerated — the new spec/conformance `.md` files changed the tracked set;
   kept fresh so C13 stays green (WS2 contract).
+  *(Superseded 2026-07-15: atlas is now repo-root `project-map.yaml` gated by `lsa/scripts/project-map-check.sh`.)*
 - `.lsa/features/pro-tier-token-affordability/script-offload/*` — the epic spec itself.
 
 Orphan hunks: none.

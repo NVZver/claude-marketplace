@@ -36,25 +36,35 @@ This document is the design-rationale narrative for `lsa`. For other concerns, s
 ```
 /
 ├── CLAUDE.md                          ← Slim Claude Code entry point.
+├── project-map.yaml                   ← GENERATED 3-level repo atlas (lsa/scripts/project-map-build.sh; discovery scoping)
 ├── .lsa.yaml                          ← LSA configuration (optional; defaults applied if absent)
+├── scripts/                           ← Repo-internal gates (outside every plugin's artifact_paths)
+│   ├── lint.sh                        ← the C1–C12 invariant lint (CI-enforced)
+│   ├── build-vision-digest.sh         ← regenerates .lsa/VISION-digest.md from .lsa/VISION.md
+│   ├── gate.sh, roadmap-row.sh        ← aggregate gate runner + first-backlog-row extractor
+│   └── …
 ├── core/                              (the core plugin — independent of LSA)
-│   ├── CLAUDE.md                      ← The canonical always-on fragment
-│   └── skills/
-│       ├── ground-rules/SKILL.md
-│       ├── actor-template/SKILL.md
-│       └── flow-selector/SKILL.md           (renamed from tier-selector in core v0.5.2)
+│   ├── CLAUDE.md                      ← The canonical always-on card
+│   └── skills/                        (the six discipline skills — see core/README.md for the table)
 ├── lsa/
 │   ├── hooks/
 │   │   ├── hooks.json
 │   │   └── session-start-drift-check.sh
+│   ├── scripts/
+│   │   ├── project-map-build.sh       ← emits repo-root project-map.yaml (shipped)
+│   │   ├── project-map-check.sh       ← rebuild + porcelain freshness gate (shipped)
+│   │   └── tests/test-project-map.sh
 │   ├── CORE.md                        ← the one-page contract every skill follows
 │   ├── agents/orchestrator.md         ← entry-point conductor
 │   └── skills/                        (the spec-loop skills — see README.md for the table)
 └── ${specs_root}/                     (defaults to .lsa/ — also holds constitution at .lsa/VISION.md)
+    ├── VISION.md                      ← The constitution (full)
+    ├── VISION-digest.md               ← GENERATED structural digest of VISION.md (build-vision-digest.sh; the mandatory constitution read)
     ├── main.spec.md                   ← App-level behavior, module index, global contracts
     ├── roadmap.md                     ← Prioritized feature backlog
     ├── research-backlog.md            ← Mid-feature ideas, deferred decisions
     ├── metrics.md                     ← Optional aggregate (one row per archived feature)
+    ├── pitches/                       ← Shaped pitches (manager:shape) awaiting decomposition
     ├── standards/
     │   ├── code.md
     │   └── testing.md
@@ -65,7 +75,8 @@ This document is the design-rationale narrative for `lsa`. For other concerns, s
     │   └── <feature-name>/
     │       ├── requirements.md        ← EARS requirements + user flows (specify)
     │       ├── <flow>.feature         ← Gherkin acceptance scenarios (specify)
-    │       └── grounding.md           ← per-reference grounding result (verify)
+    │       ├── grounding.md           ← per-reference grounding result (verify)
+    │       └── conformance.md         ← requirement ↔ hunk coverage table (reconcile)
     └── archive/
         └── YYYY-MM-DD-<feature-name>/
             └── (the archived feature spec files)

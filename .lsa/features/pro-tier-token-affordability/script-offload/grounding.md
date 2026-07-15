@@ -12,7 +12,7 @@ Verdict: **GROUNDED**
 | `lsa:reconcile` Step 1 (run the gate block, cite command+exit) — F4 wiring point | exists @ `lsa/skills/reconcile/SKILL.md:33` |
 | `manager:next` Step 0 fast-path (model reads roadmap, finds first backlog row) — F5 wiring point | exists @ `manager/skills/next/SKILL.md:24` |
 | First backlog row (extractor's expected output) | exists @ `.lsa/roadmap.md:13` (`Library-spec cache … Could … backlog`) |
-| Repo-internal script precedent (scripts/, outside artifact_paths, no plugin bump) | exists @ `scripts/lint.sh`, `scripts/build-index.sh`; convention noted in each header |
+| Repo-internal / shipped script precedent | `scripts/lint.sh` (repo-internal); `lsa/scripts/project-map-*.sh` (shipped with lsa) |
 | Existing gate scripts the block names | exist @ `scripts/lint.sh`, `scripts/check-citations.sh`, `scripts/check-links.sh` |
 | `scripts/gate.sh` (F1/F3 aggregate runner) | **new** — repo-internal, no plugin bump |
 | `scripts/roadmap-row.sh` (F2 extractor) | **new** — repo-internal, no plugin bump |
@@ -36,7 +36,7 @@ convention-gated shipped-skill wiring (D2).
 
 ## Gate results (quality-gate-contract; command + exit code) — pre-implementation baseline
 
-- `bash scripts/lint.sh` → exit 0 (C1–C14 PASS)
+- `bash scripts/lint.sh` → exit 0 (C1–C12 PASS)
 - `bash scripts/check-citations.sh` → exit 0
 - `bash scripts/check-links.sh` → exit 0
 

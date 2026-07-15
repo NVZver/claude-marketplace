@@ -26,7 +26,7 @@ Produce the intent and the cited codebase facts the spec will be grounded on.
 
 ## Steps
 
-1. Read `.lsa.yaml`, the constitution, and the code/specs the request touches — consult the project index [`.lsa/PROJECT-index.md`](../../../.lsa/PROJECT-index.md) (script-generated ≤1k-token map; per [`knowledge/conventions.md`](../../knowledge/conventions.md) §"Read protocol") to locate those files before walking the tree; fall back to a tree-walk if it is absent. Cite each `file:line`; tag any gap `[ASSUMPTION]` (CORE §1). (→ codebase facts)
+1. Read `.lsa.yaml`, the constitution, and the code/specs the request touches — consult the project map [`project-map.yaml`](../../../project-map.yaml) (script-generated 3-level repo tree; per [`knowledge/conventions.md`](../../knowledge/conventions.md) §"Read protocol") to locate those files before walking the tree; fall back to a tree-walk if it is absent. Cite each `file:line`; tag any gap `[ASSUMPTION]` (CORE §1). (→ codebase facts)
 2. Extract intent — which user flow, for which module. Ask only what isn't derivable from the facts. (→ intent)
 3. Hand intent + facts to `specify`. (→ handoff)
 

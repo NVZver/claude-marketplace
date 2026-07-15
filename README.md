@@ -13,7 +13,7 @@ A Claude Code marketplace shipping five composable plugins for spec-first, fact-
 | Plugin | Version | What it gives you |
 |---|---|---|
 | [`core`](./core/) | 0.17.0 | Always-on discipline: eight content rules, one hard output rule plus six pieces of output guidance, flow classification (Quick / Standard / Extended), the `/core:doctor` install self-check, and the Goal/Input/Steps/Output/Constraints shape every skill follows. |
-| [`lsa`](./lsa/) | 0.28.0 | **L**iving **S**pec **A**rchitecture — technology-agnostic spec layer: authors a grounded spec (EARS + Gherkin), verifies it against the codebase *before* you build and against the diff *after*, then delegates code-writing to any implementer. Not the coder; hand-edits are *absorbed* into the spec instead of forbidden. |
+| [`lsa`](./lsa/) | 0.29.0 | **L**iving **S**pec **A**rchitecture — technology-agnostic spec layer: authors a grounded spec (EARS + Gherkin), verifies it against the codebase *before* you build and against the diff *after*, then delegates code-writing to any implementer. Not the coder; hand-edits are *absorbed* into the spec instead of forbidden. |
 | [`manager`](./manager/) | 0.18.0 | Pre-build shaping: turns a vague problem into a structured pitch (problem, appetite, solution sketch, rabbit holes, no-gos) before the build cycle begins. |
 | [`prompt-engineer`](./prompt-engineer/) | 0.8.3 | Plugin-quality discipline: scans your own actors and knowledge files for ground-rule, KISS/DRY, AI over-engineering, and context-budget violations. |
 | [`observer`](./observer/) | 0.3.2 | Live observe-and-coach + increment gate: `observe` rides Claude Code's self-paced `/loop` and coaches your file changes through a chosen role (rubber-duck, pair-programmer, interviewer, or custom); `verify-checkpoint` gates delegation increments — grades one finished requirement **does·only** and emits `CLEAR` or `BLOCK`. |
@@ -57,7 +57,7 @@ Symptom → fix; when in doubt, [`/core:doctor`](./core/skills/doctor/SKILL.md) 
 - **A skill won't trigger** — run `/reload-plugins`, then invoke it explicitly (e.g. `/core:doctor`, `/lsa:discover`); if it's still missing, step 1 didn't complete.
 - **Always-on rules not applying** — the `core/CLAUDE.md` fragment isn't merged: do install step 2, then `/core:doctor` reports which rule anchors are still missing.
 - **`NOT-GROUNDED` from `lsa:verify`** — not a breakage: fix the flagged spec references before building, per [`lsa/README.md` § Quick start step 4](./lsa/README.md#quick-start).
-- **Lint red** — run the failing gate locally: `scripts/lint.sh`, `scripts/check-citations.sh`, `scripts/check-links.sh`, `scripts/check-version-changelog.sh` — each prints the offending line.
+- **Lint red** — run the failing gate locally: `scripts/lint.sh`, `scripts/check-citations.sh`, `scripts/check-links.sh`, `scripts/check-version-changelog.sh`, `lsa/scripts/project-map-check.sh` — each prints the offending line. A `lint.sh` C12 failure means a stale constitution digest: regenerate with `bash scripts/build-vision-digest.sh`. A `project-map-check.sh` failure means a stale repo atlas: regenerate with `bash lsa/scripts/project-map-build.sh`, then commit `project-map.yaml`.
 
 ## Quick start
 

@@ -1,18 +1,15 @@
-Feature: Lint enforces index freshness and the token budget
-  Scenario: A stale index fails the freshness gate
-    Given a tracked markdown file was added or an H1 changed              # F5
-    And .lsa/PROJECT-index.md was not regenerated                         # F5
-    When bash scripts/lint.sh runs                                        # F5
-    Then the freshness check FAILs naming bash scripts/build-index.sh      # F5, AC3
-    And regenerating the index makes the check PASS                        # F5, AC3
+Feature: project-map-check freshness gate
+  As a repo owner
+  I want CI to fail when project-map.yaml is stale
+  So the atlas stays honest without silent auto-commits
 
-  Scenario: The token budget is a gate, not advice
-    Given the committed .lsa/PROJECT-index.md                             # F3
-    When bash scripts/lint.sh runs                                        # F3
-    Then the budget check prints the token estimate (chars / 4)            # F3, D4
-    And it PASSes only when the estimate is <= 1000 tokens                 # F3, AC2
+  Scenario: Check passes only when rebuild is a no-op against git
+    Given project-map.yaml is committed and matches a fresh rebuild
+    When I run bash lsa/scripts/project-map-check.sh
+    Then the check exits 0                                                 # F5, AC2
 
-  Scenario: A missing index is caught
-    Given .lsa/PROJECT-index.md is absent                                 # F5
-    When bash scripts/lint.sh runs                                        # F5
-    Then the freshness check FAILs naming the regeneration command         # F5
+  Scenario: Check fails when the tree changed without updating the map
+    Given a new tracked file at depth ≤ 3 was committed without refreshing the map
+    When I run bash lsa/scripts/project-map-check.sh
+    Then the check rebuilds the map and exits non-zero                     # F5, AC2
+    And the message names committing the refreshed project-map.yaml
