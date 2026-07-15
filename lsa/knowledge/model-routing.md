@@ -31,11 +31,13 @@ Surface-key format:
 
 **Wiring rule — the map lists only surfaces a dispatcher actually reads.** A tier is
 real only when the dispatching skill resolves this map and passes the result as the
-`Agent` `model` parameter. Today exactly one surface does so: `lsa:delegate` resolves
-`lsa:delegate.verify-checkpoint` (`../skills/delegate/SKILL.md` §5). Every other surface
-below runs `inherit` — either floored by design, or transitional and never wired. Do not
-add a key for a surface no dispatcher reads: that is dead config that reads as a saving
-which never happens.
+`Agent` `model` parameter. Three surfaces do so today: `manager:next` and `manager:check`
+via the shared roadmap-orchestration contract (`../../manager/knowledge/roadmap-orchestration.md`
+§"The contract" item 1 — cited by both skills, one wiring point for all roadmap dispatches),
+and `lsa:delegate.verify-checkpoint` via `../skills/delegate/SKILL.md` §5. Every other surface
+runs `inherit` — either floored by design, or scoped but not wired (e.g. `prompt-engineer.mechanical`,
+whose agent-side resolver was reverted). Do not add a key for a surface no dispatcher reads:
+that is dead config that reads as a saving which never happens.
 
 ## Resolution algorithm
 
@@ -68,16 +70,17 @@ is `inherit` unless a dispatcher reads the map for it (per the wiring rule above
 |---|------------------|------|--------|-----------|-------|
 | 1 | `manager:shape` → product-manager | `manager/skills/shape/SKILL.md:26` | — | inherit | Transitional (inline rollout); judgment-heavy — not a routing candidate |
 | 2 | `manager:decompose` → project-manager | `manager/skills/decompose/SKILL.md:24` | — | inherit | Transitional; epic boundaries = judgment |
-| 3 | `manager:next` → project-manager | `manager/skills/next/SKILL.md:26` | No | inherit | Transitional; a `sonnet` down-route was scoped but never wired. Fast-path answers most calls without any dispatch |
-| 4 | `manager:check` → project-manager | `manager/skills/check/SKILL.md:23` | No | inherit | Transitional; a `haiku` down-route was scoped but never wired. Left inherit rather than shipped as dead config |
+| 3 | `manager:next` → project-manager | `manager/skills/next/SKILL.md:26` | **Yes** | **sonnet** | Transitional (inline rollout), but wired now via the roadmap-orchestration contract. Bounded sequencing over one roadmap file. Fast-path answers plain "what's next" with no dispatch at all |
+| 4 | `manager:check` → project-manager | `manager/skills/check/SKILL.md:23` | **Yes** | **haiku** | Transitional, but wired via the same contract. Mechanical hygiene scan (staleness rows, drift inventory) — the cheapest-tier dispatch |
 | 5 | `manager:implement` per-epic fan-out | `manager/skills/implement/SKILL.md:38` | Floored | inherit | Writes production artifacts; a downgrade recreates the hallucinated-completion failure the engine exists to prevent |
 | 6 | `lsa:delegate` → external implementer | `lsa/skills/delegate/SKILL.md:37` | Floored | inherit | Code quality is load-bearing; outside the LSA boundary |
-| 7 | `lsa:delegate` → `observer:verify-checkpoint` | `lsa/skills/delegate/SKILL.md:56` | **Yes** | **sonnet** | The one live down-route. Scoped does·only grading of ONE increment; bounded inputs. NOT haiku — grading is judgment |
+| 7 | `lsa:delegate` → `observer:verify-checkpoint` | `lsa/skills/delegate/SKILL.md:56` | **Yes** | **sonnet** | A live down-route. Scoped does·only grading of ONE increment; bounded inputs. NOT haiku — grading is judgment |
 | 8 | `lsa:reconcile` independent grader | `lsa/skills/reconcile/SKILL.md:33` | Floored | inherit | The regression harness; grader quality is the safety floor of the whole system — never a downgrade candidate |
 | 9 | prompt-engineer agent dispatches | `prompt-engineer/agents/prompt-engineer.md` | — | inherit | A `sonnet` mechanical-scan route was reverted (kept at 0.8.3); re-add only if actually wired |
 
-The durable routing surface is exactly the three isolation classes of `.lsa/standards/code.md:59-63`
-(external implementer · independent graders · worktree fan-out). Of those, only the per-increment
-grader (row 7) is a live down-route; the rest are floored to `inherit`. Transitional rows 1–4 are
-**deleted, never re-tiered** as the inline rollout (`.lsa/roadmap.md:62`) completes. New down-route =
-wire the dispatcher first, then add the map key — never the reverse.
+Live down-routes today: rows 3 (`manager:next` → sonnet), 4 (`manager:check` → haiku), and 7
+(`verify-checkpoint` → sonnet). Rows 3–4 are **transitional** — slated for deletion (not re-tiering)
+as the inline rollout (`.lsa/roadmap.md:62`) removes their dispatch; the durable surface is the three
+isolation classes of `.lsa/standards/code.md:59-63` (external implementer · independent graders ·
+worktree fan-out), of which row 7 is the one live down-route and the rest are floored to `inherit`.
+New down-route = wire the dispatcher first, then add the map key — never the reverse.

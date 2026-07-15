@@ -2,96 +2,22 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
-## [0.31.0] — 2026-07-15
-
-Raise the project map's value-per-token and make the agent that runs discovery actually reach it.
-
-### Changed
-
-- **`scripts/project-map-build.sh`** — exclude historical subtrees (`EXCLUDE_GLOBS`, currently `.lsa/archive/*`) so the token budget buys navigable signal, not archive noise (~534 tokens, down from ~599). A glob matching nothing in a given repo is a harmless no-op.
-- **`agents/orchestrator.md`** §"Discover, inline" — the conductor now names `project-map.yaml` in its discovery step, so the agent that actually runs discovery is told to consult the map instead of relying on a soft, skippable instruction buried in `discover`.
-
-## [0.30.0] — 2026-07-15
-
-Make `project-map.yaml` a navigational **directory map**, not a file catalog, and make the model-routing knowledge reflect what is actually wired.
-
-### Changed
-
-- **`scripts/project-map-build.sh`** — emit **directories only** (depth ≤ 3), schema `version: 2`. A file-level catalog overshot its 1k-token budget (~1,570 tokens) and could not scope reads past depth 3; the directory map is ~600 tokens and locates *where* things live, then discovery reads the files under the chosen directory. A root-file add no longer dirties the map (only directory changes do).
-- **`knowledge/model-routing.md`** — the tier table now states the tier each surface runs on **today** with a `Wired?` column. Only `lsa:delegate.verify-checkpoint` (→ `sonnet`) is a live down-route; `manager:next`/`manager:check`/`prompt-engineer.mechanical` were scoped but never wired and now correctly read as `inherit`. Added a wiring rule: list a map key only when a dispatcher actually reads it.
-- **`knowledge/conventions.md`**, **`skills/discover/SKILL.md`**, **`skills/init/SKILL.md`**, **`README.md`**, **`ARCHITECTURE.md`** — describe the map as a directory tree.
-
-### Removed
-
-- Dead routing config in repo `.lsa.yaml` — the three unwired `routing:` entries (`manager:next`, `manager:check`, `prompt-engineer.mechanical`). Only the one wired surface remains.
-
-## [0.29.0] — 2026-07-15
-
-Ship `project-map.yaml` out of the box (epic `pro-tier-token-affordability/project-index` amended; breaking vs 0.27.0's markdown index).
-
-### Added
-
-- **`scripts/project-map-build.sh`** — deterministic 3-level repo atlas → repo-root `project-map.yaml` (dirs + files; depth ≤ 3; no model calls).
-- **`scripts/project-map-check.sh`** — rebuild then fail if `project-map.yaml` is dirty in git (ownership stays with the human).
-- **`scripts/tests/test-project-map.sh`** — real-flow harness (idempotent build, depth truncation, check PASS/FAIL, not-a-git-repo).
-
-### Changed
-
-- **`knowledge/conventions.md`** §"Read protocol" — consult `project-map.yaml` (not `.lsa/PROJECT-index.md`).
-- **`skills/discover/SKILL.md`** Step 1 — same.
-- **`skills/init/SKILL.md`** — Step 4 runs the builder when available so new projects get a map.
-- **`ARCHITECTURE.md` / `README.md`** — document shipped scripts + root `project-map.yaml`.
-
-### Removed
-
-- Consumer reliance on marketplace-only `scripts/build-index.sh` + `.lsa/PROJECT-index.md` (deleted from this repo).
-
-## [0.28.0] — 2026-07-15
-
-Gate pre-pass offload (epic `pro-tier-token-affordability/script-offload`, `.lsa/features/pro-tier-token-affordability/script-offload/requirements.md` F4; parent pitch WS3). Wiring only — the aggregate runner is used where the repo provides one; absent it, verify/reconcile run each `gate:` command as before (backward-compatible).
-
-### Changed
-
-- **`skills/verify/SKILL.md`** (Step 4) and **`skills/reconcile/SKILL.md`** (Step 1) — where the repo provides an aggregate gate runner (this repo: `bash scripts/gate.sh`, which reads the `.lsa.yaml` `gate:` block and prints each check's command + exit), run the block in one pass and cite its consolidated output; absent a runner, run each configured command. The cited artifact stays per-check command + exit.
-
-> Repo-internal infra shipped with this epic but **not** part of any plugin (lives in `scripts/`, outside `artifact_paths`): `scripts/gate.sh` (aggregate `.lsa.yaml gate:` runner) and `scripts/roadmap-row.sh` (first-backlog-row extractor, used by `manager:next`).
-
-### Docs
-
-- **`ARCHITECTURE.md`** (§2 Directory Structure) — the tree now shows the `scripts/` gate+generator layer and the two generated `${specs_root}` artifacts (`VISION-digest.md`, `PROJECT-index.md`) added across this pitch, plus `pitches/` and per-feature `conformance.md`; the `core/skills/` line points at `core/README.md` instead of enumerating a stale three-skill subset.
-
-## [0.27.0] — 2026-07-15
-
-Project-index read scoping (epic `pro-tier-token-affordability/project-index`, `.lsa/features/pro-tier-token-affordability/project-index/requirements.md` F6; parent pitch WS2). Wiring only — the index is a scoping map, not a mandatory read; an absent index falls back to today's tree-walk (backward-compatible).
-
-### Changed
-
-- **`knowledge/conventions.md`** — §"Read protocol" now names the script-generated project index [`.lsa/PROJECT-index.md`](../.lsa/PROJECT-index.md) as the ≤1k-token scoping map to consult (headings are the descriptions) before walking the tree, with a graceful fall-back when it is absent.
-- **`skills/discover/SKILL.md`** — Step 1 consults the project index to locate the files a request touches before reading them.
-
-> Repo-internal infra shipped with this epic but **not** part of any plugin (lives in `scripts/`, outside `artifact_paths`): `scripts/build-index.sh` (the deterministic generator), `.lsa/PROJECT-index.md` (the generated index), and `scripts/lint.sh` C13 (freshness) + C14 (≤1k-token budget) gates.
-
-## [0.26.0] — 2026-07-15
-
-Model-routing contract (epic `pro-tier-token-affordability/model-routing`, `.lsa/features/pro-tier-token-affordability/model-routing/requirements.md` F1–F8; parent pitch WS4). Wiring only — no rule, gate, or behavior profile changed; an absent `routing:` map is byte-for-byte today's behavior (`inherit` everywhere).
-
-### Added
-
-- **`knowledge/model-routing.md`** — the single source of truth for per-Agent-dispatch model routing: the `.lsa.yaml` `routing:` map schema, the resolution algorithm (floored surfaces → `inherit`; map lookup; absent/unavailable → `inherit`, never a hard error; pass as the `Agent` `model` parameter + echo the tier), and the 9-row per-dispatch tier table (transitional vs. the three durable isolation classes). Cited cross-plugin by `manager` and `prompt-engineer` — same pattern as `knowledge/quality-gate-contract.md`.
-
-### Changed
-
-- **`skills/delegate/SKILL.md`** — Step 5 resolves surface-key `lsa:delegate.verify-checkpoint` (routed) per the contract; Step 3 notes the external implementer is a **floored** surface (never below `inherit`).
-- **`skills/reconcile/SKILL.md`** — Constraints: the independent grader is a **floored** routing surface (`lsa:reconcile` always resolves `inherit`, never routed down — grader quality is the system's safety floor).
-
 ## [0.25.0] — 2026-07-15
 
-Constitution-digest read protocol (epic `pro-tier-token-affordability/always-on-card`, `.lsa/features/pro-tier-token-affordability/always-on-card/requirements.md` F4–F6, D1–D2; parent pitch WS1).
+Pro-tier token affordability (parent pitch `.lsa/pitches/pro-tier-token-affordability.md`, WS1–WS4). One entry for the whole feature — net delta vs 0.24.4.
+
+### Added
+
+- **`scripts/project-map-build.sh` + `scripts/project-map-check.sh` + `scripts/tests/test-project-map.sh`** (WS2) — a deterministic, no-model builder for repo-root `project-map.yaml`: a **directories-only** navigational map (depth ≤ 3), held under a **1k-token budget** (`scripts/lint.sh` C13, ~534 tokens), with historical subtrees (`.lsa/archive`) excluded. `project-map-check.sh` rebuilds and fails on any git porcelain, so freshness is a gate, not a silent auto-commit.
+- **`knowledge/model-routing.md`** (WS4) — the single source of truth for per-Agent-dispatch model routing: the `.lsa.yaml` `routing:` map schema, the resolution algorithm (floored surfaces → `inherit`; map lookup; absent/unavailable → `inherit`, never a hard error; pass as the `Agent` `model` parameter + echo the tier), and the per-dispatch tier table with a `Wired?` column. Wired down-routes today: `manager:next` (sonnet), `manager:check` (haiku), `lsa:delegate.verify-checkpoint` (sonnet).
 
 ### Changed
 
-- **`knowledge/conventions.md` § "Read protocol" step 2** — the mandatory constitution read is now the script-generated digest `.lsa/VISION-digest.md` (built by the repo-internal `scripts/build-vision-digest.sh`, staleness-gated by `scripts/lint.sh` C12); the full `${constitution}` loads only for constitutional tasks — `lsa:init`, `lsa:revise-constitution`, or an explicit user request.
-- **`knowledge/conventions.md` § "AskUserQuestion convention"** — the substrate cite retargeted from the removed "`core/CLAUDE.md` operational checkpoint #1" (dropped in `core` 0.17.0's always-on card) to its canon, `.lsa/VISION.md` §2 principle 9 (*"Substrate-native first"*). Same rule, canonical owner.
+- **`knowledge/conventions.md`** (WS1) — the mandatory constitution read is now the script-generated digest `.lsa/VISION-digest.md` (staleness-gated by `scripts/lint.sh` C12); full `${constitution}` loads only for constitutional tasks. §"Read protocol" and the AskUserQuestion substrate cite retargeted to `.lsa/VISION.md` canon.
+- **`knowledge/conventions.md`, `skills/discover/SKILL.md`, `skills/init/SKILL.md`, `agents/orchestrator.md`** (WS2) — discovery consults `project-map.yaml` to locate the directory a request touches before walking the tree; `init` builds the map for new projects; the orchestrator names the map in its inline discover step so the agent that runs discovery actually reaches it. Absent map ⇒ graceful tree-walk fallback (backward-compatible).
+- **`skills/delegate/SKILL.md`** (WS4) — Step 5 resolves surface-key `lsa:delegate.verify-checkpoint` per the routing contract; Step 3 marks the external implementer a **floored** surface. **`skills/reconcile/SKILL.md`** — the independent grader is floored (`lsa:reconcile` never routes below `inherit`).
+- **`skills/verify/SKILL.md`, `skills/reconcile/SKILL.md`** (WS3) — where the repo provides an aggregate gate runner (`bash scripts/gate.sh`), run the `.lsa.yaml gate:` block in one pass and cite its consolidated output; absent a runner, run each configured command as before (backward-compatible).
+- **`ARCHITECTURE.md`, `README.md`** — document the shipped scripts, root `project-map.yaml` (directory map), and the gate layer.
 
 ## [0.24.4] — 2026-07-02
 

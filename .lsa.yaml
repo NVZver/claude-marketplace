@@ -39,11 +39,14 @@ implement:
 # listed; every omitted surface runs inherit (= the session model, today's behavior).
 #
 # ONLY list a surface whose dispatcher actually reads this map and passes the
-# model parameter. Today that is exactly one: lsa:delegate resolves the
-# verify-checkpoint sub-dispatch (lsa/skills/delegate/SKILL.md §5). The
-# transitional manager:* surfaces are slated for inline removal (.lsa/roadmap.md)
-# and were never wired — do not re-add them as dead config.
+# model parameter. Wired today: manager:next / manager:check (via the shared
+# roadmap-orchestration contract, manager/knowledge/roadmap-orchestration.md
+# §"The contract" item 1 — cited by both skills) and lsa:delegate.verify-checkpoint
+# (lsa/skills/delegate/SKILL.md §5). prompt-engineer.mechanical is intentionally
+# absent — its agent-side resolver was reverted (cf3b78d), so it would be dead config.
 routing:
+  manager:next: sonnet
+  manager:check: haiku
   lsa:delegate.verify-checkpoint: sonnet
 
 modules:
