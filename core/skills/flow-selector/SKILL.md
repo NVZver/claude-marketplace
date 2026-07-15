@@ -47,7 +47,7 @@ Produce a flow label (`Quick`, `Standard`, or `Extended`) plus a 2–4-sentence 
      - `[b]` override to a different flow — I re-route accordingly
      - `[c]` reconsider — I re-run the signal checklist
 
-   Format per [`../output/SKILL.md`](../output/SKILL.md); `AskUserQuestion` in Claude Code (per `core/CLAUDE.md` operational checkpoint #1). The checklist + rationale ride **inside** the picker (question text / option descriptions) per [`../output/SKILL.md`](../output/SKILL.md) Rule 5 *"Self-contained gates"* — same-turn prose before the picker may not render. Observable result: the proposal is on screen; control returns to the human; no downstream skill has fired.
+   Format per [`../output/SKILL.md`](../output/SKILL.md); `AskUserQuestion` in Claude Code (per `.lsa/VISION.md` §2 principle 9, *"Substrate-native first"*). The checklist + rationale ride **inside** the picker (question text / option descriptions) per [`../output/SKILL.md`](../output/SKILL.md) Rule 5 *"Self-contained gates"* — same-turn prose before the picker may not render. Observable result: the proposal is on screen; control returns to the human; no downstream skill has fired.
 
 5. **On confirm, hand off** per flow:
    - **Quick** — return control to the agent for a direct single-pass response. `ground-rules` still applies.

@@ -2,6 +2,23 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.25.0] — 2026-07-15
+
+Pro-tier token affordability (parent pitch `.lsa/pitches/pro-tier-token-affordability.md`, WS1–WS4). One entry for the whole feature — net delta vs 0.24.4.
+
+### Added
+
+- **`scripts/project-map-build.sh` + `scripts/project-map-check.sh` + `scripts/tests/test-project-map.sh`** (WS2) — a deterministic, no-model builder for repo-root `project-map.yaml`: a **directories-only** navigational map (depth ≤ 3), held under a **1k-token budget** (`scripts/lint.sh` C13, ~534 tokens), with historical subtrees (`.lsa/archive`) excluded. `project-map-check.sh` rebuilds and fails on any git porcelain, so freshness is a gate, not a silent auto-commit.
+- **`knowledge/model-routing.md`** (WS4) — the single source of truth for per-Agent-dispatch model routing: the `.lsa.yaml` `routing:` map schema, the resolution algorithm (floored surfaces → `inherit`; map lookup; absent/unavailable → `inherit`, never a hard error; pass as the `Agent` `model` parameter + echo the tier), and the per-dispatch tier table with a `Wired?` column. Wired down-routes today: `manager:next` (sonnet), `manager:check` (haiku), `lsa:delegate.verify-checkpoint` (sonnet).
+
+### Changed
+
+- **`knowledge/conventions.md`** (WS1) — the mandatory constitution read is now the script-generated digest `.lsa/VISION-digest.md` (staleness-gated by `scripts/lint.sh` C12); full `${constitution}` loads only for constitutional tasks. §"Read protocol" and the AskUserQuestion substrate cite retargeted to `.lsa/VISION.md` canon.
+- **`knowledge/conventions.md`, `skills/discover/SKILL.md`, `skills/init/SKILL.md`, `agents/orchestrator.md`** (WS2) — discovery consults `project-map.yaml` to locate the directory a request touches before walking the tree; `init` builds the map for new projects; the orchestrator names the map in its inline discover step so the agent that runs discovery actually reaches it. Absent map ⇒ graceful tree-walk fallback (backward-compatible).
+- **`skills/delegate/SKILL.md`** (WS4) — Step 5 resolves surface-key `lsa:delegate.verify-checkpoint` per the routing contract; Step 3 marks the external implementer a **floored** surface. **`skills/reconcile/SKILL.md`** — the independent grader is floored (`lsa:reconcile` never routes below `inherit`).
+- **`skills/verify/SKILL.md`, `skills/reconcile/SKILL.md`** (WS3) — where the repo provides an aggregate gate runner (`bash scripts/gate.sh`), run the `.lsa.yaml gate:` block in one pass and cite its consolidated output; absent a runner, run each configured command as before (backward-compatible).
+- **`ARCHITECTURE.md`, `README.md`** — document the shipped scripts, root `project-map.yaml` (directory map), and the gate layer.
+
 ## [0.24.4] — 2026-07-02
 
 Public-readiness documentation pass (docs only, no skill behavior change).

@@ -7,15 +7,15 @@ specs_root: .lsa/
 mode: docs
 
 # Quality-gate script contract (see lsa/knowledge/quality-gate-contract.md).
-# docs-mode structural probes: each key is a check name → a deterministic,
-# repo-internal command. A check passes iff its command exits 0; verify /
-# reconcile cite the command + exit code as the Rule-7 gate artifact instead of
-# re-deriving grep recipes by hand. Scripts are repo-internal (outside every
-# plugin's artifact_paths) — Pro-safe, local bash, zero model calls.
+# docs-mode structural probes: each key is a check name → a deterministic
+# command. A check passes iff its command exits 0; verify / reconcile cite the
+# command + exit code as the Rule-7 gate artifact instead of re-deriving grep
+# recipes by hand. Pro-safe, local bash, zero model calls.
 gate:
   docs-invariants: bash scripts/lint.sh
   citations: bash scripts/check-citations.sh
   links: bash scripts/check-links.sh
+  project-map: bash lsa/scripts/project-map-check.sh
 
 # Reconcile scenario-run count (lsa/skills/reconcile/SKILL.md Step 1).
 # Default when the key is absent: 3 — pass = all 3 runs succeed (≥95% of 3 ⇒ 3/3).
@@ -29,6 +29,25 @@ reconcile:
 # Escape hatch: raise toward the vendor cap for wide, provably-disjoint waves.
 implement:
   concurrency: 4
+
+# Model routing map (see lsa/knowledge/model-routing.md). Keys are Agent-dispatch
+# surfaces; values are the tier the dispatcher passes as the Agent model parameter.
+# Read at dispatch time — zero model pins ship in any plugin frontmatter (lint C8).
+# Absent key OR a model the plan lacks ⇒ inherit (never a hard error). Floored
+# surfaces (lsa:reconcile grader, lsa:delegate implementer, manager:implement
+# fan-out) always resolve inherit even if named here. Only non-inherit entries are
+# listed; every omitted surface runs inherit (= the session model, today's behavior).
+#
+# ONLY list a surface whose dispatcher actually reads this map and passes the
+# model parameter. Wired today: manager:next / manager:check (via the shared
+# roadmap-orchestration contract, manager/knowledge/roadmap-orchestration.md
+# §"The contract" item 1 — cited by both skills) and lsa:delegate.verify-checkpoint
+# (lsa/skills/delegate/SKILL.md §5). prompt-engineer.mechanical is intentionally
+# absent — its agent-side resolver was reverted (cf3b78d), so it would be dead config.
+routing:
+  manager:next: sonnet
+  manager:check: haiku
+  lsa:delegate.verify-checkpoint: sonnet
 
 modules:
   core:
@@ -49,6 +68,7 @@ modules:
       - lsa/knowledge/**/*.md
       - lsa/hooks/hooks.json
       - lsa/hooks/**/*.sh
+      - lsa/scripts/**/*.sh
       - lsa/.claude-plugin/plugin.json
       - lsa/ARCHITECTURE.md
       - lsa/README.md

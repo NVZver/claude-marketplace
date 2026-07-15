@@ -14,11 +14,11 @@ The marketplace ships five plugins (`core`, `lsa`, `manager`, `prompt-engineer`,
 
 | Module | Spec | Status |
 |---|---|---|
-| `core` | [`.lsa/modules/core/spec.md`](./modules/core/spec.md) | active — v0.14.1 |
-| `lsa` | [`.lsa/modules/lsa/spec.md`](./modules/lsa/spec.md) | active — v0.20.2 |
-| `manager` | [`.lsa/modules/manager/spec.md`](./modules/manager/spec.md) | active — v0.15.2 |
-| `prompt-engineer` | [`.lsa/modules/prompt-engineer/spec.md`](./modules/prompt-engineer/spec.md) | active — v0.7.3 |
-| `observer` | [`.lsa/modules/observer/spec.md`](./modules/observer/spec.md) | active — v0.1.1 |
+| `core` | [`.lsa/modules/core/spec.md`](./modules/core/spec.md) | active — v0.17.0 |
+| `lsa` | [`.lsa/modules/lsa/spec.md`](./modules/lsa/spec.md) | active — v0.25.0 |
+| `manager` | [`.lsa/modules/manager/spec.md`](./modules/manager/spec.md) | active — v0.17.0 |
+| `prompt-engineer` | [`.lsa/modules/prompt-engineer/spec.md`](./modules/prompt-engineer/spec.md) | active — v0.8.3 |
+| `observer` | [`.lsa/modules/observer/spec.md`](./modules/observer/spec.md) | active — v0.3.2 |
 
 ## Cross-Module Contracts
 

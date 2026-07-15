@@ -30,7 +30,7 @@ Confirm the spec is grounded in real code and buildable, before any handoff.
 1. For each module / function / type the spec names: resolve it in the codebase (cite `file:line`) or mark it `new`. (→ reference map)
 2. For each user flow: confirm it is buildable on what exists; infeasible → flag. (→ feasibility)
 3. Confirm every claim is cited and every `[ASSUMPTION]` is visible. (→ grounding verdict)
-4. Where `.lsa.yaml` defines a `gate:` block, run each configured check and cite its command + exit code as the grounding evidence — do **not** re-derive the checks by hand. A non-zero exit is a real defect (a broken citation, dangling link, or violated invariant) and yields `NOT-GROUNDED`. (→ gate results)
+4. Where `.lsa.yaml` defines a `gate:` block, run each configured check and cite its command + exit code as the grounding evidence — do **not** re-derive the checks by hand. Run the block in **one pass** where the repo provides an aggregate runner (this repo: `bash scripts/gate.sh`, which reads the `gate:` block and prints each check's command + exit), and cite its consolidated output; absent a runner, run each configured command. A non-zero exit is a real defect (a broken citation, dangling link, or violated invariant) and yields `NOT-GROUNDED`. (→ gate results)
 
 ## Output
 

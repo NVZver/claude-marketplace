@@ -6,7 +6,7 @@ Flat table of every knowledge file across the five marketplace plugins. Agents c
 
 Maintained manually. When a knowledge file is added, moved, or removed, update this index in the same commit. Per [`.lsa/pitches/readme-and-knowledge-base.md`](../.lsa/pitches/readme-and-knowledge-base.md) "Solution sketch".
 
-## Catalog — 18 knowledge files
+## Catalog — 19 knowledge files
 
 | Topic | Plugin | Path | One-sentence description |
 |---|---|---|---|
@@ -14,6 +14,7 @@ Maintained manually. When a knowledge file is added, moved, or removed, update t
 | Output vocabulary | `core` | [`core/knowledge/output-vocabulary.md`](../core/knowledge/output-vocabulary.md) | The canonical marketplace verdict labels (PROPOSED, DRIFT, APPLIED, PASS, FAIL, etc.) cited by `core/output`. |
 | LSA conventions | `lsa` | [`lsa/knowledge/conventions.md`](../lsa/knowledge/conventions.md) | Cross-cutting conventions every LSA skill applies; referenced by section name rather than restated in each skill body. |
 | Quality gate contract | `lsa` | [`lsa/knowledge/quality-gate-contract.md`](../lsa/knowledge/quality-gate-contract.md) | The required-vs-non-blocking check taxonomy and the independent-grader gate contract `lsa:reconcile` enforces. |
+| Model routing | `lsa` | [`lsa/knowledge/model-routing.md`](../lsa/knowledge/model-routing.md) | The `.lsa.yaml` `routing:` map schema, per-dispatch resolution algorithm (floored surfaces + absent-⇒-inherit), and the per-dispatch tier table — cited cross-plugin by `manager` and `prompt-engineer`. |
 | Autonomy policy | `manager` | [`manager/knowledge/autonomy-policy.md`](../manager/knowledge/autonomy-policy.md) | The `manual`/`semi`/`auto` autonomy-ladder definitions + per-level scope of unattended multi-PR churn; the single source for autonomy levels. |
 | Command naming | `manager` | [`manager/knowledge/command-naming.md`](../manager/knowledge/command-naming.md) | The function-like command-naming convention `<actor>:<action>-<modifier> args` — verbs you call with arguments, not nouns you browse; the single source of truth for command naming. |
 | Epic decomposition | `manager` | [`manager/knowledge/epic-decomposition.md`](../manager/knowledge/epic-decomposition.md) | Rules for breaking a shaped pitch into epics; each epic maps to one LSA build cycle. |

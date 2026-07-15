@@ -93,7 +93,7 @@ OpenSpec is the closest neighbour: it ships an after-the-fact `/opsx:verify` and
 
 | Skill | Purpose |
 |---|---|
-| **`discover`** | Extract user intent and gather the codebase facts the spec rests on. Also the universal input-resolver other skills call. |
+| **`discover`** | Extract user intent and gather the codebase facts the spec rests on — consulting the script-generated project map ([`project-map.yaml`](../project-map.yaml), 3-level directory tree) to scope reads before walking the tree. Also the universal input-resolver other skills call. |
 | **`specify`** | Draft the grounded spec — EARS requirements, user flows, and Gherkin `.feature` scenarios — show it in full, then write the files only on approval (show → approve → write). |
 | **`verify`** | **Before** delegating: ground the spec against the codebase, and run the `.lsa.yaml` `gate:` block — citing each command + exit code (a non-zero gate blocks `GROUNDED`). Output: `GROUNDED` / `NOT-GROUNDED` + `grounding.md`. |
 | **`delegate`** | Hand the grounded spec + `.feature` files to your implementer; collect the returned diff. Code-writing happens outside LSA. Optionally gates the build **per-increment** via `.lsa.yaml paired_verify` — `off` (default, unchanged), `checkpoint` (inject a pause+signal protocol and dispatch `observer:verify-checkpoint` after each plan task; CLEAR auto-proceeds, BLOCK surfaces), or `async` (not yet implemented — errors). |
@@ -145,6 +145,9 @@ reconcile:
 
 autonomy: manual                     # optional — manual | semi | auto. default: manual
 paired_verify: off                   # optional — off | checkpoint | async. default: off
+
+routing:                             # optional — per-dispatch model tier map. absent ⇒ inherit everywhere
+  manager:check: haiku               # surface-key → tier (inherit | sonnet | haiku)
 ```
 
 The optional `gate:` block is the **quality-gate script contract** — per-check name → command, consumed by both `verify` (before — grounding) and `reconcile` (after — correctness), and mapped to GitHub required-check slots in parallel runs. It is the configuration side of `core/ground-rules` Rule 7 *"done is a gate-proven, cited predicate"*; LSA hardcodes no tool. This repo's own `gate:` (a `mode: docs` example) runs three repo-internal structural probes — `docs-invariants` (`scripts/lint.sh`), `citations` (`scripts/check-citations.sh`), `links` (`scripts/check-links.sh`). Full contract: [`knowledge/quality-gate-contract.md`](./knowledge/quality-gate-contract.md).
@@ -154,6 +157,8 @@ The optional `reconcile.runs` knob sets N for `reconcile`'s *does* check — def
 The optional `autonomy:` knob (`manual | semi | auto`, default `manual`) sets how much human-in-the-loop a parallel `manager:implement` run uses at the merge boundary — `manual` = human merges, `semi` = auto-merge on green, `auto` = + deploy + healthcheck. The gate is identical at every level. Semantics: `manager/knowledge/autonomy-policy.md`.
 
 The optional `paired_verify:` knob (`off | checkpoint | async`, default `off`) controls whether `delegate` gates the build increment-by-increment. `off` reproduces today's delegation exactly. `checkpoint` injects a pause+signal protocol — after each plan task the implementer writes a checkpoint-signal note (`target`/`since`/`spec`/`status`) and stops, and `delegate` dispatches [`observer:verify-checkpoint`](../observer/skills/verify-checkpoint/SKILL.md) to grade the increment (CLEAR auto-proceeds with no human interrupt; BLOCK surfaces before the next task). The per-increment verifier is independent and read-only; the final whole-diff `reconcile` still runs. `async` (concurrent-interrupt) is **not yet implemented** — `delegate` errors rather than degrading. For a non-agent implementer the pause-protocol is advisory. See [`ARCHITECTURE.md`](./ARCHITECTURE.md) §3.
+
+The optional `routing:` map sets which model each Agent-dispatch surface runs on (Pro-tier affordability — cheapest capable tier per dispatch). Keys are dispatch surface-keys (`manager:check`, `lsa:delegate.verify-checkpoint`, …); values are `inherit | sonnet | haiku`. Read at dispatch time — **zero `model:` pins ship in any plugin frontmatter**. An absent key, or a model the active plan lacks, degrades to `inherit` (never a hard error); the `lsa:reconcile` grader, the `lsa:delegate` implementer, and the `manager:implement` fan-out are **floored** and never route below `inherit`. Full contract + the per-dispatch tier table: [`knowledge/model-routing.md`](./knowledge/model-routing.md).
 
 When `.lsa.yaml` is absent, LSA applies the defaults documented in [`knowledge/conventions.md`](./knowledge/conventions.md) §"`.lsa.yaml` defaults": `constitution: .lsa/VISION.md`, `specs_root: .lsa/`, `mode: code`, `modules: {}`. The workspace lives entirely under `.lsa/` so you can `rm -rf .lsa/` to fully detach. See [`ARCHITECTURE.md`](./ARCHITECTURE.md) §3 for the full schema.
 

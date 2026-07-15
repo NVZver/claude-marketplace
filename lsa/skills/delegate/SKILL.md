@@ -34,7 +34,7 @@ Get a grounded spec built by the implementer the developer already uses, and col
 
 3. **Branch on the mode:**
 
-   - **`off` (default / absent) — unchanged delegation (G2).** Dispatch to the developer's implementer (this runs **outside** LSA), then await the returned diff. Inject **no** pause instruction and dispatch **no** verifier — byte-for-byte today's behavior. Skip to Step 6. (→ delegated → diff)
+   - **`off` (default / absent) — unchanged delegation (G2).** Dispatch to the developer's implementer (this runs **outside** LSA), then await the returned diff. Inject **no** pause instruction and dispatch **no** verifier — byte-for-byte today's behavior. The implementer is a **floored** routing surface (`lsa:delegate` — never resolves below `inherit`; code quality is load-bearing) per [`../../knowledge/model-routing.md`](../../knowledge/model-routing.md). Skip to Step 6. (→ delegated → diff)
 
    - **`async` — refuse, do not degrade (G3).** ERROR: `async (concurrent-interrupt model) is not yet implemented — reserved for a later pitch`. Do **not** fall back to `checkpoint` or `off`; do not dispatch. Stop here — no silent degradation.
 
@@ -53,7 +53,7 @@ Get a grounded spec built by the implementer the developer already uses, and col
    - **Non-agent implementer** (human / Cursor / Copilot — not dispatched via the `Agent` tool) (G10): state that the pause-protocol is **ADVISORY** — delegate cannot enforce a pause on an implementer it does not drive. Emit the same four-field note protocol as guidance, but make **no** claim of enforcement. Do not silently assert the boundary is gated.
 
 5. **Gate each signalled increment (G6, G7, G8).** For each checkpoint the agent implementer signals:
-   - **Dispatch `observer:verify-checkpoint` in its per-increment mode** (via the `Agent` tool) to grade that one signalled increment (does · only, scoped to the note's `target`). Pass it the **same** ephemeral note path delegate provided the writer in Step 4, so the reader reads the file the writer wrote — this is `verify-checkpoint`'s first-class per-increment invocation mode ([`../../../observer/skills/verify-checkpoint/SKILL.md`](../../../observer/skills/verify-checkpoint/SKILL.md)), not its standalone `/loop` mode.
+   - **Dispatch `observer:verify-checkpoint` in its per-increment mode** (via the `Agent` tool) to grade that one signalled increment (does · only, scoped to the note's `target`). Pass it the **same** ephemeral note path delegate provided the writer in Step 4, so the reader reads the file the writer wrote — this is `verify-checkpoint`'s first-class per-increment invocation mode ([`../../../observer/skills/verify-checkpoint/SKILL.md`](../../../observer/skills/verify-checkpoint/SKILL.md)), not its standalone `/loop` mode. Resolve the dispatch's **model tier** for surface-key `lsa:delegate.verify-checkpoint` per [`../../knowledge/model-routing.md`](../../knowledge/model-routing.md) — pass it as the `Agent` `model` parameter (absent ⇒ `inherit`) and echo the resolved tier in the dispatch line.
    - **Gate on the verdict (G7):**
      - **CLEAR** → the implementer proceeds to the next task with **no human interrupt** (no picker, no question, no wait).
      - **BLOCK** → **surface the block to the human before the next task begins** (turn-final delivery, not buried in a subagent transcript — [`../../../core/skills/output/SKILL.md`](../../../core/skills/output/SKILL.md) Rule 7).

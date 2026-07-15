@@ -2,6 +2,16 @@
 
 All notable changes to the `manager` plugin (formerly `management`) are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.17.0] – 2026-07-15
+
+Pro-tier token affordability — model-routing wiring + roadmap-row offload (parent pitch `.lsa/pitches/pro-tier-token-affordability.md`, WS3–WS4). One entry for the whole feature — net delta vs 0.16.2.
+
+### Changed
+
+- **`knowledge/roadmap-orchestration.md` §"The contract" item 1** (WS4) — the shared `project-manager` dispatch resolves the dispatch's model tier for its surface-key (`manager:next` / `manager:decompose` / `manager:check`) per [`lsa/knowledge/model-routing.md`](../lsa/knowledge/model-routing.md): read `.lsa.yaml` `routing:<surface-key>`, pass as the `Agent` `model` parameter (absent ⇒ `inherit`), echo the resolved tier. One wiring point covers all three roadmap skills (DRY); `manager:next` → sonnet and `manager:check` → haiku resolve through it today.
+- **`skills/implement/SKILL.md` Step 4a** (WS4) — the per-epic fan-out is a **floored** routing surface (`manager:implement`, never below `inherit`; it writes production artifacts).
+- **`skills/next/SKILL.md` Step 0 (fast-path)** (WS3) — where the repo provides a roadmap-row extractor (`bash scripts/roadmap-row.sh`, which prints the first `backlog`/`not started` row of `## Feature Backlog` + its `path:line`, deterministically and Pro-safe), run it and quote its output; absent the extractor, `Read` the roadmap and locate the row model-side (backward-compatible; same cited artifact).
+
 ## [0.16.2] – 2026-07-02
 
 Public-readiness documentation pass (docs only, no skill behavior change).
