@@ -2,6 +2,16 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.28.0] — 2026-07-15
+
+Gate pre-pass offload (epic `pro-tier-token-affordability/script-offload`, `.lsa/features/pro-tier-token-affordability/script-offload/requirements.md` F4; parent pitch WS3). Wiring only — the aggregate runner is used where the repo provides one; absent it, verify/reconcile run each `gate:` command as before (backward-compatible).
+
+### Changed
+
+- **`skills/verify/SKILL.md`** (Step 4) and **`skills/reconcile/SKILL.md`** (Step 1) — where the repo provides an aggregate gate runner (this repo: `bash scripts/gate.sh`, which reads the `.lsa.yaml` `gate:` block and prints each check's command + exit), run the block in one pass and cite its consolidated output; absent a runner, run each configured command. The cited artifact stays per-check command + exit.
+
+> Repo-internal infra shipped with this epic but **not** part of any plugin (lives in `scripts/`, outside `artifact_paths`): `scripts/gate.sh` (aggregate `.lsa.yaml gate:` runner) and `scripts/roadmap-row.sh` (first-backlog-row extractor, used by `manager:next`).
+
 ## [0.27.0] — 2026-07-15
 
 Project-index read scoping (epic `pro-tier-token-affordability/project-index`, `.lsa/features/pro-tier-token-affordability/project-index/requirements.md` F6; parent pitch WS2). Wiring only — the index is a scoping map, not a mandatory read; an absent index falls back to today's tree-walk (backward-compatible).

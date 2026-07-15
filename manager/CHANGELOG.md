@@ -2,6 +2,14 @@
 
 All notable changes to the `manager` plugin (formerly `management`) are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.18.0] – 2026-07-15
+
+Roadmap-row extractor offload (epic `pro-tier-token-affordability/script-offload`, `.lsa/features/pro-tier-token-affordability/script-offload/requirements.md` F5; parent pitch WS3). Wiring only — used where the repo provides the extractor; absent it, `manager:next` reads the roadmap model-side as before (backward-compatible).
+
+### Changed
+
+- **`skills/next/SKILL.md` Step 0 (fast-path)** — where the repo provides a roadmap-row extractor (this repo: `bash scripts/roadmap-row.sh`, which prints the first `backlog`/`not started` row of the `## Feature Backlog` table + its `path:line`, deterministically and Pro-safe), run it and quote its output; absent the extractor, `Read` the roadmap and locate the row model-side. Same cited artifact (row + `file:line`).
+
 ## [0.17.0] – 2026-07-15
 
 Model-routing wiring (epic `pro-tier-token-affordability/model-routing`, `.lsa/features/pro-tier-token-affordability/model-routing/requirements.md` F3/F5/F6; parent pitch WS4). Wiring only; absent `routing:` map ⇒ unchanged behavior (`inherit`).
