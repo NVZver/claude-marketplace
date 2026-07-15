@@ -2,6 +2,19 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.26.0] — 2026-07-15
+
+Model-routing contract (epic `pro-tier-token-affordability/model-routing`, `.lsa/features/pro-tier-token-affordability/model-routing/requirements.md` F1–F8; parent pitch WS4). Wiring only — no rule, gate, or behavior profile changed; an absent `routing:` map is byte-for-byte today's behavior (`inherit` everywhere).
+
+### Added
+
+- **`knowledge/model-routing.md`** — the single source of truth for per-Agent-dispatch model routing: the `.lsa.yaml` `routing:` map schema, the resolution algorithm (floored surfaces → `inherit`; map lookup; absent/unavailable → `inherit`, never a hard error; pass as the `Agent` `model` parameter + echo the tier), and the 9-row per-dispatch tier table (transitional vs. the three durable isolation classes). Cited cross-plugin by `manager` and `prompt-engineer` — same pattern as `knowledge/quality-gate-contract.md`.
+
+### Changed
+
+- **`skills/delegate/SKILL.md`** — Step 5 resolves surface-key `lsa:delegate.verify-checkpoint` (routed) per the contract; Step 3 notes the external implementer is a **floored** surface (never below `inherit`).
+- **`skills/reconcile/SKILL.md`** — Constraints: the independent grader is a **floored** routing surface (`lsa:reconcile` always resolves `inherit`, never routed down — grader quality is the system's safety floor).
+
 ## [0.25.0] — 2026-07-15
 
 Constitution-digest read protocol (epic `pro-tier-token-affordability/always-on-card`, `.lsa/features/pro-tier-token-affordability/always-on-card/requirements.md` F4–F6, D1–D2; parent pitch WS1).

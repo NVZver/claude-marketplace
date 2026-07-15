@@ -30,6 +30,19 @@ reconcile:
 implement:
   concurrency: 4
 
+# Model routing map (see lsa/knowledge/model-routing.md). Keys are Agent-dispatch
+# surfaces; values are the tier the dispatcher passes as the Agent model parameter.
+# Read at dispatch time — zero model pins ship in any plugin frontmatter (lint C8).
+# Absent key OR a model the plan lacks ⇒ inherit (never a hard error). Floored
+# surfaces (lsa:reconcile grader, lsa:delegate implementer, manager:implement
+# fan-out) always resolve inherit even if named here. Only non-inherit entries are
+# listed; every omitted surface runs inherit (= the session model, today's behavior).
+routing:
+  manager:next: sonnet
+  manager:check: haiku
+  lsa:delegate.verify-checkpoint: sonnet
+  prompt-engineer.mechanical: sonnet
+
 modules:
   core:
     spec: .lsa/modules/core/spec.md

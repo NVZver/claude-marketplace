@@ -2,6 +2,15 @@
 
 All notable changes to the `manager` plugin (formerly `management`) are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.17.0] – 2026-07-15
+
+Model-routing wiring (epic `pro-tier-token-affordability/model-routing`, `.lsa/features/pro-tier-token-affordability/model-routing/requirements.md` F3/F5/F6; parent pitch WS4). Wiring only; absent `routing:` map ⇒ unchanged behavior (`inherit`).
+
+### Changed
+
+- **`knowledge/roadmap-orchestration.md` §"The contract" item 1** — the shared `project-manager` dispatch now resolves the dispatch's model tier for its surface-key (`manager:next` / `manager:decompose` / `manager:check`) per [`lsa/knowledge/model-routing.md`](../lsa/knowledge/model-routing.md): read `.lsa.yaml` `routing:<surface-key>`, pass as the `Agent` `model` parameter (absent ⇒ `inherit`), echo the resolved tier. One wiring point covers all three roadmap skills (DRY).
+- **`skills/implement/SKILL.md` Step 4a** — the per-epic fan-out is noted as a **floored** routing surface (`manager:implement` — never below `inherit`; it writes production artifacts).
+
 ## [0.16.2] – 2026-07-02
 
 Public-readiness documentation pass (docs only, no skill behavior change).
