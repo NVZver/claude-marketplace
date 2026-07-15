@@ -55,7 +55,7 @@ implementer · independent graders · worktree fan-out). Transitional = slated f
 | # | Dispatch surface | Cite | Survives inline rollout? | Tier | Rationale |
 |---|------------------|------|--------------------------|------|-----------|
 | 1 | `manager:shape` → product-manager | `manager/skills/shape/SKILL.md:26` | No — transitional | inherit | Shaping is judgment-heavy; inline removal beats routing here |
-| 2 | `manager:decompose` → project-manager | `manager/skills/decompose/SKILL.md:37` | No — transitional | inherit | Epic boundaries / risk ordering = judgment |
+| 2 | `manager:decompose` → project-manager | `manager/skills/decompose/SKILL.md:24` | No — transitional | inherit | Epic boundaries / risk ordering = judgment |
 | 3 | `manager:next` → project-manager | `manager/skills/next/SKILL.md:26` | No — transitional; fast-path answers without dispatch | sonnet | Bounded sequencing over one roadmap file |
 | 4 | `manager:check` → project-manager | `manager/skills/check/SKILL.md:23` | No — transitional | **haiku** | Mechanical hygiene scan (staleness rows, drift inventory) — the flagship cheapest-tier dispatch |
 | 5 | `manager:implement` per-epic fan-out | `manager/skills/implement/SKILL.md:38` | Yes — worktree isolation load-bearing | inherit — **floored** | Writes production artifacts; a downgrade recreates the hallucinated-completion failure the engine exists to prevent |
