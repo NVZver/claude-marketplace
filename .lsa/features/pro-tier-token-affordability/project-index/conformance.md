@@ -56,6 +56,18 @@ Gate (this reconcile commit, with `conformance.md` present + index regenerated):
 ✓ (exit 0, C1–C14) · `bash scripts/check-citations.sh` ✓ · `bash scripts/check-links.sh` ✓ ·
 `bash scripts/check-version-changelog.sh` ✓ (5/5).
 
+## Audit addition (2026-07-15, post-merge-review)
+
+Added `scripts/tests/test-build-index.sh` — an executable real-flow harness (20 checks over isolated
+throwaway git repos) that exercises the three `flow-*.feature` scenarios directly: deterministic
+byte-identical output (F1/AC1), verbatim-H1 spine + collapsed historical trees (F4/AC1), the
+generated banner/trace (F2/F8/AC5), the discovery-scoping pointers (F6), missing-H1 graceful degrade
++ not-a-git-repo clean exit (F7), the add-a-file drift the C13 gate detects (F5/AC3), bounded budget
+under a large tree (F3), and the live repo's C13/C14 PASS. Wired into CI (`.github/workflows/lint.yml`)
+as a step — same class as `check-version-changelog.sh` (a CI gate, not a `.lsa.yaml gate:` entry).
+Repo-internal (outside every `artifact_paths`) ⇒ no plugin bump. Previously flows 1/3 were proven by
+ad-hoc live runs during reconcile; this makes that coverage repeatable and CI-enforced.
+
 ## Remaining (pitch-level, not this epic)
 
 - **Dogfood token-delta measurement** — the pitch success criterion "a Pro session completes

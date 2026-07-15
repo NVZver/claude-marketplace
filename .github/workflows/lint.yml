@@ -18,3 +18,5 @@ jobs:
         run: bash scripts/check-links.sh
       - name: Version mirror check (plugin.json version == top CHANGELOG heading)
         run: bash scripts/check-version-changelog.sh
+      - name: Index generator tests (real-flow, scripts/build-index.sh)
+        run: bash scripts/tests/test-build-index.sh
