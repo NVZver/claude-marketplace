@@ -4,7 +4,7 @@
 
 The domain-neutral discipline plugin. Ships six skills + one always-on `CLAUDE.md` fragment.
 
-**Plugin manifest:** [`core/.claude-plugin/plugin.json`](../../../core/.claude-plugin/plugin.json) (v0.16.2)
+**Plugin manifest:** [`core/.claude-plugin/plugin.json`](../../../core/.claude-plugin/plugin.json) (v0.17.0)
 **Plugin README** (skill list, install): [`core/README.md`](../../../core/README.md)
 **Always-on fragment** (canonical source): [`core/CLAUDE.md`](../../../core/CLAUDE.md)
 **Per-skill behavior** (source of truth per skill): [`core/skills/*/SKILL.md`](../../../core/skills/)
@@ -23,7 +23,7 @@ Five skills:
 - `core/reuse-first` (core v0.15.0) — always-on 7-rung reuse ladder walked on coding tasks before code is written (understand the flow → YAGNI → existing code → stdlib → native platform → installed dependency → shortest working diff); stops at the first rung that holds, silent on prose/analysis. Cross-references `ground-rules` R3/R4 and `lsa:reconcile`'s "only" check by link; never restates them.
 - `core/doctor` (core v0.16.0) — user-runnable install self-check: four read-only checks (required plugins installed, `core/CLAUDE.md` fragment merged into the project `CLAUDE.md`, installed plugin versions vs source manifests, gate scripts) reported as PASS/WARN/FAIL/SKIP with evidence + one-line fix each; never edits user files, ships no executable. Doctor is a fixed procedural check — it does not answer open questions.
 
-The `core/CLAUDE.md` fragment is the **canonical source** for the always-on rules block (`ground-rules` + `output` + `flow-selector` invocation). Other locations (repo `CLAUDE.md`, READMEs) point to it rather than restating.
+The `core/CLAUDE.md` fragment is the **canonical source** for the always-on rules block (`ground-rules` + `output` + `flow-selector` invocation + a `reuse-first` pointer). Other locations (repo `CLAUDE.md`, READMEs) point to it rather than restating.
 
 ## Invariants
 

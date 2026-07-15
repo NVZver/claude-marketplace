@@ -46,4 +46,4 @@ Gate: `bash scripts/lint.sh` ✓ (exit 0, C1–C12 PASS) · `bash scripts/check-
 
 ## Note (adjacent, not this epic's drift)
 
-`.lsa/modules/core/spec.md:26` describes the always-on block as `ground-rules + output + flow-selector invocation` — omits `reuse-first` (shipped core v0.15.0, pre-dates this epic). Pre-existing drift, left untouched to hold scope; flagged for a future `manager:check` hygiene pass.
+`.lsa/modules/core/spec.md:26` described the always-on block as `ground-rules + output + flow-selector invocation` — omitting `reuse-first` (shipped core v0.15.0, pre-dates this epic). **Resolved in the 2026-07-15 post-merge audit:** this epic restructured the always-on block into the card (which carries a `reuse-first` pointer, F1), so `:26` now reads `ground-rules + output + flow-selector + reuse-first`. The audit also refreshed the stale module-spec version annotations for the four plugins this feature bumped (core 0.17.0, lsa 0.28.0, manager 0.18.0; prompt-engineer 0.8.3 after its WS4 revert).
