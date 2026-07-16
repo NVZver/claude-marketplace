@@ -4,22 +4,31 @@
 
 Three factors for ordering backlog items, adapted from Weighted Shortest Job First (WSJF) [unverified — SAFe framework concept] simplified for a solo workflow: dependency constraints first, then risk, then value. Each factor is grounded in data sources the project-manager agent can read in this repo.
 
-## Roadmap table format
+## Roadmap ledger format
 
-The agent reads the Feature Backlog table at `${specs_root}/roadmap.md`. Expected format (per `${specs_root}/roadmap.md:9`):
+The roadmap is the YAML ledger at `${specs_root}/roadmap.yaml`. The agent queries it on demand via `scripts/roadmap-query.sh` (`backlog --limit N` / `get <slug>` / `hygiene`) rather than whole-file-reading it. Expected schema — a top-level `version:` plus an `items:` list, each item a mapping:
 
-```markdown
-| Feature | Priority | Status | Notes |
-|---|---|---|---|
+```yaml
+items:
+  - slug: <kebab-case-id>
+    title: |
+      <feature name>
+    priority: Must | Should | Could
+    status: backlog | not_started | in_progress | shipped | deferred
+    status_detail: |          # optional — the verbatim original status ("shipped — lsa v0.8.0")
+      <detail>
+    notes: |                  # free text; often carries a `pitch:`/`Pitch:` reference
+      <notes>
 ```
 
-Column definitions:
-- **Feature** — item name matching a pitch slug or description.
-- **Priority** — `Must`, `Should`, or `Could`.
-- **Status** — `backlog`, `not started`, `shipped — <plugin> v<X.Y.Z>`, `deferred`, or a custom value.
-- **Notes** — free text; often contains a `Pitch: [<slug>](...)` link.
+Field definitions:
+- **slug** — stable kebab-case identifier; the key `roadmap-query.sh get <slug>` resolves.
+- **title** — feature name matching a pitch slug or description.
+- **priority** — `Must`, `Should`, or `Could`.
+- **status** — one of `backlog`, `not_started`, `in_progress`, `shipped`, `deferred`; the verbatim original (e.g. `shipped — lsa v0.8.0`) is preserved in the optional `status_detail`.
+- **notes** — free text; often contains a `Pitch: [<slug>](...)` link.
 
-Parse failures (missing columns, unknown format) are reported to the user, not silently ignored.
+Query failures (absent ledger, malformed YAML — a non-zero script exit) fall through to a model-side read and are reported to the user, not silently ignored.
 
 ## Three sequencing factors
 

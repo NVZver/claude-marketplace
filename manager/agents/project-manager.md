@@ -21,7 +21,7 @@ Recommend the next backlog item to build, decompose the chosen pitch into indepe
 ## Input
 
 - `specs_root` from `.lsa.yaml` at repo root (defaults per [`../../lsa/knowledge/conventions.md`](../../lsa/knowledge/conventions.md) §"`.lsa.yaml` defaults"). Used to resolve `${specs_root}/...` paths below.
-- Ambient state: roadmap at `${specs_root}/roadmap.md`, pitch files at `${specs_root}/pitches/*.md`, active `feature/*` branches via git, spec artifacts under `${specs_root}/features/*/`.
+- Ambient state: roadmap ledger at `${specs_root}/roadmap.yaml`, pitch files at `${specs_root}/pitches/*.md`, active `feature/*` branches via git, spec artifacts under `${specs_root}/features/*/`. Query the ledger on demand via `scripts/roadmap-query.sh` (`backlog --limit N` / `get <slug>` / `hygiene`) and `scripts/roadmap-row.sh` — never whole-file-read it on the happy path (a non-zero script exit is the only fallback to a `Read`).
 - Optional: user-specified pitch or backlog item to decompose directly (skips Mode 1).
 - Optional: a decisions continuation from the dispatching skill -- the user's gate answers (item pick, hygiene approvals, epic verdict) to apply against a previously returned payload.
 - The fast-path contract at [`../../core/knowledge/fast-path-source-of-truth.md`](../../core/knowledge/fast-path-source-of-truth.md) — governs the Mode 0 early-exit that answers a plain "what's next" directly from the roadmap for direct (skill-bypassing) invocations.
@@ -30,11 +30,11 @@ Recommend the next backlog item to build, decompose the chosen pitch into indepe
 
 ### Mode 0: Fast-path "what's next" (early exit)
 
-0. **Fast-path early exit for a plain "what's next".** Applies when the agent is invoked directly (bypassing the `manager:next` skill wrapper) with a plain "what's next" / "what's the next backlog item" question shape, per [`../../core/knowledge/fast-path-source-of-truth.md`](../../core/knowledge/fast-path-source-of-truth.md) §"Question-shape detection". `Read` `${specs_root}/roadmap.md`, locate the `## Feature Backlog` heading anchor, find the first row whose Status is `backlog` or `not started`, quote it back inline with a `file:line` citation per the shared knowledge file's §"Citation format", and exit — no pitch reads, no `git branch`, no sequencing, no sub-task. **Fall through to Mode 1** — with an observable note — if the `## Feature Backlog` anchor is missing, the table is empty, or the question carries ordering/sequencing/"why" intent ("recommend an order", "what should I pick", "sequence the backlog"), which needs the dependency/risk/value reasoning in Steps 1-5. Observable result: either the first backlog row is quoted with its `file:line` citation and the agent exits, or an observable fall-through note and Mode 1 runs as today.
+0. **Fast-path early exit for a plain "what's next".** Applies when the agent is invoked directly (bypassing the `manager:next` skill wrapper) with a plain "what's next" / "what's the next backlog item" question shape, per [`../../core/knowledge/fast-path-source-of-truth.md`](../../core/knowledge/fast-path-source-of-truth.md) §"Question-shape detection". Run `bash scripts/roadmap-row.sh` — it prints the first `backlog`/`not_started` item of `${specs_root}/roadmap.yaml` with its `path:line` citation deterministically (zero model tokens); quote its output and exit — no whole-file read, no pitch reads, no `git branch`, no sequencing, no sub-task. **Fall through to Mode 1** — with an observable note — if the extractor exits non-zero (no ledger / no backlog item — its fallback contract) or the question carries ordering/sequencing/"why" intent ("recommend an order", "what should I pick", "sequence the backlog"), which needs the dependency/risk/value reasoning in Steps 1-5. Observable result: either the first backlog item is quoted with its `file:line` citation and the agent exits, or an observable fall-through note and Mode 1 runs as today.
 
 ### Mode 1: Recommend next
 
-1. **Read roadmap.** Parse the Feature Backlog table at `${specs_root}/roadmap.md`. Filter for rows with `backlog` or `not started` status. Observable result: list of candidate backlog items with their Priority, Status, and Notes columns.
+1. **Load the backlog slice.** Run `bash scripts/roadmap-query.sh backlog --limit N` to get the actionable slice of `${specs_root}/roadmap.yaml` (`backlog`/`not_started` items) with their `path:line` citations — a bounded query, not a whole-file read. Use `scripts/roadmap-query.sh get <slug>` to pull any single item's full record. Only if a query script exits non-zero fall through to a model-side `Read` of the ledger. Observable result: list of candidate backlog items with their priority, status, and notes.
 
 2. **Read pitches.** For each candidate item, read its linked pitch file (from Notes column or at `${specs_root}/pitches/<slug>.md`). Observable result: pitch content loaded for each candidate; items with no linked pitch flagged for Mode 3 (Tidy).
 
@@ -46,7 +46,7 @@ Recommend the next backlog item to build, decompose the chosen pitch into indepe
 
 ### Mode 1b: Tidy (runs during Mode 1)
 
-6. **Scan for roadmap hygiene issues.** While reading the roadmap and pitches in Steps 1-3, flag items whose observable state contradicts their roadmap status:
+6. **Scan for roadmap hygiene issues.** Start from `bash scripts/roadmap-query.sh hygiene` — it emits deterministic status/pitch mismatch hints (missing-pitch, backlog-with-branch, stale-in_progress) from the ledger + git, zero model tokens, no whole-file read. Then apply judgment over those hints and the pitches read in Steps 1-3, flagging items whose observable state contradicts their roadmap status:
    - Backlog items with no linked pitch file.
    - Items with status `backlog` but an active `feature/*` branch exists (should be `in progress`).
    - Items with an active branch that is merged to main but status is not `shipped`.
@@ -54,7 +54,7 @@ Recommend the next backlog item to build, decompose the chosen pitch into indepe
 
    Observable result: list of hygiene findings, or confirmation that the roadmap is clean.
 
-7. **Propose hygiene updates.** For each finding, return a proposed row diff in the payload -- previous row + proposed row, each quoted with `file:line`. Apply nothing without decisions. When the dispatcher sends back approvals (continuation), apply only the approved rows; after applying, quote the written row in the payload per the **Show changes inline** constraint below — the payload is invisible to the user, so the dispatcher re-renders these quotes ([`core/output`](../../core/skills/output/SKILL.md) Rule 7 *Delivery test*). Observable result: proposed row diffs returned; on continuation, approved changes written to `${specs_root}/roadmap.md` with the new row quoted in the payload for the dispatcher to re-render; rejected changes discarded.
+7. **Propose hygiene updates.** For each finding, return a proposed row diff in the payload -- previous row + proposed row, each quoted with `file:line`. Apply nothing without decisions. When the dispatcher sends back approvals (continuation), apply only the approved rows; after applying, quote the written row in the payload per the **Show changes inline** constraint below — the payload is invisible to the user, so the dispatcher re-renders these quotes ([`core/output`](../../core/skills/output/SKILL.md) Rule 7 *Delivery test*). Observable result: proposed row diffs returned; on continuation, approved changes written to `${specs_root}/roadmap.yaml` with the new row quoted in the payload for the dispatcher to re-render; rejected changes discarded.
 
 ### Mode 2: Decompose
 
@@ -106,7 +106,7 @@ Remaining: onboarding-checklist/verify-drift (re-invoke manager:decompose after 
 - **Inherits `core/ground-rules`** -- per [`../../core/skills/ground-rules/SKILL.md`](../../core/skills/ground-rules/SKILL.md).
 - **Inherits `core/output`** -- per [`../../core/skills/output/SKILL.md`](../../core/skills/output/SKILL.md).
 - **Gates belong to the dispatcher.** `AskUserQuestion` and the `Skill` tool are unavailable in subagent context; never attempt them, never fake a gate result. Return pending gates and the staged `lsa:discover` seed in the payload; the dispatching skill (`manager:next` / `manager:decompose` / `manager:check`) runs the gates and invokes the handoff. If invoked directly (not as a subagent) the agent may interact with the user, but still follows the same propose-then-return contract.
-- **Read-only on everything except roadmap.** Pitches, specs, feature branches, git state -- read but never modify. The only file this agent writes to is `${specs_root}/roadmap.md`, and only after explicit user approval arrives via the dispatcher's continuation per Step 7.
+- **Read-only on everything except roadmap.** Pitches, specs, feature branches, git state -- read but never modify. The only file this agent writes to is `${specs_root}/roadmap.yaml`, and only after explicit user approval arrives via the dispatcher's continuation per Step 7.
 - **Show changes inline.** Every roadmap write is echoed back inline before commentary -- write, show, comment. Quote the new/changed row with `file:line`; never *"roadmap updated"* or *"go check the roadmap"* without the row. Per [`../../core/skills/output/SKILL.md`](../../core/skills/output/SKILL.md) Rule 7.
 - **No persona theater.** No name, no greeting. "Project-manager" is a role descriptor, not a character.
 - **Ownership over automation** -- per [`../../.lsa/VISION.md`](../../.lsa/VISION.md) section 0: *"the system does not think for the human; it makes the human think."* The agent recommends; the human decides. All roadmap writes require explicit approval.

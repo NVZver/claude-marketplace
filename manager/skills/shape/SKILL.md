@@ -32,11 +32,11 @@ Go from a vague idea to a human-approved pitch with epics ready for the LSA buil
 
    Observable result: pitch delivered through a rendered channel; every pending gate resolved by the user; on approve the file exists with `Status: approved` and is quoted inline; on reject no file exists.
 
-4. **Hand off to decompose.** On approve, invoke `manager:decompose` via the `Skill` tool with the approved pitch slug. The project-manager agent handles the roadmap entry (backlog row, priority, sequencing) and epic decomposition — this skill does not write to `${specs_root}/roadmap.md` directly. (On reject, Step 3 already exited cleanly.) Observable result: `manager:decompose` executing; pitch added to roadmap and decomposed into epics by project-manager.
+4. **Hand off to decompose.** On approve, invoke `manager:decompose` via the `Skill` tool with the approved pitch slug. The project-manager agent handles the roadmap entry (backlog row, priority, sequencing) and epic decomposition — this skill does not write to `${specs_root}/roadmap.yaml` directly. (On reject, Step 3 already exited cleanly.) Observable result: `manager:decompose` executing; pitch added to roadmap and decomposed into epics by project-manager.
 
 ## Output
 
-Either `manager:decompose` is executing (approved path) or clean exit (rejected path). The pitch file exists at `${specs_root}/pitches/<slug>.md` **only on approve** (`Status: approved`, written by this skill after its gates); on reject nothing is written. Roadmap writes (backlog row, priority, sequencing) are handled by the project-manager agent via `manager:decompose` — this skill never writes to `${specs_root}/roadmap.md` directly.
+Either `manager:decompose` is executing (approved path) or clean exit (rejected path). The pitch file exists at `${specs_root}/pitches/<slug>.md` **only on approve** (`Status: approved`, written by this skill after its gates); on reject nothing is written. Roadmap writes (backlog row, priority, sequencing) are handled by the project-manager agent via `manager:decompose` — this skill never writes to `${specs_root}/roadmap.yaml` directly.
 
 ### Example Output
 

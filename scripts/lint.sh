@@ -405,6 +405,53 @@ else
   fi
 fi
 
+# ---------------------------------------------------------------------------
+# C14 — roadmap.yaml schema gate (pitch yaml-ledger-selective-load, F11). The
+# roadmap ledger is now YAML; a malformed file or an item missing a required key
+# would silently break every read-consumer's slice. This validates structure
+# deterministically (pure awk — no yq/python): the file must carry `version:` +
+# `items:`, and every item must have a non-empty slug + title, a priority in
+# {Must,Should,Could}, and a status in {backlog,not_started,in_progress,shipped,
+# deferred}. Absent ledger is skipped (the read scripts fall through per F8).
+# Repo-internal: this ledger is outside every plugin's artifact_paths.
+# ---------------------------------------------------------------------------
+RMAP=".lsa/roadmap.yaml"
+if [[ ! -f "${RMAP}" ]]; then
+  pass_line "C14 no ${RMAP} to validate (skipped)"
+else
+  c14_viol="$(awk '
+    function chk(){
+      if(slug==""){ return }
+      if(title=="")               print "  item @ line " sline " (slug " slug "): missing/empty title"
+      if(prio!="Must"&&prio!="Should"&&prio!="Could") print "  item @ line " sline " (slug " slug "): priority \x27" prio "\x27 not in Must|Should|Could"
+      if(status!="backlog"&&status!="not_started"&&status!="in_progress"&&status!="shipped"&&status!="deferred") \
+                                  print "  item @ line " sline " (slug " slug "): status \x27" status "\x27 not in the F4 enum"
+    }
+    /^version:/                   { hasver=1 }
+    /^items:[[:space:]]*$/        { initems=1; hasitems=1; next }
+    initems && /^[^[:space:]#]/   { chk(); slug=""; initems=0 }
+    !initems                      { next }
+    /^  - slug: /                 { chk(); slug=$0; sub(/^  - slug: /,"",slug); sline=FNR; title="";prio="";status=""; blk=""; nitems++; next }
+    /^    title: \|[[:space:]]*$/ { blk="title"; next }
+    /^    priority: /             { prio=$0; sub(/^    priority: /,"",prio); blk=""; next }
+    /^    status: /               { status=$0; sub(/^    status: /,"",status); blk=""; next }
+    /^      / { if(blk=="title"){ t=$0; sub(/^      /,"",t); if(title=="")title=t } next }
+    /^    [a-z_]+: / { blk=""; next }
+    END{
+      chk()
+      if(!hasver)   print "  file: missing top-level version: key"
+      if(!hasitems) print "  file: missing top-level items: key"
+      if(nitems==0) print "  file: no items entries found"
+    }
+  ' "${RMAP}" 2>/dev/null)"
+  if [[ -z "${c14_viol}" ]]; then
+    pass_line "C14 ${RMAP} well-formed: every item has slug/title + valid priority + valid status"
+  else
+    fail_line "C14 ${RMAP} schema violations:"
+    printf '%s\n' "${c14_viol}" | sed 's/^/      /'
+  fi
+fi
+
 echo
 if [[ "${fail}" -eq 0 ]]; then
   echo "All invariants hold."

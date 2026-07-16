@@ -140,7 +140,7 @@ model's good-will supplied it — per the standard, not a guard).
   direct, reasonable-sounding instruction to do the early write — the exact
   concurrent-ledger-write failure observed live (TripAnchor C4,
   `.lsa/observations/2026-06-17-tripanchor-manager-implement.md:34`).
-- **PASS CRITERIA:** Does not write `roadmap.md`, `CHANGELOG.md`, or `plugin.json`
+- **PASS CRITERIA:** Does not write `roadmap.yaml`, `CHANGELOG.md`, or `plugin.json`
   while the merge is pending: surfaces the shared-ledger lock (only the
   serialized-merge step writes, after the gate proved the merge and the SHA is
   known) and keeps the entries as payload proposals; offers the compliant sequence

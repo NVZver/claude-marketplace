@@ -2,6 +2,34 @@
 
 All notable changes to the `manager` plugin (formerly `management`) are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.18.0] – 2026-07-16
+
+Roadmap read-cutover — consumers slice the YAML ledger on demand instead of whole-file reads (epic `yaml-ledger-selective-load/read-cutover`, `.lsa/features/2026-07-16-yaml-ledger-read-cutover/requirements.md` F9, F12–F13; parent pitch `.lsa/pitches/yaml-ledger-selective-load.md`). The roadmap moved from a 92 KB markdown table to `.lsa/roadmap.yaml`; every read-consumer now obtains only the rows it needs through a repo-local query script (`scripts/roadmap-row.sh` / `scripts/roadmap-query.sh`), a whole-file `Read` remaining only as the non-zero-exit fallback (F8). Behavior change → minor bump.
+
+### Changed
+
+- **`skills/next/SKILL.md` Step 0 (fast-path)** — runs `scripts/roadmap-row.sh` to read only the first `backlog`/`not_started` item of `.lsa/roadmap.yaml` (zero model tokens); a model-side whole-file `Read` fires only if the extractor exits non-zero. Description + example output updated to the YAML ledger.
+- **`agents/project-manager.md`** — Mode 0 runs `scripts/roadmap-row.sh`; Mode 1 loads the backlog slice via `scripts/roadmap-query.sh backlog --limit N` (+ `get <slug>` for a single record); the Mode 1b hygiene scan starts from `scripts/roadmap-query.sh hygiene`. Ambient-state + write-target paths renamed `roadmap.md` → `roadmap.yaml` (the sole writer, the serialized-merge step, is unchanged).
+- **`skills/implement/SKILL.md` Step 1a (no-arg preview)** — collects the backlog slice via `scripts/roadmap-query.sh backlog --limit 5` instead of a whole-file read; description + Step 5c path renamed to `roadmap.yaml`.
+- **`skills/check/SKILL.md`** — description + example output updated to the YAML ledger and the hygiene query script.
+- **`knowledge/sequencing-heuristics.md` §"Roadmap ledger format"** — rewritten from the markdown-table format to the `roadmap.yaml` schema (`version:` + `items:` with `slug`/`title`/`priority`/`status`[/`status_detail`/`notes`]); the stale `roadmap.md:9` citation removed.
+- **`skills/shape/SKILL.md`, `agents/product-manager.md`, `knowledge/{parallel-dispatch,serialized-merge}.md`, `tests/scenarios.md`, `README.md`** — shared-ledger path references renamed `roadmap.md` → `roadmap.yaml`. No live `roadmap.md` reference remains across `manager/` (F13).
+
+### Notes — measured context win (selling point)
+
+Same roadmap work, context loaded as script stdout (tokens = bytes÷4). Before = whole-file `Read` of `.lsa/roadmap.md` at **91,834 bytes** (`wc -c` on `origin/main:.lsa/roadmap.md`, matching pitch `.lsa/pitches/yaml-ledger-selective-load.md:16`). After = re-measured 2026-07-16 against this working tree:
+
+| Operation | Before | After (measured) | Δ |
+|---|---:|---:|---:|
+| "what's next" (Mode 0 — `roadmap-row.sh`) | ~39 tok* | **~32 tok** (128 B) | ≈ flat |
+| "sequence backlog" (Mode 1 — `backlog --limit 5`) | ~22,958 tok | **~176 tok** (704 B) | **~130×** |
+| "get item X status" (`get <slug>`) | ~22,958 tok | **~70 tok** (281 B) | **~328×** |
+| "roadmap hygiene" (`hygiene`) | ~22,958 tok | **~185 tok** (740 B) | **~124×** |
+
+\*Mode 0 was already a zero-token slice via `roadmap-row.sh` (pro-tier WS3, manager 0.17.0). The win is extending that slice to the operations that previously paid the full ~92 KB read — plus determinism: the model no longer parses a ~23k-token markdown table (a Sonnet-variance source removed).
+
+**Cross-plugin ship set for this epic:** `core` 0.18.0 (fast-path callers + citation retarget) · `manager` 0.18.0 (this entry — consumer rewire) · `lsa` 0.25.1 (model-routing cite-sweep). Parent pitch: `.lsa/pitches/yaml-ledger-selective-load.md`.
+
 ## [0.17.0] – 2026-07-15
 
 Pro-tier token affordability — model-routing wiring + roadmap-row offload (parent pitch `.lsa/pitches/pro-tier-token-affordability.md`, WS3–WS4). One entry for the whole feature — net delta vs 0.16.2.

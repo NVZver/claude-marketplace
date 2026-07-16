@@ -43,5 +43,5 @@ Every fast-path answer carries the source inline: a verbatim quote of the answer
 
 | Caller | Source-of-truth file | Trigger shape |
 |---|---|---|
-| [`../../manager/skills/next/SKILL.md`](../../manager/skills/next/SKILL.md) | `${specs_root}/roadmap.md` §`## Feature Backlog` | "what's next" (reserves full dispatch for "recommend an order") |
-| [`../../manager/agents/project-manager.md`](../../manager/agents/project-manager.md) | `${specs_root}/roadmap.md` §`## Feature Backlog` | "what's next" (early-exit on direct invocation) |
+| [`../../manager/skills/next/SKILL.md`](../../manager/skills/next/SKILL.md) | `${specs_root}/roadmap.yaml` `items:` (via `scripts/roadmap-row.sh`) | "what's next" (reserves full dispatch for "recommend an order") |
+| [`../../manager/agents/project-manager.md`](../../manager/agents/project-manager.md) | `${specs_root}/roadmap.yaml` `items:` (via `scripts/roadmap-row.sh`) | "what's next" (early-exit on direct invocation) |

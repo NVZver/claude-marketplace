@@ -60,7 +60,7 @@ A dispatcher resolves a surface's tier as follows:
 
 Durable routing surface = the three isolation classes of `.lsa/standards/code.md:59-63` (external
 implementer · independent graders · worktree fan-out). Transitional = slated for inline removal by
-`.lsa/roadmap.md:62`; once inline, the surface inherits the session model and has no routing lever.
+the `reduce-sub-agent-dispatch-fan-out-for-sonnet` item in `.lsa/roadmap.yaml`; once inline, the surface inherits the session model and has no routing lever.
 
 The **Tier** column is the tier each surface runs on *today* — not an aspiration. A surface
 is `inherit` unless a dispatcher reads the map for it (per the wiring rule above). The
@@ -80,7 +80,7 @@ is `inherit` unless a dispatcher reads the map for it (per the wiring rule above
 
 Live down-routes today: rows 3 (`manager:next` → sonnet), 4 (`manager:check` → haiku), and 7
 (`verify-checkpoint` → sonnet). Rows 3–4 are **transitional** — slated for deletion (not re-tiering)
-as the inline rollout (`.lsa/roadmap.md:62`) removes their dispatch; the durable surface is the three
+as the inline rollout (the `reduce-sub-agent-dispatch-fan-out-for-sonnet` item in `.lsa/roadmap.yaml`) removes their dispatch; the durable surface is the three
 isolation classes of `.lsa/standards/code.md:59-63` (external implementer · independent graders ·
 worktree fan-out), of which row 7 is the one live down-route and the rest are floored to `inherit`.
 New down-route = wire the dispatcher first, then add the map key — never the reverse.

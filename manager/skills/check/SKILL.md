@@ -1,6 +1,6 @@
 ---
 name: check
-description: "Check roadmap hygiene and apply approved fixes. Input: none. Output: the project-manager agent's proposed row diffs (stale/inconsistent entries — missing pitch, status vs branch mismatch, merged-but-not-shipped) delivered and gated one by one via AskUserQuestion; the agent applies only the approved rows and quotes each, which this skill re-renders. Reads ${specs_root}/roadmap.md."
+description: "Check roadmap hygiene and apply approved fixes. Input: none. Output: the project-manager agent's proposed row diffs (stale/inconsistent entries — missing pitch, status vs branch mismatch, merged-but-not-shipped) delivered and gated one by one via AskUserQuestion; the agent applies only the approved rows and quotes each, which this skill re-renders. Reads ${specs_root}/roadmap.yaml on demand via scripts/roadmap-query.sh hygiene (whole-file read is fallback only)."
 ---
 
 > **Trace.** On load, print first: `=============== [manager/skills/check/SKILL.md] [manager] ===============`
@@ -35,9 +35,9 @@ Dispatching project-manager (intent: hygiene-check)...
 
 Agent payload: 1 hygiene finding returned as a row diff.
 
-Gate — .lsa/roadmap.md:12 (status backlog → in progress; active feature/* branch exists): approve / reject
+Gate — .lsa/roadmap.yaml:21 onboarding-checklist (status backlog → in_progress; active feature/* branch exists): approve / reject
 > approve
-  Applied — .lsa/roadmap.md:12 "| onboarding-checklist | Should | in progress | ... |"
+  Applied — .lsa/roadmap.yaml:21 onboarding-checklist | Onboarding checklist | Should | in_progress
 ```
 
 ## Constraints

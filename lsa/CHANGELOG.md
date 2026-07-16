@@ -2,6 +2,18 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.25.1] — 2026-07-16
+
+Roadmap read-cutover cite-sweep (epic `yaml-ledger-selective-load/read-cutover`, `.lsa/features/2026-07-16-yaml-ledger-read-cutover/requirements.md` F12; parent pitch `.lsa/pitches/yaml-ledger-selective-load.md`). Citation-only — no routing behavior changed → patch bump.
+
+### Changed
+
+- **`knowledge/model-routing.md`** — the two inline-dispatch citations that pointed at the now-deleted `.lsa/roadmap.md:62` retargeted to name the `reduce-sub-agent-dispatch-fan-out-for-sonnet` item in `.lsa/roadmap.yaml`, keeping `scripts/check-citations.sh` green after the markdown ledger's removal.
+
+### Notes
+
+- **Measured context win lives in `manager` 0.18.0** — sequencing / get / hygiene drop from ~22,958 tok (whole-file `.lsa/roadmap.md`) to ~70–185 tok (script slices); see [`manager/CHANGELOG.md`](../manager/CHANGELOG.md) §`[0.18.0]` *Notes — measured context win*. This `lsa` patch is the cite-sweep that keeps model-routing green after the markdown ledger's removal.
+
 ## [0.25.0] — 2026-07-15
 
 Pro-tier token affordability (parent pitch `.lsa/pitches/pro-tier-token-affordability.md`, WS1–WS4). One entry for the whole feature — net delta vs 0.24.4.

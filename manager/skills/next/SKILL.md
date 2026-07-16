@@ -1,6 +1,6 @@
 ---
 name: next
-description: "Recommend what to work on next. Input: none (or a plain 'what's next' / 'recommend an order' question). Output: a plain 'what's next' gets a fast-path answer — the first backlog/not-started roadmap row quoted with a file:line citation, no agent dispatch; 'what should I pick' / 'sequence the backlog' dispatches the project-manager agent for dependency/risk/value sequencing and runs its returned pick gate. Reads ${specs_root}/roadmap.md."
+description: "Recommend what to work on next. Input: none (or a plain 'what's next' / 'recommend an order' question). Output: a plain 'what's next' gets a fast-path answer — the first backlog/not-started roadmap item quoted with a file:line citation, no agent dispatch; 'what should I pick' / 'sequence the backlog' dispatches the project-manager agent for dependency/risk/value sequencing and runs its returned pick gate. Reads ${specs_root}/roadmap.yaml on demand via scripts/roadmap-row.sh (whole-file read is fallback only)."
 ---
 
 > **Trace.** On load, print first: `=============== [manager/skills/next/SKILL.md] [manager] ===============`
@@ -21,7 +21,7 @@ Tell the user what to build next — instantly for a plain "what's next", with d
 
 ## Steps
 
-0. **Fast-path branch: "what's next" → cited roadmap row (before dispatch).** When the question shape is a plain "what's next" / "what's the next backlog item" (per [`../../../core/knowledge/fast-path-source-of-truth.md`](../../../core/knowledge/fast-path-source-of-truth.md) §"Question-shape detection"), do NOT dispatch the agent. Get the first `backlog`/`not started` row of `${specs_root}/roadmap.md`'s `## Feature Backlog` and quote it inline with its `file:line` citation per the shared knowledge file's §"Citation format", then exit cleanly. Where the repo provides a roadmap-row extractor (this repo: `bash scripts/roadmap-row.sh`, which prints that row + its `path:line` deterministically — Pro-safe, zero model tokens), run it and quote its output; absent the extractor, `Read` `${specs_root}/roadmap.md` and locate the row model-side. **Reserve the full agent dispatch in Step 1 for explicit "recommend an order" / "what should I pick" / "sequence the backlog" questions** — those need the agent's dependency/risk/value reasoning. **Fall through to Step 1** — with an observable note — if the `## Feature Backlog` anchor is missing, the table is empty, or the question carries the ordering/sequencing intent above. Observable result: either the first backlog row is quoted with its `file:line` citation and the skill exits, or an observable fall-through note and Step 1 dispatches the agent.
+0. **Fast-path branch: "what's next" → cited roadmap item (before dispatch).** When the question shape is a plain "what's next" / "what's the next backlog item" (per [`../../../core/knowledge/fast-path-source-of-truth.md`](../../../core/knowledge/fast-path-source-of-truth.md) §"Question-shape detection"), do NOT dispatch the agent. Get the first `backlog`/`not_started` item of the `${specs_root}/roadmap.yaml` ledger and quote it inline with its `file:line` citation per the shared knowledge file's §"Citation format", then exit cleanly. **Run the roadmap-row extractor** (this repo: `bash scripts/roadmap-row.sh`, which prints that item + its `path:line` deterministically from the YAML — Pro-safe, zero model tokens) and quote its output — do not whole-file-read the ledger on this happy path. Only if the extractor exits non-zero (no ledger / no backlog item — its fallback contract) do you fall through to a model-side `Read` of `${specs_root}/roadmap.yaml`. **Reserve the full agent dispatch in Step 1 for explicit "recommend an order" / "what should I pick" / "sequence the backlog" questions** — those need the agent's dependency/risk/value reasoning. **Fall through to Step 1** — with an observable note — if the extractor reports no backlog item, the ledger is empty, or the question carries the ordering/sequencing intent above. Observable result: either the first backlog item is quoted with its `file:line` citation and the skill exits, or an observable fall-through note and Step 1 dispatches the agent.
 
 1. **Dispatch the project-manager and run its gate — per the shared contract.** Dispatch the `project-manager` agent with an explicit intent (`intent: recommend-next` for "what should I pick", `intent: sequence-backlog` for "sequence the backlog") and run the returned pick gate per [`../../knowledge/roadmap-orchestration.md`](../../knowledge/roadmap-orchestration.md). The agent returns the sequenced candidate list as a pending gate (each candidate + re-sequence / exit, top-ranked as the recommended default); this skill presents it via `AskUserQuestion`. No `lsa:discover` handoff — selecting a pick to decompose is `manager:decompose`'s job. Observable result: sequenced recommendation delivered, pick gate resolved by the user.
 
@@ -35,8 +35,8 @@ Either the first backlog row is quoted inline with a `file:line` citation (fast-
 
 ```
 > what's next
-.lsa/roadmap.md:12 — "| onboarding-checklist | Should | backlog | pitch: .lsa/pitches/onboarding-checklist.md |"
-(fast-path: first backlog row, no agent dispatch)
+.lsa/roadmap.yaml:21 — onboarding-checklist | Onboarding checklist | Should | backlog
+(fast-path: first backlog item via scripts/roadmap-row.sh, no agent dispatch)
 
 > what should I pick and why
 Dispatching project-manager (intent: recommend-next)...
