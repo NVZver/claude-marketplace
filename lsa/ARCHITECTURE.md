@@ -41,7 +41,8 @@ This document is the design-rationale narrative for `lsa`. For other concerns, s
 ├── scripts/                           ← Repo-internal gates (outside every plugin's artifact_paths)
 │   ├── lint.sh                        ← the C1–C12 invariant lint (CI-enforced)
 │   ├── build-vision-digest.sh         ← regenerates .lsa/VISION-digest.md from .lsa/VISION.md
-│   ├── gate.sh, roadmap-row.sh        ← aggregate gate runner + first-backlog-row extractor
+│   ├── gate.sh, roadmap-row.sh, roadmap-query.sh, roadmap-migrate.sh, roadmap-print.sh
+│   │                                  ← aggregate gate + YAML ledger query/migrate/print (repo scripts)
 │   └── …
 ├── core/                              (the core plugin — independent of LSA)
 │   ├── CLAUDE.md                      ← The canonical always-on card
@@ -61,7 +62,7 @@ This document is the design-rationale narrative for `lsa`. For other concerns, s
     ├── VISION.md                      ← The constitution (full)
     ├── VISION-digest.md               ← GENERATED structural digest of VISION.md (build-vision-digest.sh; the mandatory constitution read)
     ├── main.spec.md                   ← App-level behavior, module index, global contracts
-    ├── roadmap.md                     ← Prioritized feature backlog
+    ├── roadmap.yaml                   ← Prioritized feature backlog (YAML ledger SoT; query via scripts/roadmap-*.sh)
     ├── research-backlog.md            ← Mid-feature ideas, deferred decisions
     ├── metrics.md                     ← Optional aggregate (one row per archived feature)
     ├── pitches/                       ← Shaped pitches (manager:shape) awaiting decomposition

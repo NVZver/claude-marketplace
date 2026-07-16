@@ -37,7 +37,7 @@ flowchart TD
 
 ```text
 > /lsa:discover "add a /status command that lists in-flight features"
-[discover] intent + facts — roadmap.md exists @ .lsa/roadmap.md; one read-only flow.
+[discover] intent + facts — roadmap.yaml exists @ .lsa/roadmap.yaml; one read-only flow.
 
 > /lsa:specify
 [specify] F1 (EARS): WHEN status runs, the system SHALL print in-flight features.
@@ -62,7 +62,7 @@ flowchart TD
 /plugin install lsa@NVZver
 ```
 
-1. **Initialize** — `/lsa:init` scaffolds the spec tree (greenfield or brownfield).
+1. **Initialize** — `/lsa:init` scaffolds the spec tree (greenfield or brownfield), including an empty **`roadmap.yaml`** ledger (never `roadmap.md`). Migrating an old markdown roadmap: [`knowledge/migration-instructions-ai.md`](./knowledge/migration-instructions-ai.md).
 2. **Discover** — `/lsa:discover "<what you want>"` extracts intent + gathers codebase facts.
 3. **Specify** — `/lsa:specify` drafts EARS requirements + Gherkin `.feature` scenarios, shows you the full draft, and writes the files only after you approve (since v0.17.0).
 4. **Verify** — `/lsa:verify` grounds the spec against your codebase; fix anything `NOT-GROUNDED` before building.
@@ -98,7 +98,7 @@ OpenSpec is the closest neighbour: it ships an after-the-fact `/opsx:verify` and
 | **`verify`** | **Before** delegating: ground the spec against the codebase, and run the `.lsa.yaml` `gate:` block — citing each command + exit code (a non-zero gate blocks `GROUNDED`). Output: `GROUNDED` / `NOT-GROUNDED` + `grounding.md`. |
 | **`delegate`** | Hand the grounded spec + `.feature` files to your implementer; collect the returned diff. Code-writing happens outside LSA. Optionally gates the build **per-increment** via `.lsa.yaml paired_verify` — `off` (default, unchanged), `checkpoint` (inject a pause+signal protocol and dispatch `observer:verify-checkpoint` after each plan task; CLEAR auto-proceeds, BLOCK surfaces), or `async` (not yet implemented — errors). |
 | **`reconcile`** | **After** the diff returns: check it **does · only · all** — each Gherkin scenario run **3 times** by default (`.lsa.yaml` `reconcile.runs`; pass at the default = all 3 runs) — and write `conformance.md` around a **requirement ↔ hunk coverage table** (one row per requirement ID × the hunks that implement it × the runs that prove it × verdict; orphan hunks are drift), then absorb drift. The `.lsa.yaml` `gate:` block is required input — a repo with no `gate:` block gets an explicit `NOT-RUNNABLE` gate status, never a silent skip. Runs as the **independent grader** — a context with no write access to the tests, `.feature` scenarios, or `.lsa.yaml` `gate:` it judges (the work cannot edit its own grader). Also surfaced by the SessionStart drift hook. |
-| **`init`** | Initialize LSA on a project (greenfield or brownfield). |
+| **`init`** | Initialize LSA on a project (greenfield or brownfield). Greenfield scaffolds **`roadmap.yaml`** (empty YAML ledger) — never `roadmap.md`. Existing markdown roadmaps: follow [`knowledge/migration-instructions-ai.md`](./knowledge/migration-instructions-ai.md). |
 | **`revise-constitution`** | Promote a finished feature's lessons into permanent constitution / standards rules. |
 
 Plus the **`orchestrator`** agent — the entry point that drives the loop. Since v0.21.0 it runs the spec-authoring stages (`discover` → `specify` → `verify`) **inline in one context**, reusing accumulated facts instead of re-reading, and crosses a context boundary only at `delegate` (the external implementer) and `reconcile` (an independent grader) — one context floor and one file-read pass instead of one per stage, so a full cycle stays affordable on the Pro-tier model (see [`.lsa/standards/code.md`](../.lsa/standards/code.md) §"Model policy"). Since v0.17.0 it surfaces every sub-agent's output to you verbatim before any gate (a sub-agent transcript is invisible to the human), and returns pending gates instead of attempting pickers when it runs as a subagent itself. See [`CORE.md`](./CORE.md) for the one-page contract every skill follows.

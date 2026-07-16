@@ -149,7 +149,7 @@ After the table: one cluster of follow-up `file:line` pointers the human can ope
 | 4 | `lsa/skills/verify/SKILL.md:74` | edit | Observable result names quoted-diff format | step 4 | <!-- [illustrative] -->
 | 5 | `lsa/skills/specify/SKILL.md:99` | edit | Observable result names quoted-section format | step 4 | <!-- [illustrative] -->
 
-*Reason: lands the `core/output` Rule 7 + LSA sweep per `.lsa/features/2026-05-22-show-changes-inline/tasks.md` step 1-2. Source: `.lsa/roadmap.md:128-132`. Type: `batch` (`add` + `edit` mix).*
+*Reason: lands the `core/output` Rule 7 + LSA sweep per `.lsa/features/2026-05-22-show-changes-inline/tasks.md` step 1-2. Source: `.lsa/roadmap.yaml`. Type: `batch` (`add` + `edit` mix).*
 
 **Example 3 — state mark.**
 
@@ -162,7 +162,7 @@ After the table: one cluster of follow-up `file:line` pointers the human can ope
 >
 > *New (line 118):*
 > ```markdown
-> - **OQ5** — Do we backfill archive specs under `.lsa/archive/`? **Resolved 2026-05-23: no — per archive-files-don't-rewrite rule (`.lsa/roadmap.md:48`).**
+> - **OQ5** — Do we backfill archive specs under `.lsa/archive/`? **Resolved 2026-05-23: no — per archive-files-don't-rewrite rule (`.lsa/roadmap.yaml`).**
 > ```
 >
 > *Reason: human picked `[b] no backfill` at User Verification 3. Source: this session 2026-05-23. Type: `mark`.*

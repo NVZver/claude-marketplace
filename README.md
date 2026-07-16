@@ -8,13 +8,47 @@
 
 A Claude Code marketplace shipping five composable plugins for spec-first, fact-grounded software development. The point isn't features — it's discipline that keeps you, the human, in the driver's seat while the agent does the typing.
 
+## Scripts do the deterministic work
+
+Most agent systems dump whole files into the model and hope it finds the needle. This marketplace does the opposite: **deterministic work is delegated to scripts; the AI works only on what is relevant and already pre-processed** — the slice a question needs, not the full artifact.
+
+Tokens = bytes÷4. Full proof + methodology: [`.lsa/observations/2026-07-16-yaml-ledger-selective-load-impact.md`](./.lsa/observations/2026-07-16-yaml-ledger-selective-load-impact.md).
+
+### Manager — selective roadmap load
+
+Same roadmap questions: before = whole-file read of the ~92 KB markdown ledger (~22,958 tok); after = script stdout only (`roadmap-row.sh` / `roadmap-query.sh`):
+
+| Situation | Before | After | Saves |
+|---|---:|---:|---:|
+| "What's next" (Mode 0) | ~39 tok* | ~32 tok | ≈ flat |
+| Sequence the backlog | ~22,958 tok | ~176 tok | **~22,780 tok (~99% / ~130×)** |
+| Get one item's status | ~22,958 tok | ~70 tok | **~22,890 tok (~99% / ~328×)** |
+| Roadmap hygiene scan | ~22,958 tok | ~185 tok | **~22,770 tok (~99% / ~124×)** |
+
+\*Mode 0 was already a one-row script slice — the win is extending that pattern to the operations that previously paid the full ledger.
+
+### LSA — selective constitution + scoping
+
+Same script-first discipline on every LSA loop stage (Read protocol). The YAML roadmap cutover does **not** change LSA loop load (LSA never ambient-read the ledger); these are the measured LSA floor wins the approach already delivers:
+
+| Situation | Before | After | Saves |
+|---|---:|---:|---:|
+| Constitution on every LSA stage | ~8,197 tok (full `VISION.md`) | ~423 tok (`VISION-digest.md`) | **~7,774 tok (~95% / ~19×)** |
+| Discovery scoping atlas | ad-hoc tree walk | ~548 tok dirs-only `project-map.yaml` | bounded ≤1k tok |
+| Mandatory LSA read floor | — | ~1,998 tok (`.lsa.yaml` + digest + map) | **~92% less** than one whole-file roadmap read (~25,588 tok) |
+| Quality-gate block | model-orchestrated per check | `gate.sh` one-pass (bash) | zero model tokens on the check loop |
+
+Plus: the orchestrator runs `discover → specify → verify` **inline** in one context so those stages reuse facts instead of reloading a fresh floor each time.
+
+**New projects** scaffold `.lsa/roadmap.yaml` via `/lsa:init` (never `roadmap.md`). **Existing markdown roadmaps:** follow the AI runbook [`lsa/knowledge/migration-instructions-ai.md`](./lsa/knowledge/migration-instructions-ai.md) (migrate → verify → rewire → cleanup).
+
 ## The five plugins
 
 | Plugin | Version | What it gives you |
 |---|---|---|
-| [`core`](./core/) | 0.17.0 | Always-on discipline: eight content rules, one hard output rule plus six pieces of output guidance, flow classification (Quick / Standard / Extended), the `/core:doctor` install self-check, and the Goal/Input/Steps/Output/Constraints shape every skill follows. |
-| [`lsa`](./lsa/) | 0.25.0 | **L**iving **S**pec **A**rchitecture — technology-agnostic spec layer: authors a grounded spec (EARS + Gherkin), verifies it against the codebase *before* you build and against the diff *after*, then delegates code-writing to any implementer. Not the coder; hand-edits are *absorbed* into the spec instead of forbidden. |
-| [`manager`](./manager/) | 0.17.0 | Pre-build shaping: turns a vague problem into a structured pitch (problem, appetite, solution sketch, rabbit holes, no-gos) before the build cycle begins. |
+| [`core`](./core/) | 0.18.0 | Always-on discipline: eight content rules, one hard output rule plus six pieces of output guidance, flow classification (Quick / Standard / Extended), the `/core:doctor` install self-check, and the Goal/Input/Steps/Output/Constraints shape every skill follows. |
+| [`lsa`](./lsa/) | 0.26.0 | **L**iving **S**pec **A**rchitecture — technology-agnostic spec layer: authors a grounded spec (EARS + Gherkin), verifies it against the codebase *before* you build and against the diff *after*, then delegates code-writing to any implementer. Not the coder; hand-edits are *absorbed* into the spec instead of forbidden. New projects get a YAML roadmap ledger by default (`/lsa:init`); markdown → YAML migration: [`lsa/knowledge/migration-instructions-ai.md`](./lsa/knowledge/migration-instructions-ai.md). |
+| [`manager`](./manager/) | 0.18.0 | Pre-build shaping: turns a vague problem into a structured pitch (problem, appetite, solution sketch, rabbit holes, no-gos) before the build cycle begins. |
 | [`prompt-engineer`](./prompt-engineer/) | 0.8.3 | Plugin-quality discipline: scans your own actors and knowledge files for ground-rule, KISS/DRY, AI over-engineering, and context-budget violations. |
 | [`observer`](./observer/) | 0.3.2 | Live observe-and-coach + increment gate: `observe` rides Claude Code's self-paced `/loop` and coaches your file changes through a chosen role (rubber-duck, pair-programmer, interviewer, or custom); `verify-checkpoint` gates delegation increments — grades one finished requirement **does·only** and emits `CLEAR` or `BLOCK`. |
 
@@ -106,7 +140,7 @@ Personal-use first; open-sourced for visibility. Claude Code is the v1 substrate
 | **Pro** | Sonnet 5 | The full marketplace — every plugin, every loop; nothing is gated behind Opus. |
 | **Max** | Opus 4.8 | The same artifacts — the reasoning-heavy stages (spec reconciliation, decomposition) get sharper for free. |
 
-One caveat for Pro users watching usage: the deeper flows spawn sub-agents (each a fresh context), so a full Extended LSA cycle or a parallel `manager:implement` run is token-heavy. For everyday work prefer the **Quick / Standard** flows (`core/flow-selector` picks them by task weight); the multi-agent parallel engine (`manager:implement`) is Max-oriented. Everything remains functional on Pro — this is about pacing usage, not access.
+One caveat for Pro users watching usage: the deeper flows spawn sub-agents (each a fresh context), so a full Extended LSA cycle or a parallel `manager:implement` run is token-heavy. For everyday work prefer the **Quick / Standard** flows (`core/flow-selector` picks them by task weight); the multi-agent parallel engine (`manager:implement`) is Max-oriented. Everything remains functional on Pro — this is about pacing usage, not access. Everyday roadmap questions already stay cheap via the [script-first load path](#scripts-do-the-deterministic-work) above.
 
 ## Security
 

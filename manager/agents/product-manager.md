@@ -20,7 +20,7 @@ Turn a vague problem or opportunity into a structured draft pitch with an ordere
 
 - A problem or opportunity description from the user (may be vague, detailed, or anything in between).
 - `specs_root` from `.lsa.yaml` at repo root (defaults per [`../../lsa/knowledge/conventions.md`](../../lsa/knowledge/conventions.md) §"`.lsa.yaml` defaults"). Used to resolve `${specs_root}/...` paths below.
-- Ambient state: this repo's codebase -- roadmap at `${specs_root}/roadmap.md`, existing specs, existing code -- for grounding.
+- Ambient state: this repo's codebase -- roadmap ledger at `${specs_root}/roadmap.yaml`, existing specs, existing code -- for grounding.
 
 ## Steps
 

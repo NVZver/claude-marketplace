@@ -2,6 +2,19 @@
 
 All notable changes to the `core` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.18.0] — 2026-07-16
+
+Roadmap read-cutover — fast-path callers table retargeted to the YAML ledger (epic `yaml-ledger-selective-load/read-cutover`, `.lsa/features/2026-07-16-yaml-ledger-read-cutover/requirements.md` F9, F12–F13; parent pitch `.lsa/pitches/yaml-ledger-selective-load.md`). The roadmap moved from `.lsa/roadmap.md` to `.lsa/roadmap.yaml`, queried on demand via repo-local scripts. Fast-path knowledge change → minor bump; no golden rule added, removed, weakened, or renumbered.
+
+### Changed
+
+- **`knowledge/fast-path-source-of-truth.md` §"Callers"** — the two roadmap callers (`manager:next`, `project-manager`) now cite `${specs_root}/roadmap.yaml` `items:` reached via `scripts/roadmap-row.sh`, replacing the `${specs_root}/roadmap.md` §`## Feature Backlog` whole-file source.
+- **`skills/output/SKILL.md`** — the two Rule-7 worked-example citations that pointed at the now-deleted `.lsa/roadmap.md:N` retargeted to `.lsa/roadmap.yaml` (keeps `scripts/check-citations.sh` green after the markdown ledger's removal).
+
+### Notes
+
+- **Measured context win lives in `manager` 0.18.0** — sequencing / get / hygiene drop from ~22,958 tok (whole-file `.lsa/roadmap.md`) to ~70–185 tok (script slices); see [`manager/CHANGELOG.md`](../manager/CHANGELOG.md) §`[0.18.0]` *Notes — measured context win*. This `core` bump is the fast-path + citation retarget that keeps callers pointing at the new ledger.
+
 ## [0.17.0] — 2026-07-15
 
 Always-on card — read-floor compression, packaging only (epic `pro-tier-token-affordability/always-on-card`, `.lsa/features/pro-tier-token-affordability/always-on-card/requirements.md` F1–F3, F7–F8; parent pitch WS1). No rule added, removed, weakened, or renumbered; canon stays the linked SKILL.md files.

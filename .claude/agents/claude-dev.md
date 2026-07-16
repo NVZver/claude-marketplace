@@ -45,7 +45,7 @@ claude-marketplace/
 ├── .lsa/                       # Constitution, specs, roadmap (flat layout)
 │   ├── VISION.md
 │   ├── main.spec.md
-│   ├── roadmap.md
+│   ├── roadmap.yaml
 │   ├── modules/, features/, pitches/, standards/, archive/
 ├── CLAUDE.md                   # Entry point
 ├── CONTRIBUTING.md

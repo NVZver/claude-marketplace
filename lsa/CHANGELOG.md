@@ -2,6 +2,32 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.26.0] — 2026-07-16
+
+YAML roadmap is the default for new projects; AI migration runbook added (closes the LSA product-docs / `init` gap deferred from epic `yaml-ledger-selective-load/read-cutover`). Behavior change to `init` → minor bump.
+
+### Added
+
+- **`knowledge/migration-instructions-ai.md`** — AI-actionable runbook: detect → migrate (`roadmap-migrate.sh`) → verify (schema + query scripts + lossless spot-check) → rewire consumers → cite-sweep → cleanup (delete `roadmap.md`) → final gates. Hard rules: single SoT, no happy-path whole-file Read, no silent cleanup on failed verify.
+
+### Changed
+
+- **`skills/init/SKILL.md`** — greenfield scaffolds **`roadmap.yaml`** (empty `version`/`items`/`shipped_history`) and **never** creates `roadmap.md`; if a markdown roadmap already exists, Step 3 points at the migration runbook instead of inventing a second SoT. Step 2 quotes the new ledger inline per `core/output` Rule 7 (prompt-review 3l).
+- **`knowledge/migration-instructions-ai.md`** — header marks procedure-as-knowledge (AI runbook, not an Actor) so separation-of-concerns reviews do not false-HIGH the ordered Steps.
+- **`ARCHITECTURE.md`, `README.md`, `CORE.md` §9, `tests/scenarios.md`** — live docs and the illustrative status-command fixture retargeted from `roadmap.md` to `roadmap.yaml`.
+
+## [0.25.1] — 2026-07-16
+
+Roadmap read-cutover cite-sweep (epic `yaml-ledger-selective-load/read-cutover`, `.lsa/features/2026-07-16-yaml-ledger-read-cutover/requirements.md` F12; parent pitch `.lsa/pitches/yaml-ledger-selective-load.md`). Citation-only — no routing behavior changed → patch bump.
+
+### Changed
+
+- **`knowledge/model-routing.md`** — the two inline-dispatch citations that pointed at the now-deleted `.lsa/roadmap.md:62` retargeted to name the `reduce-sub-agent-dispatch-fan-out-for-sonnet` item in `.lsa/roadmap.yaml`, keeping `scripts/check-citations.sh` green after the markdown ledger's removal.
+
+### Notes
+
+- **Measured context win lives in `manager` 0.18.0** — sequencing / get / hygiene drop from ~22,958 tok (whole-file `.lsa/roadmap.md`) to ~70–185 tok (script slices); see [`manager/CHANGELOG.md`](../manager/CHANGELOG.md) §`[0.18.0]` *Notes — measured context win*. This `lsa` patch is the cite-sweep that keeps model-routing green after the markdown ledger's removal.
+
 ## [0.25.0] — 2026-07-15
 
 Pro-tier token affordability (parent pitch `.lsa/pitches/pro-tier-token-affordability.md`, WS1–WS4). One entry for the whole feature — net delta vs 0.24.4.
