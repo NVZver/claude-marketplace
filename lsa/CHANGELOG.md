@@ -2,6 +2,19 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.26.0] — 2026-07-16
+
+YAML roadmap is the default for new projects; AI migration runbook added (closes the LSA product-docs / `init` gap deferred from epic `yaml-ledger-selective-load/read-cutover`). Behavior change to `init` → minor bump.
+
+### Added
+
+- **`knowledge/migration-instructions-ai.md`** — AI-actionable runbook: detect → migrate (`roadmap-migrate.sh`) → verify (schema + query scripts + lossless spot-check) → rewire consumers → cite-sweep → cleanup (delete `roadmap.md`) → final gates. Hard rules: single SoT, no happy-path whole-file Read, no silent cleanup on failed verify.
+
+### Changed
+
+- **`skills/init/SKILL.md`** — greenfield scaffolds **`roadmap.yaml`** (empty `version`/`items`/`shipped_history`) and **never** creates `roadmap.md`; if a markdown roadmap already exists, Step 3 points at the migration runbook instead of inventing a second SoT.
+- **`ARCHITECTURE.md`, `README.md`, `CORE.md` §9, `tests/scenarios.md`** — live docs and the illustrative status-command fixture retargeted from `roadmap.md` to `roadmap.yaml`.
+
 ## [0.25.1] — 2026-07-16
 
 Roadmap read-cutover cite-sweep (epic `yaml-ledger-selective-load/read-cutover`, `.lsa/features/2026-07-16-yaml-ledger-read-cutover/requirements.md` F12; parent pitch `.lsa/pitches/yaml-ledger-selective-load.md`). Citation-only — no routing behavior changed → patch bump.

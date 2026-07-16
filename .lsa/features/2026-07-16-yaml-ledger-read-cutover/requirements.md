@@ -47,7 +47,7 @@ Convert this repo's roadmap from a 92 KB markdown table (`.lsa/roadmap.md`, 378 
 
 ## Out of Scope
 
-- LSA plugin runtime (`init`/`discover`/`verify`) and its generic `${specs_root}/roadmap.md` product docs → deferred to the separate LSA-format-aware pitch.
+- LSA plugin runtime (`init`/`discover`/`verify`) ~~and its generic `${specs_root}/roadmap.md` product docs~~ → **partially closed in lsa 0.26.0** (`init` scaffolds `roadmap.yaml`; product docs retargeted; AI runbook at `lsa/knowledge/migration-instructions-ai.md`). Remaining: copy/ship query scripts into consumer installs if desired.
 - The serialized-merge **write** path → epic `yaml-ledger-selective-load/merge-write`.
 - The Mode 1 pitch-body ladder → epic `yaml-ledger-selective-load/pitch-ladder`.
 - Converting CHANGELOG / `plugin.json` / any non-roadmap ledger.

@@ -91,9 +91,9 @@ Every skill and agent is written as **Role · Goal · Inputs (each sourced `user
 Request (`user`): *"add a `/lsa:status` command that lists in-flight features."*
 
 - **orchestrator** — in: request → CoT: a feature; enter the loop at `discover` → out: run the loop.
-- **discover** — in: request + repo → CoT: `.lsa.yaml` → `roadmap.md` holds feature status; one read-only flow → out: intent + facts (`roadmap.md exists @ .lsa/roadmap.md`).
+- **discover** — in: request + repo → CoT: `.lsa.yaml` → `roadmap.yaml` holds feature status; one read-only flow → out: intent + facts (`roadmap.yaml exists @ .lsa/roadmap.yaml`).
 - **specify** — in: intent + facts → CoT: one flow; success = table printed; I/O = `∅ → stdout` → out: EARS F1 + `status.feature` (Given the roadmap has in-flight rows / When status runs / Then a table is printed).
-- **verify (before)** — in: spec + codebase → CoT: `roadmap.md` exists ✓; a command surface exists to extend ✓; flow buildable ✓ → out: **GROUNDED** + `grounding.md`.
+- **verify (before)** — in: spec + codebase → CoT: `roadmap.yaml` exists ✓; a command surface exists to extend ✓; flow buildable ✓ → out: **GROUNDED** + `grounding.md`.
 - **delegate** — in: spec + `status.feature` → CoT: hand to the dev's implementer → out: *(external)* a diff returns.
 - **reconcile (after)** — in: diff + `status.feature` → CoT: scenario 5/5 *(does)*; every hunk traces to F1 *(only)*; F1 covered *(all)* → out: **PASS** + `conformance.md`.
 

@@ -39,14 +39,14 @@ probe changes the fixture, its SETUP says so. All fixture paths/diffs below are
 **Spec** — `${specs_root}/features/2026-07-02-status-command/requirements.md`:
 
 - **F1** — When `/lsa:status` is invoked, the system shall print a table of
-  in-flight features read from `${specs_root}/roadmap.md`.
+  in-flight features read from `${specs_root}/roadmap.yaml`.
 - **F2** — When the roadmap has no in-flight rows, the system shall print
   `no in-flight features` instead of an empty table.
-- **F3** — When `${specs_root}/roadmap.md` is absent, the system shall exit
+- **F3** — When `${specs_root}/roadmap.yaml` is absent, the system shall exit
   with an actionable error naming the expected path.
 - **F4** — The table shall include the columns `feature | status | branch`.
 - **F5** — The command shall be read-only: it shall never write to
-  `${specs_root}/roadmap.md`. *(Non-scenario requirement — covered by a code
+  `${specs_root}/roadmap.yaml`. *(Non-scenario requirement — covered by a code
   check / covering test, not a Gherkin scenario.)*
 
 **Acceptance** — `status.feature`:
@@ -55,7 +55,7 @@ probe changes the fixture, its SETUP says so. All fixture paths/diffs below are
   `feature | status | branch` table is printed. *(covers F1, F4)*
 - **S-b** — Given the roadmap has no in-flight rows / When status runs / Then
   `no in-flight features` is printed. *(covers F2)*
-- **S-c** — Given `roadmap.md` is absent / When status runs / Then the command
+- **S-c** — Given `roadmap.yaml` is absent / When status runs / Then the command
   errors naming the expected path. *(covers F3)*
 
 **Gate** — the consumer repo's `.lsa.yaml` defines
@@ -67,7 +67,7 @@ probe changes the fixture, its SETUP says so. All fixture paths/diffs below are
    the empty-state line, errors on missing file; opens the roadmap read-only.
 2. `src/commands/index.ts` — registers the `status` command.
 3. `test/status.test.ts` (new) — unit tests incl. an assertion that no write
-   syscall touches `roadmap.md` (the F5 covering test).
+   syscall touches `roadmap.yaml` (the F5 covering test).
 
 ---
 
@@ -167,8 +167,8 @@ probe changes the fixture, its SETUP says so. All fixture paths/diffs below are
 ## R6 — stale spec: absorb reality, never revert  (SKILL.md Step 4; Level 2.5)
 
 - **SETUP:** The diff prints columns `feature | status | owner` — because the
-  consumer repo's real `roadmap.md` header (cited in the diff's test fixture
-  at `test/fixtures/roadmap.md:1`) has no `branch` column at all; `owner` is
+  consumer repo's real `roadmap.yaml` header (cited in the diff's test fixture
+  at `test/fixtures/roadmap.yaml:1`) has no `branch` column at all; `owner` is
   what actually exists. Spec F4 and scenario S-a still demand `branch` (the
   spec was written against an assumed format). Stated run results: S-b, S-c
   3/3 PASS; **S-a 0/3 FAIL** (expects `branch`, code prints `owner` — matching

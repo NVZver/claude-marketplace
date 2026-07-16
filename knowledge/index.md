@@ -6,13 +6,14 @@ Flat table of every knowledge file across the five marketplace plugins. Agents c
 
 Maintained manually. When a knowledge file is added, moved, or removed, update this index in the same commit. Per [`.lsa/pitches/readme-and-knowledge-base.md`](../.lsa/pitches/readme-and-knowledge-base.md) "Solution sketch".
 
-## Catalog — 19 knowledge files
+## Catalog — 20 knowledge files
 
 | Topic | Plugin | Path | One-sentence description |
 |---|---|---|---|
 | Fast-path source of truth | `core` | [`core/knowledge/fast-path-source-of-truth.md`](../core/knowledge/fast-path-source-of-truth.md) | The shared single-source-of-truth navigation fast-path contract — direct read + cited quote, exact-phrase detection, fall-through-on-failure — cited by `manager:next`. |
 | Output vocabulary | `core` | [`core/knowledge/output-vocabulary.md`](../core/knowledge/output-vocabulary.md) | The canonical marketplace verdict labels (PROPOSED, DRIFT, APPLIED, PASS, FAIL, etc.) cited by `core/output`. |
 | LSA conventions | `lsa` | [`lsa/knowledge/conventions.md`](../lsa/knowledge/conventions.md) | Cross-cutting conventions every LSA skill applies; referenced by section name rather than restated in each skill body. |
+| Migration instructions (AI) | `lsa` | [`lsa/knowledge/migration-instructions-ai.md`](../lsa/knowledge/migration-instructions-ai.md) | AI runbook to migrate `${specs_root}/roadmap.md` → `roadmap.yaml` (detect → migrate → verify → rewire → cleanup → gates); cited by `lsa:init`. |
 | Quality gate contract | `lsa` | [`lsa/knowledge/quality-gate-contract.md`](../lsa/knowledge/quality-gate-contract.md) | The required-vs-non-blocking check taxonomy and the independent-grader gate contract `lsa:reconcile` enforces. |
 | Model routing | `lsa` | [`lsa/knowledge/model-routing.md`](../lsa/knowledge/model-routing.md) | The `.lsa.yaml` `routing:` map schema, per-dispatch resolution algorithm (floored surfaces + absent-⇒-inherit), and the per-dispatch tier table — cited cross-plugin by `manager` and `prompt-engineer`. |
 | Autonomy policy | `manager` | [`manager/knowledge/autonomy-policy.md`](../manager/knowledge/autonomy-policy.md) | The `manual`/`semi`/`auto` autonomy-ladder definitions + per-level scope of unattended multi-PR churn; the single source for autonomy levels. |

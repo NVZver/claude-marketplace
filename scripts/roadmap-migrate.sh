@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 # scripts/roadmap-migrate.sh — one-shot lossless migrator: .lsa/roadmap.md → .lsa/roadmap.yaml.
 #
+# AI agents: follow the full runbook (verify + rewire + cleanup) at
+#   lsa/knowledge/migration-instructions-ai.md
+# Do not delete roadmap.md until that runbook's verification steps pass.
+#
 # Reads the former markdown roadmap and emits the YAML ledger (F1, F1b, F2):
 #   - every `## Feature Backlog` row  → one `items:` entry (slug/title/priority/
 #     status[/status_detail]/notes) — the full Notes cell preserved verbatim in a

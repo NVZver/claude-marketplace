@@ -40,12 +40,14 @@ Same script-first discipline on every LSA loop stage (Read protocol). The YAML r
 
 Plus: the orchestrator runs `discover → specify → verify` **inline** in one context so those stages reuse facts instead of reloading a fresh floor each time.
 
+**New projects** scaffold `.lsa/roadmap.yaml` via `/lsa:init` (never `roadmap.md`). **Existing markdown roadmaps:** follow the AI runbook [`lsa/knowledge/migration-instructions-ai.md`](./lsa/knowledge/migration-instructions-ai.md) (migrate → verify → rewire → cleanup).
+
 ## The five plugins
 
 | Plugin | Version | What it gives you |
 |---|---|---|
 | [`core`](./core/) | 0.18.0 | Always-on discipline: eight content rules, one hard output rule plus six pieces of output guidance, flow classification (Quick / Standard / Extended), the `/core:doctor` install self-check, and the Goal/Input/Steps/Output/Constraints shape every skill follows. |
-| [`lsa`](./lsa/) | 0.25.1 | **L**iving **S**pec **A**rchitecture — technology-agnostic spec layer: authors a grounded spec (EARS + Gherkin), verifies it against the codebase *before* you build and against the diff *after*, then delegates code-writing to any implementer. Not the coder; hand-edits are *absorbed* into the spec instead of forbidden. |
+| [`lsa`](./lsa/) | 0.26.0 | **L**iving **S**pec **A**rchitecture — technology-agnostic spec layer: authors a grounded spec (EARS + Gherkin), verifies it against the codebase *before* you build and against the diff *after*, then delegates code-writing to any implementer. Not the coder; hand-edits are *absorbed* into the spec instead of forbidden. New projects get a YAML roadmap ledger by default (`/lsa:init`); markdown → YAML migration: [`lsa/knowledge/migration-instructions-ai.md`](./lsa/knowledge/migration-instructions-ai.md). |
 | [`manager`](./manager/) | 0.18.0 | Pre-build shaping: turns a vague problem into a structured pitch (problem, appetite, solution sketch, rabbit holes, no-gos) before the build cycle begins. |
 | [`prompt-engineer`](./prompt-engineer/) | 0.8.3 | Plugin-quality discipline: scans your own actors and knowledge files for ground-rule, KISS/DRY, AI over-engineering, and context-budget violations. |
 | [`observer`](./observer/) | 0.3.2 | Live observe-and-coach + increment gate: `observe` rides Claude Code's self-paced `/loop` and coaches your file changes through a chosen role (rubber-duck, pair-programmer, interviewer, or custom); `verify-checkpoint` gates delegation increments — grades one finished requirement **does·only** and emits `CLEAR` or `BLOCK`. |

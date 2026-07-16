@@ -84,3 +84,5 @@ The manager plugin owns both the pre-build shaping phase (product-manager) and t
 
 - **Fast-path (Mode 0)** — a plain "what's next" returns the first `backlog` / `not_started` item of the `.lsa/roadmap.yaml` ledger quoted with a `file:line` citation in seconds, read on demand via `scripts/roadmap-row.sh` (zero model tokens, no whole-file read), without dispatching the agent (per [`../core/knowledge/fast-path-source-of-truth.md`](../core/knowledge/fast-path-source-of-truth.md)).
 - **Full flow** — when the question asks for ordering or selection reasoning, it dispatches the project-manager, which reads linked pitches and applies sequencing heuristics (dependency / risk / value), then runs the pick gate. Decomposing the chosen pitch into epics and the LSA handoff are `manager:decompose`'s job, not `manager:next`'s.
+
+Ledger format + schema: [`knowledge/sequencing-heuristics.md`](./knowledge/sequencing-heuristics.md) §"Roadmap ledger format". Migrating an old `roadmap.md`: [`../lsa/knowledge/migration-instructions-ai.md`](../lsa/knowledge/migration-instructions-ai.md).
