@@ -2,6 +2,8 @@
 
 > **Trace.** On load, print first: `=============== [lsa/knowledge/migration-instructions-ai.md] [lsa] ===============`
 
+**Procedure-as-knowledge (AI runbook) — not an Actor.** Lives under `knowledge/` so `lsa:init` and agents can load it on demand; the ordered Steps are the migration checklist, not a skill with Goal/Input/Output frontmatter. Separation-of-concerns: do not restate this procedure inside Actors — cite this file.
+
 **Audience:** an AI agent migrating a consumer project (or this marketplace) from `${specs_root}/roadmap.md` to `${specs_root}/roadmap.yaml`.  
 **Goal:** one source-of-truth YAML ledger; consumers query via scripts; markdown deleted; citations cleaned; gates green.  
 **Do not** keep dual SoT. **Do not** invent a parallel index. **Do not** whole-file-Read the ledger on the happy path after migration.

@@ -35,7 +35,7 @@ Stand up the LSA spec tree so the other skills can run.
    shipped_history: []
    ```
 
-   Observable result: `${specs_root}/roadmap.yaml` exists; `${specs_root}/roadmap.md` does not. (→ spec tree)
+   After writing, quote the new `roadmap.yaml` inline (and a one-line list of the other created paths) per [`../../../core/skills/output/SKILL.md`](../../../core/skills/output/SKILL.md) Rule 7 — never "spec tree created" without the quoted ledger. Observable result: `${specs_root}/roadmap.yaml` exists and is quoted; `${specs_root}/roadmap.md` does not. (→ spec tree)
 3. **Existing markdown roadmap:** if `${specs_root}/roadmap.md` exists and `${specs_root}/roadmap.yaml` does not (or both exist), **do not** invent a second SoT by hand — load and follow [`../../knowledge/migration-instructions-ai.md`](../../knowledge/migration-instructions-ai.md) (migrate → verify → rewire → cleanup). Observable result: migration report cited, or an explicit skip with reason. (→ migrated ledger or deferred)
 4. **Brownfield modules:** via `discover`, infer one `modules/<name>/spec.md` per logical module from `artifact_paths` (or `/src`); tag every inferred line `[ASSUMPTION]` (CORE §1); show, approve, write. (→ module specs)
 5. **Project map:** run the shipped builder — prefer `bash "${CLAUDE_PLUGIN_ROOT}/scripts/project-map-build.sh"` when `CLAUDE_PLUGIN_ROOT` points at the installed `lsa` plugin; otherwise `bash lsa/scripts/project-map-build.sh` from a marketplace checkout. Observable result: repo-root `project-map.yaml` exists (3-level directory tree). Skip only if the script cannot be found — note the gap; discover falls back to a tree-walk. (→ project-map.yaml)

@@ -12,7 +12,8 @@ YAML roadmap is the default for new projects; AI migration runbook added (closes
 
 ### Changed
 
-- **`skills/init/SKILL.md`** — greenfield scaffolds **`roadmap.yaml`** (empty `version`/`items`/`shipped_history`) and **never** creates `roadmap.md`; if a markdown roadmap already exists, Step 3 points at the migration runbook instead of inventing a second SoT.
+- **`skills/init/SKILL.md`** — greenfield scaffolds **`roadmap.yaml`** (empty `version`/`items`/`shipped_history`) and **never** creates `roadmap.md`; if a markdown roadmap already exists, Step 3 points at the migration runbook instead of inventing a second SoT. Step 2 quotes the new ledger inline per `core/output` Rule 7 (prompt-review 3l).
+- **`knowledge/migration-instructions-ai.md`** — header marks procedure-as-knowledge (AI runbook, not an Actor) so separation-of-concerns reviews do not false-HIGH the ordered Steps.
 - **`ARCHITECTURE.md`, `README.md`, `CORE.md` §9, `tests/scenarios.md`** — live docs and the illustrative status-command fixture retargeted from `roadmap.md` to `roadmap.yaml`.
 
 ## [0.25.1] — 2026-07-16
