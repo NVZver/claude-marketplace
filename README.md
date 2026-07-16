@@ -10,9 +10,13 @@ A Claude Code marketplace shipping five composable plugins for spec-first, fact-
 
 ## Scripts do the deterministic work
 
-Most agent systems dump whole files into the model and hope it finds the needle. This marketplace does the opposite: **deterministic work is delegated to scripts; the AI works only on what is relevant and already pre-processed** — the slice a question needs, not the ledger it came from.
+Most agent systems dump whole files into the model and hope it finds the needle. This marketplace does the opposite: **deterministic work is delegated to scripts; the AI works only on what is relevant and already pre-processed** — the slice a question needs, not the full artifact.
 
-Same roadmap work, context loaded (tokens = bytes÷4). Before = whole-file read of the ~92 KB markdown ledger; after = script stdout only:
+Tokens = bytes÷4. Full proof + methodology: [`.lsa/observations/2026-07-16-yaml-ledger-selective-load-impact.md`](./.lsa/observations/2026-07-16-yaml-ledger-selective-load-impact.md).
+
+### Manager — selective roadmap load
+
+Same roadmap questions: before = whole-file read of the ~92 KB markdown ledger (~22,958 tok); after = script stdout only (`roadmap-row.sh` / `roadmap-query.sh`):
 
 | Situation | Before | After | Saves |
 |---|---:|---:|---:|
@@ -21,7 +25,20 @@ Same roadmap work, context loaded (tokens = bytes÷4). Before = whole-file read 
 | Get one item's status | ~22,958 tok | ~70 tok | **~22,890 tok (~99% / ~328×)** |
 | Roadmap hygiene scan | ~22,958 tok | ~185 tok | **~22,770 tok (~99% / ~124×)** |
 
-\*Mode 0 was already a one-row script slice — the win is extending that pattern to the operations that previously paid the full ledger. Full methodology: [`manager/CHANGELOG.md`](./manager/CHANGELOG.md) §`[0.18.0]` *Notes — measured context win*.
+\*Mode 0 was already a one-row script slice — the win is extending that pattern to the operations that previously paid the full ledger.
+
+### LSA — selective constitution + scoping
+
+Same script-first discipline on every LSA loop stage (Read protocol). The YAML roadmap cutover does **not** change LSA loop load (LSA never ambient-read the ledger); these are the measured LSA floor wins the approach already delivers:
+
+| Situation | Before | After | Saves |
+|---|---:|---:|---:|
+| Constitution on every LSA stage | ~8,197 tok (full `VISION.md`) | ~423 tok (`VISION-digest.md`) | **~7,774 tok (~95% / ~19×)** |
+| Discovery scoping atlas | ad-hoc tree walk | ~548 tok dirs-only `project-map.yaml` | bounded ≤1k tok |
+| Mandatory LSA read floor | — | ~1,998 tok (`.lsa.yaml` + digest + map) | **~92% less** than one whole-file roadmap read (~25,588 tok) |
+| Quality-gate block | model-orchestrated per check | `gate.sh` one-pass (bash) | zero model tokens on the check loop |
+
+Plus: the orchestrator runs `discover → specify → verify` **inline** in one context so those stages reuse facts instead of reloading a fresh floor each time.
 
 ## The five plugins
 
