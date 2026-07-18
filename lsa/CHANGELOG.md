@@ -2,6 +2,19 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.27.0] — 2026-07-19
+
+`reconcile`'s coverage-table enumeration is now scripted (first instance of `.lsa/VISION.md` §2 principle 10 applied to the N×-repeated reconcile surface). Behavior change to `reconcile` Step 4 → minor bump. The enumeration script + its test are repo-level (outside every `artifact_paths`) and drive no bump on their own — only the `reconcile/SKILL.md` edit does.
+
+### Changed
+
+- **`skills/reconcile/SKILL.md`** — Step 4 now begins by running `bash scripts/coverage-skeleton.sh <feature-dir>` to obtain the deterministic skeleton (every requirement ID as a table row, every changed file as a candidate hunk, spec files under `<feature-dir>` excluded); the grader fills only the semantic mapping column and reads off orphans / uncovered, citing principle 10 (enumeration is scripted; the does·only·all judgment stays the model's). No existing reconcile check weakened — the coverage-table shape, the `does`/`only`/`all` questions, and the independence rules are unchanged.
+- **`README.md`** — the `reconcile` skill row names `scripts/coverage-skeleton.sh` as the enumeration source for Step 4's two axes.
+
+### Notes
+
+- **Repo-level, unshipped** — `scripts/coverage-skeleton.sh` and `scripts/tests/coverage-skeleton-test.sh` live outside every plugin's `artifact_paths` (like the other `scripts/` gate helpers) and ship in no plugin; they trigger no version bump or CHANGELOG entry of their own. Spec: `.lsa/features/2026-07-19-deterministic-work-scripted-coverage-skeleton/requirements.md` (R1–R10).
+
 ## [0.26.0] — 2026-07-16
 
 YAML roadmap is the default for new projects; AI migration runbook added (closes the LSA product-docs / `init` gap deferred from epic `yaml-ledger-selective-load/read-cutover`). Behavior change to `init` → minor bump.
