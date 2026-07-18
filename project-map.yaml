@@ -32,6 +32,7 @@ tree:  # directories only (depth ≤ 3)
       2026-07-01-reuse-first:
       2026-07-02-paired-verify-lsa-delegate-wiring:
       2026-07-16-yaml-ledger-read-cutover:
+      2026-07-17-deterministic-work-scripted-codify:
       observer:
       pro-tier-token-affordability:
     modules:
