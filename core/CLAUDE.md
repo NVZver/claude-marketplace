@@ -31,6 +31,10 @@ Before any non-trivial task, classify the work, state the reasoning, and wait fo
 
 On any coding task, walk the skill's 7-rung reuse ladder before writing code and stop at the first rung that holds — reuse over rewrite, shortest working diff.
 
+## Deterministic work is scripted — [`.lsa/VISION.md`](../.lsa/VISION.md) §2 principle 10
+
+Any deterministic step of meaningful complexity — enumeration, set-difference, lookup, tally, format transform — is done by a script whose output you cite, not recomputed at inference time; a trivial one-item check need not be scripted (ceremony scales to weight).
+
 ## Loading discipline
 
 - **Cite without loading.** Citing a rule by name or markdown link never requires loading the linked file — load only the file the current step acts on.

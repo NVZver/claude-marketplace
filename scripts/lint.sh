@@ -452,6 +452,28 @@ else
   fi
 fi
 
+# ---------------------------------------------------------------------------
+# C15 — the "deterministic work is scripted" principle must stay present on
+# both surfaces. Vision v0.13 added §2 principle 10 and a one-line pointer on
+# the core always-on card (core 0.19.0); this guards against either being
+# silently dropped in a future edit (a doctrine regression). Presence check
+# only — detecting whether a *new* skill reintroduced inline determinism is a
+# judgment, not a grep, and stays with reconcile / human review.
+# ---------------------------------------------------------------------------
+DW_MARKER='Deterministic work is scripted'
+DW_VISION=".lsa/VISION.md"
+DW_CARD="core/CLAUDE.md"
+if grep -qiF "${DW_MARKER}" "${DW_VISION}" 2>/dev/null; then
+  pass_line "C15 deterministic-work-is-scripted principle present in ${DW_VISION}"
+else
+  fail_line "C15 deterministic-work-is-scripted principle missing from ${DW_VISION} (§2 principle 10 dropped)"
+fi
+if grep -qiF "${DW_MARKER}" "${DW_CARD}" 2>/dev/null; then
+  pass_line "C15 deterministic-work-is-scripted pointer present in ${DW_CARD}"
+else
+  fail_line "C15 deterministic-work-is-scripted pointer missing from ${DW_CARD} (always-on card no longer references principle 10)"
+fi
+
 echo
 if [[ "${fail}" -eq 0 ]]; then
   echo "All invariants hold."
