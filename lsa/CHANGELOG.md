@@ -2,6 +2,20 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.28.0] — 2026-07-19
+
+`verify`'s Step 1 reference resolution is now scripted (second instance of `.lsa/VISION.md` §2 principle 10, after `reconcile`'s coverage skeleton). Behavior change to `verify` Step 1 → minor bump. The resolver script + its test are repo-level (outside every `artifact_paths`) and drive no bump on their own — only the `verify/SKILL.md` edit does.
+
+### Changed
+
+- **`skills/verify/SKILL.md`** — Step 1 now instructs the model to identify the named modules / functions / types (its judgment) and pass them to `bash scripts/resolve-refs.sh`, citing the per-symbol resolution (`exists @ file:line` | `new` | `MISSING` | `OUT-OF-RANGE`) as the reference map instead of multi-round `Grep`; the GROUNDED / NOT-GROUNDED verdict stays the model's, per principle 10. No existing verify check weakened — Step 2 (feasibility), Step 3 (`[ASSUMPTION]` visibility), and Step 4 (the `gate:` block) are unchanged.
+- **`README.md`** — the `verify` skill row names `scripts/resolve-refs.sh` as Step 1's per-symbol resolver.
+
+### Notes
+
+- **Repo-level, unshipped** — `scripts/resolve-refs.sh` and `scripts/tests/resolve-refs-test.sh` live outside every plugin's `artifact_paths` (like the other `scripts/` gate helpers) and ship in no plugin; they trigger no version bump or CHANGELOG entry of their own. Spec: `.lsa/features/2026-07-19-deterministic-work-scripted-resolve-refs/requirements.md` (R1–R10).
+- **Input contract — arguments take precedence.** `resolve-refs.sh` reads stdin **only** when no arguments are given (conventional `grep`/`cat` precedence); with args present it never touches stdin. This is what makes it safe for its primary consumer: `lsa:verify` calls it from an agent harness, where stdin is an open pipe that never sends EOF, so a mixed args-plus-stdin read would block forever. A regression case in the test suite runs an arg-only invocation against a never-EOF FIFO and fails if it hangs.
+
 ## [0.27.0] — 2026-07-19
 
 `reconcile`'s coverage-table enumeration is now scripted (first instance of `.lsa/VISION.md` §2 principle 10 applied to the N×-repeated reconcile surface). Behavior change to `reconcile` Step 4 → minor bump. The enumeration script + its test are repo-level (outside every `artifact_paths`) and drive no bump on their own — only the `reconcile/SKILL.md` edit does.
