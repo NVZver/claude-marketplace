@@ -34,6 +34,7 @@ tree:  # directories only (depth ≤ 3)
       2026-07-16-yaml-ledger-read-cutover:
       2026-07-17-deterministic-work-scripted-codify:
       2026-07-19-deterministic-work-scripted-coverage-skeleton:
+      2026-07-19-deterministic-work-scripted-hygiene-classes:
       2026-07-19-deterministic-work-scripted-resolve-refs:
       observer:
       pro-tier-token-affordability:
