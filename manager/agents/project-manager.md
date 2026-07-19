@@ -46,13 +46,15 @@ Recommend the next backlog item to build, decompose the chosen pitch into indepe
 
 ### Mode 1b: Tidy (runs during Mode 1)
 
-6. **Scan for roadmap hygiene issues.** Start from `bash scripts/roadmap-query.sh hygiene` — it emits deterministic status/pitch mismatch hints (missing-pitch, backlog-with-branch, stale-in_progress) from the ledger + git, zero model tokens, no whole-file read. Then apply judgment over those hints and the pitches read in Steps 1-3, flagging items whose observable state contradicts their roadmap status:
-   - Backlog items with no linked pitch file.
-   - Items with status `backlog` but an active `feature/*` branch exists (should be `in progress`).
-   - Items with an active branch that is merged to main but status is not `shipped`.
-   - Items with no branch, no spec artifacts, and no recent activity (flag for user to classify as deferred or active).
+6. **Scan for roadmap hygiene issues.** Start from `bash scripts/roadmap-query.sh hygiene` — it emits **all five** deterministic hint classes from the ledger + git, zero model tokens, no whole-file read. All four conditions below are script-derived; none is a model-side scan:
+   - (1) Backlog items with no linked pitch file — script class 1 (missing-pitch).
+   - (2) Items with status `backlog` but an active `feature/<slug>` branch exists (should be `in_progress`) — script class 2 (backlog-but-branch); the inverse, `in_progress` with no branch, is script class 3 (stale-in-progress).
+   - (3) Items whose `feature/<slug>` branch is merged into the default branch but status is not `shipped` — script class 4 (merged-not-shipped).
+   - (4) Items with no branch, no `${specs_root}/features/*<slug>*` dir and no `${specs_root}/pitches/<slug>.md` — script class 5 (no-artifacts), flagged for the user to classify as deferred or active.
 
-   Observable result: list of hygiene findings, or confirmation that the roadmap is clean.
+   **Recency boundary.** Class 5 is an artifact-**existence** proxy, not a recency check. True staleness ("no recent activity") is out of scope: the roadmap item schema carries no date/updated field, so time-based staleness is not deterministically derivable. Never report a class-5 hint as "this item went stale" — it means "nothing was ever created for this slug". The deferred-vs-active call stays the human's.
+
+   Then apply judgment over the script's hints and the pitches read in Steps 1-3 — the hints are input, not verdicts: confirm each against what you read, drop the ones the pitch context explains away, and flag anything the script cannot see. Observable result: list of hygiene findings, or confirmation that the roadmap is clean.
 
 7. **Propose hygiene updates.** For each finding, return a proposed row diff in the payload -- previous row + proposed row, each quoted with `file:line`. Apply nothing without decisions. When the dispatcher sends back approvals (continuation), apply only the approved rows; after applying, quote the written row in the payload per the **Show changes inline** constraint below — the payload is invisible to the user, so the dispatcher re-renders these quotes ([`core/output`](../../core/skills/output/SKILL.md) Rule 7 *Delivery test*). Observable result: proposed row diffs returned; on continuation, approved changes written to `${specs_root}/roadmap.yaml` with the new row quoted in the payload for the dispatcher to re-render; rejected changes discarded.
 

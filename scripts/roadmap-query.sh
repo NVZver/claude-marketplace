@@ -11,6 +11,22 @@
 #   get <slug>                             the one record verbatim, or exit 1 if absent
 #   hygiene                                deterministic status/pitch mismatch hints
 #
+# hygiene emits five deterministic hint classes:
+#   (1) missing-pitch       actionable item with no pitch/detail/archive reference
+#   (2) backlog-but-branch  actionable item that already has a feature/<slug> branch
+#   (3) stale-in-progress   in_progress with no matching feature/<slug> branch
+#   (4) merged-not-shipped  feature/<slug> merged into the default branch, status != shipped
+#   (5) no-artifacts        actionable item with NO branch, NO features/*<slug>* dir,
+#                           and NO pitches/<slug>.md
+#
+# SCOPE NOTE — class 5 is NOT a recency check. True staleness ("no recent
+# activity") is OUT OF SCOPE: the roadmap item schema carries no date/updated
+# field (items are slug · title · priority · status · status_detail · notes), so
+# time-based staleness is not deterministically derivable here. Class 5 is an
+# artifact-EXISTENCE proxy only — it says "nothing was ever created for this
+# slug", never "this slug went quiet". The deferred-vs-active call stays the
+# human's; every class is a hint, never an auto-fix.
+#
 # Fallback contract (F8): any non-zero exit ⇒ the calling consumer falls through to
 # a whole-file read of the ledger. Exit 1 = no ledger / bad args / get-miss.
 #
@@ -125,8 +141,44 @@ case "${sub}" in
   hygiene)
     # feature/* branch names carry no spaces → pass them space-joined for awk split.
     branches="$(git branch --format='%(refname:short)' 2>/dev/null | grep '^feature/' | tr '\n' ' ' || true)"
-    items_tsv | awk -F'\t' -v roadmap="${ROADMAP}" -v branches="${branches}" '
-      BEGIN{ nb=split(branches,B," ") }
+
+    # Default branch for the merged-into test: origin/HEAD when the remote head is
+    # known, else "main". Prefer the local ref; fall back to origin/<default> when
+    # only the remote-tracking ref exists.
+    default_branch="$(git symbolic-ref --quiet --short refs/remotes/origin/HEAD 2>/dev/null || true)"
+    default_branch="${default_branch#origin/}"
+    [[ -n "${default_branch}" ]] || default_branch="main"
+    merge_base_ref="${default_branch}"
+    if ! git rev-parse --verify --quiet "${merge_base_ref}" >/dev/null 2>&1; then
+      if git rev-parse --verify --quiet "origin/${default_branch}" >/dev/null 2>&1; then
+        merge_base_ref="origin/${default_branch}"
+      fi
+    fi
+    merged="$(git branch --merged "${merge_base_ref}" --format='%(refname:short)' 2>/dev/null | grep '^feature/' | tr '\n' ' ' || true)"
+
+    # Spec-artifact inventories for class 5 (basenames, space-joined like branches).
+    featdirs=""
+    if [[ -d "${specs_root%/}/features" ]]; then
+      for d in "${specs_root%/}/features"/*/; do
+        [[ -d "${d}" ]] || continue
+        b="${d%/}"; b="${b##*/}"
+        featdirs="${featdirs}${b} "
+      done
+    fi
+    pitchfiles=""
+    if [[ -d "${specs_root%/}/pitches" ]]; then
+      for f in "${specs_root%/}/pitches"/*.md; do
+        [[ -f "${f}" ]] || continue
+        pitchfiles="${pitchfiles}${f##*/} "
+      done
+    fi
+
+    items_tsv | awk -F'\t' -v roadmap="${ROADMAP}" -v branches="${branches}" \
+                      -v merged="${merged}" -v defbranch="${default_branch}" \
+                      -v featdirs="${featdirs}" -v pitchfiles="${pitchfiles}" \
+                      -v sroot="${specs_root%/}/" '
+      BEGIN{ nb=split(branches,B," "); nm=split(merged,M," ")
+             nfd=split(featdirs,FD," "); np=split(pitchfiles,P," ") }
       {
         slug=$1; line=$2; status=$4; notes=$7
         has_branch=0
@@ -145,6 +197,28 @@ case "${sub}" in
         if(status=="in_progress" && !has_branch){
           printf "%s:%d — %s — HINT: status in_progress but no feature/%s branch\n", roadmap, line, slug, slug
           hits++
+        }
+        # (4) merged-not-shipped: feature/<slug> is merged into the default branch
+        #     yet the item is not marked shipped.
+        merged_branch=""
+        for(i=1;i<=nm;i++){ if(M[i]=="feature/" slug) merged_branch=M[i] }
+        if(merged_branch!="" && status!="shipped"){
+          printf "%s:%d — %s — HINT: branch %s is merged into %s but status is %s (→ shipped?)\n", \
+                 roadmap, line, slug, merged_branch, defbranch, status
+          hits++
+        }
+        # (5) no-artifacts: an actionable item with no branch, no features/*<slug>*
+        #     dir and no pitches/<slug>.md. Artifact-EXISTENCE proxy, NOT recency —
+        #     the item schema has no date field (see the SCOPE NOTE in the header).
+        if(status=="backlog"||status=="not_started"||status=="in_progress"){
+          has_artifact=has_branch
+          for(i=1;i<=nfd;i++){ if(!has_artifact && index(FD[i], slug)>0) has_artifact=1 }
+          for(i=1;i<=np;i++){ if(!has_artifact && P[i]==slug ".md") has_artifact=1 }
+          if(!has_artifact){
+            printf "%s:%d — %s — HINT: no feature/%s branch, no %sfeatures/*%s* dir, no %spitches/%s.md — classify as deferred or active (artifact-existence proxy, not a recency check)\n", \
+                   roadmap, line, slug, slug, sroot, slug, sroot, slug
+            hits++
+          }
         }
       }
       END{ if(hits==0) print "roadmap-query hygiene: no deterministic mismatches found" }

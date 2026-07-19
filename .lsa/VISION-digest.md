@@ -1,6 +1,6 @@
 > **Trace.** On load, print first: `=============== [.lsa/VISION-digest.md] [vision] ===============`
 <!-- GENERATED — DO NOT EDIT. Structural digest of .lsa/VISION.md built by scripts/build-vision-digest.sh; regenerate with: bash scripts/build-vision-digest.sh -->
-<!-- source-sha256: 25ee7582c54e84791e40c369a9f57983ce3107eb392ec65da7a90a7530cc4471 -->
+<!-- source-sha256: 3a770004852ddaf10e1097ad1961543978c761a5f3a62a6cd2d98a6088836380 -->
 
 ## Section map (`#`/`##` headings, verbatim)
 - # The Vision
@@ -30,3 +30,4 @@
 7. **The human owns intent; the system absorbs reality.**
 8. **The system improves itself.**
 9. **Substrate-native first.**
+10. **Deterministic work is scripted.**

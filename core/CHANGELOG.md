@@ -2,6 +2,18 @@
 
 All notable changes to the `core` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.19.0] — 2026-07-19
+
+Always-on card gains a pointer to the new constitutional principle 10, *"Deterministic work is scripted"* (`.lsa/VISION.md` §2, Vision v0.13; epic `deterministic-work-scripted-codify`, `.lsa/features/2026-07-17-deterministic-work-scripted-codify/requirements.md` R1–R9). Packaging only — the card cites the principle by link and restates no rule text it does not own; canon stays `.lsa/VISION.md`. New always-on discipline pointer on the card → minor bump; no golden rule added, removed, weakened, or renumbered.
+
+### Added
+
+- **`CLAUDE.md` — one-line pointer to `.lsa/VISION.md` §2 principle 10** (*"Deterministic work is scripted"*): any deterministic step of meaningful complexity — enumeration, set-difference, lookup, tally, format transform — is done by a script whose output the model cites, not recomputed at inference time; a trivial one-item check need not be scripted (ceremony scales to weight). Loads every session alongside the other disciplines.
+
+### Notes
+
+- **Guarded by `scripts/lint.sh` C15** — a C6-shaped presence guard that FAILs if the principle-10 marker is dropped from `.lsa/VISION.md` or the card. `scripts/lint.sh` and `.lsa/VISION.md` are repo-level (outside every plugin's `artifact_paths`) and trigger no plugin bump on their own; only the `core/CLAUDE.md` card edit drives this bump.
+
 ## [0.18.0] — 2026-07-16
 
 Roadmap read-cutover — fast-path callers table retargeted to the YAML ledger (epic `yaml-ledger-selective-load/read-cutover`, `.lsa/features/2026-07-16-yaml-ledger-read-cutover/requirements.md` F9, F12–F13; parent pitch `.lsa/pitches/yaml-ledger-selective-load.md`). The roadmap moved from `.lsa/roadmap.md` to `.lsa/roadmap.yaml`, queried on demand via repo-local scripts. Fast-path knowledge change → minor bump; no golden rule added, removed, weakened, or renumbered.
