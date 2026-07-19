@@ -2,6 +2,24 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.30.0] — 2026-07-20
+
+`reconcile` now writes the ledger it was always supposed to. Per pitch `restore-tracked-metrics-harvest` (epic 2 of 2, `reconcile-emit-guard`): `lsa` 0.16.0 silently dropped the `.lsa/metrics.md` writer as refactor collateral and nothing caught it — this restores the emit step and adds a repo-level anti-regression guard (`scripts/lint.sh` C17) so it cannot be dropped again unnoticed. New `reconcile` behavior + a tightened output contract → minor bump.
+
+### Added
+
+- **`skills/reconcile/SKILL.md` §Steps** — step 5, a metrics emit step: on a `reconcile: PASS` verdict only, runs `bash scripts/metrics-harvest.sh <feature-dir>/conformance.md` and appends one row to `.lsa/metrics.md` using its existing six-column schema. Descriptive only — never changes the PASS/FAIL verdict, gate threshold, or `reconcile.runs` semantics; a harvest failure or `UNPARSEABLE` metric is recorded in the row's `notes` column, never silently dropped and never turned into a FAIL. No row is appended on FAIL.
+
+### Changed
+
+- **`skills/reconcile/SKILL.md` §Output + §Steps step 4** — the orphan-hunk line is now specified as **canonical and machine-readable**: exactly one line, at column 0, either `Orphan hunks: none.` or `Orphan hunks: <integer>` (optionally followed by prose on subsequent lines). A prose heading no longer satisfies the contract. The synthetic coverage-table example is unchanged (it already used the canonical zero-orphan form).
+- **`.lsa/metrics.md`** — writer line corrected from `lsa:verify` to `lsa:reconcile` + `scripts/metrics-harvest.sh`; the `Facts` column renamed **`Citation resolve-rate`** with its proxy limitation stated inline (it proves a citation resolves, not that the quote is intact); the two 2026-05-21 rows kept and marked pre-contract. The "Pass/fail counts only" note is unchanged.
+
+### Notes
+
+- **Repo-level guard, unshipped** — `scripts/lint.sh` C17 and `scripts/tests/metrics-emit-guard-test.sh` live outside every plugin's `artifact_paths` and ship in no plugin; they trigger no version bump or CHANGELOG entry of their own. C17 is a falsification-tested presence guard (style precedent: C6, C15) — `metrics-emit-guard-test.sh` proves deleting the emit step actually turns `scripts/lint.sh` red, not merely that the check exists.
+- Spec: `.lsa/features/restore-tracked-metrics-harvest/reconcile-emit-guard/requirements.md` (R1–R11).
+
 ## [0.29.0] — 2026-07-20
 
 Names `reconcile`'s `conformance.md` coverage table as a requirements traceability matrix (RTM) — a positioning-only change, no skill behavior differs. Per pitch `name-conformance-as-rtm` (Fork 1-3): the artifact already functions as an RTM (IEEE 830-1998 / ISO-IEC-IEEE 29148 traceability lineage, `[unverified]` at clause level — cited by name/number/year only); the repo had never said so. Claims the practice, explicitly not conformance to either standard. User-visible README delta → minor bump.
