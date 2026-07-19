@@ -577,7 +577,9 @@ items:
     title: |
       Restore the three tracked metrics — harvested from artifacts
     priority: Must
-    status: backlog
+    status: in_progress
+    status_detail: |
+      epic 1 (harvest-script) shipped — PR #78, merged into chore/project-quality-improvements, repo-internal (no plugin bump). epic 2 (reconcile-emit-guard) not started.
     notes: |
       Approved 2026-07-19. `.lsa/VISION.md` §7 decision 5 marks metric-tracking RESOLVED while `.lsa/metrics.md` holds 2 rows from 2026-05-21 — the writer was dropped as collateral in lsa 0.16.0 and 23 `conformance.md` files have accumulated with the scope-creep signal computed and discarded. Derived from existing artifacts, no session telemetry. Epics: `restore-tracked-metrics-harvest/{harvest-script, reconcile-emit-guard}`. Pitch: [restore-tracked-metrics-harvest](pitches/restore-tracked-metrics-harvest.md).
   - slug: name-conformance-as-rtm
