@@ -2,7 +2,7 @@
 
 > **Trace.** On load, print first: `=============== [core/CLAUDE.md] [core] ===============`
 
-**Opt-in fragment** — merge into your project's `CLAUDE.md` when you install `core`. This card IS the always-on discipline: apply it directly, without loading the linked SKILL.md files (re-grounded-summary licence: `core/skills/output/SKILL.md:8`). Packaging only — the linked skills stay canon; no rule is added, removed, weakened, or renumbered here.
+**Opt-in fragment** — merge into your project's `CLAUDE.md` (Claude Code) or `AGENTS.md` (any other agent tool) when you install `core`. This card IS the always-on discipline: apply it directly, without loading the linked SKILL.md files (re-grounded-summary licence: `core/skills/output/SKILL.md:8`). Packaging only — the linked skills stay canon; no rule is added, removed, weakened, or renumbered here.
 
 ## Ground rules — [`core/ground-rules`](./skills/ground-rules/SKILL.md)
 

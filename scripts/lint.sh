@@ -474,6 +474,28 @@ else
   fail_line "C15 deterministic-work-is-scripted pointer missing from ${DW_CARD} (always-on card no longer references principle 10)"
 fi
 
+# ---------------------------------------------------------------------------
+# C16 — the always-on discipline text must live in exactly one file. AGENTS.md
+# (0.21.0) is canonical; CLAUDE.md holds an @AGENTS.md import, never a copy.
+# This anti-duplication gate is the mitigation named in the
+# standards-conformance-agents-md pitch's rabbit hole 1: "if the chosen wiring
+# cannot be gated by a script, it is the wrong wiring." Excludes .lsa/** (spec/
+# pitch prose quotes the marker by design), this script (defines the marker),
+# and CHANGELOG.md files (frozen history).
+# ---------------------------------------------------------------------------
+DISCIPLINE_MARKER='The always-on card lives at'
+DISCIPLINE_HOME='AGENTS.md'
+c16_hits="$(git grep -lIF --untracked "${DISCIPLINE_MARKER}" -- ':(exclude).lsa/**' ':(exclude)scripts/lint.sh' ':(exclude)**/CHANGELOG.md' 2>/dev/null | sort)"
+c16_count="$(printf '%s' "${c16_hits}" | grep -c . || true)"
+if [[ "${c16_count}" -eq 1 && "${c16_hits}" == "${DISCIPLINE_HOME}" ]]; then
+  pass_line "C16 discipline text present in exactly one file (${DISCIPLINE_HOME})"
+elif [[ "${c16_count}" -eq 0 ]]; then
+  fail_line "C16 discipline marker missing from ${DISCIPLINE_HOME}"
+else
+  fail_line "C16 discipline text duplicated — found in:"
+  printf '%s\n' "${c16_hits}" | sed 's/^/        /'
+fi
+
 echo
 if [[ "${fail}" -eq 0 ]]; then
   echo "All invariants hold."
