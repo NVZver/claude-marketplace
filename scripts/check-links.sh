@@ -13,6 +13,14 @@
 #     (living-spec drafts, per-feature specs, research, observations, dated
 #     designs) plus tests/ docs (illustrative fixtures — lint.sh exempts them).
 #     The gate guards the maintained plugin surface + top-level docs.
+#   - INCLUDED by name: .lsa/roadmap.yaml. It sits inside the excluded .lsa/
+#     tree but is not a point-in-time record — it is the live ledger, and its
+#     `Pitch: [slug](pitches/<slug>.md)` links are load-bearing navigation. It
+#     is also the only tracked non-*.md file carrying markdown links, so the
+#     `git ls-files '*.md'` glob alone never reached it: a dangling pitch link
+#     sat unnoticed here until found by hand on 2026-07-19. Added by name
+#     rather than by widening the .lsa/ filter, which would pull in ~157
+#     frozen spec/archive files the exemption above exists to exclude.
 #   - Fenced code blocks (```…```) and lines carrying an [illustrative] /
 #     [unverified] marker are skipped: links there are examples.
 #   - OUT OF SCOPE (skipped, not checked):
@@ -85,7 +93,13 @@ while IFS= read -r md; do
                                         { print }
     ' "${md}" | grep -noE "${LINK_RE}" 2>/dev/null || true
   )
-done < <(git ls-files '*.md' | grep -vE '(^|/)CHANGELOG\.md$' | grep -vE '^\.lsa/' | grep -vE '(^|/)tests/')
+done < <(
+  {
+    git ls-files '*.md' | grep -vE '(^|/)CHANGELOG\.md$' | grep -vE '^\.lsa/' | grep -vE '(^|/)tests/'
+    # The live roadmap ledger — see "INCLUDED by name" in the header.
+    git ls-files '.lsa/roadmap.yaml'
+  }
+)
 
 echo
 if [[ "${violations}" -eq 0 ]]; then
