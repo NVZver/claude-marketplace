@@ -36,6 +36,7 @@ tree:  # directories only (depth ≤ 3)
       2026-07-19-deterministic-work-scripted-coverage-skeleton:
       2026-07-19-deterministic-work-scripted-hygiene-classes:
       2026-07-19-deterministic-work-scripted-resolve-refs:
+      marketplace-ai-engineering-audit:
       observer:
       pro-tier-token-affordability:
     modules:
