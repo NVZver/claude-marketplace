@@ -2,6 +2,20 @@
 
 All notable changes to the `core` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.21.0] — 2026-07-20
+
+Adopts `/AGENTS.md` as this repo's canonical always-on instruction file, closing the `standards-conformance-agents-md/agents-md-canonical` epic. Install-instruction change only; no rule added, removed, or renumbered on the `core/CLAUDE.md` card itself.
+
+### Added
+
+- **`/AGENTS.md`** (new, repo root) — the vendor-neutral standard (https://agents.md/) now holds this repo's full always-on discipline verbatim. Read natively by Cursor, Copilot, Codex, Devin, Zed, Junie, Aider, goose and other listed AGENTS.md consumers.
+- **`scripts/lint.sh` C16** — anti-duplication gate: fails the build if the always-on discipline marker (`"The always-on card lives at"`) appears in any file other than exactly `AGENTS.md`. Proven by falsification (a scratch second copy makes it fail, deleting it makes it pass again).
+
+### Changed
+
+- **`/CLAUDE.md`** — reduced to an `@AGENTS.md` import plus the Claude-Code-specific install block and `/core:doctor` pointer (≤20 lines). Necessary because Claude Code does not read `AGENTS.md` natively (`anthropics/claude-code#6235`, open as of 2026-07-19), so both files coexist.
+- **`core/CLAUDE.md`**, **`core/README.md`** — the merge-instruction prose now names a tool-conditional destination: `CLAUDE.md` for Claude Code, `AGENTS.md` for every other agent tool. `core/CLAUDE.md` keeps its exact path (pinned by `.lsa.yaml` `core.artifact_paths` and lint C15) and all rule content, unchanged.
+
 ## [0.20.0] — 2026-07-19
 
 Closes two audit findings against the output discipline: a hard-rule collision that made one Actor contract unsatisfiable, and a card gap that forced a 15 KB load to comply with the marketplace's most-cited guidance rule. Both are card + canonical-skill edits; no rule added, removed, or renumbered.
