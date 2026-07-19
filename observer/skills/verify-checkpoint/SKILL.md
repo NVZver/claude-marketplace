@@ -75,12 +75,10 @@ Per cycle: either nothing (no signal, F4) or one gate verdict for the signalled 
 
 [illustrative]
 
+**Silent cycles emit nothing and therefore appear nowhere below.** In this run, cycle 1 had no note and cycle 4 had a `status` that was not the pause marker. Neither produced a byte — no trace line, no cycle number, no marker, no "idle" parenthetical. They are named in *this sentence* only; a real transcript contains no evidence they ran. Cycle 2 is the first cycle that emits, so it carries the file-load trace ([`../../../core/skills/output/SKILL.md`](../../../core/skills/output/SKILL.md) Rule 4, *Silent-cycle exemption*) — covering the files that shaped *that* emission. A silent cycle's trace is discarded, not deferred: it produced no output, so it has nothing to attribute.
+
 ```
 =============== [observer/skills/verify-checkpoint/SKILL.md] [observer] ===============
-
-[loop started — self-paced]
-
-cycle 1 — no checkpoint signal (no note / status not paused).
 cycle 2 — signal: target=F7, since=3aa8147, spec=.lsa/features/…/
   does — F7 scenarios (# F7,F10): scope-creep-blocks → pass. (in scope)
   only — 4 hunks; hunk 3 (observer/knowledge/roles.md edit) traces to no requirement.

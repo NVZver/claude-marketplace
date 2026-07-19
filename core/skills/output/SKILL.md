@@ -25,6 +25,8 @@ Every factual claim carries source + exact quote per [`core/ground-rules`](../gr
 
 **File-load trace.** Every NVZver-marketplace instructional file carries a one-line trace directive at its top. On load, the agent prints that line verbatim — `=============== [<file>] [<plugin>] ===============` — before the response body. One line per loaded file, in load order. Gives the human a step-by-step path of which marketplace files shaped the turn. **Hard — print it.**
 
+**Silent-cycle exemption (the only exemption).** An Actor whose contract is **zero user-facing output** for a given cycle emits no trace on that cycle. The trace precedes *a response body*; where there is no response body there is nothing to precede, and printing one would itself break the zero-output contract the Actor exists to honour. This is a scope boundary, not a relaxation: the moment such an Actor emits any user-facing byte, the full trace obligation applies to that emission, covering the files that shaped it. A silent cycle produced no output, so it has nothing to attribute — the exemption discards the trace, it does not defer it. Claiming this exemption requires the Actor's own contract to state zero-output explicitly — e.g. `observer:verify-checkpoint` Step 2 (*"silence means NO user-facing text"*) and `observer:observe` Step 8d. Never available to an Actor that is merely being brief.
+
 ---
 
 ## GUIDANCE

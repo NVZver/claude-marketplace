@@ -147,7 +147,7 @@ autonomy: manual                     # optional — manual | semi | auto. defaul
 paired_verify: off                   # optional — off | checkpoint | async. default: off
 
 routing:                             # optional — per-dispatch model tier map. absent ⇒ inherit everywhere
-  manager:check: haiku               # surface-key → tier (inherit | sonnet | haiku)
+  manager:next: sonnet               # surface-key → tier (inherit | sonnet | haiku)
 ```
 
 The optional `gate:` block is the **quality-gate script contract** — per-check name → command, consumed by both `verify` (before — grounding) and `reconcile` (after — correctness), and mapped to GitHub required-check slots in parallel runs. It is the configuration side of `core/ground-rules` Rule 7 *"done is a gate-proven, cited predicate"*; LSA hardcodes no tool. This repo's own `gate:` (a `mode: docs` example) runs three repo-internal structural probes — `docs-invariants` (`scripts/lint.sh`), `citations` (`scripts/check-citations.sh`), `links` (`scripts/check-links.sh`). Full contract: [`knowledge/quality-gate-contract.md`](./knowledge/quality-gate-contract.md).

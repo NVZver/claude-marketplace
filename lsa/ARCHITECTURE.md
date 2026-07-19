@@ -113,7 +113,7 @@ autonomy: manual                     # manual | semi | auto. default: manual
 paired_verify: off                   # off | checkpoint | async. default: off
 
 routing:                             # optional; per-dispatch model tier map (default: {} → inherit everywhere)
-  <surface-key>: <tier>              # e.g. manager:check: haiku. tier ∈ inherit | sonnet | haiku
+  <surface-key>: <tier>              # e.g. manager:next: sonnet. tier ∈ inherit | sonnet | haiku
 ```
 
 - `constitution` — every LSA skill reads this first.

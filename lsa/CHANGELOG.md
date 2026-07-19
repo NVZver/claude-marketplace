@@ -2,6 +2,15 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.28.1] — 2026-07-19
+
+Knowledge-file truth pass following the `manager:check` inlining (manager 0.20.0). Documentation only — no skill behavior change → patch bump.
+
+### Changed
+
+- **`knowledge/model-routing.md`** — row 4 (`manager:check` → project-manager) marked **Deleted**, and the wiring rule corrected from *"Three surfaces do so today"* to two (`manager:next`, `lsa:delegate.verify-checkpoint`). The map must list only surfaces a dispatcher actually reads; `manager:check` no longer dispatches. Row 4 is recorded as the first transitional row to reach its planned end state — deleted rather than re-tiered.
+- **`knowledge/migration-instructions-ai.md`** — the `roadmap-row.sh` line now reads "highest-priority backlog row", matching the script's corrected ordering contract (manager 0.20.0).
+
 ## [0.28.0] — 2026-07-19
 
 `verify`'s Step 1 reference resolution is now scripted (second instance of `.lsa/VISION.md` §2 principle 10, after `reconcile`'s coverage skeleton). Behavior change to `verify` Step 1 → minor bump. The resolver script + its test are repo-level (outside every `artifact_paths`) and drive no bump on their own — only the `verify/SKILL.md` edit does.

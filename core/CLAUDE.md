@@ -19,9 +19,13 @@ Apply to every substantive task. Eight content rules, numbered 0–7:
 
 ## Output — [`core/output`](./skills/output/SKILL.md)
 
-**HARD rule (Rule 4, Sourced — holds on every human-facing output, no exceptions):** every factual claim carries a source + exact searchable quote. **File-load trace (part of Rule 4, hard):** every marketplace instructional file carries a one-line trace directive at its top; on load, print it verbatim — `=============== [<file>] [<plugin>] ===============` — before the response body, one line per loaded file, in load order.
+**HARD rule (Rule 4, Sourced — holds on every human-facing output, no exceptions):** every factual claim carries a source + exact searchable quote. **File-load trace (part of Rule 4, hard):** every marketplace instructional file carries a one-line trace directive at its top; on load, print it verbatim — `=============== [<file>] [<plugin>] ===============` — before the response body, one line per loaded file, in load order. *Silent-cycle exemption:* an Actor whose contract states zero user-facing output for a cycle emits no trace on that cycle; its next emission traces the files that shaped **that** emission — the silent cycle's trace is discarded, not deferred.
 
-The other six rules are guidance — outcomes to aim for when they serve the answer, not a per-response checklist. See [`core/output`](./skills/output/SKILL.md) for the hard/guidance split, the picker discipline, and the show-changes-inline templates.
+The remaining rules are guidance — outcomes to aim for when they serve the answer, not a per-response checklist.
+
+**Rule 7 in brief (guidance — reach for it on an artifact write):** authorized change → write → show → comment; approval-gated artifact → show → approve → write; "shown" means the turn-final message or an `AskUserQuestion` gate, never a subagent report or a file path.
+
+See [`core/output`](./skills/output/SKILL.md) for the hard/guidance split, the picker discipline, and the show-changes-inline templates.
 
 ## Flow selection — [`core/flow-selector`](./skills/flow-selector/SKILL.md)
 
