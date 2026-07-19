@@ -2,6 +2,20 @@
 
 All notable changes to the `manager` plugin (formerly `management`) are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.19.0] – 2026-07-19
+
+Roadmap hygiene fully scripted — the last two model-side scan conditions become deterministic hint classes (epic `deterministic-work-scripted/hygiene-classes`, `.lsa/features/2026-07-19-deterministic-work-scripted-hygiene-classes/requirements.md` R1–R9). Applies `.lsa/VISION.md` §2 principle 10 *"deterministic work is scripted"*. New agent-visible hint classes → minor bump.
+
+### Changed
+
+- **`agents/project-manager.md` Step 6 (Mode 1b tidy)** — all four hygiene conditions are now attributed to `bash scripts/roadmap-query.sh hygiene`, which emits **five** deterministic classes (was three; conditions 3–4 were previously model-derived): merged-not-shipped (class 4) and no-artifacts (class 5) join missing-pitch, backlog-but-branch, and stale-in-progress. Each condition names its script class. The agent's judgment-over-hints role and its propose-then-gate contract are unchanged — the hints are input, not verdicts.
+- **`agents/project-manager.md` Step 6 — recency boundary stated (R3).** True staleness ("no recent activity") is out of scope: the roadmap item schema carries no date/updated field, so time-based staleness is not deterministically derivable. Class 5 is an artifact-**existence** proxy ("nothing was ever created for this slug"), never a recency signal; the deferred-vs-active call stays the human's.
+- **`README.md`** — the `manager:check` row describes the five-class hygiene surface and the existence-proxy boundary.
+
+### Notes
+
+The hint classes themselves live in `scripts/roadmap-query.sh` with a hermetic behavior test at `scripts/tests/roadmap-query-hygiene-test.sh` — both repo-level (outside every plugin's `artifact_paths`), so neither drives a version bump on its own; only the `project-manager.md` edit does. The test's fixture is required, not optional: no merged branch in the live tree matches a roadmap slug, so class 4 emits nothing on real data and a green live run proves nothing.
+
 ## [0.18.0] – 2026-07-16
 
 Roadmap read-cutover — consumers slice the YAML ledger on demand instead of whole-file reads (epic `yaml-ledger-selective-load/read-cutover`, `.lsa/features/2026-07-16-yaml-ledger-read-cutover/requirements.md` F9, F12–F13; parent pitch `.lsa/pitches/yaml-ledger-selective-load.md`). The roadmap moved from a 92 KB markdown table to `.lsa/roadmap.yaml`; every read-consumer now obtains only the rows it needs through a repo-local query script (`scripts/roadmap-row.sh` / `scripts/roadmap-query.sh`), a whole-file `Read` remaining only as the non-zero-exit fallback (F8). Behavior change → minor bump.
