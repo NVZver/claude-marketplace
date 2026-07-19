@@ -5,6 +5,15 @@ All notable changes to the `observer` plugin are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.3] - 2026-07-19
+
+Fixes an Example Output that violated the rule stated 23 lines above it.
+
+### Fixed
+
+- **`skills/verify-checkpoint/SKILL.md` Example Output no longer breaks its own silence contract.** Step 2 requires a no-signal cycle to produce *"zero output"* with *"no marker, token, placeholder, status line, or parenthetical"* — yet the example printed `cycle 1 — no checkpoint signal (no note / status not paused).` plus a `[loop started — self-paced]` status line. An Actor copying the example would emit bytes on a silent cycle, which is precisely the failure the contract exists to prevent. The example now shows only emitting cycles, and states in prose that silent cycles appear nowhere in a real transcript.
+- The example's file-load trace is now explicitly attributed to the first *emitting* cycle, citing `core/skills/output/SKILL.md` Rule 4 *Silent-cycle exemption* (new in `core` 0.20.0) — the trace is owed on first emission, not on the loads that preceded it.
+
 ## [0.3.2] - 2026-07-02
 
 Public-readiness documentation pass (docs only, no skill behavior change).

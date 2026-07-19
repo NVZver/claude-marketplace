@@ -91,7 +91,7 @@ Symptom → fix; when in doubt, [`/core:doctor`](./core/skills/doctor/SKILL.md) 
 - **A skill won't trigger** — run `/reload-plugins`, then invoke it explicitly (e.g. `/core:doctor`, `/lsa:discover`); if it's still missing, step 1 didn't complete.
 - **Always-on rules not applying** — the `core/CLAUDE.md` fragment isn't merged: do install step 2, then `/core:doctor` reports which rule anchors are still missing.
 - **`NOT-GROUNDED` from `lsa:verify`** — not a breakage: fix the flagged spec references before building, per [`lsa/README.md` § Quick start step 4](./lsa/README.md#quick-start).
-- **Lint red** — run the failing gate locally: `scripts/lint.sh`, `scripts/check-citations.sh`, `scripts/check-links.sh`, `scripts/check-version-changelog.sh`, `lsa/scripts/project-map-check.sh` — each prints the offending line. A `lint.sh` C12 failure means a stale constitution digest: regenerate with `bash scripts/build-vision-digest.sh`. A `project-map-check.sh` failure means a stale repo atlas: regenerate with `bash lsa/scripts/project-map-build.sh`, then commit `project-map.yaml`.
+- **Lint red** — run the failing gate locally: `scripts/lint.sh`, `scripts/check-citations.sh`, `scripts/check-links.sh`, `scripts/check-version-changelog.sh`, `lsa/scripts/project-map-check.sh`, `scripts/run-tests.sh` — each prints the offending line. A `lint.sh` C12 failure means a stale constitution digest: regenerate with `bash scripts/build-vision-digest.sh`. A `project-map-check.sh` failure means a stale repo atlas: regenerate with `bash lsa/scripts/project-map-build.sh`, then commit `project-map.yaml`.
 
 ## Quick start
 

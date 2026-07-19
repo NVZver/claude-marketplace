@@ -88,8 +88,12 @@ case "${sub}" in
     fields="slug,title,priority,status"
     while [[ $# -gt 0 ]]; do
       case "$1" in
-        --limit) limit="${2:-}"; shift 2 ;;
-        --fields) fields="${2:-}"; shift 2 ;;
+        # `shift 2` with only one arg left is a no-op returning non-zero, so a
+        # value-less --limit/--fields spun this loop forever. Demand the value.
+        --limit)  [[ $# -ge 2 ]] || { echo "roadmap-query: --limit needs a value" >&2; exit 1; }
+                  limit="$2"; shift 2 ;;
+        --fields) [[ $# -ge 2 ]] || { echo "roadmap-query: --fields needs a value" >&2; exit 1; }
+                  fields="$2"; shift 2 ;;
         *) usage; exit 1 ;;
       esac
     done

@@ -1,6 +1,6 @@
 ---
 name: decompose
-description: "Decompose a pitch into independently-shippable epics. Input: a pitch slug or path (argument; if omitted, the first backlog pick). Output: the project-manager agent's epic list delivered and gated (approve / reject / adjust) via AskUserQuestion; on approval the first epic seeds an lsa:discover handoff and the remaining epics are surfaced. Reads ${specs_root}/pitches/<slug>.md."
+description: "Decompose a pitch into independently-shippable epics. Input: a pitch slug or path (argument; if omitted, the highest-priority backlog pick). Output: the project-manager agent's epic list delivered and gated (approve / reject / adjust) via AskUserQuestion; on approval the first epic seeds an lsa:discover handoff and the remaining epics are surfaced. Reads ${specs_root}/pitches/<slug>.md."
 ---
 
 > **Trace.** On load, print first: `=============== [manager/skills/decompose/SKILL.md] [manager] ===============`
@@ -16,7 +16,7 @@ Turn an approved pitch into a list of independently-shippable epics — each key
 
 ## Input
 
-- A pitch slug or path as the skill argument (e.g. `manager:decompose onboarding-checklist` or a path under `${specs_root}/pitches/`). If no argument is given, the agent decomposes the first backlog pick (per [`../../agents/project-manager.md`](../../agents/project-manager.md) Step 8).
+- A pitch slug or path as the skill argument (e.g. `manager:decompose onboarding-checklist` or a path under `${specs_root}/pitches/`). If no argument is given, the agent decomposes the highest-priority backlog pick (per [`../../agents/project-manager.md`](../../agents/project-manager.md) Step 8).
 - `specs_root` from `.lsa.yaml` at repo root (defaults per [`../../../lsa/knowledge/conventions.md`](../../../lsa/knowledge/conventions.md) §"`.lsa.yaml` defaults"). Used to resolve `${specs_root}/...` paths.
 
 ## Steps

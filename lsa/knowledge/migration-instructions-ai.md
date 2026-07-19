@@ -120,7 +120,7 @@ Observable result: quote one `path:line` from `roadmap-row.sh` and one item slug
 In **this** project’s skills/agents/knowledge that load the roadmap:
 
 1. Replace happy-path `Read ${specs_root}/roadmap.md` (or whole-file `roadmap.yaml` reads) with:
-   - first backlog row → `bash scripts/roadmap-row.sh`
+   - highest-priority backlog row → `bash scripts/roadmap-row.sh`
    - backlog slice → `bash scripts/roadmap-query.sh backlog --limit N`
    - one record → `bash scripts/roadmap-query.sh get <slug>`
    - hygiene hints → `bash scripts/roadmap-query.sh hygiene`

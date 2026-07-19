@@ -449,7 +449,7 @@ items:
     status_detail: |
       in progress
     notes: |
-      Identified 2026-07-01 in the token/model assessment. The marketplace is already Sonnet-native (zero hardcoded models; all `inherit`) and Pro-safe + dispatch-efficient by standard (`.lsa/standards/code.md` §"Model policy", §"Dispatch efficiency"). A full designed cycle dispatched a fresh sub-agent per stage (each reloads the CLAUDE.md floor + memory + re-reads files), costly under Pro usage caps. **Done:** `lsa:orchestrator` runs `discover → specify → verify` inline, crossing a boundary only at `delegate`/`reconcile` (lsa v0.21.0, PR #65) — ~6 contexts → ~3. **Pending (per-plugin application of the Dispatch-efficiency standard):** `manager` shape/decompose/next/check run their agents inline where isolation is not load-bearing (keep `manager:implement` worktree fan-out). Each is a per-plugin behavior change → own LSA cycle + versioning.
+      Identified 2026-07-01 in the token/model assessment. The marketplace is already Sonnet-native (zero hardcoded models; all `inherit`) and Pro-safe + dispatch-efficient by standard (`.lsa/standards/code.md` §"Model policy", §"Dispatch efficiency"). A full designed cycle dispatched a fresh sub-agent per stage (each reloads the CLAUDE.md floor + memory + re-reads files), costly under Pro usage caps. **Done:** `lsa:orchestrator` runs `discover → specify → verify` inline, crossing a boundary only at `delegate`/`reconcile` (lsa v0.21.0, PR #65) — ~6 contexts → ~3. **Done (2):** `manager:check` runs inline and its `routing:` key is deleted (manager v0.20.0) — its five hygiene hint classes are script-derived, so judgment over script output needed no fresh context. Measured cost removed: 20,286 B reload per invocation (`CLAUDE.md` + `core/CLAUDE.md` + agent body + 2 knowledge files). First transitional routing row to reach its planned end state. **Pending:** `manager` shape/decompose/next — same standard, same argument; `next`'s fast path already dispatches nothing, so only its sequencing branch remains. Keep `manager:implement` worktree fan-out (load-bearing isolation). Each is a per-plugin behavior change → own LSA cycle + versioning.
   - slug: checkpoint-gated-paired-verification-during-delegation-observer-verify
     title: |
       Checkpoint-gated paired verification during delegation (`observer:verify-checkpoint` + `lsa:delegate` wiring)
@@ -531,6 +531,39 @@ items:
       shipped — merged 2026-07-15 (`63a1409`, PR #71): core 0.17.0, lsa 0.25.0, manager 0.17.0. WS1 always-on card + constitution digest; WS2 directories-only `project-map.yaml` (≤1k tokens, lint C13); WS3 `gate.sh` + `roadmap-row.sh` offload; WS4 `.lsa.yaml` `routing:` map with 3 wired down-routes. Epics: `pro-tier-token-affordability/{always-on-card, model-routing, project-index, script-offload}`. Post-merge review re-graded the `project-index` reconcile against the pitch.
     notes: |
       Approved 2026-07-15 (reshape v2, amendments A1-A4 + model-routing direction). Constitution's own standard requires 100% Pro-plan operation (`.lsa/standards/code.md:49`) and today it does not — hence Must. Four small-batch epics, lever-ordered WS1→WS4→WS2→WS3: `pro-tier-token-affordability/{always-on-card, model-routing, project-index, script-offload}`. Forks locked: B all four workstreams; D commit hook + CI mirror auto-rebuild the index; E routing as `.lsa.yaml` `routing:` map, zero shipped pins, absent key = inherit, reconcile grader never routable down. Interacts with (does not block) the in-progress inline-dispatch rollout (row above, line 62) — transitional surfaces marked in the tier table. Pitch: [pro-tier-token-affordability](pitches/pro-tier-token-affordability.md).
+  - slug: deterministic-work-scripted
+    title: |
+      Deterministic work is scripted — coverage skeleton + principle-10 codify
+    priority: Must
+    status: in_progress
+    status_detail: |
+      in progress — branch `feature/deterministic-work-scripted` (2026-07-19). Coverage-skeleton epic in flight: `scripts/coverage-skeleton.sh` + `lsa:reconcile` Step 4 wiring; feature pack `.lsa/features/2026-07-19-deterministic-work-scripted-coverage-skeleton/`. Parent codify epic: `.lsa/features/2026-07-17-deterministic-work-scripted-codify/`.
+    notes: |
+      Principle 10 (`.lsa/VISION.md` §2): enumeration / set-difference / lookup run in scripts; models keep semantic judgment. Follow-on after pro-tier selective-load (roadmap/digest/map/gate). Remaining named epics from the codify pack: resolve-refs, pitch-ladder, hygiene-class extensions — after coverage-skeleton ships. Next Must after this row: `marketplace-ai-engineering-audit`.
+
+  - slug: marketplace-ai-engineering-audit
+    title: |
+      Marketplace AI-engineering audit — token efficiency + small/top-model leverage
+    priority: Must
+    status: shipped
+    status_detail: |
+      shipped — core v0.20.0, manager v0.20.0, observer v0.3.3, lsa v0.28.1 (2026-07-19)
+    notes: |
+      Remediation shipped against an **independently re-derived** finding set, not the original F01–F10 program. The prep pack's ranking was superseded: an adversarial pass (`critique.md`) killed F02/F09/F10 as unmeasured, and a second investigation found the original F04 rested on a truncated quote (`flow-selector/SKILL.md:38` reads *"State the chain-of-thought as a one-paragraph summary"*; the audit quoted only *"State the chain-of-thought"*, cutting the clause that refuted the finding). Prep pack retained for provenance at `.lsa/features/marketplace-ai-engineering-audit/`; **do not execute its program order.**
+
+      Shipped: (1) `roadmap-row.sh` Must>Should>Could ordering — the fast path was returning a `Could` while two `Must` items waited, a product bug the original audit never filed; (2) `core/CLAUDE.md` restates Rule 7 in brief — cited 34× across 16 of 27 actors, previously the one rule the card deferred to a 15,467 B load; (3) `manager:check` inlined, `routing: manager:check` deleted — 20,286 B reload measured, bought nothing; (4) silent-cycle exemption for the Rule 4 trace vs `verify-checkpoint` zero-output collision, plus the Example Output that violated its own rule; (5) `scripts/pitch-query.sh outline` + Mode 1 wiring — measured 25× (1,956 B vs 50,739 B) on a 5-candidate pass; (6) `roadmap-row-test.sh` + `no-wholefile-pitch-read.sh`, and `scripts/run-tests.sh` wired as a `gate:` check — the `scripts/tests/` suite existed but nothing invoked it.
+
+      Deliberately NOT built (no reproduced failure mode): Prompt ABI compiler, evidence ledger with stable IDs, capability-class router, cross-tier eval lab, feature-pack resolver, typed JSON boundaries. Measured cross-actor duplication is ~6 repeated phrases across 27 files — there is no prompt bloat to compile away.
+
+      Deferred with cause: ship `roadmap-*.sh` under `manager/` via `CLAUDE_PLUGIN_ROOT` (real portability gap — `manager/scripts/` does not exist and the scripts declare *"Repo-internal — NOT shipped"* — but `next/SKILL.md` documents a graceful whole-file fallback, so it degrades rather than breaks; no evidence of a foreign-repo `manager` install yet). Remaining inline rollout (`shape`/`decompose`/`next`) tracked at `reduce-sub-agent-dispatch-fan-out-for-sonnet`.
+
+  - slug: cursor-equal-support
+    title: |
+      Cursor equal support via portable generator
+    priority: Must
+    status: backlog
+    notes: |
+      Re-approved 2026-07-16 after reshape (locked: SoT = Claude plugin trees; `scripts/generate-for-cursor.sh [<out-dir>]` default `./dist/cursor`; primary UX = generate → copy `.cursor/` into working repo; knowledge co-export Fork A; fixed Cursor checklist; gitignore `dist/`; VISION §3 in-feature; v1 = core+lsa+manager; hooks / prompt-engineer / observer out). Epics: `cursor-equal-support/{generate-script, vision-second-surface, generate-and-copy-docs}`. Pitch: [cursor-equal-support](pitches/cursor-equal-support.md). Sequence note: after `marketplace-ai-engineering-audit` in the Must queue unless a human reorders.
 
 shipped_history:
   -

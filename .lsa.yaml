@@ -16,6 +16,7 @@ gate:
   citations: bash scripts/check-citations.sh
   links: bash scripts/check-links.sh
   project-map: bash lsa/scripts/project-map-check.sh
+  tests: bash scripts/run-tests.sh
 
 # Reconcile scenario-run count (lsa/skills/reconcile/SKILL.md Step 1).
 # Default when the key is absent: 3 — pass = all 3 runs succeed (≥95% of 3 ⇒ 3/3).
@@ -46,7 +47,6 @@ implement:
 # absent — its agent-side resolver was reverted (cf3b78d), so it would be dead config.
 routing:
   manager:next: sonnet
-  manager:check: haiku
   lsa:delegate.verify-checkpoint: sonnet
 
 modules:

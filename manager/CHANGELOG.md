@@ -2,6 +2,25 @@
 
 All notable changes to the `manager` plugin (formerly `management`) are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.20.0] – 2026-07-19
+
+Closes three audit findings: a priority-blind fast path (product bug), a dispatch that bought nothing, and the last large measured read fan-out. Behavior changes to `check` and the agent's Mode 1 → minor bump.
+
+### Fixed
+
+- **`manager:next` fast path no longer returns a `Could` while a `Must` waits.** `scripts/roadmap-row.sh` returned *the first* `backlog`/`not_started` row in file order, so the live ledger answered "what's next" with `library-spec-cache-for-top-3-5-libraries` (`Could`) while two `Must` items sat lower in the file. Ordering is now `Must > Should > Could > unset`, with file order as the tie-break within a priority. This was product-wrong, not merely token-cheap: the fast path's whole value is that its answer can be trusted without review.
+- Contract descriptions updated in lockstep across `skills/next/SKILL.md`, `agents/project-manager.md`, `README.md`, and `lsa/knowledge/migration-instructions-ai.md` — "first backlog item" was no longer true of the artifact they describe.
+
+### Changed
+
+- **`manager:check` runs inline — no agent dispatch.** All five hygiene hint classes are already derived by `scripts/roadmap-query.sh hygiene`; the only model work is judgment over that script's output, which is not one of the three load-bearing isolation classes in `.lsa/standards/code.md:59-63` (external implementer · independent grader · worktree fan-out). The dispatch cost a full context reload — **measured 20,286 B** (`CLAUDE.md` + `core/CLAUDE.md` + agent body + two knowledge files) — to interpret text a script had already produced. The scan conditions stay canon in `agents/project-manager.md` Step 6, which still runs when hygiene rides along with Mode 1 sequencing (Step 7 is now report-only — see below).
+- **Agent Mode 1 Step 2 loads pitch outlines, not pitch bodies.** New `scripts/pitch-query.sh outline` prints title + first line of `## Problem` + first line of `## Appetite` per candidate with a `path:line` citation. **Measured on a 5-candidate pass: 1,956 B of outlines vs 50,739 B of full reads — 25×, ~12.2k tok saved.** A full body is read only after the user picks, or when an outline is genuinely insufficient — in which case the agent must name the candidate and say why, so over-reads are observable rather than habitual. An outline the script marks `INCOMPLETE` (pitch has no `## Problem`/`## Appetite`) is the one sanctioned in-sequencing full read — the script names the justification itself.
+- **Agent Mode 1b (hygiene) is now report-only.** It previously returned gated row diffs for a dispatcher to approve and write back. With `manager:check` inline, no dispatcher runs a hygiene gate — `manager:next` is recommend-only and `manager:decompose` gates the epic list — so those diffs had no gate to reach and no writer to apply them. Mode 1b now surfaces cited findings and names `manager:check` as the way to act on them. Caught by `prompt-engineer` review; the inlining would otherwise have silently orphaned the hygiene write path.
+
+### Removed
+
+- **`.lsa.yaml` `routing: manager:check: haiku`** — deleted, not re-tiered, now that the surface dispatches nothing. This is the documented end state for a transitional routing row (`lsa/knowledge/model-routing.md`: *"Rows 3–4 are **transitional** — slated for deletion (not re-tiering)"*), and the first such row to reach it.
+
 ## [0.19.0] – 2026-07-19
 
 Roadmap hygiene fully scripted — the last two model-side scan conditions become deterministic hint classes (epic `deterministic-work-scripted/hygiene-classes`, `.lsa/features/2026-07-19-deterministic-work-scripted-hygiene-classes/requirements.md` R1–R9). Applies `.lsa/VISION.md` §2 principle 10 *"deterministic work is scripted"*. New agent-visible hint classes → minor bump.
@@ -220,6 +239,8 @@ Splits the 3-in-1 `manager:roadmap` skill into three function-named verb skills 
 - **`manager/skills/check/SKILL.md`** (`manager:check`) — check roadmap hygiene. Dispatches the `project-manager` (`intent: hygiene-check`) and gates each proposed row diff one by one; re-renders the rows the agent applies.
 - **`manager/knowledge/roadmap-orchestration.md`** — the shared dispatch → gate → re-render contract extracted (DRY) from the former roadmap skill's Step 2 + Constraints. The three verb skills cite it instead of restating the orchestration loop.
 
+- **Agent Mode 1b (hygiene) is now report-only.** It previously returned gated row diffs for a dispatcher to approve and write back. With `manager:check` inline, no dispatcher runs a hygiene gate — `manager:next` is recommend-only and `manager:decompose` gates the epic list — so those diffs had no gate to reach and no writer to apply them. Mode 1b now surfaces cited findings and names `manager:check` as the way to act on them. Caught by `prompt-engineer` review; the inlining would otherwise have silently orphaned the hygiene write path.
+
 ### Removed
 
 - **`manager/skills/roadmap/SKILL.md`** — the 3-in-1 skill. Clean break, no alias.
@@ -278,6 +299,8 @@ Adopts the `core` 0.13.0 **gate-delivery contract** (Rule 5 *Self-contained gate
 - **`management/skills/roadmap/SKILL.md` Step 2 + constraints** — gates must be self-contained (subject in question text / option descriptions / `preview`) or preceded by turn-final delivery; this skill re-renders the agent's applied-row quotes (the payload is invisible).
 - **`management/agents/project-manager.md` Steps 7/10** — payload quotes are marked as dispatcher-re-render material; Step 10 returns the full epic list for delivery.
 - **`management/knowledge/pitch-structure.md`** — status lifecycle documented: `draft` exists only in the agent payload (never on disk); on-disk pitches are always `Status: approved`; `rejected` removed from the metadata enum.
+
+- **Agent Mode 1b (hygiene) is now report-only.** It previously returned gated row diffs for a dispatcher to approve and write back. With `manager:check` inline, no dispatcher runs a hygiene gate — `manager:next` is recommend-only and `manager:decompose` gates the epic list — so those diffs had no gate to reach and no writer to apply them. Mode 1b now surfaces cited findings and names `manager:check` as the way to act on them. Caught by `prompt-engineer` review; the inlining would otherwise have silently orphaned the hygiene write path.
 
 ### Removed
 

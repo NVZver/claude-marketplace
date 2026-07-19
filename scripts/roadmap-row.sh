@@ -1,11 +1,15 @@
 #!/usr/bin/env bash
-# scripts/roadmap-row.sh — deterministic first-backlog-row extractor (YAML ledger).
+# scripts/roadmap-row.sh — deterministic highest-priority-backlog-row extractor (YAML ledger).
 #
 # The manager:next Step 0 fast-path offload (pitch pro-tier-token-affordability
 # WS3): instead of an agent whole-file-reading the roadmap model-side to find the
-# first actionable item, this prints the first `backlog` / `not_started` item of
-# the `.lsa/roadmap.yaml` ledger with its `path:line` citation — the exact
-# artifact manager:next quotes.
+# next actionable item, this prints the highest-priority `backlog` /
+# `not_started` item of the `.lsa/roadmap.yaml` ledger with its `path:line`
+# citation — the exact artifact manager:next quotes.
+#
+# Ordering is Must > Should > Could > unset, then file order within a priority.
+# File order alone is NOT the answer: it can surface a Could while a Must sits
+# lower in the ledger, which makes the fast path product-wrong, not just cheap.
 #
 # specs_root is read from .lsa.yaml (default .lsa/); the ledger is
 # ${specs_root}/roadmap.yaml. Zero model calls, pure awk, Pro-safe (no yq, no
@@ -34,9 +38,16 @@ if [[ ! -f "${ROADMAP}" ]]; then
   exit 1
 fi
 
-# Walk items:; print the first whose status is backlog / not_started as
+# Walk items:; print the highest-priority backlog / not_started item as
 # "path:line — slug | title | priority | status", citing the slug's line.
+# Ties within a priority resolve to the first in file order.
 row="$(awk -v roadmap="${ROADMAP}" '
+  function rank(p) {
+    if (p=="Must")   return 1
+    if (p=="Should") return 2
+    if (p=="Could")  return 3
+    return 4                                             # unset / unrecognised sorts last
+  }
   /^items:[[:space:]]*$/            { ins=1; next }
   ins && /^[^[:space:]#]/           { ins=0 }            # left the items: block
   !ins                              { next }
@@ -50,12 +61,16 @@ row="$(awk -v roadmap="${ROADMAP}" '
   /^    status: / {
     st=$0; sub(/^    status: /,"",st)
     if (st=="backlog" || st=="not_started") {
-      printf "%s:%d — %s | %s | %s | %s\n", roadmap, sline, slug, title, prio, st
-      found=1; exit
+      r=rank(prio)
+      # strict < keeps the first row seen at a rank: file order is the tie-break
+      if (best==0 || r<best) {
+        best=r
+        brow=sprintf("%s:%d — %s | %s | %s | %s", roadmap, sline, slug, title, prio, st)
+      }
     }
     next
   }
-  END { if (!found) exit 1 }
+  END { if (best==0) exit 1; print brow }
 ' "${ROADMAP}")"
 
 if [[ -z "${row}" ]]; then

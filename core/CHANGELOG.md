@@ -2,6 +2,21 @@
 
 All notable changes to the `core` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.20.0] — 2026-07-19
+
+Closes two audit findings against the output discipline: a hard-rule collision that made one Actor contract unsatisfiable, and a card gap that forced a 15 KB load to comply with the marketplace's most-cited guidance rule. Both are card + canonical-skill edits; no rule added, removed, or renumbered.
+
+### Added
+
+- **`core/skills/output/SKILL.md` Rule 4 — silent-cycle exemption.** An Actor whose contract states **zero user-facing output** for a cycle emits no trace on that cycle, and owes the full trace on its next emission. Resolves a real collision: Rule 4's file-load trace was *"Hard — print it"* while `observer/skills/verify-checkpoint/SKILL.md` Step 2 requires *"silence means NO user-facing text (no marker, token, placeholder, status line, or parenthetical)"* — an Actor could not satisfy both. Scoped deliberately: the exemption requires the Actor's own contract to state zero-output explicitly (only `observer:verify-checkpoint` Step 2 and `observer:observe` Step 8d qualify) and is never available to an Actor that is merely being brief. The exemption lives in the canonical file because `output/SKILL.md:8` forbids other plugins relaxing the hard rule themselves.
+- **`core/CLAUDE.md` — Rule 7 restated in brief, one line, explicitly marked guidance.** Rule 7 is cited **34 times across 16 of 27 actor files** — the most-cited rule in the marketplace — and was the one rule the card deferred rather than restated, so complying with a citation meant knowing mechanics that lived only in 15,467 B of `output/SKILL.md` (Rule 7's own section is 7,023 B of it). The card now carries the three decision points (authorized change · approval-gated artifact · what counts as "shown") and nothing else; templates, worked examples, and the forbidden-forms list stay behind the link. The **`(guidance — reach for it on an artifact write)`** marker is load-bearing: `output/SKILL.md:8` forbids re-promoting a guidance rule to a marketplace-wide hard requirement, and an imperative block on the always-on card would read as exactly that. Permitted by `output/SKILL.md:8`: *"Re-grounded summaries that restate the rules in prose are permitted only when they cite this file by link at the top."*
+
+### Notes
+
+- Card grew ~300 B against a 15,467 B load avoided per Rule-7 compliance event. Load *rate* is not instrumented — no session-level telemetry exists — so this is a structural asymmetry corrected, not a measured token saving. Recorded as such rather than claimed as a win.
+- The exemption states that a silent cycle's trace is **discarded, not deferred** — an earlier draft said the next emission covers files loaded during preceding silent cycles, which contradicted `observer:verify-checkpoint`'s own example and would have required an Actor to carry trace state across cycles it is contractually blind to. Caught by `prompt-engineer` review before release.
+- `core/CLAUDE.md` no longer states a guidance rule *count* ("The other six rules" → "The remaining rules"). `output/SKILL.md:8` reserves rule-count statements to the canonical file; lint C1's regex did not catch this phrasing, so it was corrected by hand rather than left to trip later.
+
 ## [0.19.0] — 2026-07-19
 
 Always-on card gains a pointer to the new constitutional principle 10, *"Deterministic work is scripted"* (`.lsa/VISION.md` §2, Vision v0.13; epic `deterministic-work-scripted-codify`, `.lsa/features/2026-07-17-deterministic-work-scripted-codify/requirements.md` R1–R9). Packaging only — the card cites the principle by link and restates no rule text it does not own; canon stays `.lsa/VISION.md`. New always-on discipline pointer on the card → minor bump; no golden rule added, removed, weakened, or renumbered.
