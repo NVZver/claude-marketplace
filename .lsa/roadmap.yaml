@@ -582,9 +582,11 @@ items:
     title: |
       Name conformance.md as a Requirements Traceability Matrix
     priority: Should
-    status: backlog
+    status: shipped
+    status_detail: |
+      shipped — lsa v0.29.0
     notes: |
-      Approved 2026-07-19. Positioning-only: name the existing coverage table an RTM alongside EARS + Gherkin, with an explicit non-conformance disclaimer for IEEE 830 / ISO 29148 (both paywalled, cited by name/number/year only). Epics: `name-conformance-as-rtm/{rtm-lineage}`. **Flow decision (owner-approved 2026-07-19): ships as a direct Quick-flow commit + `lsa:revise-constitution` for the VISION §6 paragraph, NOT a full LSA cycle — ~40 lines of change against ~210 lines of constant spec ceremony; the pitch Appetite says the same.** Pitch: [name-conformance-as-rtm](pitches/name-conformance-as-rtm.md).
+      Approved 2026-07-19. Positioning-only: named the existing coverage table an RTM alongside EARS + Gherkin, with an explicit non-conformance disclaimer for IEEE 830 / ISO 29148 (both paywalled, cited by name/number/year only). **Flow decision (owner-approved 2026-07-19): shipped as a direct Quick-flow commit + `lsa:revise-constitution` (on `constitution/name-conformance-as-rtm`, merged) for the VISION §6 paragraph, NOT a full LSA cycle.** Shipped 2026-07-20: `lsa/README.md` §Standards + §"The two checks" (RTM lineage paragraph + one-line naming), `.lsa/VISION.md` §6 "Converged" bucket (lineage bullet, corrects the pulse-check's loose "codified in IEEE 830" framing), `.lsa/modules/lsa/spec.md` (Standards-adopted invariant line), `lsa/CHANGELOG.md` + `plugin.json` (0.28.1 → 0.29.0, minor — user-visible README delta). Gate: lint/citations/links/project-map/tests all green. Pitch: [name-conformance-as-rtm](pitches/name-conformance-as-rtm.md).
   - slug: observable-grader-independence
     title: |
       Observable grader independence — record the model axis

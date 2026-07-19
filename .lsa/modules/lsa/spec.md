@@ -37,7 +37,7 @@ Baseline SHA per module (consumed by the SessionStart drift hook and `reconcile`
 ## Invariants
 
 - **Markdown + small JSON / YAML / bash surface.** No `/src/`. Plugin manifest is JSON; config is YAML; hook is bash. Per `.lsa/standards/code.md`.
-- **Technology-agnostic; not the implementer.** LSA authors EARS + Gherkin specs and runs the two checks; code-writing is delegated to any implementer (`.lsa/VISION.md` §4 *"The implementer is external"*). Standards adopted: EARS + Gherkin (Specification by Example) — interoperable with Spec Kit / Kiro / Cursor.
+- **Technology-agnostic; not the implementer.** LSA authors EARS + Gherkin specs and runs the two checks; code-writing is delegated to any implementer (`.lsa/VISION.md` §4 *"The implementer is external"*). Standards adopted: EARS + Gherkin (Specification by Example) — interoperable with Spec Kit / Kiro / Cursor — plus RTM (requirements traceability matrix), the lineage `reconcile`'s `conformance.md` coverage table claims; practice, not IEEE 830 / ISO 29148 conformance (`lsa/README.md` §Standards).
 - **One uniform instruction pattern.** Every skill and agent body is Role / Goal / Inputs (each sourced `user` / `discover` / `self`) / Steps (1:1 input → CoT → output) / Output. Per `CORE.md` §4.
 - **`discover` is the universal input-resolver.** Context inputs for any skill are gathered by `discover`; only free text comes from the user (`CORE.md` §4).
 - **The two checks are the product.** `verify` grounds the spec against the codebase before delegation and blocks an ungrounded spec; `reconcile` checks the returned diff **does · only · all** (scenarios pass ×N ≥95%; every hunk traces; every requirement covered), emits `conformance.md`, and absorbs drift. Per `CORE.md` §6.

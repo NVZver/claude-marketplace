@@ -114,11 +114,13 @@ Everything else is table stakes; these two are why LSA exists.
 - **only** — every changed hunk traces to a requirement (no scope creep).
 - **all** — every requirement maps to a change or a covering test (nothing skipped).
 
-Output is `conformance.md` — a **requirement ↔ hunk coverage table**: one row per requirement ID mapping the diff hunks that implement it, the scenario runs that prove it, and a verdict — *what actually changed vs. the plan*, with orphan hunks (in the diff, in no row) surfaced as drift. Drift → the spec absorbs reality; the code is never reverted.
+Output is `conformance.md` — a **requirement ↔ hunk coverage table**, in substance a requirements traceability matrix (RTM; see §Standards): one row per requirement ID mapping the diff hunks that implement it, the scenario runs that prove it, and a verdict — *what actually changed vs. the plan*, with orphan hunks (in the diff, in no row) surfaced as drift. Drift → the spec absorbs reality; the code is never reverted.
 
 ## Standards
 
 LSA adopts industry standards rather than inventing formats — **EARS** ("While `<state>` / when `<event>`, the system shall …") for requirements, and **Gherkin** (`Given / When / Then`, from [Specification by Example](https://gojko.net/books/specification-by-example/)) for acceptance scenarios. Authored tech-agnostically; your implementer wires execution.
+
+`reconcile`'s `conformance.md` coverage table is, in substance, a **requirements traceability matrix (RTM)** — the conventional instrument for demonstrating the traceability property IEEE 830-1998 and its successor ISO/IEC/IEEE 29148 require of an SRS. `[unverified]` — both standards are paywalled and were not read directly; cited by name/number/year only. The claim is the practice, not conformance: LSA has been audited against neither standard.
 
 ## Configuration
 

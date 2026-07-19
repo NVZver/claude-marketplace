@@ -2,6 +2,21 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.29.0] — 2026-07-20
+
+Names `reconcile`'s `conformance.md` coverage table as a requirements traceability matrix (RTM) — a positioning-only change, no skill behavior differs. Per pitch `name-conformance-as-rtm` (Fork 1-3): the artifact already functions as an RTM (IEEE 830-1998 / ISO-IEC-IEEE 29148 traceability lineage, `[unverified]` at clause level — cited by name/number/year only); the repo had never said so. Claims the practice, explicitly not conformance to either standard. User-visible README delta → minor bump.
+
+### Added
+
+- **`README.md` §Standards** — RTM lineage paragraph alongside EARS + Gherkin, with the non-optional practice-not-conformance disclaimer.
+- **`.lsa/VISION.md` §6 "Converged"** — RTM lineage bullet, correcting the loose "codified in IEEE 830" framing from the 2026-07-19 SDD competitive pulse-check to the precise property-vs-artifact split.
+
+### Changed
+
+- **`README.md` §"The two checks — the product"** — one line naming the `conformance.md` coverage table an RTM at the point it's described.
+- **`.lsa/modules/lsa/spec.md`** — "Standards adopted" invariant line gains RTM alongside EARS + Gherkin.
+- **`.claude-plugin/plugin.json`** description — same RTM lineage line, practice-not-conformance disclaimer.
+
 ## [0.28.1] — 2026-07-19
 
 Knowledge-file truth pass following the `manager:check` inlining (manager 0.20.0). Documentation only — no skill behavior change → patch bump.
