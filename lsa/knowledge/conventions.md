@@ -46,10 +46,11 @@ Observable result: per-source one-liner printed back to the human.
 
 When any LSA skill needs to call a library API it is unsure about:
 
-1. Check available tools for `resolve-library-id` (context7 MCP).
-2. **If context7 available:** read `package.json` (or equivalent) for the library version → call `resolve-library-id` → call `query-docs` with the specific API question. Cite as `lib:<name>:<api> via context7`.
-3. **If no context7:** use `WebSearch` for official docs (prefer `.md` over `.html`). Cite as `lib:<name>:<api> via <url>`.
-4. **If nothing found:** state it. Use codebase patterns and types. Never guess API signatures.
+1. **If the library is registered under `libs:` in `.lsa.yaml`:** run `bash scripts/check-lib-pins.sh` and read its status line for that library. On `OK`, read the registered pinned spec; if it covers the symbol, cite it as `lib:<name>:<api> via pin@<pinned-version>` and stop — make no external call. On `STALE`, `BROKEN`, or `[cannot verify]`, or if the symbol is not covered, continue to step 2. **Precedence is conditional, not positional:** a pinned spec is an in-repo doc representing an external source, so under `.lsa/VISION.md` §2 principle 6 (in-repo config → in-repo docs → the code itself → external sources → ask the human) it earns the in-repo-doc rank only while its staleness check is green — never a soft pass. The green/not-green determination comes from `scripts/check-lib-pins.sh`'s status line and exit code, never the model's own judgment of freshness (principle 10). An unverifiable pin does not outrank a fetchable answer.
+2. Check available tools for `resolve-library-id` (context7 MCP).
+3. **If context7 available:** read `package.json` (or equivalent) for the library version → call `resolve-library-id` → call `query-docs` with the specific API question. Cite as `lib:<name>:<api> via context7`.
+4. **If no context7:** use `WebSearch` for official docs (prefer `.md` over `.html`). Cite as `lib:<name>:<api> via <url>`.
+5. **If nothing found:** state it. Use codebase patterns and types. Never guess API signatures.
 
 Skills that perform discovery (`lsa:discover`) do this proactively; any unknown API is resolved this way before it is relied on.
 

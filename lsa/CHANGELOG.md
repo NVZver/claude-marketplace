@@ -2,7 +2,13 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
-## [0.31.0] — 2026-07-20
+## [0.32.0] — 2026-07-20
+
+A pinned library spec now outranks the reactive fetch protocol — but only while its staleness check is green. Per pitch `pinned-library-specs` (epic 3 of 3, `conditional-read-precedence`). Behavior change to `lsa/knowledge/conventions.md`'s library documentation protocol → minor bump.
+
+### Changed
+
+- **`lsa/knowledge/conventions.md`** §"Library documentation protocol" — new step 1: if the library is registered under `.lsa.yaml` `libs:`, run `scripts/check-lib-pins.sh`; on `OK`, read the pinned spec and cite `lib:<name>:<api> via pin@<pinned-version>`, no external call. On `STALE`/`BROKEN`/`[cannot verify]`, or a symbol off the pin's map, fall through unchanged to the existing 4-step reactive protocol (renumbered 2-5). Precedence is **conditional on the script's exit code**, never the model's own freshness judgment — an unverifiable pin does not outrank a fetchable answer (`.lsa/VISION.md` §2 principles 6 and 10).
 
 Adds pinned library specs — a capped (≤5) registry of version-pinned specs for the libraries a repo calls most, with a deterministic staleness gate. Per pitch `pinned-library-specs` (epic 1 of 3, `format-and-staleness-gate`): the shrunk version of Tessl's proactive spec-cache idea (`.lsa/VISION.md` §6 "Adjust #2"). New documented capability → minor bump.
 
