@@ -530,6 +530,26 @@ else
   fail_line "C17 metrics-harvest emit step missing from ${METRICS_SKILL} (metrics writer dropped again — see lsa 0.16.0)"
 fi
 
+# ---------------------------------------------------------------------------
+# C18 — the .lsa.yaml `libs:` block (pinned library specs) is capped at 5
+# entries. Rabbit hole 2 (pitch pinned-library-specs): unbounded growth turns
+# this into the 10,000-spec registry the pitch explicitly declines to build.
+# Counts 2-space-indented `<lib-name>:` lines directly under `libs:`; 0 entries
+# (including no `libs:` block at all) passes.
+# ---------------------------------------------------------------------------
+LIBS_CAP=5
+libs_count="$(awk '
+  /^libs:[[:space:]]*$/ { inlibs=1; next }
+  inlibs && /^[^[:space:]#]/ { inlibs=0 }
+  inlibs && /^[[:space:]]{2}[A-Za-z0-9_-]+:[[:space:]]*$/ { n++ }
+  END { print n+0 }
+' .lsa.yaml 2>/dev/null)"
+if [[ "${libs_count:-0}" -le "${LIBS_CAP}" ]]; then
+  pass_line "C18 .lsa.yaml libs: block within the ${LIBS_CAP}-entry cap (${libs_count:-0} registered)"
+else
+  fail_line "C18 .lsa.yaml libs: block exceeds the ${LIBS_CAP}-entry cap (${libs_count} registered)"
+fi
+
 echo
 if [[ "${fail}" -eq 0 ]]; then
   echo "All invariants hold."
