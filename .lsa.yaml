@@ -54,8 +54,10 @@ routing:
 # names a version-pinned spec file + the manifest it's checked against;
 # scripts/check-lib-pins.sh (wired into gate: above as lib-pins) verifies
 # staleness on every lsa:verify. Capped at 5 entries (scripts/lint.sh C18).
-# No entries registered yet — this epic ships the format + gate only.
-libs: {}
+libs:
+  actions-checkout:
+    spec: .lsa/libs/actions-checkout.md
+    manifest: .github/workflows/lint.yml
 
 modules:
   core:

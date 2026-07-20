@@ -43,6 +43,7 @@ tree:  # directories only (depth ≤ 3)
       pro-tier-token-affordability:
       restore-tracked-metrics-harvest:
       standards-conformance-agents-md:
+    libs:
     modules:
       core:
       lsa:
