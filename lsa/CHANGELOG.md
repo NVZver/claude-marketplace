@@ -2,6 +2,26 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.33.0] — 2026-07-20
+
+Closes the findings sweep over the 2026-07-20 overnight epic batch. The batch shipped eight epics with a green `gate:` block and, between them, one `conformance.md` — whose verdict was left `@ <pending>`. The metrics layer restored in 0.30.0 emitted zero rows the whole time, because its anti-regression guard (lint C17) greps `reconcile`'s instruction text and cannot observe whether the step ran. `reconcile` gains an output-contract repair step → minor bump.
+
+### Changed
+
+- **`skills/reconcile/SKILL.md`** Step 5 — an `UNPARSEABLE (non-canonical orphan-hunk line)` from `scripts/metrics-harvest.sh` is now a **Step 4 output-contract violation**: repair the orphan line and re-run the harvest before appending the row. This is a format rule, not a metric rule — the metric still never gates a PASS/FAIL verdict (pitch `restore-tracked-metrics-harvest` no-go 5). The step also now states when to pass an explicit commit range: none while the cycle is uncommitted (the live path), the cycle's own `<base>..<sha>` once it is committed.
+
+### Added (repo-internal, outside every plugin's `artifact_paths` — no other plugin bumps)
+
+- **`scripts/lint.sh` C19** — every post-contract `conformance.md` must carry the canonical column-0 orphan-hunk line. This is the check C17 cannot be: C17 proves the emit step is still *documented*, C19 checks the *emitted artifact*. The metrics epic's own `conformance.md` had written a bolded `**Orphan hunks: none.**` under a prose heading — precisely the shape its own requirement forbids — and its own harvest script reported `UNPARSEABLE` on it.
+- **`scripts/lint.sh` C20** — every feature dir with a `requirements.md` must have a `conformance.md`. A spec with no graded verdict means `lsa:reconcile` was skipped and nothing independently checked does · only · all. Both checks carry a shrink-only baseline under `scripts/baselines/` exempting genuinely pre-contract artifacts.
+
+### Fixed
+
+- **`scripts/metrics-harvest.sh` / `scripts/coverage-skeleton.sh`** — `only-required-changes` was computed against the current working tree regardless of which cycle was being harvested, so any committed cycle produced a confident wrong ratio. Both scripts now distinguish a commit **range** (`A..B`, a historical cycle) from a working-tree comparison (no args or a bare `HEAD`, the live path reconcile uses): a range no longer folds in today's untracked files, and harvesting a committed cycle without one reports `UNPARSEABLE (committed cycle, no explicit diff range given)`. Observed impact: `harvest-script` harvested as `65/65` against a real diff of 2 files.
+- **`scripts/metrics-harvest.sh`** — orphans exceeding candidate hunks now reports `UNPARSEABLE` instead of a negative numerator.
+- **`.gitignore`** — `dist/` (generated export tree) and `.lsa/planned-lsa-run.log` are ignored. Untracked build output was being counted as candidate hunks, silently inflating the denominator of every derived metric. Ignoring `dist/` was already a locked decision on the `cursor-equal-support` roadmap row, never applied.
+- **`.lsa/metrics.md`** — the ledger held 2 rows from 2026-05-21, exactly as the pitch's problem statement described. Seven rows appended, one per epic in the sweep, each harvested against its own commit range. The `Citation resolve-rate` column is now documented as a repo-wide snapshot at harvest time: it carries no per-feature variation and must be read as a repo-level trend, never a per-cycle score.
+
 ## [0.32.1] — 2026-07-20
 
 Fixes invalid YAML frontmatter in 6 `lsa` skills (roadmap `agent-skills-strict-yaml-conformance`, found during `standards-conformance-agents-md/standards-claim`). Description-only, no trigger-relevant wording change → patch bump.

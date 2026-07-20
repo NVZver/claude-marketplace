@@ -1,13 +1,16 @@
 # Conformance — restore-tracked-metrics-harvest/harvest-script
 
-`reconcile: PASS @ <pending — graded pre-commit, self-check by implementer>`
+`reconcile: PASS @ b26c2b2` — independent grade, 2026-07-20 (see "Independent re-grade" below)
 Graded: working tree on `feature/harvest-script` · Date: 2026-07-20 · N = `.lsa.yaml` `reconcile.runs` = **3** (pass = 3/3)
 
-**Note on independence.** This `conformance.md` is a self-check produced by the same agent
-that wrote the implementation, in the same context — it does **not** satisfy
-`lsa/knowledge/quality-gate-contract.md`'s independence rule (a separate context, a separate
-commit). It is submitted per the orchestrator's explicit instruction to self-check before
-handoff; the orchestrator's own independent `lsa:reconcile` run is the authoritative verdict.
+**Note on independence.** Everything from here to §"does · only · all" is the original
+**self-check**, produced by the same agent that wrote the implementation, in the same context —
+it does **not** satisfy `lsa/knowledge/quality-gate-contract.md`'s independence rule (a separate
+context, a separate commit). It was submitted per the orchestrator's instruction to self-check
+before handoff, deferring to an independent `lsa:reconcile` run as authoritative. That run never
+happened before merge. It is supplied in §"Independent re-grade (2026-07-20)" below, which is
+the authoritative verdict; the self-check is retained as the record of what was claimed at
+handoff.
 
 ## Requirement ↔ hunk coverage
 
@@ -33,7 +36,7 @@ handoff; the orchestrator's own independent `lsa:reconcile` run is the authorita
 candidate hunks: `scripts/metrics-harvest.sh`, `scripts/tests/metrics-harvest-test.sh` — both
 map to rows above.
 
-**Orphan hunks: none.**
+Orphan hunks: none.
 
 A third file, `project-map.yaml`, was touched but lives in a **separate, prior commit**
 (`c0fa803`, "chore: regenerate project-map.yaml for restore-tracked-metrics-harvest epics") —
@@ -61,7 +64,34 @@ an orphan of this spec; it precedes and is independent of it.
 - **only** — 2 candidate hunks (`scripts/metrics-harvest.sh`, `scripts/tests/metrics-harvest-test.sh`), both mapped to requirement rows; no orphans.
 - **all** — R1–R13 each have an implementing hunk, a proving run, and a ✅ verdict.
 
+## Independent re-grade (2026-07-20)
+
+The self-check above was never followed by the independent run it defers to; the epic merged
+with its verdict left `@ <pending>`. That run is supplied here, in a separate context and by a
+different model from the implementer.
+
+**Re-run evidence:** `bash scripts/tests/metrics-harvest-test.sh` → all cases pass (now 14,
+after three cases added by the 2026-07-20 findings sweep); `bash scripts/run-tests.sh` → 10/10;
+`bash scripts/gate.sh` → 6/6 exit 0. R1–R13 as tabled above are confirmed.
+
+**Two defects the self-check missed, both since fixed:**
+
+1. **This file violated the contract its own epic defined.** The orphan line was written as a
+   bolded `**Orphan hunks: none.**` under a `## Orphan hunks` prose heading — precisely the
+   shape R5 declares invalid — so `metrics-harvest.sh` reported
+   `only-required-changes: UNPARSEABLE` on the artifact of the epic that built it. Corrected to
+   the canonical column-0 form; lint **C19** now enforces this on every post-contract
+   `conformance.md`.
+2. **`only-required-changes` was computable but wrong for any committed cycle.** With no
+   explicit range the metric measured the current working tree, and untracked build output
+   (`dist/`, ungitignored) counted as candidate hunks — this feature harvested as `65/65` at one
+   point, against a real diff of 2 files. Fixed by the commit-range guard in
+   `metrics-harvest.sh` and `coverage-skeleton.sh`, plus a `.gitignore` entry for `dist/`.
+
+Neither defect changes the epic's PASS: the requirements are met as written. Both are defects
+in what the requirements asked for, and are recorded in the findings sweep.
+
 ## Verdict
 
-`reconcile (self-check): PASS` — pending the orchestrator's independent `lsa:reconcile` re-run,
-which is the authoritative grade per this epic's instructions.
+`reconcile: PASS @ b26c2b2` — independent grade. The self-check's verdict is superseded by
+this one.

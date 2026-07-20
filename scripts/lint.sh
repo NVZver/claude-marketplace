@@ -550,6 +550,88 @@ else
   fail_line "C18 .lsa.yaml libs: block exceeds the ${LIBS_CAP}-entry cap (${libs_count} registered)"
 fi
 
+# ---------------------------------------------------------------------------
+# C19 — every conformance.md must carry the canonical, machine-readable
+# orphan-hunk line required by lsa/skills/reconcile/SKILL.md Step 4: exactly one
+# line, at column 0, reading `Orphan hunks: none.` or `Orphan hunks: <integer>`.
+#
+# This is the check C17 cannot be. C17 greps reconcile's SKILL.md and proves the
+# emit step is still *documented*; it passes happily while the emitted artifacts
+# are unparseable and the ledger stays empty — which is exactly what happened on
+# the 2026-07-20 sweep, where the metrics epic's own conformance.md wrote a
+# bolded `**Orphan hunks: none.**` under a prose heading and its own harvest
+# script reported UNPARSEABLE. C19 checks the artifact, not the instruction.
+#
+# Format only. The metric never gates a PASS/FAIL verdict (pitch
+# restore-tracked-metrics-harvest, no-go 5) — this enforces Step 4's output
+# contract, which was always mandatory.
+#
+# Files listed in the baseline predate the contract and are exempt; that list is
+# shrink-only (see its header).
+# ---------------------------------------------------------------------------
+ORPHAN_BASELINE="scripts/baselines/pre-contract-conformance.txt"
+ORPHAN_RE='^Orphan hunks: (none\.|[0-9]+)[[:space:]]*$'
+c19_bad=""
+c19_checked=0
+while IFS= read -r cf; do
+  [[ -n "${cf}" ]] || continue
+  # Grandfathered? (comments and blank lines in the baseline are ignored)
+  if [[ -f "${ORPHAN_BASELINE}" ]] \
+     && grep -v '^[[:space:]]*#' "${ORPHAN_BASELINE}" | grep -qxF "${cf}"; then
+    continue
+  fi
+  c19_checked=$((c19_checked + 1))
+  hits="$(grep -cE "${ORPHAN_RE}" "${cf}" 2>/dev/null || true)"
+  [[ -n "${hits}" ]] || hits=0
+  if [[ "${hits}" -ne 1 ]]; then
+    c19_bad="${c19_bad}${cf} (${hits} canonical orphan lines, need exactly 1)
+"
+  fi
+done <<< "$(find .lsa/features -name conformance.md 2>/dev/null | sort)"
+
+if [[ -z "${c19_bad}" ]]; then
+  pass_line "C19 canonical orphan-hunk line present in all ${c19_checked} post-contract conformance.md files"
+else
+  fail_line "C19 conformance.md files missing the canonical orphan-hunk line (reconcile SKILL.md Step 4):"
+  printf '%s' "${c19_bad}" | sed 's/^/        /'
+fi
+
+# ---------------------------------------------------------------------------
+# C20 — every feature dir carrying a requirements.md must also carry a
+# conformance.md. A spec without a graded verdict means the epic shipped with
+# `lsa:reconcile` skipped: nothing independently checked does · only · all.
+#
+# This is the check the 2026-07-20 sweep needed and did not have. Eight epics
+# merged with a green `gate:` block and no conformance.md between them, and the
+# roadmap recorded "gate green throughout" as the quality evidence. The gate is a
+# lint/test runner; reconcile is the independent grader. Substituting the first
+# for the second is invisible without this check.
+#
+# Dirs in the baseline are exempt for a stated reason (pre-contract, or dropped
+# at specify and never implemented); that list is shrink-only.
+# ---------------------------------------------------------------------------
+CONF_EXEMPT="scripts/baselines/conformance-exempt.txt"
+c20_bad=""
+c20_checked=0
+while IFS= read -r rf; do
+  [[ -n "${rf}" ]] || continue
+  fdir="$(dirname "${rf}")"
+  if [[ -f "${CONF_EXEMPT}" ]] \
+     && grep -v '^[[:space:]]*#' "${CONF_EXEMPT}" | grep -qxF "${fdir}"; then
+    continue
+  fi
+  c20_checked=$((c20_checked + 1))
+  [[ -f "${fdir}/conformance.md" ]] || c20_bad="${c20_bad}${fdir}
+"
+done <<< "$(find .lsa/features -name requirements.md 2>/dev/null | sort)"
+
+if [[ -z "${c20_bad}" ]]; then
+  pass_line "C20 every graded feature dir has a conformance.md (${c20_checked} checked)"
+else
+  fail_line "C20 feature dirs with requirements.md but no conformance.md (reconcile skipped):"
+  printf '%s' "${c20_bad}" | sed 's/^/        /'
+fi
+
 echo
 if [[ "${fail}" -eq 0 ]]; then
   echo "All invariants hold."

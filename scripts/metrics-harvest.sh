@@ -23,6 +23,12 @@
 #   (git-diff-args passed through verbatim to coverage-skeleton.sh; default HEAD,
 #   matching scripts/coverage-skeleton.sh:23)
 #
+# only-required-changes is meaningful only when the measured diff range IS the
+# graded cycle's range. Live reconcile satisfies that by construction (it grades
+# before the commit). Harvesting an already-committed cycle does not, so with no
+# explicit range that case reports UNPARSEABLE rather than a ratio derived from
+# unrelated later work — pass the cycle's own range to backfill it deliberately.
+#
 # Exit 0 whenever the four output lines are printed — an UNPARSEABLE metric is
 # informational, not a failure (mirrors scripts/resolve-refs.sh's new/MISSING
 # handling). Non-zero exit only on the usage / missing-file errors below.
@@ -44,6 +50,16 @@ if [[ ! -f "${conformance}" ]]; then
   exit 1
 fi
 shift
+# Did the caller name a commit RANGE (`A..B`)? A range denotes a historical,
+# already-committed cycle; no args — or a bare `HEAD` — means the current working
+# change, which is what reconcile grades live. Arg count cannot decide this: an
+# explicit `HEAD` is still the live case. Same discriminator as
+# scripts/coverage-skeleton.sh, deliberately, so the two agree on which cycle is
+# being measured.
+has_commit_range=0
+for _a in "$@"; do
+  case "${_a}" in *..*) has_commit_range=1 ;; esac
+done
 
 feature_dir="$(dirname "${conformance}")"
 feature_dir="${feature_dir%/}"
@@ -72,17 +88,36 @@ else
     orphans="${orphan_value}"
   fi
 
-  cov_output="$(bash scripts/coverage-skeleton.sh "${feature_dir}" "$@" 2>/dev/null)"
-  cov_rc=$?
-  if [[ "${cov_rc}" -ne 0 ]]; then
-    metric2="UNPARSEABLE (coverage-skeleton failed)"
+  # Live-vs-historical guard. With no explicit range the measured diff is the
+  # working tree against HEAD, which describes THIS cycle only while the cycle is
+  # still uncommitted — reconcile grades an epic before its commit, so the epic's
+  # files are still untracked (scripts/coverage-skeleton.sh:61-63). Once the
+  # cycle is committed, HEAD measures whatever unrelated work came after it, and
+  # a ratio computed from that range is confidently wrong rather than merely
+  # imprecise. Detect it by asking whether the conformance file is itself a clean
+  # tracked file, and report the honest unknown instead. An explicit range means
+  # the caller stated the cycle's boundaries, so it is trusted.
+  if [[ "${has_commit_range}" -eq 0 ]] \
+     && git ls-files --error-unmatch "${conformance}" >/dev/null 2>&1 \
+     && git diff --quiet HEAD -- "${conformance}" 2>/dev/null; then
+    metric2="UNPARSEABLE (committed cycle, no explicit diff range given)"
   else
-    candidate_n="$(printf '%s\n' "${cov_output}" | grep -c '^- \[ \] ' || true)"
-    [[ -n "${candidate_n}" ]] || candidate_n=0
-    if [[ "${candidate_n}" -eq 0 ]]; then
-      metric2="UNPARSEABLE (no candidate hunks)"
+    cov_output="$(bash scripts/coverage-skeleton.sh "${feature_dir}" "$@" 2>/dev/null)"
+    cov_rc=$?
+    if [[ "${cov_rc}" -ne 0 ]]; then
+      metric2="UNPARSEABLE (coverage-skeleton failed)"
     else
-      metric2="$((candidate_n - orphans))/${candidate_n}"
+      candidate_n="$(printf '%s\n' "${cov_output}" | grep -c '^- \[ \] ' || true)"
+      [[ -n "${candidate_n}" ]] || candidate_n=0
+      if [[ "${candidate_n}" -eq 0 ]]; then
+        metric2="UNPARSEABLE (no candidate hunks)"
+      elif [[ "${orphans}" -gt "${candidate_n}" ]]; then
+        # More orphans than candidate hunks is a contradiction between the two
+        # sources, never a negative numerator dressed up as a rate.
+        metric2="UNPARSEABLE (orphans ${orphans} exceed candidate hunks ${candidate_n})"
+      else
+        metric2="$((candidate_n - orphans))/${candidate_n}"
+      fi
     fi
   fi
 fi
@@ -136,6 +171,6 @@ elif [[ -n "${fail_line}" ]]; then
 else
   metric4="UNPARSEABLE (check-citations summary not found)"
 fi
-echo "citation-resolve-rate: ${metric4}  (PROXY — resolve-rate, not quote integrity)"
+echo "citation-resolve-rate: ${metric4}  (PROXY — repo-wide at harvest time, not per-feature; resolve-rate, not quote integrity)"
 
 exit 0

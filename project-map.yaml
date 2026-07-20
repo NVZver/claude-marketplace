@@ -108,5 +108,6 @@ tree:  # directories only (depth ≤ 3)
     knowledge:
     tests:
   scripts:
+    baselines:
     tests:
   tests:

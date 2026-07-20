@@ -101,6 +101,16 @@ else
   fail_line "untracked-file enumeration: expected src/untracked.txt candidate hunk (exit ${rcu})"
 fi
 
+# …but a commit RANGE names a historical cycle. Whatever is untracked in the
+# working tree today did not belong to it, and counting it inflates the
+# candidate-hunk denominator of every metric derived from this skeleton.
+outr="$(bash "${SCRIPT}" "${FD}" 'HEAD~1..HEAD')"; rcr=$?
+if [[ "${rcr}" -eq 0 ]] && ! printf '%s' "${outr}" | grep -qF -- '- [ ] src/untracked.txt'; then
+  pass_line "commit range excludes untracked files (historical cycle, not the working tree)"
+else
+  fail_line "commit range: src/untracked.txt must NOT be a candidate hunk for A..B (exit ${rcr})"
+fi
+
 # --- F-keyed spec -----------------------------------------------------------
 printf '%s\n' \
   '# Demo requirements (F-keyed)' \

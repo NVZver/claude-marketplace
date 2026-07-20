@@ -67,7 +67,7 @@ flowchart TD
 3. **Specify** — `/lsa:specify` drafts EARS requirements + Gherkin `.feature` scenarios, shows you the full draft, and writes the files only after you approve (since v0.17.0).
 4. **Verify** — `/lsa:verify` grounds the spec against your codebase; fix anything `NOT-GROUNDED` before building.
 5. **Delegate** — `/lsa:delegate` hands the spec to your coding agent.
-6. **Reconcile** — `/lsa:reconcile` checks the returned diff **does · only · all** and writes `conformance.md`; on a PASS verdict it also writes a `.lsa/metrics.md` row.
+6. **Reconcile** — `/lsa:reconcile` checks the returned diff **does · only · all** and writes `conformance.md`; on a PASS verdict it also writes a `.lsa/metrics.md` row. `conformance.md` must carry a canonical, machine-readable orphan-hunk line (`Orphan hunks: none.` or `Orphan hunks: <n>`, at column 0) — the metrics row is derived from it, and lint C19/C20 fail if that line is malformed or the verdict is missing entirely.
 
 > [!TIP]
 > You don't have to run the steps by hand — talk to the `orchestrator` and it drives the whole loop, resolving each step's inputs via `discover`.

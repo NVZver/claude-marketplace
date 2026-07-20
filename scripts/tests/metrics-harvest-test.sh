@@ -45,7 +45,7 @@ after_sum="$(shasum -a 256 "${real_conformance}" 2>/dev/null || true)"
 if [[ "${rc_real}" -eq 0 ]] \
    && printf '%s' "${out_real}" | grep -qE '^only-required-changes: UNPARSEABLE \(non-canonical orphan-hunk line\)$' \
    && printf '%s' "${out_real}" | grep -qE '^accuracy-to-task: [0-9]+/[0-9]+$' \
-   && printf '%s' "${out_real}" | grep -qE '^citation-resolve-rate: .*\(PROXY — resolve-rate, not quote integrity\)$'; then
+   && printf '%s' "${out_real}" | grep -qE '^citation-resolve-rate: .*\(PROXY — repo-wide at harvest time, not per-feature; resolve-rate, not quote integrity\)$'; then
   pass_line "real historical file: non-canonical orphan line → UNPARSEABLE, other two lines still print, exit 0"
 else
   fail_line "real historical file: got (exit ${rc_real}):
@@ -124,7 +124,7 @@ if [[ "${rc1}" -eq 0 ]] \
    && printf '%s' "${out1}" | grep -qF 'feature: test-fixture' \
    && printf '%s' "${out1}" | grep -qE '^only-required-changes: ([0-9]+)/\1$' \
    && printf '%s' "${out1}" | grep -qF 'accuracy-to-task: 3/4' \
-   && printf '%s' "${out1}" | grep -qE '^citation-resolve-rate: [0-9]+/[0-9]+  \(PROXY — resolve-rate, not quote integrity\)$'; then
+   && printf '%s' "${out1}" | grep -qE '^citation-resolve-rate: [0-9]+/[0-9]+  \(PROXY — repo-wide at harvest time, not per-feature; resolve-rate, not quote integrity\)$'; then
   pass_line "canonical fixture: all three metrics M/N, accuracy-to-task 3/4, PROXY suffix present, exit 0"
 else
   fail_line "canonical fixture: got (exit ${rc1}):
@@ -211,11 +211,76 @@ out4="$(bash "${SCRIPT}" "${FD}/conformance.md")"; rc4=$?
 mv scripts/check-citations.sh.bak scripts/check-citations.sh
 
 if [[ "${rc4}" -eq 0 ]] \
-   && printf '%s' "${out4}" | grep -qF 'citation-resolve-rate: 48/50  (PROXY — resolve-rate, not quote integrity)'; then
+   && printf '%s' "${out4}" | grep -qF 'citation-resolve-rate: 48/50  (PROXY — repo-wide at harvest time, not per-feature; resolve-rate, not quote integrity)'; then
   pass_line "FAIL-line arithmetic: FAIL 2 broken of 50 checked → citation-resolve-rate: 48/50, exit 0 (non-zero check-citations exit does not gate)"
 else
   fail_line "FAIL-line arithmetic: expected citation-resolve-rate: 48/50, got (exit ${rc4}):
 ${out4}"
+fi
+
+# --- live-vs-historical guard: committed cycle, no explicit range ----------
+# A committed cycle measured against the default HEAD range describes whatever
+# work came after it, not the cycle. The guard must report the honest unknown.
+cd "${work}"
+# Commit any leftovers from earlier fixtures first, so the fixture-3 commit
+# below contains fixture 3 alone and HEAD~1..HEAD is exactly its cycle.
+git add -A
+git commit -q -m "settle earlier fixtures" || true
+FD3=".lsa/features/committed-cycle"
+mkdir -p "${FD3}"
+printf '%s\n' '# Demo requirements' '' '- F1. thing one' > "${FD3}/requirements.md"
+mkdir -p src3
+echo "x" > src3/c1.sh
+cat > "${FD3}/conformance.md" <<'EOF'
+# Conformance — committed-cycle
+
+| Req | Implementing hunks/files | Proving runs | Verdict |
+|---|---|---|---|
+| F1 | src3/c1.sh | 3/3 | ✅ |
+
+Orphan hunks: none.
+EOF
+git add -A
+git commit -q -m "fixture 3: committed cycle"
+
+out5="$(bash "${SCRIPT}" "${FD3}/conformance.md")"; rc5=$?
+if [[ "${rc5}" -eq 0 ]] \
+   && printf '%s' "${out5}" | grep -qF 'only-required-changes: UNPARSEABLE (committed cycle, no explicit diff range given)'; then
+  pass_line "committed cycle without a range: only-required-changes UNPARSEABLE, not a ratio from unrelated later work"
+else
+  fail_line "committed cycle without a range: expected the committed-cycle UNPARSEABLE reason, got (exit ${rc5}):
+${out5}"
+fi
+
+# An explicit range means the caller stated the cycle's boundaries — the guard
+# must yield to it rather than veto a deliberate backfill.
+out6="$(bash "${SCRIPT}" "${FD3}/conformance.md" 'HEAD~1..HEAD')"; rc6=$?
+if [[ "${rc6}" -eq 0 ]] \
+   && printf '%s' "${out6}" | grep -qF 'only-required-changes: 1/1'; then
+  pass_line "committed cycle with an explicit range: guard yields, only-required-changes 1/1"
+else
+  fail_line "committed cycle with an explicit range: expected only-required-changes: 1/1, got (exit ${rc6}):
+${out6}"
+fi
+
+# --- orphans exceeding candidate hunks is a contradiction, not a negative ---
+echo "x" > src3/c2.sh
+cat > "${FD3}/conformance.md" <<'EOF'
+# Conformance — committed-cycle (contradiction)
+
+| Req | Implementing hunks/files | Proving runs | Verdict |
+|---|---|---|---|
+| F1 | src3/c1.sh | 3/3 | ✅ |
+
+Orphan hunks: 99
+EOF
+out7="$(bash "${SCRIPT}" "${FD3}/conformance.md")"; rc7=$?
+if [[ "${rc7}" -eq 0 ]] \
+   && printf '%s' "${out7}" | grep -qE '^only-required-changes: UNPARSEABLE \(orphans 99 exceed candidate hunks [0-9]+\)$'; then
+  pass_line "orphans exceeding candidates: UNPARSEABLE, never a negative numerator"
+else
+  fail_line "orphans exceeding candidates: expected the exceed-UNPARSEABLE reason, got (exit ${rc7}):
+${out7}"
 fi
 
 # --- R2: string 'citation density' must appear nowhere in the script -------
