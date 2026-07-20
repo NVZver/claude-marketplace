@@ -1,6 +1,6 @@
 ---
 name: revise-constitution
-description: Promote a finished feature's lessons into permanent rules. Output: updated constitution + standards.
+description: Promote a finished feature's lessons into permanent rules. Output — updated constitution + standards.
 ---
 
 > **Trace.** On load, print first: `=============== [lsa/skills/revise-constitution/SKILL.md] [lsa] ===============`

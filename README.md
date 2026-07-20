@@ -129,7 +129,7 @@ The single test the whole system answers: **what is the minimum ceremony that st
 
 ## Status + substrate
 
-Personal-use first; open-sourced for visibility. Claude Code is the v1 substrate; the discipline (specs, sourcing, flow gating) isn't Claude-specific and the skills are plain Markdown — porting to another agentic IDE is a routing exercise, not a rewrite. This claim now carries a source: the repo's agent instructions live in [`AGENTS.md`](./AGENTS.md), the vendor-neutral standard ([agents.md](https://agents.md/)); its skills adopt the open [Agent Skills spec](https://agentskills.io/specification) (description length, name↔directory match — 13/20 fully conform to the strict reference validator, 20/20 conform to this repo's own `lint.sh` C7/C9 checks; evidence + the gap in [`core/VERIFICATION.md`](./core/VERIFICATION.md) §"Agent Skills spec conformance").
+Personal-use first; open-sourced for visibility. Claude Code is the v1 substrate; the discipline (specs, sourcing, flow gating) isn't Claude-specific and the skills are plain Markdown — porting to another agentic IDE is a routing exercise, not a rewrite. This claim now carries a source: the repo's agent instructions live in [`AGENTS.md`](./AGENTS.md), the vendor-neutral standard ([agents.md](https://agents.md/)); its skills conform 20/20 to the open [Agent Skills spec](https://agentskills.io/specification) reference validator (description length, name↔directory match, valid frontmatter; evidence in [`core/VERIFICATION.md`](./core/VERIFICATION.md) §"Agent Skills spec conformance").
 
 ## Plans & models
 

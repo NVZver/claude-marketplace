@@ -1,6 +1,6 @@
 ---
 name: verify
-description: Ground the spec against the codebase BEFORE delegating. Output: GROUNDED / NOT-GROUNDED + grounding.md.
+description: Ground the spec against the codebase BEFORE delegating. Output — GROUNDED / NOT-GROUNDED + grounding.md.
 ---
 
 > **Trace.** On load, print first: `=============== [lsa/skills/verify/SKILL.md] [lsa] ===============`

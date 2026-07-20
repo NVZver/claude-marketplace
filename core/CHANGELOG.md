@@ -2,6 +2,14 @@
 
 All notable changes to the `core` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.21.2] — 2026-07-20
+
+Fixes `core/skills/ground-rules/SKILL.md`'s invalid YAML frontmatter (roadmap `agent-skills-strict-yaml-conformance`, found during `standards-claim`, 0.21.1). Description-only, no trigger-relevant wording change → patch bump.
+
+### Fixed
+
+- **`ground-rules/SKILL.md`** — `description:` contained an unquoted mid-string `: ` ("...eight content rules: ownership-over-automation...") — invalid per the YAML spec inside a plain scalar (ambiguous with a new mapping key), though Claude Code's own frontmatter parser tolerated it. Replaced with an em dash ("...eight content rules — ownership-over-automation..."), no meaning change. `core/VERIFICATION.md` "Agent Skills spec conformance" corrected from 13/20 to the true, re-verified **20/20**.
+
 ## [0.21.1] — 2026-07-20
 
 Cites the open Agent Skills spec (https://agentskills.io/specification) that `lint.sh` C7/C9 already silently enforce, per `standards-conformance-agents-md/standards-claim`. Comments + docs only — C7/C9 executable logic is byte-identical. Patch bump: `core/VERIFICATION.md` (in `core`'s `artifact_paths`) gains a new section.
