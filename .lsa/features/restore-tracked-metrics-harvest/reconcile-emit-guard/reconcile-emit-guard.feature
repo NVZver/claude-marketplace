@@ -75,7 +75,7 @@ Feature: Reconcile emits a metrics row, and C17 proves the emit step cannot be d
   Scenario: Versioning discipline
     Given "lsa/skills/reconcile/SKILL.md" changed and it is inside the lsa artifact_paths
     When the change ships
-    Then "lsa/.claude-plugin/plugin.json" reads version "0.29.0"
+    Then "lsa/.claude-plugin/plugin.json" reads version "0.30.0"
     And "lsa/CHANGELOG.md" carries a matching entry in the same commit
     And "lsa/README.md" notes that reconcile writes a .lsa/metrics.md row on PASS
     And no other plugin version is bumped

@@ -496,6 +496,31 @@ else
   printf '%s\n' "${c16_hits}" | sed 's/^/        /'
 fi
 
+# ---------------------------------------------------------------------------
+# C17 — the reconcile metrics-emit step must stay present. `lsa` 0.16.0
+# silently removed the `.lsa/metrics.md` writer as refactor collateral and
+# nothing caught it (restore-tracked-metrics-harvest pitch, rabbit hole 2);
+# the metrics layer was rebuilt in epic reconcile-emit-guard specifically to
+# not die the same way twice. This guards the two literal markers that prove
+# the emit step is still wired into lsa/skills/reconcile/SKILL.md — the
+# script name that performs the harvest and the file it appends to.
+# Presence check only — verifying the emit step actually RAN on a given
+# cycle is reconcile's own job, not a grep (mirrors the C15 comment above).
+# ---------------------------------------------------------------------------
+METRICS_SKILL="lsa/skills/reconcile/SKILL.md"
+METRICS_SCRIPT_MARKER='scripts/metrics-harvest.sh'
+METRICS_FILE_MARKER='.lsa/metrics.md'
+if grep -qF "${METRICS_SCRIPT_MARKER}" "${METRICS_SKILL}" 2>/dev/null; then
+  pass_line "C17 metrics-harvest emit step present in ${METRICS_SKILL} (${METRICS_SCRIPT_MARKER})"
+else
+  fail_line "C17 metrics-harvest emit step missing from ${METRICS_SKILL} (metrics writer dropped again — see lsa 0.16.0)"
+fi
+if grep -qF "${METRICS_FILE_MARKER}" "${METRICS_SKILL}" 2>/dev/null; then
+  pass_line "C17 metrics-harvest emit step present in ${METRICS_SKILL} (${METRICS_FILE_MARKER})"
+else
+  fail_line "C17 metrics-harvest emit step missing from ${METRICS_SKILL} (metrics writer dropped again — see lsa 0.16.0)"
+fi
+
 echo
 if [[ "${fail}" -eq 0 ]]; then
   echo "All invariants hold."

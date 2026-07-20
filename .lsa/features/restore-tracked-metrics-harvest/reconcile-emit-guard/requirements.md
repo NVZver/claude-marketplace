@@ -112,8 +112,10 @@ re-read from the shipped script before implementing.
   `scripts/run-tests.sh` auto-discovers `scripts/tests/*.sh`, so no runner edit is needed;
   the test SHALL appear as `PASS  metrics-emit-guard-test.sh` in its output.
 
-- R8. `lsa` SHALL bump SemVer **0.28.1 → 0.29.0** (MINOR — new `reconcile` behavior +
-  tightened output contract) in `lsa/.claude-plugin/plugin.json`, with a matching
+- R8. `lsa` SHALL bump SemVer **0.29.0 → 0.30.0** (MINOR — new `reconcile` behavior +
+  tightened output contract; the spec's original wording said 0.28.1 → 0.29.0, but
+  `name-conformance-as-rtm` already shipped 0.29.0 on the base branch before this epic
+  started — grounding drift, corrected per `grounding.md`) in `lsa/.claude-plugin/plugin.json`, with a matching
   `lsa/CHANGELOG.md` entry (Keep a Changelog, same commit) and a `lsa/README.md` update
   where the `reconcile` surface is described (`lsa/README.md:8`, `lsa/README.md:70`) noting
   that reconcile now writes a `.lsa/metrics.md` row on PASS. `scripts/lint.sh`,
