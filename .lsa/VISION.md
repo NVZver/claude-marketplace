@@ -95,7 +95,7 @@ packs/  (load on demand)
 
 **Why core-first.** The core is pure markdown ground rules with no code dependency, so it can be installed and exercised on its own before the heavy tech pack exists — catching bugs in the vision against real usage. Tech, the heaviest pack, comes after the spine is proven.
 
-> The vision is tool-agnostic; the mapping below is the **Claude Code reference implementation** — the first pack, not the only possible substrate.
+> The vision is tool-agnostic; the mapping below is the **Claude Code reference implementation** — the first pack, not the only possible substrate. This repo's agent instructions live in `AGENTS.md`, the vendor-neutral standard ([agents.md](https://agents.md/)); its skills adopt the open Agent Skills spec ([agentskills.io/specification](https://agentskills.io/specification)) — 13/20 fully conform to the strict reference validator, 20/20 to this repo's own `lint.sh` C7/C9 checks (evidence + the gap: `core/VERIFICATION.md` §"Agent Skills spec conformance").
 
 ### Primitives and where each lives in Claude Code
 

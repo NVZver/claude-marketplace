@@ -187,6 +187,12 @@ shipped_actor_files() {
 # `|`/`>` block scalars (value = continuation lines, block indent stripped).
 # Additionally, a SKILL.md frontmatter `name:` must equal its directory name —
 # a mismatch breaks skill addressing. Violations reported, not auto-fixed.
+# The same two constraints (description length, name↔directory match) are also
+# normative in the open Agent Skills spec (https://agentskills.io/specification)
+# — this check enforces our own hard limit, which happens to coincide with the
+# spec's. See core/VERIFICATION.md §"Agent Skills spec conformance" — the spec's
+# *other* constraints (valid frontmatter YAML) are not fully met; C7 does not
+# check YAML validity.
 # ---------------------------------------------------------------------------
 DESC_LIMIT=1024
 c7_viol=""
@@ -267,6 +273,9 @@ fi
 # SKILL.md and agents/*.md. Hard-fail (pitch Fork A): nothing shipped is near
 # the cap (~190 max at decision time), and a warn-that-never-fails is itself
 # tech debt. A file with no frontmatter counts every line as body.
+# The open Agent Skills spec (https://agentskills.io/specification) *recommends*
+# bodies under 500 lines; our 500 is a hard cap on that same number, not a
+# separate invention. See core/VERIFICATION.md §"Agent Skills spec conformance".
 # ---------------------------------------------------------------------------
 BODY_LIMIT=500
 c9_viol=""

@@ -2,6 +2,19 @@
 
 All notable changes to the `core` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.21.1] — 2026-07-20
+
+Cites the open Agent Skills spec (https://agentskills.io/specification) that `lint.sh` C7/C9 already silently enforce, per `standards-conformance-agents-md/standards-claim`. Comments + docs only — C7/C9 executable logic is byte-identical. Patch bump: `core/VERIFICATION.md` (in `core`'s `artifact_paths`) gains a new section.
+
+### Added
+
+- **`core/VERIFICATION.md`** — "Agent Skills spec conformance" section: transcribes a one-off `skills-ref validate` run over all 20 shipped skills. **Result: 13/20**, not the 20/20 this epic's originating pitch assumed — 7 skills' unquoted `description:` frontmatter field contains a mid-string `: ` (colon+space), invalid per strict YAML even though Claude Code's own frontmatter parser tolerates it. Root cause verified by direct inspection, not just the validator's message. Fixing the 7 descriptions is out of this epic's scope (citation-only, no skill content changes) — tracked as a new backlog item, `agent-skills-strict-yaml-conformance`.
+
+### Changed
+
+- **`scripts/lint.sh`** — C7 and C9 banner comments (comments only, zero executable-logic change) now cite https://agentskills.io/specification alongside their existing citations, with C7's comment noting explicitly that it does not check YAML validity (the exact axis the 7 failures fall on).
+- **`README.md`** §"Status + substrate", **`.lsa/VISION.md`** §3 — name both `AGENTS.md` (agents.md) and the Agent Skills spec by URL, with the honest 13/20-vs-20/20 split, not an unqualified conformance claim.
+
 ## [0.21.0] — 2026-07-20
 
 Adopts `/AGENTS.md` as this repo's canonical always-on instruction file, closing the `standards-conformance-agents-md/agents-md-canonical` epic. Install-instruction change only; no rule added, removed, or renumbered on the `core/CLAUDE.md` card itself.
