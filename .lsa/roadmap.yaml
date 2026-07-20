@@ -607,7 +607,9 @@ items:
     title: |
       Fix 7 skills' invalid-YAML frontmatter (Agent Skills spec strict conformance)
     priority: Should
-    status: backlog
+    status: shipped
+    status_detail: |
+      shipped — core v0.21.2, lsa v0.32.1. Fixed the mid-string `: ` in each of the 7 descriptions (em dash, no meaning change). Re-ran skills-ref validate: 20/20, independently reproduced. core/VERIFICATION.md, README.md, .lsa/VISION.md corrected from 13/20 to unqualified 20/20.
     notes: |
       Found 2026-07-20 during `standards-conformance-agents-md/standards-claim`: running the actual `skills-ref` reference validator (https://agentskills.io/specification) over all 20 shipped skills found **13/20 pass, 7 fail** — not the 20/20 the parent pitch assumed. Root cause, verified by direct byte inspection: the 7 failing skills' `description:` frontmatter is an unquoted YAML plain scalar containing a mid-string `: ` (colon immediately followed by a space) — e.g. `lsa/skills/discover/SKILL.md:3` (`"...a spec will rest on. Output: intent + cited facts..."`). Per the YAML spec a colon+space inside a plain scalar is invalid without quoting; Claude Code's own frontmatter parser tolerates it (all 7 skills trigger correctly in practice), but the strict reference validator correctly rejects it. Failing skills: `core/skills/ground-rules`, `lsa/skills/{discover,init,reconcile,revise-constitution,specify,verify}`. Fix: quote the `description:` value (or rephrase to avoid the mid-string colon) in each of the 7 files — a mechanical, low-risk change, but touches `*/skills/**/SKILL.md` under 2 plugins' `artifact_paths` (`core`, `lsa`), so needs a version bump + CHANGELOG entry per plugin, plus a re-run of `skills-ref validate` transcribed into `core/VERIFICATION.md` to update the 13/20 claim. Not folded into `standards-claim` — that epic is citation-only, no skill content changes, per its own R7/Out-of-Scope. Evidence: `core/VERIFICATION.md` §"Agent Skills spec conformance".
 

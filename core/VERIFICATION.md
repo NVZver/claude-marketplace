@@ -40,7 +40,7 @@ Eyeball it for v1; instrument later (spec §6 adjust #3).
 
 Across two weeks of regular use, log every session where `ground-rules` *should* have fired (any factual claim was made or any output overreached). If it fires on fewer than **~90% of intended tasks**, that is a v1 failure mode — not a wording tweak. Revisit the `CLAUDE.md`-fragment option from VISION §3 before tightening the description further.
 
-## Agent Skills spec conformance (2026-07-20)
+## Agent Skills spec conformance (2026-07-20, corrected 2026-07-20)
 
 One-off manual run of the [Agent Skills reference validator](https://agentskills.io/specification) (`skills-ref`) over all 20 shipped skills — a third-party check, not our own script. **Not wired into the `gate:` block** (`.lsa.yaml` stays npm-free) or into `scripts/`.
 
@@ -49,16 +49,16 @@ $ npx --yes skills-ref validate <skill_path>  # run against all 20 shipped skill
 PASS  core/skills/actor-template
 PASS  core/skills/doctor
 PASS  core/skills/flow-selector
-FAIL  core/skills/ground-rules — invalid YAML frontmatter (unquoted colon+space in description)
+PASS  core/skills/ground-rules
 PASS  core/skills/output
 PASS  core/skills/reuse-first
 PASS  lsa/skills/delegate
-FAIL  lsa/skills/discover — invalid YAML frontmatter (unquoted colon+space in description)
-FAIL  lsa/skills/init — invalid YAML frontmatter (unquoted colon+space in description)
-FAIL  lsa/skills/reconcile — invalid YAML frontmatter (unquoted colon+space in description)
-FAIL  lsa/skills/revise-constitution — invalid YAML frontmatter (unquoted colon+space in description)
-FAIL  lsa/skills/specify — invalid YAML frontmatter (unquoted colon+space in description)
-FAIL  lsa/skills/verify — invalid YAML frontmatter (unquoted colon+space in description)
+PASS  lsa/skills/discover
+PASS  lsa/skills/init
+PASS  lsa/skills/reconcile
+PASS  lsa/skills/revise-constitution
+PASS  lsa/skills/specify
+PASS  lsa/skills/verify
 PASS  manager/skills/check
 PASS  manager/skills/decompose
 PASS  manager/skills/implement
@@ -68,10 +68,10 @@ PASS  observer/skills/observe
 PASS  observer/skills/verify-checkpoint
 ```
 
-**Result: 13/20**, not the 20/20 this section's originating pitch (`.lsa/pitches/standards-conformance-agents-md.md`) assumed before this run — the assumption was based on our own `lint.sh` C7/C9 checks (description ≤ 1024 chars, name↔directory match), which are necessary but not sufficient conditions of the spec. Per-plugin: `core 5/6`, `lsa 1/7`, `manager 5/5`, `observer 2/2`.
+**Result: 20/20.**
 
-**Root cause, verified by direct inspection (not the validator's message alone):** the 7 failing skills' `description:` field is an unquoted YAML plain scalar that contains a mid-string `: ` (colon immediately followed by a space) — e.g. `lsa/skills/discover/SKILL.md:3`, `description: Extract user intent and gather the codebase facts a spec will rest on. Output: intent + cited facts, handed to specify.` (the `Output: ` after the first sentence). Per the YAML spec, a colon+space inside a plain (unquoted) scalar is ambiguous with a new mapping key and is invalid without quoting; Claude Code's own frontmatter parser tolerates it (these skills trigger correctly in practice — see `.claude-plugin/plugin.json` skill lists and this file's own probes above), but the strict reference validator correctly rejects it. This is a **real, unclaimed gap**, not a validator quirk: the 13 passing skills' descriptions simply don't happen to contain a colon+space; the 7 failing ones do.
+**History (not erased, because it's the credibility-relevant part).** The originating pitch (`.lsa/pitches/standards-conformance-agents-md.md`) assumed 20/20 based only on this repo's own `lint.sh` C7/C9 checks — necessary but not sufficient conditions of the spec. The first real run of the reference validator, on 2026-07-19, found **13/20**: 7 skills' `description:` field was an unquoted YAML plain scalar containing a mid-string `: ` (colon immediately followed by a space) — e.g. the pre-fix `lsa/skills/discover/SKILL.md`, `description: Extract user intent ... Output: intent + cited facts, handed to specify.` (the `Output: ` after the first sentence). A colon+space inside a plain (unquoted) scalar is ambiguous with a new mapping key and invalid per the YAML spec without quoting; Claude Code's own frontmatter parser tolerated it (these skills always triggered correctly in practice), but the strict reference validator correctly rejected it. The honest 13/20 was recorded rather than the assumed 20/20, and the fix was backlogged as `agent-skills-strict-yaml-conformance` rather than folded into the citation-only `standards-claim` epic (out of that epic's stated scope).
 
-**Scope decision (this epic, `standards-claim`, is citation-only — no skill content changes per its own Out-of-Scope R7):** fixing the 7 descriptions (quoting the value, or rephrasing to avoid the mid-string colon) is left to a new backlog item, [`agent-skills-strict-yaml-conformance`](../.lsa/roadmap.yaml), rather than folded into this epic — the exact anti-scope-creep reasoning `standards-conformance-agents-md`'s own Fork D used to drop the `license` field. Claiming 20/20 here would have been the credibility failure this pitch exists to prevent (see `.lsa/pitches/standards-conformance-agents-md.md` rabbit hole 1: *"Overstating the lineage would be worse than silence"*) — so `README.md` and `.lsa/VISION.md` cite the Agent Skills spec as **adopted, partially conformant (13/20 by the strict reference validator; 20/20 by this repo's own `lint.sh` C7/C9 checks)**, not as a clean conformance claim.
+**Fix (this entry, `agent-skills-strict-yaml-conformance`).** The 7 failing skills' `Output: ` / `rules: ` mid-string colon+space was replaced with an em dash (`Output — ...` / `rules — ...`) — no wording or meaning change, matching this repo's existing em-dash style elsewhere in the same descriptions. Re-running `skills-ref validate` against all 20 confirms **20/20**, independently reproduced by the reconciling orchestrator. `README.md` and `.lsa/VISION.md` now claim unqualified Agent Skills spec conformance, matching reality.
 
-**License / metadata (R6).** No skill declares a `license` or `metadata` frontmatter field. Both are deliberately unset — the root `LICENSE` file is the single source of that fact, and writing `license` into 20 files would copy one fact into twenty independently-driftable places (the exact failure mode `standards-conformance-agents-md/agents-md-canonical`'s C16 check exists to prevent for the discipline text). `metadata` stays unset for the same reason.
+**License / metadata (R6, `standards-claim`).** No skill declares a `license` or `metadata` frontmatter field. Both are deliberately unset — the root `LICENSE` file is the single source of that fact, and writing `license` into 20 files would copy one fact into twenty independently-driftable places (the exact failure mode `standards-conformance-agents-md/agents-md-canonical`'s C16 check exists to prevent for the discipline text). `metadata` stays unset for the same reason.

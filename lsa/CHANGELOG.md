@@ -2,6 +2,14 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.32.1] — 2026-07-20
+
+Fixes invalid YAML frontmatter in 6 `lsa` skills (roadmap `agent-skills-strict-yaml-conformance`, found during `standards-conformance-agents-md/standards-claim`). Description-only, no trigger-relevant wording change → patch bump.
+
+### Fixed
+
+- **`skills/{discover,init,reconcile,revise-constitution,specify,verify}/SKILL.md`** — each `description:` contained an unquoted mid-string `: ` (e.g. "...a spec will rest on. Output: intent + cited facts...") — invalid per the YAML spec inside a plain scalar, though Claude Code's own frontmatter parser tolerated it. Replaced with an em dash ("Output — ..."), no meaning change. `core/VERIFICATION.md` "Agent Skills spec conformance" corrected from 13/20 to the true, re-verified **20/20**; `.lsa/VISION.md` §3 claim un-qualified to match.
+
 ## [0.32.0] — 2026-07-20
 
 A pinned library spec now outranks the reactive fetch protocol — but only while its staleness check is green. Per pitch `pinned-library-specs` (epic 3 of 3, `conditional-read-precedence`). Behavior change to `lsa/knowledge/conventions.md`'s library documentation protocol → minor bump.
