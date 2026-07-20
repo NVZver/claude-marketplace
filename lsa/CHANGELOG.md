@@ -2,6 +2,21 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.31.0] — 2026-07-20
+
+Adds pinned library specs — a capped (≤5) registry of version-pinned specs for the libraries a repo calls most, with a deterministic staleness gate. Per pitch `pinned-library-specs` (epic 1 of 3, `format-and-staleness-gate`): the shrunk version of Tessl's proactive spec-cache idea (`.lsa/VISION.md` §6 "Adjust #2"). New documented capability → minor bump.
+
+### Added
+
+- **`.lsa.yaml` `libs:` block** — sibling to `modules:`, two keys per entry (`spec`, `manifest`); no `artifact_paths` (external deps have no in-repo artifact globs). Ships empty (`libs: {}`) — this epic registers no library.
+- **`scripts/check-lib-pins.sh`** (repo-internal, no plugin bump) — reads `libs:`, resolves each pin through a literal decision order (spec missing → BROKEN; `Pinned-Version:` absent → BROKEN; `Lockfile: none` or missing → `[cannot verify]`; `Lockfile-Assertion:` absent → BROKEN; assertion found → OK; not found → STALE), and exits 0/1/2 — never a silent green on an unknown. Wired into `.lsa.yaml` `gate:` as `lib-pins`.
+- **`scripts/lint.sh` C18** — caps the `libs:` block at 5 entries.
+- **`lsa/knowledge/pinned-library-specs.md`** — the pinned-spec file format, `libs:` schema, staleness-gate contract, and the fetched-content-is-untrusted-data promotion boundary.
+
+### Changed
+
+- **`lsa/ARCHITECTURE.md`** §3 — `libs:` added to the `.lsa.yaml` schema listing; the SessionStart-hook paragraph now states the drift hook covers `modules:` only, not pin staleness (that's the `gate:` check's job).
+
 ## [0.30.0] — 2026-07-20
 
 `reconcile` now writes the ledger it was always supposed to. Per pitch `restore-tracked-metrics-harvest` (epic 2 of 2, `reconcile-emit-guard`): `lsa` 0.16.0 silently dropped the `.lsa/metrics.md` writer as refactor collateral and nothing caught it — this restores the emit step and adds a repo-level anti-regression guard (`scripts/lint.sh` C17) so it cannot be dropped again unnoticed. New `reconcile` behavior + a tightened output contract → minor bump.

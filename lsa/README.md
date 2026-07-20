@@ -139,6 +139,11 @@ modules:
       - lsa/skills/**/SKILL.md
       - lsa/hooks/**/*
 
+libs:                                # optional — pinned library specs (≤5), default: {}
+  stripe:
+    spec: .lsa/libs/stripe.md        # see lsa/knowledge/pinned-library-specs.md
+    manifest: package.json
+
 gate:                                # optional — quality-gate script contract
   test: <command>                    # check name → command; passes iff exit 0, cited as the gate artifact
 
