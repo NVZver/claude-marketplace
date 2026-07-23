@@ -1,5 +1,14 @@
 core/skills/*.zip
 
+# Generated export trees (scripts/generate-for-cursor.sh) — build output, never
+# committed. Untracked build output is counted as a candidate hunk by
+# scripts/coverage-skeleton.sh, which silently inflates the
+# only-required-changes denominator; ignoring it keeps the metric honest.
+dist/
+
+# planned-lsa-run daemon runtime log — machine-local, not behavior-bearing.
+.lsa/planned-lsa-run.log
+
 # macOS Finder metadata — never committed
 .DS_Store
 

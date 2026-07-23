@@ -50,6 +50,17 @@ if [[ ! -f "${req_file}" ]]; then
   exit 1
 fi
 
+# Does the caller name a commit RANGE (`A..B`), as opposed to a working-tree
+# comparison (no args, or a bare `HEAD`)? Only a commit range denotes a
+# historical, already-committed cycle; both other forms mean "the change in the
+# working tree right now". This decides whether untracked files count as
+# candidate hunks (see R2) — arg *count* cannot decide it, because an explicit
+# `HEAD` is still the live case.
+has_commit_range=0
+for _a in "$@"; do
+  case "${_a}" in *..*) has_commit_range=1 ;; esac
+done
+
 # Default the git-diff-args to HEAD when none are passed.
 if [[ $# -eq 0 ]]; then
   set -- HEAD
@@ -58,12 +69,18 @@ fi
 # R1: every requirement ID (^- R1. / ^- F1. …) in document order.
 ids="$(grep -oE '^- [RF][0-9]+\.' "${req_file}" | grep -oE '[RF][0-9]+' || true)"
 
-# R2: changed files — tracked diff PLUS untracked new files (reconcile grades an
-# epic before its commit, so the epic's own new files are still untracked). Merge
-# both lists, dedupe + sort, and exclude <feature-dir> itself (spec files are never
-# hunks).
+# R2: changed files — the tracked diff, plus untracked new files ONLY in the live
+# case. Reconcile grades an epic before its commit, so with no explicit range the
+# epic's own new files are still untracked and must be counted. When the caller
+# names an explicit range they are asking about a historical, already-committed
+# cycle; whatever happens to be untracked in the working tree today is unrelated
+# to it, and folding it in inflates the candidate-hunk denominator with files the
+# cycle never touched. Merge, dedupe + sort, and exclude <feature-dir> itself
+# (spec files are never hunks).
 changed="$( { git diff --name-only "$@" 2>/dev/null; \
-              git ls-files --others --exclude-standard 2>/dev/null; } \
+              if [[ "${has_commit_range}" -eq 0 ]]; then
+                git ls-files --others --exclude-standard 2>/dev/null
+              fi; } \
   | sort -u \
   | awk -v d="${feature_dir}" '
       $0 == d               { next }      # the dir path itself

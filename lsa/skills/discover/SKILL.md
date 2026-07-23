@@ -1,6 +1,6 @@
 ---
 name: discover
-description: Extract user intent and gather the codebase facts a spec will rest on. Output: intent + cited facts, handed to specify. Also the universal input-resolver for other skills.
+description: Extract user intent and gather the codebase facts a spec will rest on. Output — intent + cited facts, handed to specify. Also the universal input-resolver for other skills.
 ---
 
 > **Trace.** On load, print first: `=============== [lsa/skills/discover/SKILL.md] [lsa] ===============`

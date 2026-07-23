@@ -1,6 +1,6 @@
 > **Trace.** On load, print first: `=============== [.lsa/VISION-digest.md] [vision] ===============`
 <!-- GENERATED — DO NOT EDIT. Structural digest of .lsa/VISION.md built by scripts/build-vision-digest.sh; regenerate with: bash scripts/build-vision-digest.sh -->
-<!-- source-sha256: 3a770004852ddaf10e1097ad1961543978c761a5f3a62a6cd2d98a6088836380 -->
+<!-- source-sha256: f2f13eb8ec6fd9fe544671f416bb1a4e3683cd1030aa3fdd71e02db7acf0638d -->
 
 ## Section map (`#`/`##` headings, verbatim)
 - # The Vision

@@ -68,7 +68,7 @@ Plus: the orchestrator runs `discover → specify → verify` **inline** in one 
    /reload-plugins
    ```
 
-2. Merge the [`core/CLAUDE.md`](./core/CLAUDE.md) fragment into your project's `CLAUDE.md`. This is the step that activates the always-on rules — skip it and the discipline layer silently never engages.
+2. Merge the [`core/CLAUDE.md`](./core/CLAUDE.md) fragment into your project's `CLAUDE.md` (Claude Code) or `AGENTS.md` (every other agent tool). This is the step that activates the always-on rules — skip it and the discipline layer silently never engages.
 
 3. Run [`/core:doctor`](./core/skills/doctor/SKILL.md) to verify the wiring: four read-only checks (required plugins installed, fragment merged, plugin versions consistent, gate scripts) reported as a per-check PASS / WARN / FAIL / SKIP table with evidence and a one-line fix per failure. A healthy install looks like (`[illustrative]`):
 
@@ -89,7 +89,7 @@ Symptom → fix; when in doubt, [`/core:doctor`](./core/skills/doctor/SKILL.md) 
 
 - **Install failed** — re-run install step 1; `/plugin` lists what actually landed, then `/reload-plugins`.
 - **A skill won't trigger** — run `/reload-plugins`, then invoke it explicitly (e.g. `/core:doctor`, `/lsa:discover`); if it's still missing, step 1 didn't complete.
-- **Always-on rules not applying** — the `core/CLAUDE.md` fragment isn't merged: do install step 2, then `/core:doctor` reports which rule anchors are still missing.
+- **Always-on rules not applying** — the `core/CLAUDE.md` fragment isn't merged into `CLAUDE.md` (Claude Code) or `AGENTS.md` (every other agent tool): do install step 2, then `/core:doctor` reports which rule anchors are still missing.
 - **`NOT-GROUNDED` from `lsa:verify`** — not a breakage: fix the flagged spec references before building, per [`lsa/README.md` § Quick start step 4](./lsa/README.md#quick-start).
 - **Lint red** — run the failing gate locally: `scripts/lint.sh`, `scripts/check-citations.sh`, `scripts/check-links.sh`, `scripts/check-version-changelog.sh`, `lsa/scripts/project-map-check.sh`, `scripts/run-tests.sh` — each prints the offending line. A `lint.sh` C12 failure means a stale constitution digest: regenerate with `bash scripts/build-vision-digest.sh`. A `project-map-check.sh` failure means a stale repo atlas: regenerate with `bash lsa/scripts/project-map-build.sh`, then commit `project-map.yaml`.
 
@@ -129,7 +129,7 @@ The single test the whole system answers: **what is the minimum ceremony that st
 
 ## Status + substrate
 
-Personal-use first; open-sourced for visibility. Claude Code is the v1 substrate; the discipline (specs, sourcing, flow gating) isn't Claude-specific and the skills are plain Markdown — porting to another agentic IDE is a routing exercise, not a rewrite.
+Personal-use first; open-sourced for visibility. Claude Code is the v1 substrate; the discipline (specs, sourcing, flow gating) isn't Claude-specific and the skills are plain Markdown — porting to another agentic IDE is a routing exercise, not a rewrite. This claim now carries a source: the repo's agent instructions live in [`AGENTS.md`](./AGENTS.md), the vendor-neutral standard ([agents.md](https://agents.md/)); its skills conform 20/20 to the open [Agent Skills spec](https://agentskills.io/specification) reference validator (description length, name↔directory match, valid frontmatter; evidence in [`core/VERIFICATION.md`](./core/VERIFICATION.md) §"Agent Skills spec conformance").
 
 ## Plans & models
 

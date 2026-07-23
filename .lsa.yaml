@@ -17,6 +17,7 @@ gate:
   links: bash scripts/check-links.sh
   project-map: bash lsa/scripts/project-map-check.sh
   tests: bash scripts/run-tests.sh
+  lib-pins: bash scripts/check-lib-pins.sh
 
 # Reconcile scenario-run count (lsa/skills/reconcile/SKILL.md Step 1).
 # Default when the key is absent: 3 — pass = all 3 runs succeed (≥95% of 3 ⇒ 3/3).
@@ -48,6 +49,15 @@ implement:
 routing:
   manager:next: sonnet
   lsa:delegate.verify-checkpoint: sonnet
+
+# Pinned library specs (lsa/knowledge/pinned-library-specs.md). Each entry
+# names a version-pinned spec file + the manifest it's checked against;
+# scripts/check-lib-pins.sh (wired into gate: above as lib-pins) verifies
+# staleness on every lsa:verify. Capped at 5 entries (scripts/lint.sh C18).
+libs:
+  actions-checkout:
+    spec: .lsa/libs/actions-checkout.md
+    manifest: .github/workflows/lint.yml
 
 modules:
   core:

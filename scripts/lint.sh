@@ -187,6 +187,12 @@ shipped_actor_files() {
 # `|`/`>` block scalars (value = continuation lines, block indent stripped).
 # Additionally, a SKILL.md frontmatter `name:` must equal its directory name —
 # a mismatch breaks skill addressing. Violations reported, not auto-fixed.
+# The same two constraints (description length, name↔directory match) are also
+# normative in the open Agent Skills spec (https://agentskills.io/specification)
+# — this check enforces our own hard limit, which happens to coincide with the
+# spec's. See core/VERIFICATION.md §"Agent Skills spec conformance" — the spec's
+# *other* constraints (valid frontmatter YAML) are not fully met; C7 does not
+# check YAML validity.
 # ---------------------------------------------------------------------------
 DESC_LIMIT=1024
 c7_viol=""
@@ -267,6 +273,9 @@ fi
 # SKILL.md and agents/*.md. Hard-fail (pitch Fork A): nothing shipped is near
 # the cap (~190 max at decision time), and a warn-that-never-fails is itself
 # tech debt. A file with no frontmatter counts every line as body.
+# The open Agent Skills spec (https://agentskills.io/specification) *recommends*
+# bodies under 500 lines; our 500 is a hard cap on that same number, not a
+# separate invention. See core/VERIFICATION.md §"Agent Skills spec conformance".
 # ---------------------------------------------------------------------------
 BODY_LIMIT=500
 c9_viol=""
@@ -472,6 +481,155 @@ if grep -qiF "${DW_MARKER}" "${DW_CARD}" 2>/dev/null; then
   pass_line "C15 deterministic-work-is-scripted pointer present in ${DW_CARD}"
 else
   fail_line "C15 deterministic-work-is-scripted pointer missing from ${DW_CARD} (always-on card no longer references principle 10)"
+fi
+
+# ---------------------------------------------------------------------------
+# C16 — the always-on discipline text must live in exactly one file. AGENTS.md
+# (0.21.0) is canonical; CLAUDE.md holds an @AGENTS.md import, never a copy.
+# This anti-duplication gate is the mitigation named in the
+# standards-conformance-agents-md pitch's rabbit hole 1: "if the chosen wiring
+# cannot be gated by a script, it is the wrong wiring." Excludes .lsa/** (spec/
+# pitch prose quotes the marker by design), this script (defines the marker),
+# and CHANGELOG.md files (frozen history).
+# ---------------------------------------------------------------------------
+DISCIPLINE_MARKER='The always-on card lives at'
+DISCIPLINE_HOME='AGENTS.md'
+c16_hits="$(git grep -lIF --untracked "${DISCIPLINE_MARKER}" -- ':(exclude).lsa/**' ':(exclude)scripts/lint.sh' ':(exclude)**/CHANGELOG.md' 2>/dev/null | sort)"
+c16_count="$(printf '%s' "${c16_hits}" | grep -c . || true)"
+if [[ "${c16_count}" -eq 1 && "${c16_hits}" == "${DISCIPLINE_HOME}" ]]; then
+  pass_line "C16 discipline text present in exactly one file (${DISCIPLINE_HOME})"
+elif [[ "${c16_count}" -eq 0 ]]; then
+  fail_line "C16 discipline marker missing from ${DISCIPLINE_HOME}"
+else
+  fail_line "C16 discipline text duplicated — found in:"
+  printf '%s\n' "${c16_hits}" | sed 's/^/        /'
+fi
+
+# ---------------------------------------------------------------------------
+# C17 — the reconcile metrics-emit step must stay present. `lsa` 0.16.0
+# silently removed the `.lsa/metrics.md` writer as refactor collateral and
+# nothing caught it (restore-tracked-metrics-harvest pitch, rabbit hole 2);
+# the metrics layer was rebuilt in epic reconcile-emit-guard specifically to
+# not die the same way twice. This guards the two literal markers that prove
+# the emit step is still wired into lsa/skills/reconcile/SKILL.md — the
+# script name that performs the harvest and the file it appends to.
+# Presence check only — verifying the emit step actually RAN on a given
+# cycle is reconcile's own job, not a grep (mirrors the C15 comment above).
+# ---------------------------------------------------------------------------
+METRICS_SKILL="lsa/skills/reconcile/SKILL.md"
+METRICS_SCRIPT_MARKER='scripts/metrics-harvest.sh'
+METRICS_FILE_MARKER='.lsa/metrics.md'
+if grep -qF "${METRICS_SCRIPT_MARKER}" "${METRICS_SKILL}" 2>/dev/null; then
+  pass_line "C17 metrics-harvest emit step present in ${METRICS_SKILL} (${METRICS_SCRIPT_MARKER})"
+else
+  fail_line "C17 metrics-harvest emit step missing from ${METRICS_SKILL} (metrics writer dropped again — see lsa 0.16.0)"
+fi
+if grep -qF "${METRICS_FILE_MARKER}" "${METRICS_SKILL}" 2>/dev/null; then
+  pass_line "C17 metrics-harvest emit step present in ${METRICS_SKILL} (${METRICS_FILE_MARKER})"
+else
+  fail_line "C17 metrics-harvest emit step missing from ${METRICS_SKILL} (metrics writer dropped again — see lsa 0.16.0)"
+fi
+
+# ---------------------------------------------------------------------------
+# C18 — the .lsa.yaml `libs:` block (pinned library specs) is capped at 5
+# entries. Rabbit hole 2 (pitch pinned-library-specs): unbounded growth turns
+# this into the 10,000-spec registry the pitch explicitly declines to build.
+# Counts 2-space-indented `<lib-name>:` lines directly under `libs:`; 0 entries
+# (including no `libs:` block at all) passes.
+# ---------------------------------------------------------------------------
+LIBS_CAP=5
+libs_count="$(awk '
+  /^libs:[[:space:]]*$/ { inlibs=1; next }
+  inlibs && /^[^[:space:]#]/ { inlibs=0 }
+  inlibs && /^[[:space:]]{2}[A-Za-z0-9_-]+:[[:space:]]*$/ { n++ }
+  END { print n+0 }
+' .lsa.yaml 2>/dev/null)"
+if [[ "${libs_count:-0}" -le "${LIBS_CAP}" ]]; then
+  pass_line "C18 .lsa.yaml libs: block within the ${LIBS_CAP}-entry cap (${libs_count:-0} registered)"
+else
+  fail_line "C18 .lsa.yaml libs: block exceeds the ${LIBS_CAP}-entry cap (${libs_count} registered)"
+fi
+
+# ---------------------------------------------------------------------------
+# C19 — every conformance.md must carry the canonical, machine-readable
+# orphan-hunk line required by lsa/skills/reconcile/SKILL.md Step 4: exactly one
+# line, at column 0, reading `Orphan hunks: none.` or `Orphan hunks: <integer>`.
+#
+# This is the check C17 cannot be. C17 greps reconcile's SKILL.md and proves the
+# emit step is still *documented*; it passes happily while the emitted artifacts
+# are unparseable and the ledger stays empty — which is exactly what happened on
+# the 2026-07-20 sweep, where the metrics epic's own conformance.md wrote a
+# bolded `**Orphan hunks: none.**` under a prose heading and its own harvest
+# script reported UNPARSEABLE. C19 checks the artifact, not the instruction.
+#
+# Format only. The metric never gates a PASS/FAIL verdict (pitch
+# restore-tracked-metrics-harvest, no-go 5) — this enforces Step 4's output
+# contract, which was always mandatory.
+#
+# Files listed in the baseline predate the contract and are exempt; that list is
+# shrink-only (see its header).
+# ---------------------------------------------------------------------------
+ORPHAN_BASELINE="scripts/baselines/pre-contract-conformance.txt"
+ORPHAN_RE='^Orphan hunks: (none\.|[0-9]+)[[:space:]]*$'
+c19_bad=""
+c19_checked=0
+while IFS= read -r cf; do
+  [[ -n "${cf}" ]] || continue
+  # Grandfathered? (comments and blank lines in the baseline are ignored)
+  if [[ -f "${ORPHAN_BASELINE}" ]] \
+     && grep -v '^[[:space:]]*#' "${ORPHAN_BASELINE}" | grep -qxF "${cf}"; then
+    continue
+  fi
+  c19_checked=$((c19_checked + 1))
+  hits="$(grep -cE "${ORPHAN_RE}" "${cf}" 2>/dev/null || true)"
+  [[ -n "${hits}" ]] || hits=0
+  if [[ "${hits}" -ne 1 ]]; then
+    c19_bad="${c19_bad}${cf} (${hits} canonical orphan lines, need exactly 1)
+"
+  fi
+done <<< "$(find .lsa/features -name conformance.md 2>/dev/null | sort)"
+
+if [[ -z "${c19_bad}" ]]; then
+  pass_line "C19 canonical orphan-hunk line present in all ${c19_checked} post-contract conformance.md files"
+else
+  fail_line "C19 conformance.md files missing the canonical orphan-hunk line (reconcile SKILL.md Step 4):"
+  printf '%s' "${c19_bad}" | sed 's/^/        /'
+fi
+
+# ---------------------------------------------------------------------------
+# C20 — every feature dir carrying a requirements.md must also carry a
+# conformance.md. A spec without a graded verdict means the epic shipped with
+# `lsa:reconcile` skipped: nothing independently checked does · only · all.
+#
+# This is the check the 2026-07-20 sweep needed and did not have. Eight epics
+# merged with a green `gate:` block and no conformance.md between them, and the
+# roadmap recorded "gate green throughout" as the quality evidence. The gate is a
+# lint/test runner; reconcile is the independent grader. Substituting the first
+# for the second is invisible without this check.
+#
+# Dirs in the baseline are exempt for a stated reason (pre-contract, or dropped
+# at specify and never implemented); that list is shrink-only.
+# ---------------------------------------------------------------------------
+CONF_EXEMPT="scripts/baselines/conformance-exempt.txt"
+c20_bad=""
+c20_checked=0
+while IFS= read -r rf; do
+  [[ -n "${rf}" ]] || continue
+  fdir="$(dirname "${rf}")"
+  if [[ -f "${CONF_EXEMPT}" ]] \
+     && grep -v '^[[:space:]]*#' "${CONF_EXEMPT}" | grep -qxF "${fdir}"; then
+    continue
+  fi
+  c20_checked=$((c20_checked + 1))
+  [[ -f "${fdir}/conformance.md" ]] || c20_bad="${c20_bad}${fdir}
+"
+done <<< "$(find .lsa/features -name requirements.md 2>/dev/null | sort)"
+
+if [[ -z "${c20_bad}" ]]; then
+  pass_line "C20 every graded feature dir has a conformance.md (${c20_checked} checked)"
+else
+  fail_line "C20 feature dirs with requirements.md but no conformance.md (reconcile skipped):"
+  printf '%s' "${c20_bad}" | sed 's/^/        /'
 fi
 
 echo

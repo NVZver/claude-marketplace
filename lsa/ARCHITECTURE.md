@@ -106,6 +106,11 @@ modules:
       - <glob>
       - <glob>
 
+libs:                                 # optional; pinned library specs (default: {})
+  <lib-name>:
+    spec: <path-relative-to-repo-root>       # the pinned spec, e.g. .lsa/libs/stripe.md
+    manifest: <path-relative-to-repo-root>   # or the literal `none`
+
 gate:                                # optional; the quality-gate script contract (default: {})
   <check-name>: <command>            # e.g. test: npm test
 
@@ -124,6 +129,7 @@ routing:                             # optional; per-dispatch model tier map (de
   - `mixed` — both; either failing fails verify.
 - `modules.<name>.spec` — path to that module's spec.md.
 - `modules.<name>.artifact_paths` — globs (repo-root-relative) that implement this module; consumed by verify (doc-mode), reconcile (drift diff), and the SessionStart hook.
+- `libs.<lib-name>.spec` / `libs.<lib-name>.manifest` — a version-pinned spec for an external library this repo calls, checked for staleness on every `lsa:verify` via `scripts/check-lib-pins.sh` (wired into `gate` as `lib-pins`). Capped at 5 entries (`scripts/lint.sh` C18). Structurally distinct from `modules` — no `artifact_paths`, since an external dependency has no in-repo artifact globs. Full contract: [`knowledge/pinned-library-specs.md`](./knowledge/pinned-library-specs.md).
 - `gate` — per-check name → command; each check passes iff its command exits `0`, and a completion state may be reported only with the command + output cited (`core/ground-rules` Rule 7). Consumed by `reconcile` and, in parallel runs, mapped to GitHub required-check slots. LSA hardcodes no tool. Full contract: [`knowledge/quality-gate-contract.md`](./knowledge/quality-gate-contract.md).
 - `autonomy` — `manual | semi | auto` (default `manual`); how much human-in-the-loop a parallel `manager:implement` run uses at the merge/deploy boundary. `manual` = the human merges; `semi` = auto-merge on green into the integration branch; `auto` = + deploy + healthcheck. The gate is identical at every level — autonomy removes only the prompt after green, never the gate. Consumed by `manager:implement`; semantics in `manager/knowledge/autonomy-policy.md`.
 - `routing` — per-Agent-dispatch model tier map (default `{}`); surface-key → `inherit | sonnet | haiku`, read at dispatch time. Absent key or a model the plan lacks ⇒ `inherit` (never a hard error); floored surfaces (`lsa:reconcile` grader, `lsa:delegate` implementer, `manager:implement` fan-out) never route below `inherit`. Zero `model:` pins ship in frontmatter. Full contract + tier table: [`knowledge/model-routing.md`](./knowledge/model-routing.md).
@@ -131,7 +137,7 @@ routing:                             # optional; per-dispatch model tier map (de
 
 **When absent**, LSA applies the defaults documented in [`knowledge/conventions.md`](./knowledge/conventions.md) §"`.lsa.yaml` defaults": `constitution: .lsa/VISION.md`, `specs_root: .lsa/`, `mode: code`, `modules: {}`. A fresh `lsa:init` scaffolds the spec tree under `.lsa/` so the entire LSA workspace is one removable directory.
 
-The SessionStart hook (`hooks/hooks.json` declares `matcher: "startup"`) invokes `hooks/session-start-drift-check.sh`. For each module, the hook resolves the baseline SHA as the last commit that modified the module's spec file (`git log -1 --format=%H -- <spec-path>`); if any of the module's `artifact_paths` differ from that SHA, the hook prints a one-line notice; control returns to the user, who chooses when to invoke `/lsa:reconcile`. The hook exits 0 always — it must never block session start.
+The SessionStart hook (`hooks/hooks.json` declares `matcher: "startup"`) invokes `hooks/session-start-drift-check.sh`. For each module, the hook resolves the baseline SHA as the last commit that modified the module's spec file (`git log -1 --format=%H -- <spec-path>`); if any of the module's `artifact_paths` differ from that SHA, the hook prints a one-line notice; control returns to the user, who chooses when to invoke `/lsa:reconcile`. The hook exits 0 always — it must never block session start. **The drift hook covers `modules:` only** — pinned-library-spec staleness is surfaced by the `gate:` check (`lib-pins`), not the SessionStart hook.
 
 ---
 

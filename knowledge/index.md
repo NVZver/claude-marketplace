@@ -6,7 +6,7 @@ Flat table of every knowledge file across the five marketplace plugins. Agents c
 
 Maintained manually. When a knowledge file is added, moved, or removed, update this index in the same commit. Per [`.lsa/pitches/readme-and-knowledge-base.md`](../.lsa/pitches/readme-and-knowledge-base.md) "Solution sketch".
 
-## Catalog — 20 knowledge files
+## Catalog — 21 knowledge files
 
 | Topic | Plugin | Path | One-sentence description |
 |---|---|---|---|
@@ -16,6 +16,7 @@ Maintained manually. When a knowledge file is added, moved, or removed, update t
 | Migration instructions (AI) | `lsa` | [`lsa/knowledge/migration-instructions-ai.md`](../lsa/knowledge/migration-instructions-ai.md) | AI runbook to migrate `${specs_root}/roadmap.md` → `roadmap.yaml` (detect → migrate → verify → rewire → cleanup → gates); cited by `lsa:init`. |
 | Quality gate contract | `lsa` | [`lsa/knowledge/quality-gate-contract.md`](../lsa/knowledge/quality-gate-contract.md) | The required-vs-non-blocking check taxonomy and the independent-grader gate contract `lsa:reconcile` enforces. |
 | Model routing | `lsa` | [`lsa/knowledge/model-routing.md`](../lsa/knowledge/model-routing.md) | The `.lsa.yaml` `routing:` map schema, per-dispatch resolution algorithm (floored surfaces + absent-⇒-inherit), and the per-dispatch tier table — cited cross-plugin by `manager` and `prompt-engineer`. |
+| Pinned library specs | `lsa` | [`lsa/knowledge/pinned-library-specs.md`](../lsa/knowledge/pinned-library-specs.md) | The `${specs_root}/libs/<lib-name>.md` pinned-spec file format, the `.lsa.yaml` `libs:` registration schema, and `scripts/check-lib-pins.sh`'s staleness-gate exit codes (OK/STALE/`[cannot verify]`/BROKEN). |
 | Autonomy policy | `manager` | [`manager/knowledge/autonomy-policy.md`](../manager/knowledge/autonomy-policy.md) | The `manual`/`semi`/`auto` autonomy-ladder definitions + per-level scope of unattended multi-PR churn; the single source for autonomy levels. |
 | Command naming | `manager` | [`manager/knowledge/command-naming.md`](../manager/knowledge/command-naming.md) | The function-like command-naming convention `<actor>:<action>-<modifier> args` — verbs you call with arguments, not nouns you browse; the single source of truth for command naming. |
 | Epic decomposition | `manager` | [`manager/knowledge/epic-decomposition.md`](../manager/knowledge/epic-decomposition.md) | Rules for breaking a shaped pitch into epics; each epic maps to one LSA build cycle. |
