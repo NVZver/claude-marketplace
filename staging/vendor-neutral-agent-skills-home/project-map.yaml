@@ -1,0 +1,4 @@
+# GENERATED — DO NOT EDIT. Regenerate: bash lsa/scripts/project-map-build.sh
+version: 2
+depth: 3
+tree:  # directories only (depth ≤ 3)

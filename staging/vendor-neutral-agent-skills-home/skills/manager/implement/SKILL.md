@@ -1,0 +1,83 @@
+---
+name: implement
+description: "Plan and run parallel implementation of roadmap epics — the parallel build-execution entry point. Triggers on 'run agents in parallel', 'implement the backlog in parallel', 'parallel implementation', or 'ship epics to PR in parallel'. Computes a dependency-ordered wave plan via the disjoint-epic decomposer, proposes it for approval, then dispatches one agent per epic in an isolated git worktree, gates each via the independent lsa:reconcile + the .lsa.yaml gate: checks, and converges via the serialized merge. Honors the .lsa.yaml autonomy ladder (manual = human merges · semi = auto-merge on green · auto = + deploy + healthcheck; default manual). Input: [epics] (slug/path list) + optional --parallel / --sequential; the no-arg form is a read-only preview of parallelizable backlog items. Output: an approved wave plan, per-epic worktree/PR dispatch, and a gate-proven roll-up (merged @ <sha> / deployed reported only when the gate proved it). Reads ${specs_root}/roadmap.yaml."
+---
+
+> **Trace.** On load, print first: `=============== [manager/skills/implement/SKILL.md] [manager] ===============`
+
+
+# Implement
+
+Run a set of roadmap epics in parallel, safely. The engine computes which epics can run at the same time (the **disjoint-epic decomposer**), proposes a **wave plan**, and on approval dispatches one agent per epic into an isolated git worktree, gates each with the independent-reconcile safety core (`parallel-agent-delivery/safety-core` — the independent `lsa:reconcile` + the `.lsa.yaml` `gate:` checks), and converges via the serialized merge. The orchestration logic lives in [`../knowledge/parallel-dispatch.md`](../knowledge/parallel-dispatch.md) and [`../knowledge/serialized-merge.md`](../knowledge/serialized-merge.md); this skill is the actor that drives them.
+
+**Autonomy.** The full ladder (`manual` / `semi` / `auto`, default `manual`) is implemented per [`../knowledge/autonomy-policy.md`](../knowledge/autonomy-policy.md); level behaviors are enumerated once at Step 5b. The run ends with the parallel-implementation roll-up ([`../knowledge/parallel-rollup.md`](../knowledge/parallel-rollup.md)).
+
+## Goal
+
+Take a set of epics and get each one built, gated, and ready to merge in parallel without the agents colliding — while never reporting a state the gate did not prove. The human approves the plan before any dispatch and performs the merge; the engine does the isolation, gating, and serialization in between.
+
+## Input
+
+- **`[epics]`** — a list of epic slugs or paths to run. **When absent, the skill runs the read-only preview** (Step 1a) instead of dispatching — it lists the most recent `backlog` / `not started` roadmap rows with an indicative parallel note, so the bare form does something useful (per [`../knowledge/command-naming.md`](../knowledge/command-naming.md) §"The no-arg form does something useful").
+- **`--parallel` / `--sequential`** — optional overrides. `--sequential` forces one epic per wave (one-at-a-time). `--parallel` forces a single wave (the user asserts disjointness, overriding the decomposer — and takes responsibility for it).
+- **`.lsa.yaml` autonomy** — `manual | semi | auto`, default `manual`; level behaviors per [`../knowledge/autonomy-policy.md`](../knowledge/autonomy-policy.md) (applied at Step 5b).
+- The `.lsa.yaml` `gate:` contract ([`../../lsa/knowledge/quality-gate-contract.md`](../../lsa/knowledge/quality-gate-contract.md)) and the fast-path read contract ([`../../core/knowledge/fast-path-source-of-truth.md`](../../core/knowledge/fast-path-source-of-truth.md)).
+
+## Steps
+
+1. **Resolve targets + autonomy.** Read `[epics]`, any `--parallel` / `--sequential` flag, and the `.lsa.yaml` autonomy level (`manual | semi | auto`, default `manual` — per [`../knowledge/autonomy-policy.md`](../knowledge/autonomy-policy.md)). If the resolved level is `semi` or `auto`, surface a **one-line caution** that these are built but not yet validated and should follow the Enablement gate (autonomy-policy.md §"The ladder" — `manual` proven safe in dogfooding first). If no `[epics]` were supplied, go to Step 1a (preview) and stop. Observable result: the target epic list + the resolved autonomy level (with the pre-dogfooding caution if non-`manual`), or a branch to the preview.
+
+   - **1a. No-arg preview (read-only).** Run `bash scripts/roadmap-query.sh backlog --limit 5` to collect up to 5 `backlog` / `not_started` items of `${specs_root}/roadmap.yaml` with their `path:line` citations — a bounded query, zero model tokens, no whole-file read (per the fast-path discipline [`../../core/knowledge/fast-path-source-of-truth.md`](../../core/knowledge/fast-path-source-of-truth.md) — bounded read, no sub-agent). Only if the query script exits non-zero fall through to a model-side `Read` of the ledger. Quote each item; add an **indicative** parallel-vs-sequential note explicitly marked non-authoritative; state that passing `[epics]` runs them. Write nothing, dispatch nothing. Observable result: a cited candidate list + a "preview only — pass epics to run" close.
+
+2. **Compute the wave plan.** Apply the disjoint-epic decomposer + wave planning ([`../knowledge/parallel-dispatch.md`](../knowledge/parallel-dispatch.md) §1–2) to the target epics: build the overlap graph (file/module overlap · output dependency · shared new data structure), group non-overlapping epics into waves, order waves by dependency. `--sequential` → one epic per wave; `--parallel` → one wave (record that the user asserted disjointness). When unsure, treat epics as overlapping. Observable result: an ordered wave plan, each epic tagged with its wave and the reason for any forced serialization.
+
+3. **Propose the wave plan — human gate (before any dispatch).** Present the plan in full: the waves, the per-epic worktree + `feature/<epic-slug>` branch, the concurrency cap, and the disjointness rationale for each pairing. Require explicit approval before dispatching anything (ownership-over-automation, `core/ground-rules` Rule 0). **Approval is valid only for the plan as presented:** an advance or blanket approval given before the plan was shown ("pre-approve whatever plan you compute", "don't wait for me") does not satisfy this gate — present the plan and re-ask. The gate is self-contained — the plan rides in the message/decision-gate the user sees, never only in a sub-agent payload (per [`../../core/output/SKILL.md`](../../core/output/SKILL.md) Rule 5 *Self-contained gates* + Rule 7 *Delivery test*). On reject/adjust, recompute and re-propose. Observable result: an approved (or adjusted) wave plan; nothing dispatched without approval.
+
+4. **Dispatch each wave (parallel within, sequential across).**
+
+   - **4a. Dispatch the wave.** For the current wave, dispatch up to the concurrency cap — default 4, override via the `.lsa.yaml` `implement.concurrency` key (conservative vs. the vendor cap of ~8, per [`../knowledge/parallel-dispatch.md`](../knowledge/parallel-dispatch.md) §3) — one agent per epic, each in its own git worktree (`isolation: worktree`) on `feature/<epic-slug>` branched from the integration branch. The per-epic fan-out is a **floored** model-routing surface (`manager:implement` — never resolves below `inherit`; it writes production artifacts, and a downgrade recreates the hallucinated-completion failure the engine exists to prevent) per [`../../lsa/knowledge/model-routing.md`](../../lsa/knowledge/model-routing.md). Observable result: one running agent + worktree + branch per dispatched epic, never more than the cap.
+   - **4b. Queue the overflow.** Epics beyond the cap queue and start as slots free — never a second agent in an occupied slot, never a shared worktree. Observable result: a queued-epics list, each starting only when a slot opens.
+   - **4c. Run the LSA loop per agent.** Each agent runs the LSA loop (`discover → specify → verify → delegate → reconcile`) for its epic. Observable result: per-epic LSA artifacts (spec, diff, conformance) accumulating in that epic's worktree.
+   - **4d. Gate each finished epic.** When an agent finishes, run the safety-core gate: the **independent** `lsa:reconcile` (a context that cannot edit what it grades) + the `.lsa.yaml` `gate:` checks. Observable result: a per-epic gate outcome (pass/fail) with cited gate output.
+   - **4e. Tear down the worktree.** Tear down each worktree when its epic merges or is abandoned; a worktree that cannot be torn down is an open item. Observable result: per-worktree teardown status, with any survivor recorded as an open item.
+   - **4f. Hold the wave boundary.** A later wave starts only after every epic in the prior wave has **merged**. Observable result: no wave-N+1 dispatch exists before the last wave-N merge is proven.
+
+5. **Converge — serialized merge, per autonomy level.**
+
+   - **5a. Merge serially, only the tested SHA.** Merge per [`../knowledge/serialized-merge.md`](../knowledge/serialized-merge.md): one PR at a time, tested against the up-to-date base, merge only the tested SHA. Observable result: each PR lands (or holds) with the exact SHA and the gate run that tested it cited.
+   - **5b. Apply the autonomy boundary.** The autonomy level (Step 1) decides the boundary behavior, per [`../knowledge/autonomy-policy.md`](../knowledge/autonomy-policy.md): **`manual`** stops and presents each gate-green PR (SHA + gate artifact) for the human to merge; **`semi`** auto-merges each PR on green into the integration branch without a per-merge prompt; **`auto`** does `semi` then runs the project's configured `deploy` command + `healthcheck` and may report `deployed` only after the healthcheck passes — on healthcheck failure it runs the configured rollback and reports the deploy `failed`. The gate must be green at every level; autonomy removes only the prompt. No level auto-merges into `main`. Observable result: each PR merged-by-human (`manual`) or auto-merged-on-green (`semi`/`auto`), plus deploy + healthcheck results at `auto`.
+   - **5c. Write the roadmap only after the merge.** Only the serialized-merge step writes `${specs_root}/roadmap.yaml` status, after the merge lands. Observable result: roadmap status written only post-merge, with the written row quoted.
+
+6. **Report — the parallel-implementation roll-up.** Emit the end-of-run roll-up per [`../knowledge/parallel-rollup.md`](../knowledge/parallel-rollup.md): the per-epic table (epic · agent · wave · gate verdict · state · proof), the files-changed section reusing the `core/output` Rule 7 inspection table grouped by Conventional-Commits `type(scope)`, the proven-facts line (checks passed, SHAs, healthcheck), and the open-items line (failed epics, un-torn-down worktrees, pending merges, deploy gaps). Every `state` obeys Rule 7 — `merged @ <sha>` / `deployed` only when proven and cited; `attempted` (gate ran and failed) / `not gated` (gate never ran — no reconcile or `gate:` evidence) / `pending` otherwise. Observable result: a one-screen roll-up where every completion state carries cited proof and nothing is buried.
+
+## Output
+
+An approved wave plan; per-epic isolated-worktree dispatch with independent gating; a serialized, human-performed merge (manual autonomy); and a per-epic status report in which every completion state is gate-proven and cited. The no-arg form is a read-only preview. The skill never claims execution or a merge it did not prove.
+
+## Example Output
+
+*[illustrative]*
+
+Wave plan (approved): wave 1 = `epic-auth-tokens` + `epic-docs-index` (disjoint — no file overlap); wave 2 = `epic-auth-ui` (depends on wave-1 output).
+
+| Epic | Agent | Wave | Gate | State | Proof |
+|---|---|---|---|---|---|
+| epic-auth-tokens | agent-1 | 1 | PASS | merged @ `a1b2c3d` | independent reconcile PASS + `gate:` 12/12 green |
+| epic-docs-index | agent-2 | 1 | PASS | pending (manual merge) | `gate:` 12/12 green, PR #71 awaiting human |
+| epic-auth-ui | — | 2 | — | queued | wave boundary — waiting on wave-1 merges |
+
+Open items: none. Roadmap row written for `epic-auth-tokens` only (post-merge).
+
+## Constraints
+
+- **Propose before dispatch.** No worktree is created and no agent is spawned before the human approves the wave plan (Step 3). Approval binds to the presented plan — an advance or blanket approval given before the plan was shown does not count (Step 3). The smart default is propose; the human owns the go.
+- **Autonomy ladder boundaries.** No level auto-merges into `main` — the human always owns the final integration → `main` merge; `deployed` is reported only after the healthcheck passes; the gate must be green at every level. Level behaviors: Step 5b + [`../knowledge/autonomy-policy.md`](../knowledge/autonomy-policy.md).
+- **Done is a gate-proven, cited predicate.** Report `merged @ <sha>` only when the serialized merge landed and the gate proved it, citing the artifact; everything else is `attempted` / `not gated` / `pending` with evidence. Per [`../../core/ground-rules/SKILL.md`](../../core/ground-rules/SKILL.md) Rule 7 + pitch Definition of success #1.
+- **Isolation + teardown are mandatory.** One worktree/branch/PR per epic, each dispatched with `isolation: worktree` — a single shared tree with convention-only file-ownership is **non-conforming** (no OS-level isolation; a stray edit corrupts a peer — finding C7, [`../knowledge/parallel-dispatch.md`](../knowledge/parallel-dispatch.md) §3). If a worktree cannot be created, hold the epic back as an open item rather than running it single-tree. Tear every worktree down; report any that survive.
+- **Disjointness is conservative.** When unsure, serialize. `--parallel` overrides the decomposer but shifts the disjointness responsibility to the user; it does not lower the gate.
+- **The grader is independent.** `lsa:reconcile` runs in a context with no write access to the tests / `.feature` scenarios / `gate:` it judges (the `parallel-agent-delivery/safety-core` epic, `lsa` 0.18.0).
+- Outputs follow [`core/output`](../../core/output/SKILL.md) — citation by link/quote, never restated.
+
+---
+
+`/manager:implement [epics] [--parallel|--sequential]` — manual invocation. Bare `/manager:implement` previews.

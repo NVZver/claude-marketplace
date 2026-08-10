@@ -1,0 +1,53 @@
+> **Trace.** On load, print first: `=============== [.lsa/modules/manager/spec.md] [vision] ===============`
+
+# Module Spec — `manager`
+
+Product and project management discipline. Shapes vague ideas into structured pitches (product-manager) and stewards the roadmap from approved pitches through epic decomposition to LSA handoff (project-manager).
+
+**Plugin manifest:** [`manager/.claude-plugin/plugin.json`](../../../manager/.claude-plugin/plugin.json) (v0.17.0)
+**Plugin README** (install, dependencies, status): [`skills/manager/README.md`](../../../skills/manager/README.md)
+**Knowledge** (pitch format, role adaptation, epic decomposition, sequencing heuristics, command naming, roadmap orchestration; plus the parallel-execution engine — parallel-dispatch, serialized-merge, autonomy-policy, parallel-rollup): [`manager/knowledge/`](../../../manager/knowledge/)
+
+## Role in the marketplace
+
+`manager` owns two phases of the development lifecycle:
+
+1. **Shaping (product-manager)** — turns a user's vague idea into a structured pitch with clear scope, boundaries, and exclusions.
+2. **Project coordination (project-manager)** — stewards the roadmap: recommends what to build next (dependency/risk/value reasoning), decomposes pitches into independently-shippable epics, proposes roadmap hygiene updates, and hands each epic to LSA.
+
+The pitch is the bridge: the product-manager produces it, the project-manager consumes it. The LSA build cycle (`lsa:discover` → `lsa:specify` → `lsa:verify` → `lsa:delegate` → `lsa:reconcile`) receives individual epics from the project-manager.
+
+Depends on `core` ([`skills/manager/README.md`](../../../skills/manager/README.md) *"Depends on"*) for:
+
+- `core/ground-rules` — fact-grounding policy (every claim cited; cannot-verify fallback rather than fabrication).
+- `core/output` — format discipline every response inherits.
+
+Reads `lsa` artifacts (roadmap, specs, branches) for codebase context but does not depend on `lsa` at the plugin level. `lsa` does not depend on `manager`.
+
+## Invariants
+
+- **Versioning.** `manager` evolves with its own SemVer + CHANGELOG (`.lsa/constitution.md` §1 *"Distribution + versioning"*). Currently v0.17.0.
+- **Markdown-only.** No `/src/`; the plugin is pure Markdown plus the JSON manifest. Per `.lsa/standards/code.md`.
+- **Depends on `core`.** Documented in `manager/.claude-plugin/plugin.json` `dependencies` field and `skills/manager/README.md` *"Depends on"*.
+- **Ownership over automation.** Both agents facilitate — they do not decide scope or sequencing. Per `.lsa/constitution.md:15`.
+- **Domain-neutral.** The product-manager self-selects a domain role per invocation. Per `skills/manager/knowledge/role-adaptation.md`.
+- **Pitch structure is canonical.** Format, sections, and heading structure defined in `skills/manager/knowledge/pitch-structure.md`. That file is the single source of truth for pitch format.
+- **Epic decomposition rules are canonical.** Quality criteria, boundary signals, and anti-patterns defined in `skills/manager/knowledge/epic-decomposition.md`. That file is the single source of truth for epic format.
+- **Sequencing heuristics are grounded.** Three factors (dependency, risk, value) defined in `skills/manager/knowledge/sequencing-heuristics.md`, each grounded in data sources the agent can read from this repo.
+- **Command naming is canonical.** The function-like convention `<actor>:<action>-<modifier> args` is defined in `skills/manager/knowledge/command-naming.md`; that file is the single source of truth for command naming.
+- **Human gate before every handoff — agents propose, skills gate.** A pitch must reach `approved` status before it enters project coordination; epics must be user-approved before LSA handoff; roadmap writes require explicit user approval. The gates run in the orchestrator skills (`manager:shape`, `manager:next`, `manager:decompose`, `manager:check`; `check` runs its gates inline rather than via a dispatch since manager 0.20.0) — A decision gate and the `Skill` tool are unavailable in subagent context, so the agents return pending gates and a staged `lsa:discover` seed in their payloads instead of asking or invoking. The shared dispatch → gate → re-render contract for the two dispatching roadmap verbs (`manager:next`, `manager:decompose`) is canonical at `skills/manager/knowledge/roadmap-orchestration.md`.
+- **Gate-delivery — show → approve → write (management v0.6.0).** Adopts `core` v0.13.0 (`.lsa/modules/core/spec.md`, Rule 7 *Authorization boundary* / *Delivery test*). The `product-manager` agent writes **no file** — it returns the full pitch content + proposed slug in its payload (tools narrowed to `Read, Grep, Glob`). The dispatching skill (`manager:shape`) re-renders that payload through a rendered channel (turn-final message or gate `preview` — the agent payload is invisible to the user), runs the gates, and writes `${specs_root}/pitches/<slug>.md` with `Status: approved` **only on approve**; on reject nothing is written. The `project-manager` / `manager:next` / `manager:decompose` path applies the same rule to roadmap rows and epic lists.
+- **`manager:implement` is the parallel execution engine (manager v0.15.x).** `manager:implement [epics] [--parallel|--sequential]` ([`../../../manager/skills/implement/SKILL.md`](../../../skills/manager/implement/SKILL.md)) computes a dependency-ordered **wave plan** via the disjoint-epic decomposer, **proposes it for approval**, then dispatches one agent per epic in an isolated git worktree (`isolation: worktree` — a single shared tree is non-conforming), gates each via the independent `lsa:reconcile` + the `.lsa.yaml` `gate:` checks, and converges via the **serialized merge** (shared-ledger lock). It honors the `.lsa.yaml` autonomy ladder (`manual`/`semi`/`auto`, default `manual`; no level auto-merges into `main`) and ends with the fleet roll-up; every `merged @ <sha>`/`deployed` is gate-proven, never asserted (`.lsa/constitution.md:15` *ownership over automation* + `core/ground-rules` Rule 7). The **no-arg form** is the read-only backlog preview. Built by the `parallel-agent-delivery` feature ([`../../pitches/parallel-agent-delivery.md`](../../pitches/parallel-agent-delivery.md)); the engine contracts are canonical at `manager/knowledge/` — [`parallel-dispatch.md`](../../../skills/manager/knowledge/parallel-dispatch.md), [`serialized-merge.md`](../../../skills/manager/knowledge/serialized-merge.md), [`autonomy-policy.md`](../../../skills/manager/knowledge/autonomy-policy.md), [`parallel-rollup.md`](../../../skills/manager/knowledge/parallel-rollup.md).
+- **Pitch output path.** Approved pitches land at `${specs_root}/pitches/<slug>.md` — `specs_root` is resolved from `.lsa.yaml` at the repo root (defaults per [`../../../lsa/knowledge/conventions.md`](../../../skills/lsa/knowledge/conventions.md) §"`.lsa.yaml` defaults"). In this repo, that resolves to `.lsa/pitches/<slug>.md`. Written only on approve per the gate-delivery invariant above; a rejected pitch is never written.
+- **Roadmap is the single entry point for the project-manager.** The agent reads `${specs_root}/roadmap.yaml` — the YAML ledger (`version:` + `items:` list, schema per `skills/manager/knowledge/sequencing-heuristics.md` §"Roadmap ledger format") — as its primary data source, querying it on demand via `scripts/roadmap-query.sh` / `scripts/roadmap-row.sh` rather than whole-file reads (`specs_root` resolved from `.lsa.yaml`; in this repo, `.lsa/roadmap.yaml`). All roadmap modifications are proposed as inline diffs; no silent writes.
+- **`specs_root` is resolved from `.lsa.yaml`.** Every entry-point skill (`manager:shape`, `manager:next`, `manager:decompose`, `manager:check`) and both agents read `.lsa.yaml` to resolve `specs_root` for pitch/roadmap/feature paths, falling back to LSA's defaults per [`../../../lsa/knowledge/conventions.md`](../../../skills/lsa/knowledge/conventions.md) §"`.lsa.yaml` defaults". This is what lets the manager plugin interoperate with LSA's configurable workspace instead of hardcoding `vision/specs/`.
+
+## Artifact paths
+
+```yaml
+- manager/agents/**/*.md
+- manager/skills/**/SKILL.md
+- manager/knowledge/**/*.md
+- manager/.claude-plugin/plugin.json
+- manager/README.md
+```

@@ -1,0 +1,105 @@
+# .lsa.yaml — Living Spec Architecture configuration for this repo.
+# Schema version: 1 (matches lsa pack major version 0.x.y)
+# See skills/lsa/ARCHITECTURE.md §3 for the full schema.
+
+constitution: .lsa/constitution.md
+specs_root: .lsa/
+mode: docs
+
+# Quality-gate script contract (see skills/lsa/knowledge/quality-gate-contract.md).
+# docs-mode structural probes: each key is a check name → a deterministic
+# command. A check passes iff its command exits 0; verify / reconcile cite the
+# command + exit code as the Rule-7 gate artifact instead of re-deriving grep
+# recipes by hand. Pro-safe, local bash, zero model calls.
+gate:
+  docs-invariants: bash scripts/lint.sh
+  citations: bash scripts/check-citations.sh
+  links: bash scripts/check-links.sh
+  project-map: bash skills/lsa/scripts/project-map-check.sh
+  tests: bash scripts/run-tests.sh
+  lib-pins: bash scripts/check-lib-pins.sh
+
+# Reconcile scenario-run count (skills/lsa/reconcile/SKILL.md Step 1).
+# Default when the key is absent: 3 — pass = all 3 runs succeed (≥95% of 3 ⇒ 3/3).
+# Escape hatch: raise for high-stakes epics; at a larger N, pass = ≥95% of runs.
+reconcile:
+  runs: 3
+
+# manager:implement concurrency cap (skills/manager/implement/SKILL.md Step 4a).
+# Default when the key is absent: 4 — at most 4 epic agents run at once
+# (conservative vs. the vendor cap of ~8, skills/manager/knowledge/parallel-dispatch.md §3).
+# Escape hatch: raise toward the vendor cap for wide, provably-disjoint waves.
+implement:
+  concurrency: 4
+
+# Model routing map (see skills/lsa/knowledge/model-routing.md). Keys are Agent-dispatch
+# surfaces; values are the tier the dispatcher passes as the Agent model parameter.
+# Read at dispatch time — zero model pins ship in any pack frontmatter (lint C8).
+# Absent key OR a model the plan lacks ⇒ inherit (never a hard error). Floored
+# surfaces (lsa:reconcile grader, lsa:delegate implementer, manager:implement
+# fan-out) always resolve inherit even if named here. Only non-inherit entries are
+# listed; every omitted surface runs inherit (= the session model, today's behavior).
+#
+# ONLY list a surface whose dispatcher actually reads this map and passes the
+# model parameter. Wired today: manager:next / manager:check (via the shared
+# roadmap-orchestration contract, skills/manager/knowledge/roadmap-orchestration.md
+# §"The contract" item 1 — cited by both skills) and lsa:delegate.verify-checkpoint
+# (skills/lsa/delegate/SKILL.md §5). prompt-engineer.mechanical is intentionally
+# absent — its agent-side resolver was reverted (cf3b78d), so it would be dead config.
+routing:
+  manager:next: sonnet
+  lsa:delegate.verify-checkpoint: sonnet
+
+# Pinned library specs (skills/lsa/knowledge/pinned-library-specs.md). Each entry
+# names a version-pinned spec file + the manifest it's checked against;
+# scripts/check-lib-pins.sh (wired into gate: above as lib-pins) verifies
+# staleness on every lsa:verify. Capped at 5 entries (scripts/lint.sh C18).
+libs:
+  actions-checkout:
+    spec: .lsa/libs/actions-checkout.md
+    manifest: .github/workflows/lint.yml
+
+modules:
+  core:
+    spec: .lsa/modules/core/spec.md
+    artifact_paths:
+      - skills/core/*/SKILL.md
+      - skills/core/knowledge/**/*.md
+      - skills/core/README.md
+      - skills/core/VERIFICATION.md
+      - skills/core/tests/**/*.md
+  lsa:
+    spec: .lsa/modules/lsa/spec.md
+    artifact_paths:
+      - skills/lsa/*/SKILL.md
+      - skills/lsa/agents/**/*.md
+      - skills/lsa/knowledge/**/*.md
+      - skills/lsa/scripts/**/*.sh
+      - skills/lsa/ARCHITECTURE.md
+      - skills/lsa/README.md
+      - skills/lsa/CORE.md
+      - skills/lsa/CHANGELOG.md
+  manager:
+    spec: .lsa/modules/manager/spec.md
+    artifact_paths:
+      - skills/manager/agents/**/*.md
+      - skills/manager/*/SKILL.md
+      - skills/manager/knowledge/**/*.md
+      - skills/manager/README.md
+  prompt-engineer:
+    spec: .lsa/modules/prompt-engineer/spec.md
+    artifact_paths:
+      - skills/prompt-engineer/agents/**/*.md
+      - skills/prompt-engineer/commands/**/*.md
+      - skills/prompt-engineer/knowledge/**/*.md
+      - skills/prompt-engineer/README.md
+      - skills/prompt-engineer/VERIFICATION.md
+      - skills/prompt-engineer/tests/**/*.md
+  observer:
+    spec: .lsa/modules/observer/spec.md
+    artifact_paths:
+      - skills/observer/*/SKILL.md
+      - skills/observer/knowledge/**/*.md
+      - skills/observer/README.md
+      - skills/observer/CHANGELOG.md
+      - skills/observer/tests/**/*.md
