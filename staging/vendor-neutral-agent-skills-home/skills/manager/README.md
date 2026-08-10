@@ -1,0 +1,85 @@
+# Manager
+
+Product and project management discipline for the NVZver marketplace. Two roles:
+
+1. **Product manager** — shapes vague ideas into structured, buildable pitches before the build cycle begins. The shaping conversation follows a 5-section pitch format (defined in [`knowledge/pitch-structure.md`](knowledge/pitch-structure.md)) whose sections — Problem, Appetite, Solution sketch, Rabbit holes, No-gos — are the five pitch ingredients from Basecamp's [Shape Up](https://basecamp.com/shapeup/1.5-chapter-06) (*"Problem, Appetite, Solution, Rabbit holes, No-gos"*). The product-manager agent dynamically adapts its domain-expert role per invocation.
+
+2. **Project manager** — stewards the roadmap after pitches are approved. Recommends what to build next using dependency/risk/value reasoning, decomposes chosen pitches into focused epics, and hands each epic to LSA for technical refinement. The project-manager agent reads the roadmap, pitches, branches, and spec state to ground every recommendation. Its commands follow the function-like naming convention in [`knowledge/command-naming.md`](knowledge/command-naming.md) — verbs you call with arguments, not nouns you browse.
+
+Spec: [`.lsa/modules/manager/spec.md`](../.lsa/modules/manager/spec.md).
+
+## Install
+
+```
+npx skills add <org>/<repo> --skill core/ground-rules --skill core/output --skill manager/next --skill manager/shape --skill manager/check --skill manager/decompose --skill manager/implement
+```
+
+Install `core`'s `ground-rules` + `output` too — `manager` cites them for fact-grounding and format discipline. See the root [`CONTRIBUTING.md`](../../CONTRIBUTING.md) for the manual-copy fallback.
+
+## Depends on
+
+- **`core`** — `core/ground-rules` (fact-grounding policy), `core/output` (format discipline). No manifest declares this dependency (this repo ships no `.claude-plugin/plugin.json`) — install both packs together per the command above.
+
+## Skills
+
+| Skill | What it does |
+|---|---|
+| `manager:shape` | Shape a new feature. Accepts a problem description, dispatches the product-manager agent, **delivers the full pitch to you** (the agent's payload is invisible), runs the returned human gates (role, shaping forks, approve/reshape/reject), and writes the pitch file **only on approve** — nothing lands on disk on reject (since v0.6.0). Hands off to `manager:decompose` for epic decomposition on approval. |
+| `manager:next` | Recommend what to work on next. A plain "what's next" gets a fast-path answer in seconds — a Step 0 branch runs `scripts/roadmap-row.sh` to read only the highest-priority `backlog`/`not_started` item of the `.lsa/roadmap.yaml` ledger (zero model tokens, no whole-file read) and quotes it with a `file:line` citation, no agent dispatch (per [`../core/knowledge/fast-path-source-of-truth.md`](../core/knowledge/fast-path-source-of-truth.md)). The full project-manager dispatch (dependency/risk/value sequencing) is reserved for "recommend an order" / "what should I pick" questions — and that path now loads **pitch outlines, not pitch bodies**, via `scripts/pitch-query.sh outline` (title + problem + appetite per candidate; measured 25× less than the equivalent full reads on a 5-candidate pass; see `scripts/tests/no-wholefile-pitch-read.sh:10`). A full pitch is read only after you pick one. |
+| `manager:decompose <pitch>` | Decompose a pitch into independently-shippable epics. Dispatches the project-manager agent with the pitch, runs the approve/reject/adjust epic gate, and on approval hands the first epic to `lsa:discover` (remaining epics surfaced for re-invocation). |
+| `manager:check` | Check roadmap hygiene. **Runs inline — no agent dispatch** (v0.20.0). Starts from `scripts/roadmap-query.sh hygiene` — **five deterministic hint classes** computed from the ledger + git with zero model tokens: missing-pitch, backlog-but-branch, stale-in-progress, merged-but-not-shipped, and no-artifacts (no branch, no feature dir, no pitch). Judgment is applied over the hints inline, then each proposed row diff is gated one by one and every written row quoted back. Note: no-artifacts is an artifact-**existence** proxy, not a recency check — the item schema has no date field, so the deferred-vs-active call stays yours. |
+| `manager:implement [epics] [--parallel\|--sequential]` | **Parallel execution engine** (built by the `parallel-agent-delivery` dispatcher epic). Computes a dependency-ordered **wave plan** via the disjoint-epic decomposer ([`knowledge/parallel-dispatch.md`](knowledge/parallel-dispatch.md)), **proposes it for approval**, then dispatches one agent per epic in an isolated git worktree, gates each via the independent `lsa:reconcile` + the `.lsa.yaml` `gate:` checks, and converges via the **serialized merge** ([`knowledge/serialized-merge.md`](knowledge/serialized-merge.md)). It honors the **`.lsa.yaml` autonomy ladder** ([`knowledge/autonomy-policy.md`](knowledge/autonomy-policy.md)): `manual` (default — human merges), `semi` (auto-merge on green), `auto` (+ deploy + healthcheck, rollback on failure). `semi`/`auto` are **built but not yet enabled** — the default stays `manual` until it proves safe in dogfooding (pitch enablement gate). No level auto-merges into `main`. `--sequential` forces one-at-a-time; `--parallel` forces a single wave (user asserts disjointness). The bare form is a read-only preview. The run ends with the **parallel-implementation roll-up** ([`knowledge/parallel-rollup.md`](knowledge/parallel-rollup.md)) — per-agent attribution, per-epic gate verdicts, proven facts, open items; every `merged @ <sha>` / `deployed` carries cited proof (`core/ground-rules` Rule 7). |
+
+## Agents
+
+| Agent | What it does |
+|---|---|
+| `product-manager` | Shaping agent. Adapts domain-expert role per invocation, drafts the pitch and returns its full content + pending human gates for `manager:shape` to deliver and run — writes no files (since v0.6.0). |
+| `project-manager` | Roadmap steward. Recommends next backlog item (dependency/risk/value reasoning), decomposes pitches into independently-shippable epics, reports roadmap hygiene findings, stages the first-epic LSA handoff for `manager:decompose` to invoke. Two roadmap verbs (`manager:next` / `manager:decompose`) dispatch it with a distinct intent; the shared dispatch → gate → re-render contract lives at [`knowledge/roadmap-orchestration.md`](knowledge/roadmap-orchestration.md). `manager:check` no longer dispatches — it runs inline (v0.20.0) and owns the hygiene gates and writes end to end. When hygiene rides along with Mode 1 sequencing the agent's Mode 1b is **report-only**: it surfaces cited findings and names `manager:check` as the way to apply them, because neither dispatching verb runs a hygiene gate. |
+
+## Example
+
+A shaping run, end to end — the snippet is `[illustrative]` (constructed for readability, not copied from a live session):
+
+```text
+> /manager:shape "users complain onboarding takes too long"
+
+[product-manager] Shaping into a pitch.
+Adopting role — onboarding-funnel product manager.
+Q1 — what's the most-recent concrete onboarding complaint you've heard?
+Q2 — how long is "too long" (in minutes), and who measured it?
+
+(… interactive Q&A grounded in the codebase and existing specs …)
+
+PROPOSED — pitch at .lsa/pitches/onboarding-friction.md.
+Appetite: small batch (~1 week).
+Approve to hand off to /manager:decompose, or reshape.
+```
+
+## How it fits
+
+```
+manager:shape → (human approves pitch) → manager:decompose
+                                                  ↓
+                                roadmap entry + decompose into epics → (human approves epics)
+                                                  ↓
+              lsa:discover → lsa:specify → lsa:verify → lsa:delegate → lsa:reconcile
+
+manager:next      → recommend what to work on next (fast-path or sequenced)
+manager:implement → build the approved epics in parallel (the build-execution entry point):
+                    wave plan → isolated worktrees → independent gate → serialized merge → PRs
+manager:check     → check roadmap hygiene, gate proposed row diffs
+```
+
+`manager:implement` is the **parallel build-execution entry point** — once epics are approved (or you just want the backlog built in parallel), invoke it directly. It surfaces in this flow and the skill table above so the parallel engine is findable without hunting (observation log C1, [`../.lsa/observations/2026-06-17-tripanchor-manager-implement.md:59`](../.lsa/observations/2026-06-17-tripanchor-manager-implement.md) *"C1 — entry-point discoverability. `manager:implement` hard to find."*).
+
+The manager plugin owns both the pre-build shaping phase (product-manager) and the project coordination phase (project-manager). The product-manager produces pitches; the project-manager converts them into roadmap items and decomposes them into epics for LSA. Human approval gates exist at every handoff — pitch approval, roadmap entry, epic approval, and LSA handoff. The orchestrator skills run these gates; the agents prepare them (agents propose, skills gate — `AskUserQuestion` is unavailable in subagent context).
+
+## `manager:next` — fast-path vs full reasoning
+
+`manager:next` answers "what should I work on next?" at two levels:
+
+- **Fast-path (Mode 0)** — a plain "what's next" returns the highest-priority `backlog` / `not_started` item of the `.lsa/roadmap.yaml` ledger quoted with a `file:line` citation in seconds, read on demand via `scripts/roadmap-row.sh` (zero model tokens, no whole-file read), without dispatching the agent (per [`../core/knowledge/fast-path-source-of-truth.md`](../core/knowledge/fast-path-source-of-truth.md)).
+- **Full flow** — when the question asks for ordering or selection reasoning, it dispatches the project-manager, which reads linked pitches and applies sequencing heuristics (dependency / risk / value), then runs the pick gate. Decomposing the chosen pitch into epics and the LSA handoff are `manager:decompose`'s job, not `manager:next`'s.
+
+Ledger format + schema: [`knowledge/sequencing-heuristics.md`](knowledge/sequencing-heuristics.md) §"Roadmap ledger format". Migrating an old `roadmap.md`: [`../lsa/knowledge/migration-instructions-ai.md`](../lsa/knowledge/migration-instructions-ai.md).

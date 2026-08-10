@@ -1,0 +1,33 @@
+# Pre-contract conformance.md files — exempt from lint C19.
+#
+# The canonical, machine-readable orphan-hunk line (`Orphan hunks: none.` or
+# `Orphan hunks: <integer>` at column 0) became a required part of the
+# conformance.md output contract on 2026-07-20, in lsa/skills/reconcile/SKILL.md
+# Step 4 (epic restore-tracked-metrics-harvest/reconcile-emit-guard). Every file
+# listed here predates that contract and is grandfathered so the check is
+# enforceable on new work instead of failing on history — the pitch's no-go 4
+# forbids retroactively rewriting these files.
+#
+# This list is SHRINK-ONLY. Never append to it: a new conformance.md must satisfy
+# the contract. Removing a line (after bringing that file up to contract) is the
+# only edit that should ever happen here.
+.lsa/features/2026-06-14-parallel-agent-delivery-epic-0/conformance.md
+.lsa/features/2026-06-16-command-naming-convention/conformance.md
+.lsa/features/2026-06-16-manager-implement-stub/conformance.md
+.lsa/features/2026-06-16-manager-rename/conformance.md
+.lsa/features/2026-06-16-roadmap-verb-split/conformance.md
+.lsa/features/2026-06-17-parallel-agent-delivery-epic-1/conformance.md
+.lsa/features/2026-06-17-parallel-agent-delivery-epic-2/conformance.md
+.lsa/features/2026-06-17-parallel-agent-delivery-epic-3/conformance.md
+.lsa/features/2026-06-17-parallel-agent-delivery-epic-4/conformance.md
+.lsa/features/2026-06-17-parallel-engine-findings/conformance.md
+.lsa/features/2026-07-01-paired-verify-observer-verifier/conformance.md
+.lsa/features/2026-07-01-reuse-first/conformance.md
+.lsa/features/2026-07-02-paired-verify-lsa-delegate-wiring/conformance.md
+.lsa/features/2026-07-16-yaml-ledger-read-cutover/conformance.md
+.lsa/features/2026-07-17-deterministic-work-scripted-codify/conformance.md
+.lsa/features/2026-07-19-deterministic-work-scripted-coverage-skeleton/conformance.md
+.lsa/features/2026-07-19-deterministic-work-scripted-hygiene-classes/conformance.md
+.lsa/features/2026-07-19-deterministic-work-scripted-resolve-refs/conformance.md
+.lsa/features/observer/conformance.md
+.lsa/features/pro-tier-token-affordability/project-index/conformance.md

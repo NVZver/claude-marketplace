@@ -1,0 +1,22 @@
+name: lint
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  invariants:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Marketplace invariant lint
+        run: bash scripts/lint.sh
+      - name: Citation check (path:line citations resolve)
+        run: bash scripts/check-citations.sh
+      - name: Link check (relative markdown links resolve)
+        run: bash scripts/check-links.sh
+      - name: Project-map tests (real-flow, skills/lsa/scripts/project-map-*.sh)
+        run: bash skills/lsa/scripts/tests/test-project-map.sh
+      - name: Project-map freshness gate
+        run: bash skills/lsa/scripts/project-map-check.sh

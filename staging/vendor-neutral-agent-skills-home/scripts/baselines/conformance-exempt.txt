@@ -1,0 +1,30 @@
+# Feature dirs with a requirements.md but deliberately no conformance.md —
+# exempt from lint C20.
+#
+# Two legitimate reasons appear here:
+#
+#   1. PRE-CONTRACT. The dir predates the requirement that every graded epic emit
+#      a conformance.md. Grading them now would mean inventing verdicts for work
+#      whose diff boundaries are no longer recoverable — an honest gap is better
+#      than a fabricated grade.
+#
+#   2. DROPPED AT SPECIFY. The spec was written in full and the feature was then
+#      dropped as architecturally unreachable, so no implementation was ever
+#      graded. The spec is retained as the record of why. See the
+#      `observable-grader-independence` row in .lsa/roadmap.yaml.
+#
+# This list is SHRINK-ONLY. A new epic must emit a conformance.md; adding its dir
+# here instead of grading it is exactly the failure C20 exists to catch.
+
+# --- pre-contract -----------------------------------------------------------
+.lsa/features/2026-05-22-askuserquestion-audit
+.lsa/features/2026-05-22-custom-inventions-sweep
+.lsa/features/2026-05-22-lint-command
+.lsa/features/2026-05-22-show-changes-inline
+.lsa/features/2026-07-01-artifact-handoff-standard
+.lsa/features/2026-07-01-deterministic-doc-lint-gate
+.lsa/features/2026-07-01-plugin-discipline-commit-hook
+.lsa/features/marketplace-ai-engineering-audit
+
+# --- dropped at specify, never implemented ----------------------------------
+.lsa/features/observable-grader-independence/cross-model-verdict

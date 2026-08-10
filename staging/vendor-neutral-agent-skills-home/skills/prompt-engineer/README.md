@@ -1,0 +1,53 @@
+# Prompt Engineer
+
+Prompt engineering discipline for Claude Code plugins: *how* you ask — clear, specific, and backed by the context the task rests on — determines what the model returns. An agent enforces quality rules across prompt files (agents, commands, skills, knowledge); commands provide review, optimize, and create workflows.
+
+## Install
+
+```
+/plugin marketplace add NVZver/claude-marketplace
+/plugin install prompt-engineer@NVZver
+/reload-plugins
+```
+
+## Commands
+
+| Command | What it does |
+|---|---|
+| `prompt-engineer:prompt-review` | Scan prompts for ground rule, KISS/DRY, AI sweep, context budget, and show-changes-inline violations. Reports findings as a table with severity and rule citation; judgment-based findings must survive an independent re-derivation before being reported (self-consistency), deterministic checks are exempt. The show-changes-inline check (warning-only) flags any step body in a prompt source (`**/SKILL.md`, `**/agents/*.md`) that writes/edits/marks an artifact without a directive to quote the change inline — the author-time enforcement of `core/output` Rule 7. |
+| `prompt-engineer:prompt-optimize` | Apply fixes for issues found by prompt-review. Groups by severity, re-verifies after fixes. |
+| `prompt-engineer:prompt-create` | Scaffold a new agent or command file with all required sections — shows the full generated content for approval and writes the file only on approve (show → approve → write, since v0.7.0) — then verify compliance. |
+
+## Example
+
+A review run — the snippet is `[illustrative]` (constructed for readability, not copied from a live session):
+
+```text
+> /prompt-engineer:prompt-review manager/agents/product-manager.md
+
+| Severity | Rule                            | Finding                                                |
+|----------|---------------------------------|--------------------------------------------------------|
+| HIGH     | Actor rule 10 (Example Output)  | Section missing — actors must show their output shape. |
+| MED      | KISS rule 2 (no duplication)    | Step 3 restates Step 1's input check.                  |
+| LOW      | Context budget                  | Low-density framing paragraph adds no actionable info. |
+
+Apply auto-fixes with /prompt-engineer:prompt-optimize.
+```
+
+## Agent
+
+| Agent | What it does |
+|---|---|
+| `prompt-engineer` | Principal prompt engineer. Auto-engages on prompt review, optimization, creation, and analysis requests. Enforces six rule categories: actor ground rules (11), knowledge quality checks (6), separation of concerns (5 boundary violations), KISS/DRY audit (6), AI over-engineering checks (5), context budget checks (4). |
+
+## Rule categories
+
+| Category | Rules | Catches |
+|---|---|---|
+| Actor ground rules | 11 | Missing sections, vague steps, unverifiable output, wording issues, Example Output mismatching the Output spec |
+| Knowledge quality checks | 6 | Non-actionable rules, duplication, broken cross-references, execution logic in knowledge |
+| Separation of concerns | 5 | Actor restating knowledge, knowledge containing steps, cross-boundary violations |
+| KISS / DRY audit | 6 | Redundant abstraction, duplicate content, hardcoded formats, multi-concern files, volatile component counts |
+| AI over-engineering | 5 | Formalized common sense, reinvented paradigms, arbitrary thresholds, example bloat |
+| Context budget | 4 | Goal restating description, mergeable constraints, over-constraining examples, padding |
+| Show-changes-inline (author-time) | 1 (warning-only) | Step body that writes/edits/marks an artifact with no directive to quote the change inline (`core/output` Rule 7) |

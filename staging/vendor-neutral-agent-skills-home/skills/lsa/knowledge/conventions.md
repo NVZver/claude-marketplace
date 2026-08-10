@@ -1,0 +1,75 @@
+> **Trace.** On load, print first: `=============== [lsa/knowledge/conventions.md] [lsa] ===============`
+
+# LSA Conventions — Knowledge
+
+Cross-cutting conventions every LSA skill applies. This file is **Knowledge**, not an Actor — it has no Goal / Input / Steps / Output / Constraints. LSA skills reference these conventions by section name rather than restating them.
+
+For the operating constitution see [`../../../.lsa/constitution.md`](../../../.lsa/constitution.md). For fact-grounding rules see [`../../core/ground-rules/SKILL.md`](../../core/ground-rules/SKILL.md). For the `.lsa.yaml` schema see [`../ARCHITECTURE.md`](../ARCHITECTURE.md) §3.
+
+---
+
+## `.lsa.yaml` defaults
+
+When `.lsa.yaml` is absent at the repo root, LSA applies these defaults:
+
+```yaml
+constitution: .lsa/constitution.md
+specs_root: .lsa/
+mode: code
+modules: {}
+paired_verify: off
+```
+
+The default workspace lives entirely under `.lsa/` so a user can `rm -rf .lsa/` to fully detach from LSA. The constitution sits inside that workspace as `.lsa/constitution.md`. Projects with a pre-existing `/CLAUDE.md` constitution or a `/specs/` spec tree should set `constitution` and `specs_root` explicitly in `.lsa.yaml`.
+
+LSA skills cite this section instead of restating the defaults inline.
+
+---
+
+## Read protocol
+
+Every LSA skill begins with the same protocol — read in this order, print a one-line read-summary per source:
+
+1. `.lsa.yaml` at repo root (or apply the defaults above).
+2. The constitution **digest** — [`../../../.lsa/constitution-digest.md`](../../../.lsa/constitution-digest.md), script-generated from the configured `${constitution}` (mandatory; never hand-edited — regenerate with `bash scripts/build-constitution-digest.sh`). Load the full `${constitution}` only for constitutional tasks: `lsa:init`, `lsa:revise-constitution`, or an explicit user request.
+3. The skill-specific source list — each skill names its own list under its Steps.
+
+To locate *which* files a request touches (skill lists that resolve to "the code/specs the request touches", e.g. `discover` Step 1), consult the **project map** — [`project-map.yaml`](../../project-map.yaml) at the repo root, a script-generated 3-level tree of **directories** (a navigational map, not a file catalog) — **before** walking the tree. Locate the directory a request touches, then read the files under it. It is a scoping atlas, not a mandatory full read; script-generated, never hand-edited (regenerate with `bash lsa/scripts/project-map-build.sh`, or `${CLAUDE_PLUGIN_ROOT}/scripts/project-map-build.sh` when the plugin is installed). Freshness gate: `bash lsa/scripts/project-map-check.sh`.
+
+If a source does not exist — including the project map — note the gap and fall back to a direct tree-walk rather than guessing. Per `skills/core/ground-rules/SKILL.md` Rule 3.
+
+Observable result: per-source one-liner printed back to the human.
+
+---
+
+## Library documentation protocol
+
+When any LSA skill needs to call a library API it is unsure about:
+
+1. **If the library is registered under `libs:` in `.lsa.yaml`:** run `bash scripts/check-lib-pins.sh` and read its status line for that library. On `OK`, read the registered pinned spec; if it covers the symbol, cite it as `lib:<name>:<api> via pin@<pinned-version>` and stop — make no external call. On `STALE`, `BROKEN`, or `[cannot verify]`, or if the symbol is not covered, continue to step 2. **Precedence is conditional, not positional:** a pinned spec is an in-repo doc representing an external source, so under `.lsa/constitution.md` §2 principle 6 (in-repo config → in-repo docs → the code itself → external sources → ask the human) it earns the in-repo-doc rank only while its staleness check is green — never a soft pass. The green/not-green determination comes from `scripts/check-lib-pins.sh`'s status line and exit code, never the model's own judgment of freshness (principle 10). An unverifiable pin does not outrank a fetchable answer.
+2. Check available tools for `resolve-library-id` (context7 MCP).
+3. **If context7 available:** read `package.json` (or equivalent) for the library version → call `resolve-library-id` → call `query-docs` with the specific API question. Cite as `lib:<name>:<api> via context7`.
+4. **If no context7:** use `WebSearch` for official docs (prefer `.md` over `.html`). Cite as `lib:<name>:<api> via <url>`.
+5. **If nothing found:** state it. Use codebase patterns and types. Never guess API signatures.
+
+Skills that perform discovery (`lsa:discover`) do this proactively; any unknown API is resolved this way before it is relied on.
+
+---
+
+## Output discipline
+
+All LSA skill outputs follow [`core/output`](../../core/output/SKILL.md) — citation by link, never restated. No LSA skill restates the `core/output` rules inline; it cites `core/output` by section or rule number.
+
+---
+
+## Decision-gate convention
+
+When a skill presents a decision to the human, it asks with labelled options and one-line outcomes per `.lsa/constitution.md` §2 principle 9 (*"Substrate-native first"*) — the host maps this to its native picker where one exists, else renders text-formatted options. The decision block is formatted per [`core/output`](../../core/output/SKILL.md) (Rule 5 for picker prompts, Rule 6 for verdicts). Skills cite this convention instead of restating the substrate reference and formatting instruction.
+
+A gate must be **self-contained or preceded by turn-final delivery** of its subject — per [`core/output`](../../core/output/SKILL.md) Rule 5 *Self-contained gates* and Rule 7 *Delivery test*. Content in a subagent transcript, or in same-turn text emitted before a tool call, counts as **not shown**; the skill re-renders it before gating. Approval-gated artifacts follow show → approve → write per Rule 7 *Authorization boundary*.
+
+---
+
+## Prompt voice convention
+
+Picker prompts follow [`core/output`](../../core/output/SKILL.md) Rule 5. The picker **question** names the feature subject in real-world terms (e.g., *"Approve the requirements for `<feature-name>`?"*), not internal jargon (e.g., not *"Approve F1/F2/F3?"*). Option **labels** name the outcome, not the mechanism. Skills cite this convention instead of inlining the Rule 5 coaching block.
