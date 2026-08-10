@@ -559,6 +559,26 @@ items:
 
       Deferred with cause: ship `roadmap-*.sh` under `manager/` via `CLAUDE_PLUGIN_ROOT` (real portability gap — `manager/scripts/` does not exist and the scripts declare *"Repo-internal — NOT shipped"* — but `next/SKILL.md` documents a graceful whole-file fallback, so it degrades rather than breaks; no evidence of a foreign-repo `manager` install yet). Remaining inline rollout (`shape`/`decompose`/`next`) tracked at `reduce-sub-agent-dispatch-fan-out-for-sonnet`.
 
+  - slug: rag-context-engine-and-repo-indexing
+    title: |
+      RAG context engine — repo indexing (initial + sync) with default-on retrieval across search-heavy skills
+    priority: Must
+    status: backlog
+    notes: |
+      Owner-directed 2026-08-10, **top priority — next item for pitching** (no pitch written yet; this row records scope + constraints for that pitch, per explicit owner instruction "no need for pitching now, we just planning our next moves"). Positioned ahead of `cursor-equal-support` in file order so `scripts/roadmap-row.sh`'s Must-priority tiebreak (documented at `scripts/roadmap-row.sh:10-11,43` — "file order within a priority") actually surfaces this item first; `cursor-equal-support` remains Must/backlog and unaffected otherwise. Origin: the owner's own dogfooding of the DeepLearning.AI "AI Code Review" short course (6 lessons + 1 lab, completed 2026-08-10), reproducing its chunk → embed → vector-index → selective-retrieve → specialized-ensemble pipeline and its own numbers on the course's sample corpus (diff-only F1 39.51% → context-aware F1 65.91% → selective-context F1 61.22–65.91% depending on run → ensemble-of-specialists F1 72.00%).
+
+      **Scope requested by owner:** (1) **Indexing** — initial index of the repo plus keep-in-sync-after-changes (staleness/freshness handling, not a one-time snapshot). (2) **RAG binding** — retrieval made available to agents "as available and highly recommended tools," described by the owner as "hooks" to keep it Claude-Code-native; **open design question, not yet resolved:** Claude Code hooks (`PreToolUse`/`PostToolUse`/`SessionStart`/etc., see `plugin-dev:hook-development`) fire on harness events, not agent intent — an agent cannot "trigger" a hook on demand the way it invokes a tool. The prior-art pitch below used an agent-invoked CLI instead. Needs disambiguating at pitch time: literal hooks system, or a tool/skill/CLI the agent calls directly. (3) **Consumers** — `lsa:discover`, `lsa:verify`, `lsa:reconcile`, and any other tool/skill/agent that does search, RAG by default with fallback to the vendor's generic search tools (Grep/Read/etc.) when RAG is unavailable, stale, or misses.
+
+      **Objective (owner-set numeric targets, 2026-08-10, not yet measured):** ≥50% increase in correctness/accuracy of search activities; ≥70% reduction in token usage; reliable operation on smaller/Pro-tier plans; 50–70% more throughput for Max-tier users on the same plan. These are targets for the `code-review-eval-harness` row below to actually measure — no eval harness exists yet, so none of these numbers are validated.
+
+      **Prior art — PR #85** (`cursor/rag-retrieve-before-read-pitch-cdce`, DRAFT, unmerged as of 2026-08-10; pitch at `.lsa/pitches/rag-retrieve-before-read.md` on that branch only, not on `main`): an already-**approved** pitch shaped 2026-08-04, scoped narrower and more cautiously — RAG for **agent search during `lsa:discover`** specifically (not review context), as a **dogfood spike only**, gated by its own fixed-probe Before/After numeric Keep/Narrow/Drop gate (≥50% median reduction in `search_tokens_approx` or `whole_file_reads`, `confirm_miss_rate` ≤20%), with its own text stating packaging/broader rollout is "a later pitch after Keep" and default-on for all plugin users is explicitly out of that pitch's appetite. PR #85 has shipped no runtime/index code and has not been decomposed. This roadmap row is the owner's explicit 2026-08-10 direction to proceed with the broader initiative now, **not contingent on PR #85's Keep-gate clearing first** — differs from this assistant's own recommendation earlier the same session (let PR #85's narrower spike clear its gate first, then treat this as its follow-on); recorded for the record, owner's call stands. Whoever pitches this should decide explicitly whether it supersedes or subsumes PR #85, or whether PR #85 still runs standalone first.
+
+      **Posture note:** net-new capability (new subsystem: local vector store/embeddings infra, Docker packaging, retrieval binding across multiple skills), OUTSIDE the consolidation posture set 2026-07-16 ("no new features expected until the system works best and optimally"; one prior bounded exception, `library-spec-cache-for-top-3-5-libraries`, already shipped and closed). Owner directed this as a new exception 2026-08-10 — materially larger in scope than the prior exception (a full subsystem vs. 3–5 pinned specs); flagged honestly, not a reason to block, owner's call stands. Consolidation remains in force for anything not explicitly reopened.
+
+      **Design flags to carry into the pitch** (raised during the course-review session, 2026-08-10): dropping `project-map.yaml` from `lsa:discover` entirely (vs. keeping it as a scope filter alongside RAG, which is what PR #85's own approved appetite does) is a bigger claim than currently approved anywhere — decide on purpose, don't drift into it. Wiring RAG into `lsa:reconcile` needs to inherit PR #85's own staleness mitigation (index keyed to `(sha, embed_model, chunk_schema)`) given `reconcile`'s independent-grader rule (`lsa/skills/reconcile/SKILL.md:62,64` — no write access to gate config, verdict authored in a separate context) — whatever RAG context reconcile reads must not be silently staleable by the diff it's grading.
+
+      **Sequencing:** `ai-code-review-skill` and `code-review-eval-harness` (below, later in this ledger) both depend on this item per the course's own measured results (no-context → selective-context alone was the largest single F1 jump observed) — this ships first.
+
   - slug: cursor-equal-support
     title: |
       Cursor equal support via portable generator
@@ -614,6 +634,34 @@ items:
       shipped — core v0.21.2, lsa v0.32.1. Fixed the mid-string `: ` in each of the 7 descriptions (em dash, no meaning change). Re-ran skills-ref validate: 20/20, independently reproduced. core/VERIFICATION.md, README.md, .lsa/VISION.md corrected from 13/20 to unqualified 20/20.
     notes: |
       Found 2026-07-20 during `standards-conformance-agents-md/standards-claim`: running the actual `skills-ref` reference validator (https://agentskills.io/specification) over all 20 shipped skills found **13/20 pass, 7 fail** — not the 20/20 the parent pitch assumed. Root cause, verified by direct byte inspection: the 7 failing skills' `description:` frontmatter is an unquoted YAML plain scalar containing a mid-string `: ` (colon immediately followed by a space) — e.g. `lsa/skills/discover/SKILL.md:3` (`"...a spec will rest on. Output: intent + cited facts..."`). Per the YAML spec a colon+space inside a plain scalar is invalid without quoting; Claude Code's own frontmatter parser tolerates it (all 7 skills trigger correctly in practice), but the strict reference validator correctly rejects it. Failing skills: `core/skills/ground-rules`, `lsa/skills/{discover,init,reconcile,revise-constitution,specify,verify}`. Fix: quote the `description:` value (or rephrase to avoid the mid-string colon) in each of the 7 files — a mechanical, low-risk change, but touches `*/skills/**/SKILL.md` under 2 plugins' `artifact_paths` (`core`, `lsa`), so needs a version bump + CHANGELOG entry per plugin, plus a re-run of `skills-ref validate` transcribed into `core/VERIFICATION.md` to update the 13/20 claim. Not folded into `standards-claim` — that epic is citation-only, no skill content changes, per its own R7/Out-of-Scope. Evidence: `core/VERIFICATION.md` §"Agent Skills spec conformance".
+
+  - slug: ai-code-review-skill
+    title: |
+      Standalone AI code review skill (on-demand, specialized-ensemble architecture)
+    priority: Should
+    status: backlog
+    notes: |
+      Owner-directed 2026-08-10, sequenced **after** `rag-context-engine-and-repo-indexing` (needs selective-context retrieval to reach useful precision/recall — course Lesson 5 finding, owner's own run: no-context F1 39.51% vs. selective-context F1 61.22%). Origin: DeepLearning.AI "AI Code Review" course, Lessons 1–3 and 6.
+
+      **Shape, confirmed with owner during the course review:** a separate, self-contained skill (clean separation of concerns) — not folded into `lsa:reconcile`, `observer:verify-checkpoint`, or `paired_verify` checkpoint mode. Triggerable on demand, by a human or by another verification step calling into it; not a passive/automatic hook. Internal architecture is a **specialized ensemble** — e.g. a security-focused sub-agent and a pattern-compliance-focused sub-agent run in parallel, results merged — not one general-purpose reviewer prompt, per course Lesson 6's measured result (owner's own run: general-agent F1 61.22% vs. ensemble F1 72.00%, at a cost of ~10pp recall).
+
+      **Confirmed not a rebuild of existing gates:** `lsa:reconcile`'s independent-grader rule (`lsa/skills/reconcile/SKILL.md:62,64` — no write access to tests/scenarios/gate config, verdict authored in a separate context and commit) already exceeds this course's "don't let the generator review itself" best practice; this new skill is additive, not a replacement.
+
+      **Two real gaps this skill's design should address** (found by checking, not assumed): (1) severity triage — neither `lsa:reconcile` (PASS/FAIL) nor `observer:verify-checkpoint` (CLEAR/BLOCK) has a middle "review recommended but not merge-blocking" tier (course Lesson 3 best practice); (2) a full pre-PR sweep of a finished branch — `paired_verify: checkpoint` (`lsa/skills/delegate/SKILL.md:31-68`) only gates per-increment mid-delegation, not a complete local pass before opening a PR (course Lesson 2 best practice). Both are open design questions for the pitch, not yet decided.
+
+  - slug: code-review-eval-harness
+    title: |
+      Portable code-review / search-quality eval harness (precision, recall, F1)
+    priority: Should
+    status: backlog
+    notes: |
+      Owner-directed 2026-08-10, sequenced alongside/after `rag-context-engine-and-repo-indexing` and `ai-code-review-skill` — exists to give both of those, and this initiative's own ≥50%/≥70% targets, a measured number instead of a felt impression (the throughline of the whole source course). Origin: course Lesson 4 lab methodology, reproduced by the owner on the course's own 15-PR sample corpus (diff-only F1 39.51% → context-aware F1 65.91%).
+
+      **Scope constraint, owner-set 2026-08-10:** must measure quality both (a) on this repo, and (b) on **any other project**, including ones that use this marketplace informally without ever installing `core`/`lsa` as plugins (owner's own stated use case: a personal work assistant built on this marketplace's tooling, in a codebase that never adopts it as a dependency). The harness therefore cannot assume `.lsa.yaml`, `AGENTS.md`, or any of this project's conventions are present in the target — it has to be portable/external to whatever it measures, not dependent on that codebase's adoption of our stack.
+
+      **Needs:** a labeled benchmark corpus (diffs/PRs with deliberately planted issues + ground truth, mirroring the course's `sample_prs` design) and a matching/scoring step — likely an LLM-judge given free-text findings, since exact string match won't reconcile differently-worded true positives (inferred from the course notebook's behavior; its actual matching source (`create_detailed_matching_table`) was not included in the owner's course download, so this is not confirmed).
+
+      Checked before filing: no existing precision/recall/F1/benchmark harness anywhere in this repo (repo-wide grep, 2026-08-10) — this is genuinely new, not a rediscovered wheel.
 
 shipped_history:
   -
