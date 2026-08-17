@@ -22,3 +22,5 @@ jobs:
         run: bash lsa/scripts/tests/test-project-map.sh
       - name: Project-map freshness gate
         run: bash lsa/scripts/project-map-check.sh
+      - name: RAG index freshness gate (rag-index-fresh)
+        run: bash scripts/check-rag-index-fresh.sh
