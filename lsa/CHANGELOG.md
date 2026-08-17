@@ -2,6 +2,18 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.35.0] — 2026-08-17
+
+Wires the RAG index into `reconcile`'s Step 4 semantic-mapping judgment and extends `scripts/rag-query.sh` with a sha-pinned filter mode. Per pitch `rag-context-engine-and-repo-indexing` (epic 4 of 4, `reconcile-wiring`, last epic of the pitch): epic 1 built `scripts/rag-query.sh`/`scripts/rag-index.sh`; epic 3 wired `discover`/`verify`; this epic wires the remaining consumer, `reconcile`, without weakening its independent-grader constraints. New documented capability (`--sha`) + behavior change to one existing skill → minor bump.
+
+### Added
+
+- **`scripts/rag-query.sh` `--sha <sha>` mode** — after the normal query returns, filters candidate results to only paths unchanged between `<sha>` and HEAD (`git diff --quiet <sha> HEAD -- <path>`, per path). A changed path, or a `<sha>` that doesn't resolve to a real commit at all, is discarded; if that leaves zero results, it reports the exact same `{"results": []}` / exit-0 miss contract as an ordinary miss — no new error shape. Host-side filter layered on top of the existing query; no change to `docker/rag_cli.py`'s chunk schema or chunking logic. Requires `jq` on `PATH` (only when `--sha` is given, guarded with a clear error). The no-`--sha` path is unchanged — same command, stdout streamed straight through, byte-for-byte identical to before this epic.
+
+### Changed
+
+- **`skills/reconcile/SKILL.md`** Step 4 — its semantic-mapping judgment (which hunk satisfies which requirement) may now query `scripts/rag-query.sh --sha <graded-sha> "<query>"` — the same sha the final verdict names — for exploratory search beyond the diff and spec, falling back to `Grep`/`Read` per-path on any discarded or empty result. Steps 1, 2, 3, 5, and the entire Constraints section (independent-grader rule, never-routed-down rule, independence-must-be-observable rule) are byte-for-byte unchanged — this epic touches only the one sentence in Step 4 that names the new fallback chain.
+
 ## [0.34.0] — 2026-08-17
 
 Wires the RAG index (epic 1, `index-query-pipeline`) into `discover`'s and `verify`'s search steps. Per pitch `rag-context-engine-and-repo-indexing` (epic 3 of 4, `discover-verify-wiring`): `scripts/rag-query.sh` already existed and worked but nothing called it — `discover` Step 1 and `verify` Step 2 walked `Grep`/`Read` straight from the `project-map`-resolved directory. New documented capability, behavior change to two existing skills → minor bump.
