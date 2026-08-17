@@ -2,6 +2,16 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.34.0] — 2026-08-17
+
+Wires the RAG index (epic 1, `index-query-pipeline`) into `discover`'s and `verify`'s search steps. Per pitch `rag-context-engine-and-repo-indexing` (epic 3 of 4, `discover-verify-wiring`): `scripts/rag-query.sh` already existed and worked but nothing called it — `discover` Step 1 and `verify` Step 2 walked `Grep`/`Read` straight from the `project-map`-resolved directory. New documented capability, behavior change to two existing skills → minor bump.
+
+### Changed
+
+- **`lsa/knowledge/conventions.md`** §"Read protocol" — the directory-scoping paragraph is now a 3-stage order: `project-map.yaml` resolves the directory scope (unchanged) → `scripts/rag-query.sh` ranks/queries within that scope → `Grep`/`Read` is the fallback on a miss, stale index, or unavailable Docker daemon (`rag-query.sh` exit 2). The fallback prints a one-line observable notice, matching this section's existing per-source read-summary convention.
+- **`skills/discover/SKILL.md`** Step 1 — now queries `scripts/rag-query.sh` within the `project-map`-resolved scope before falling back to `Grep`/`Read`, per the updated Read protocol.
+- **`skills/verify/SKILL.md`** Step 2 (the buildability/feasibility check) — now queries `scripts/rag-query.sh` for its broader exploratory search before falling back to `Grep`/`Read`. Step 1's `scripts/resolve-refs.sh` named-symbol resolution is unchanged — the two mechanisms serve different searches (named-symbol lookup vs. open-ended feasibility) and neither replaces the other.
+
 ## [0.33.0] — 2026-07-20
 
 Closes the findings sweep over the 2026-07-20 overnight epic batch. The batch shipped eight epics with a green `gate:` block and, between them, one `conformance.md` — whose verdict was left `@ <pending>`. The metrics layer restored in 0.30.0 emitted zero rows the whole time, because its anti-regression guard (lint C17) greps `reconcile`'s instruction text and cannot observe whether the step ran. `reconcile` gains an output-contract repair step → minor bump.
