@@ -7,6 +7,7 @@ tree:  # directories only (depth ≤ 3)
     hooks:
     rules:
   ".claude-plugin":
+  ".githooks":
   ".github":
     workflows:
   ".lsa":

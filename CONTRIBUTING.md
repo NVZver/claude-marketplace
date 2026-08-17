@@ -63,6 +63,23 @@ How to build and contribute. Operating rules live in [`.lsa/VISION.md`](./.lsa/V
 
 After editing any `SKILL.md`, hook, or plugin manifest: `/reload-plugins` picks it up without restart. Per [`core/README.md`](./core/README.md) "Install on Claude Code".
 
+**Optional: local RAG-index pre-commit hook.** One command enables it — no
+installer script, since that's the whole point of `core.hooksPath`:
+
+```
+git config core.hooksPath .githooks
+```
+
+This runs [`.githooks/pre-commit`](./.githooks/pre-commit) on every local
+`git commit`, keeping the local RAG index (`.lsa/.rag-index/`, gitignored)
+current with what you commit. It's best-effort convenience only — it never
+blocks a commit, even if Docker is unreachable — the real enforcement is a CI
+check (`rag-index-matches-head`, wired into `.lsa.yaml` `gate:` and
+[`.github/workflows/lint.yml`](./.github/workflows/lint.yml)) that rebuilds the
+index from HEAD independently of whether you installed this hook. Opt out any
+time with `git config --unset core.hooksPath`. Full detail:
+[`SECURITY.md`](./SECURITY.md) §"The RAG-index pre-commit hook".
+
 ---
 
 ## Classify the work first

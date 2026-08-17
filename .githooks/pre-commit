@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+# .githooks/pre-commit — best-effort local RAG-index refresh on commit.
+#
+# Enabled via: git config core.hooksPath .githooks   (opt-in, per-clone; see
+# CONTRIBUTING.md §"Setup"). NOT wired by default — a fresh checkout (local or
+# CI) has core.hooksPath unset.
+#
+# R1 (.lsa/features/rag-context-engine-and-repo-indexing/commit-triggered-sync/
+# requirements.md): on `git commit`, runs scripts/rag-index.sh once per file
+# staged in this commit (added/copied/modified/renamed — deletions have no
+# content left to index), updating the local RAG index
+# (.lsa/.rag-index/, gitignored) to match what's about to be committed.
+#
+# R2: this hook is best-effort local convenience, NOT the enforcement point —
+# scripts/check-rag-index-matches-head.sh (wired into CI, .lsa.yaml gate:
+# rag-index-matches-head) is. This hook MUST NEVER block the commit: any
+# rag-index.sh failure — including Docker being unreachable (exit 2, see
+# scripts/rag-index.sh's exit-code contract) — is reported as a warning on
+# stderr and the hook still exits 0.
+#
+# Opt out: git config --unset core.hooksPath  (see SECURITY.md).
+
+set -uo pipefail
+export LC_ALL=C
+
+repo_root="$(git rev-parse --show-toplevel 2>/dev/null || true)"
+[[ -n "${repo_root}" ]] || exit 0
+cd "${repo_root}" || exit 0
+
+changed_files="$(git diff --cached --name-only --diff-filter=ACMR 2>/dev/null || true)"
+[[ -n "${changed_files}" ]] || exit 0
+
+any_failed=0
+while IFS= read -r f; do
+  [[ -n "${f}" && -f "${f}" ]] || continue
+  if ! scripts/rag-index.sh "${f}"; then
+    any_failed=1
+  fi
+done <<<"${changed_files}"
+
+if [[ "${any_failed}" -eq 1 ]]; then
+  printf 'WARNING: .githooks/pre-commit — the RAG index was not fully updated for this commit (see messages above, e.g. Docker unreachable). This is a best-effort local convenience only; CI enforces index freshness independently. Commit proceeding.\n' >&2
+fi
+
+exit 0

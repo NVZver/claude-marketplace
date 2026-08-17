@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+# scripts/check-rag-index-matches-head.sh — R3/R4 CI check
+# (.lsa/features/rag-context-engine-and-repo-indexing/commit-triggered-sync/
+# requirements.md): is the RAG index, once (re)built here, current with HEAD?
+#
+# This is the enforcement point R2 explicitly says the pre-commit hook is NOT.
+# The pre-commit hook (.githooks/pre-commit) is opt-in, local, best-effort, and
+# never blocks a commit — so a hook that's uninstalled, skipped, bypassed
+# (`--no-verify`), or failed leaves a commit landing with no guarantee its
+# content is indexed. This check closes that gap independently: it does not
+# trust or inspect any locally-built index (.lsa/.rag-index/ is gitignored —
+# never pushed, never available to CI) — it rebuilds the index itself, in the
+# CI checkout, from HEAD's actual on-disk content, and fails the job if that
+# build does not succeed cleanly.
+#
+# scripts/rag-index.sh's content-hash-keyed cache (docker/rag_cli.py: a row's
+# identity is (path, content_hash, embed_model, chunk_schema)) makes rebuilding
+# the whole repo ("." scope) idempotent and cheap — unchanged chunks are
+# skipped, not re-embedded — so this check does not need to compute a
+# PR/push diff against a base ref (which would need extra checkout
+# fetch-depth wiring to work for both `pull_request` and `push` events in
+# .github/workflows/lint.yml). It always verifies the full current tree
+# against HEAD, covering every changed file by construction.
+#
+# Exit codes:
+#   0 = OK   — scripts/rag-index.sh rebuilt the index cleanly against HEAD;
+#              every file's current content is reflected in the index (R4).
+#   1 = FAIL — scripts/rag-index.sh could not build/update the index for
+#              HEAD's content, for ANY reason (R3) — including Docker being
+#              unreachable (rag-index.sh exit 2). Unlike the local
+#              check-rag-index-fresh.sh gate check (best-effort dev
+#              convenience, where daemon-unreachable is reported as
+#              [cannot verify], exit 2, and does not by itself fail the local
+#              gate), this script IS the enforcement point, so there is no
+#              [cannot verify] pass-through here: Docker not being reachable
+#              in CI means the invariant cannot be proven, which is a FAIL.
+#
+# Usage: check-rag-index-matches-head.sh   (no arguments; always scope ".")
+#
+# Repo-internal — NOT shipped in any plugin; lives outside every plugin's
+# artifact_paths, so it triggers no plugin version bump or CHANGELOG entry.
+
+set -uo pipefail
+export LC_ALL=C
+
+repo_root="$(git rev-parse --show-toplevel 2>/dev/null || true)"
+[[ -n "${repo_root}" ]] || repo_root="$(pwd)"
+cd "${repo_root}" || exit 1
+
+scripts/rag-index.sh .
+rc=$?
+
+if [[ "${rc}" -ne 0 ]]; then
+  printf '  FAIL             rag-index-matches-head — scripts/rag-index.sh exited %s against HEAD; changed files are not fully reflected in the index\n' "${rc}"
+  exit 1
+fi
+
+printf '  OK               rag-index-matches-head — index rebuilt cleanly against HEAD\n'
+exit 0

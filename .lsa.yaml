@@ -19,6 +19,7 @@ gate:
   tests: bash scripts/run-tests.sh
   lib-pins: bash scripts/check-lib-pins.sh
   rag-index-fresh: bash scripts/check-rag-index-fresh.sh
+  rag-index-matches-head: bash scripts/check-rag-index-matches-head.sh
 
 # Reconcile scenario-run count (lsa/skills/reconcile/SKILL.md Step 1).
 # Default when the key is absent: 3 — pass = all 3 runs succeed (≥95% of 3 ⇒ 3/3).

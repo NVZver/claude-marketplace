@@ -24,3 +24,5 @@ jobs:
         run: bash lsa/scripts/project-map-check.sh
       - name: RAG index freshness gate (rag-index-fresh)
         run: bash scripts/check-rag-index-fresh.sh
+      - name: RAG index matches HEAD (rag-index-matches-head)
+        run: bash scripts/check-rag-index-matches-head.sh
