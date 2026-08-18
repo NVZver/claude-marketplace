@@ -230,34 +230,103 @@ def content_hash(text):
 # Filesystem walk
 # --------------------------------------------------------------------------
 
-def _is_excluded_dir(root, name, repo_root):
+def load_ignored_list(path):
+    """Parse the host-computed gitignore list (index-freshness epic, R4/R5).
+
+    `path` is the container-side path to a file written by scripts/rag-
+    index.sh from `git ls-files --others --ignored --exclude-standard
+    --directory` — verified directly against this repo to return a MIX of
+    whole-directory entries (trailing "/", e.g. "dist/") and individual-file
+    entries (no trailing "/", e.g. ".DS_Store"). A directory with its own
+    nested .gitignore (this repo's `.remember/`, which ignores itself via
+    "* .remember/") produces BOTH the directory entry AND per-file entries
+    beneath it — not one clean collapsed entry — so both shapes are handled,
+    not assumed deduplicated.
+
+    Returns (dirs, files): `dirs` holds directory entries with the trailing
+    "/" stripped (repo-root-relative, "/"-separated), for prefix matching in
+    _is_excluded_dir; `files` holds file entries as-is, for exact matching
+    in _is_ignored_file. Missing/unreadable `path` (None, --ignored-list
+    omitted, or the host's git command failed) yields two empty sets — the
+    hardcoded SKIP_DIR_NAMES/ARCHIVE_PATH_PREFIX safety net still applies
+    regardless.
+    """
+    dirs = set()
+    files = set()
+    if not path:
+        return dirs, files
+    try:
+        with open(path, "r", encoding="utf-8") as fh:
+            for line in fh:
+                entry = line.strip()
+                if not entry:
+                    continue
+                if entry.endswith("/"):
+                    dirs.add(entry.rstrip("/"))
+                else:
+                    files.add(entry)
+    except OSError:
+        pass
+    return dirs, files
+
+
+def _is_excluded_dir(root, name, repo_root, ignored_dirs=frozenset()):
     """True if the directory `name` under walk-root `root` must be skipped.
 
-    Two independent checks (index-lsa-content epic, R1/R3):
+    Three checks, the first two hardcoded (index-lsa-content epic, R1/R3)
+    and always applied regardless of `ignored_dirs`:
       - basename, anywhere in the tree (SKIP_DIR_NAMES — pure tool/VCS
         internals: `.git`, `node_modules`, `.rag-index`, `__pycache__`).
       - repo-root-relative PATH PREFIX, exact match only (`.lsa/archive`) —
         deliberately NOT a basename check, so a directory named "archive"
-        anywhere else in the tree is left alone. Computed via `os.path.
-        relpath` against `repo_root` (not against the walk's own top,
-        which may itself be a subdirectory when `--scope` narrows the
-        walk) and normalized to "/" so the string comparison is exact
-        regardless of `os.sep`.
+        anywhere else in the tree is left alone.
+      - repo-root-relative PATH PREFIX against the dynamic `ignored_dirs`
+        set (index-freshness epic, R4/R5) — supplementing, not replacing,
+        the two hardcoded checks above, so a missing/empty `ignored_dirs`
+        (--ignored-list omitted, or the host's git command failed) still
+        leaves the hardcoded safety net intact.
+
+    All three use the same repo-root-relative, "/"-normalized `rel`,
+    computed via `os.path.relpath` against `repo_root` (not against the
+    walk's own top, which may itself be a subdirectory when `--scope`
+    narrows the walk).
     """
     if name in SKIP_DIR_NAMES:
         return True
     rel = os.path.relpath(os.path.join(root, name), repo_root).replace(os.sep, "/")
-    return rel == ARCHIVE_PATH_PREFIX or rel.startswith(ARCHIVE_PATH_PREFIX + "/")
+    if rel == ARCHIVE_PATH_PREFIX or rel.startswith(ARCHIVE_PATH_PREFIX + "/"):
+        return True
+    for ignored_dir in ignored_dirs:
+        if rel == ignored_dir or rel.startswith(ignored_dir + "/"):
+            return True
+    return False
 
 
-def iter_scope_files(scope_path, repo_root):
+def _is_ignored_file(rel_path, ignored_files=frozenset()):
+    """True if `rel_path` (repo-root-relative, "/"-normalized) is an exact
+    match in the dynamic ignored-files set (index-freshness epic, R4/R5) —
+    the individual-file-entry half of load_ignored_list's output (e.g.
+    ".DS_Store", ".claude/settings.local.json" at paths not already pruned
+    by a whole-directory exclusion).
+    """
+    return rel_path in ignored_files
+
+
+def iter_scope_files(scope_path, repo_root, ignored_dirs=frozenset(), ignored_files=frozenset()):
     if os.path.isfile(scope_path):
+        rel_path = os.path.relpath(scope_path, repo_root).replace(os.sep, "/")
+        if _is_ignored_file(rel_path, ignored_files):
+            return
         yield scope_path
         return
     for root, dirs, files in os.walk(scope_path):
-        dirs[:] = [d for d in dirs if not _is_excluded_dir(root, d, repo_root)]
+        dirs[:] = [d for d in dirs if not _is_excluded_dir(root, d, repo_root, ignored_dirs)]
         for fn in files:
-            yield os.path.join(root, fn)
+            fs_path = os.path.join(root, fn)
+            rel_path = os.path.relpath(fs_path, repo_root).replace(os.sep, "/")
+            if _is_ignored_file(rel_path, ignored_files):
+                continue
+            yield fs_path
 
 
 def read_text_file(fs_path):
@@ -364,12 +433,14 @@ def cmd_index(args):
     db = open_db(args.index_dir)
     table = get_or_create_table(db)
 
+    ignored_dirs, ignored_files = load_ignored_list(getattr(args, "ignored_list", None))
+
     embedded_count = 0
     skipped_count = 0
     deleted_count = 0
     files_seen = 0
 
-    for fs_path in iter_scope_files(scope_fs, repo_root):
+    for fs_path in iter_scope_files(scope_fs, repo_root, ignored_dirs, ignored_files):
         rel_path = os.path.relpath(fs_path, repo_root)
         text = read_text_file(fs_path)
         if text is None:
@@ -580,6 +651,17 @@ def main():
     p_index.add_argument("--scope", default=".")
     p_index.add_argument("--index-dir", required=True)
     p_index.add_argument("--repo-root", default="/repo")
+    p_index.add_argument(
+        "--ignored-list",
+        default=None,
+        help=(
+            "container-side path to a host-computed gitignore list "
+            "(scripts/rag-index.sh; index-freshness epic R4/R5) — one path "
+            "per line, directories with a trailing '/'. Optional: omitted "
+            "or unreadable falls back to the hardcoded SKIP_DIR_NAMES/"
+            "ARCHIVE_PATH_PREFIX safety net only."
+        ),
+    )
 
     p_query = sub.add_parser("query")
     p_query.add_argument("query_text")

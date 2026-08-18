@@ -118,11 +118,32 @@ if ! docker_daemon_reachable; then
   exit 2
 fi
 
-if ! docker image inspect "${IMAGE_NAME}" >/dev/null 2>&1; then
-  echo "Building ${IMAGE_NAME} from ${repo_root}/Dockerfile ..." >&2
-  if ! docker build -q -t "${IMAGE_NAME}" "${repo_root}" >/dev/null; then
+# Stale-image detection (R1-R3 — .lsa/features/rag-context-engine-and-repo-
+# indexing/index-freshness/requirements.md): the image existing is not the
+# same as the image being current — see scripts/rag-index.sh for the full
+# rationale, including a second real incident that ruled out an
+# unconditional `--no-cache` (it re-downloads pip packages and the
+# embedding model on every source edit and failed outright under network
+# pressure). Two-tier: try a plain cached build first (Docker's own
+# COPY-layer invalidation reliably reuses the expensive pip/model layers
+# here); only fall back to `--no-cache` if the resulting label still
+# doesn't match.
+SOURCE_HASH="$(cat "${repo_root}/Dockerfile" "${repo_root}/docker/rag_cli.py" | shasum -a 256 | cut -d' ' -f1)"
+CURRENT_SOURCE_HASH="$(docker image inspect "${IMAGE_NAME}" --format '{{ index .Config.Labels "source-hash" }}' 2>/dev/null || true)"
+
+if [[ -z "${CURRENT_SOURCE_HASH}" || "${CURRENT_SOURCE_HASH}" != "${SOURCE_HASH}" ]]; then
+  echo "Building ${IMAGE_NAME} from ${repo_root}/Dockerfile (source changed or image missing/stale) ..." >&2
+  if ! docker build -q -t "${IMAGE_NAME}" --label "source-hash=${SOURCE_HASH}" "${repo_root}" >/dev/null; then
     printf 'ERROR: docker build failed for %s\n' "${IMAGE_NAME}" >&2
     exit 1
+  fi
+  REBUILT_HASH="$(docker image inspect "${IMAGE_NAME}" --format '{{ index .Config.Labels "source-hash" }}' 2>/dev/null || true)"
+  if [[ "${REBUILT_HASH}" != "${SOURCE_HASH}" ]]; then
+    echo "Cached build did not pick up the source change — retrying with --no-cache ..." >&2
+    if ! docker build --no-cache -q -t "${IMAGE_NAME}" --label "source-hash=${SOURCE_HASH}" "${repo_root}" >/dev/null; then
+      printf 'ERROR: docker build (--no-cache fallback) failed for %s\n' "${IMAGE_NAME}" >&2
+      exit 1
+    fi
   fi
 fi
 
