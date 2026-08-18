@@ -10,33 +10,24 @@ A Claude Code marketplace shipping five composable plugins for spec-first, fact-
 
 ## Scripts do the deterministic work
 
-Most agent systems dump whole files into the model and hope it finds the needle. This marketplace does the opposite: **deterministic work is delegated to scripts; the AI works only on what is relevant and already pre-processed** — the slice a question needs, not the full artifact.
+Most agent systems dump whole files into the model and hope it finds the needle, or grep blind and read whatever matches. This marketplace does the opposite: **deterministic work is delegated to scripts and a local retrieval index; the AI works only on what is relevant and already pre-processed** — the slice a question needs, not the full artifact.
 
-Tokens = bytes÷4. Full proof + methodology: [`.lsa/observations/2026-07-16-yaml-ledger-selective-load-impact.md`](./.lsa/observations/2026-07-16-yaml-ledger-selective-load-impact.md).
+### Repo search — measured, not assumed
+
+A controlled e2e comparison across four search strategies, 12 fixed ground-truthed probes against this repo, real runs (including real Docker-backed vector search calls, not simulated). Full methodology, per-probe data, and disclosed limitations: [`.lsa/observations/2026-08-17-rag-eval/report.md`](./.lsa/observations/2026-08-17-rag-eval/report.md).
+
+| Strategy | Accuracy | Completeness | Token usage | Latency |
+|---|---:|---:|---:|---:|
+| Nothing (blind grep) | 58% | 50% | ~176,554 tok | <1s |
+| `project-map.yaml` only | 67% | 67% | **~16,948 tok** | <1s |
+| Vector search only | 83% | 83% | ~29,066 tok | ~1.72s/query |
+| **Both, combined** | **92%** | **92%** | ~35,416 tok | ~1.73s/query |
+
+Directory scoping (`project-map.yaml`) alone beats blind search on *every* metric at once — not a tradeoff. Combining it with local vector retrieval is the accuracy/completeness ceiling of the four, recovering misses neither signal catches alone. Vector search runs fully local — no hosted vector DB, no hosted embedding API, no network call at query time (`Dockerfile`, `docker/rag_cli.py`).
 
 ### Manager — selective roadmap load
 
-Same roadmap questions: before = whole-file read of the ~92 KB markdown ledger (~22,958 tok); after = script stdout only (`roadmap-row.sh` / `roadmap-query.sh`):
-
-| Situation | Before | After | Saves |
-|---|---:|---:|---:|
-| "What's next" (Mode 0) | ~39 tok* | ~32 tok | ≈ flat |
-| Sequence the backlog | ~22,958 tok | ~176 tok | **~22,780 tok (~99% / ~130×)** |
-| Get one item's status | ~22,958 tok | ~70 tok | **~22,890 tok (~99% / ~328×)** |
-| Roadmap hygiene scan | ~22,958 tok | ~185 tok | **~22,770 tok (~99% / ~124×)** |
-
-\*Mode 0 was already a one-row script slice — the win is extending that pattern to the operations that previously paid the full ledger.
-
-### LSA — selective constitution + scoping
-
-Same script-first discipline on every LSA loop stage (Read protocol). The YAML roadmap cutover does **not** change LSA loop load (LSA never ambient-read the ledger); these are the measured LSA floor wins the approach already delivers:
-
-| Situation | Before | After | Saves |
-|---|---:|---:|---:|
-| Constitution on every LSA stage | ~8,197 tok (full `VISION.md`) | ~423 tok (`VISION-digest.md`) | **~7,774 tok (~95% / ~19×)** |
-| Discovery scoping atlas | ad-hoc tree walk | ~548 tok dirs-only `project-map.yaml` | bounded ≤1k tok |
-| Mandatory LSA read floor | — | ~1,998 tok (`.lsa.yaml` + digest + map) | **~92% less** than one whole-file roadmap read (~25,588 tok) |
-| Quality-gate block | model-orchestrated per check | `gate.sh` one-pass (bash) | zero model tokens on the check loop |
+Same script-first discipline applied to the roadmap ledger: before = whole-file read of the ~92 KB markdown ledger (~22,958 tok); after = script stdout only (`roadmap-row.sh` / `roadmap-query.sh`) — **~99% (~130–328×) less** per query. Constitution load follows the same pattern: ~8,197 tok full `VISION.md` → ~423 tok `VISION-digest.md` (**~95% / ~19× less**). Full proof + methodology: [`.lsa/observations/2026-07-16-yaml-ledger-selective-load-impact.md`](./.lsa/observations/2026-07-16-yaml-ledger-selective-load-impact.md).
 
 Plus: the orchestrator runs `discover → specify → verify` **inline** in one context so those stages reuse facts instead of reloading a fresh floor each time.
 
