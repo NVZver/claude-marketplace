@@ -30,6 +30,51 @@ Design notes (see .lsa/pitches/rag-context-engine-and-repo-indexing.md):
   path and the true best in-path match ranks below TOP_K overall, a
   post-filter on an already-limited result set silently returns nothing
   useful even though a real in-path answer exists.
+- Hybrid (dense + lexical) search (see .lsa/features/rag-context-engine-and-
+  repo-indexing/hybrid-retrieval/requirements.md): `cmd_index` builds a
+  native LanceDB full-text-search index on the `text` column
+  (`create_fts_index`, default non-tantivy backend — confirmed no new pip
+  dependency needed, `use_tantivy=False` works on this corpus size);
+  `cmd_query` combines it with the existing dense-vector search via
+  reciprocal rank fusion (`lancedb.rerankers.RRFReranker`), fixing dense-
+  vector-only search's miss on queries whose relevant text is present
+  literally but doesn't embed with high cosine similarity.
+
+  The combination is built manually (vector sub-query + FTS sub-query +
+  `RRFReranker().rerank_hybrid(...)`) rather than through LanceDB's
+  `table.search(query, query_type="hybrid")` convenience builder
+  (`LanceHybridQueryBuilder`), for one verified reason: that builder applies
+  a single `.where(pred, prefilter=...)` call to BOTH sub-queries via the
+  same prefilter flag, and the two signals need DIFFERENT prefilter
+  handling once `--path` scoping is in play, verified directly against a
+  real copy of this repo's index (`table.search(...).where(...)` at various
+  `prefilter`/`limit` combinations):
+    - Vector: `prefilter=True` is correct and unchanged from the
+      path-scoped-query-fix epic above.
+    - FTS: `prefilter=True` silently returns ZERO rows for an in-scope
+      match that demonstrably exists (a real, disclosed limitation of this
+      pinned LanceDB version's non-tantivy FTS backend — `create_fts_index`'s
+      own docstring calls the whole API "highly experimental and... likely
+      to change"). `prefilter=False` (postfilter) is also unsafe at a small
+      `.limit()`: it truncates to the GLOBAL top-K by BM25 score BEFORE
+      applying the path predicate, silently dropping an in-path match
+      ranked outside that global top-K — the identical failure mode
+      `prefilter=True` was chosen to avoid for vector search in the prior
+      epic. The verified-safe fix: fetch FTS results generously
+      (`FTS_OVERFETCH_LIMIT`, bounded only by this small ~1,200-chunk
+      corpus — same `.limit(100000)` precedent as `cmd_index`'s own
+      per-path scan below), filter by path in Python — safe because native
+      Lance FTS computes an exact BM25 score over an inverted index, not an
+      approximate/truncated ANN search, so over-fetch-then-filter loses no
+      recall — THEN truncate to `TOP_K` to match the vector side's
+      candidate size before RRF fusion.
+
+  MIN_SIMILARITY (below) is now an OR-gate, not an AND-gate: a result
+  clears the floor if its dense cosine similarity alone clears
+  MIN_SIMILARITY (unchanged dense-only guarantee — no regression to
+  existing wins), OR it is a genuine member of the FTS candidate set
+  (a real literal/lexical match for this exact query, not a guess) — that
+  second path is precisely the fix this epic exists to ship.
 """
 import argparse
 import hashlib
@@ -339,6 +384,19 @@ def cmd_index(args):
             table.add(new_rows)
             embedded_count += len(new_rows)
 
+    # R1 (hybrid-retrieval): build/rebuild the full-text search index on the
+    # chunk `text` column alongside the vector index. This corpus is small
+    # (~1,200 chunks) so a full FTS rebuild every `cmd_index` run is an
+    # acceptable simplification (no incremental FTS update) — verified
+    # `create_fts_index` works on an empty table too (0 rows), so this is
+    # safe to call unconditionally, including on a freshly-created table.
+    # `replace=True` because `create_fts_index` errors on an already-present
+    # index otherwise (its default is `replace=False`).
+    fts_index_built = False
+    if table.count_rows() > 0:
+        table.create_fts_index("text", replace=True)
+        fts_index_built = True
+
     summary = {
         "files_seen": files_seen,
         "chunks_embedded": embedded_count,
@@ -346,6 +404,7 @@ def cmd_index(args):
         "chunks_deleted_stale": deleted_count,
         "embed_model": EMBED_MODEL_VERSION,
         "chunk_schema": CHUNK_SCHEMA_VERSION,
+        "fts_index_built": fts_index_built,
     }
     print(json.dumps(summary))
     return 0
@@ -355,18 +414,34 @@ def cmd_index(args):
 # query
 # --------------------------------------------------------------------------
 
-# Cosine distance threshold (LanceDB "cosine" metric reports distance =
-# 1 - cosine_similarity on L2-normalized vectors). Below this similarity, a
-# result is not considered a real match — R4: a miss must be an empty result,
-# never a guess. Empirically tuned against BAAI/bge-small-en-v1.5's baseline
-# same-domain noise floor (short-text bi-encoder similarity rarely drops
-# below ~0.45-0.6 even for unrelated queries); 0.65 leaves margin above that
-# floor while still passing genuine paraphrastic matches (~0.75+ observed).
-# This is a coarse, mechanism-level default, not a tuned retrieval-quality
-# target — that measurement is out of scope for this epic (separate
+# Cosine similarity threshold for the DENSE signal alone (LanceDB "cosine"
+# metric reports distance = 1 - cosine_similarity on L2-normalized vectors).
+# Empirically tuned against BAAI/bge-small-en-v1.5's baseline same-domain
+# noise floor (short-text bi-encoder similarity rarely drops below ~0.45-0.6
+# even for unrelated queries); 0.65 leaves margin above that floor while
+# still passing genuine paraphrastic matches (~0.75+ observed). This is a
+# coarse, mechanism-level default, not a tuned retrieval-quality target —
+# that measurement is out of scope for this epic (separate
 # `code-review-eval-harness` roadmap row); revisit with real corpus data.
+#
+# hybrid-retrieval epic: this is now an OR-gate, not the sole gate — see
+# `cmd_query` below and the module docstring's "Hybrid (dense + lexical)
+# search" note. A result clears the floor if EITHER its dense cosine
+# similarity alone clears MIN_SIMILARITY (unchanged dense-only guarantee),
+# OR it is a genuine member of the FTS candidate set for this exact query
+# (a real literal/lexical match, not a guess) — R1/R5.
 MIN_SIMILARITY = 0.65
 TOP_K = 5
+
+# FTS sub-query over-fetch bound before path-filtering in Python (see the
+# module docstring's "Hybrid" note for why: LanceDB 0.25.0's native FTS
+# `.where(..., prefilter=True)` silently drops in-scope matches, and
+# `prefilter=False` at a small `.limit()` truncates before filtering).
+# Bounded only by this repo's own corpus size (~1,200 chunks;
+# `cmd_index` above already uses the same 100000 bound for its own
+# per-path scan) — cheap because Lance's native FTS is an exact BM25
+# computation over an inverted index, not an approximate search.
+FTS_OVERFETCH_LIMIT = 100000
 
 
 def cmd_query(args):
@@ -380,26 +455,61 @@ def cmd_query(args):
         print(json.dumps({"results": []}))
         return 0
 
-    qvec = embed_query(args.query_text)
-    search = table.search(qvec, vector_column_name="vector").metric("cosine")
-    path_prefix = getattr(args, "path", None)
-    if path_prefix:
-        # Real pre-filter (R1): prefilter=True pushes this predicate into the
-        # table scan BEFORE the ANN top-K below, so an in-path match ranked
-        # 6th-20th in the whole corpus still surfaces — see the module
-        # docstring's "Path-scoped query" note for why prefilter=False (a
-        # post-filter) would be wrong here, not just suboptimal. LIKE-escape
-        # single quotes only, matching this file's existing level of SQL
-        # interpolation rigor (cmd_index above does the same for `path =`).
-        escaped_prefix = path_prefix.replace("'", "''")
-        search = search.where(f"path LIKE '{escaped_prefix}%'", prefilter=True)
-    hits = search.limit(TOP_K).to_list()
+    import numpy as np
+    import pyarrow.compute as pc
+    from lancedb.rerankers import RRFReranker
 
+    path_prefix = getattr(args, "path", None)
+    qvec = embed_query(args.query_text)
+
+    # --- Dense (vector) sub-query — unchanged from path-scoped-query-fix:
+    # prefilter=True pushes the path predicate into the table scan BEFORE
+    # the ANN top-K, so an in-path match ranked 6th-20th in the whole corpus
+    # still surfaces. See the module docstring's "Path-scoped query" note.
+    vec_search = (
+        table.search(qvec, vector_column_name="vector")
+        .metric("cosine")
+        .with_row_id(True)
+    )
+    if path_prefix:
+        # LIKE-escape single quotes only, matching this file's existing
+        # level of SQL interpolation rigor (cmd_index does the same).
+        escaped_prefix = path_prefix.replace("'", "''")
+        vec_search = vec_search.where(f"path LIKE '{escaped_prefix}%'", prefilter=True)
+    vector_arrow = vec_search.limit(TOP_K).to_arrow()
+
+    # --- Lexical (FTS) sub-query — see the module docstring for why this is
+    # fetched generously and filtered by path in Python rather than via
+    # `.where(..., prefilter=...)` directly (both prefilter modes verified
+    # unsafe for FTS + path scoping in this LanceDB version).
+    fts_arrow = (
+        table.search(args.query_text, query_type="fts")
+        .with_row_id(True)
+        .limit(FTS_OVERFETCH_LIMIT)
+        .to_arrow()
+    )
+    if path_prefix and fts_arrow.num_rows > 0:
+        fts_arrow = fts_arrow.filter(pc.starts_with(fts_arrow["path"], path_prefix))
+    if fts_arrow.num_rows > TOP_K:
+        fts_arrow = fts_arrow.slice(0, TOP_K)
+    lexical_rowids = set(fts_arrow["_rowid"].to_pylist()) if fts_arrow.num_rows > 0 else set()
+
+    # --- Combine via LanceDB's default reciprocal-rank-fusion reranker (R2).
+    combined = RRFReranker().rerank_hybrid(args.query_text, vector_arrow, fts_arrow)
+    hits = combined.slice(0, TOP_K).to_pylist()
+
+    qv = np.asarray(qvec, dtype="float32")
     results = []
     for h in hits:
-        distance = h.get("_distance", 1.0)
-        similarity = 1.0 - distance
-        if similarity < MIN_SIMILARITY:
+        # Vectors are L2-normalized at embed time (embed_query/
+        # embed_passages), so a plain dot product IS the cosine similarity —
+        # computed directly from each row's own stored vector rather than
+        # relying on the reranker's `_distance`/`_score` columns, which are
+        # null/absent for rows that matched via only one of the two signals.
+        row_vec = np.asarray(h["vector"], dtype="float32")
+        similarity = float(np.dot(qv, row_vec))
+        is_lexical_hit = h["_rowid"] in lexical_rowids
+        if similarity < MIN_SIMILARITY and not is_lexical_hit:
             continue
         results.append({
             "path": h["path"],
