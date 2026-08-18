@@ -2,6 +2,24 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.36.0] — 2026-08-18
+
+Gives `docker/rag_cli.py query` a real `--path <prefix>` pre-filter, closing a gap the 2026-08-17 e2e eval (`.lsa/observations/2026-08-17-rag-eval/report.md`) found: epic 3's shipped prose already said "query within that resolved scope," but `cmd_query` had no `--path` argument at all — the eval had to work around this by manually filtering RAG's whole-repo top-5 results client-side after the fact. Per pitch `rag-context-engine-and-repo-indexing` (epic 5 of 4-planned, `path-scoped-query-fix`, discovered via the eval rather than pre-shaped). New documented capability + behavior change to two existing skills' prose → minor bump.
+
+### Added
+
+- **`docker/rag_cli.py query --path <prefix>`** — applies the prefix as a real LanceDB pre-filter (`.where("path LIKE '<prefix>%'", prefilter=True)`) on the vector search itself, evaluated **before** the ANN top-K limit — not a Python-side check on an already-limited result list. Verified against the installed `lancedb==0.25.0` (pinned in `Dockerfile`): `LanceVectorQueryBuilder.where`'s own docstring example is `.where("original_width > 1000", prefilter=True)`, and `cmd_index` already relied on the identical `.where(..., prefilter=True)` call for its per-path staleness scan. A synthetic pre-filter-vs-post-filter proof (20 rows, 10 outside/ rows all closer to the query than any scripts/ row) confirmed `prefilter=True, limit=3` correctly surfaces the best in-path result even though every out-of-path row ranks higher in the whole corpus — while `prefilter=False` on the same setup returns zero results, reproducing exactly the bug this epic fixes. No `--path` given → behavior byte-for-byte unchanged (verified: two consecutive no-`--path` runs of the same query produce identical stdout).
+- **`scripts/rag-query.sh --path <prefix>`** — optional flag, same argument-parsing pattern as the existing `--sha` flag (epic 4), passed through as the container's `query --path` argument. Independent of `--sha`; both may be given together (sanity-checked, not exhaustively tested in combination).
+
+### Changed
+
+- **`lsa/knowledge/conventions.md`** §"Read protocol", **`skills/discover/SKILL.md`** Step 1, **`skills/verify/SKILL.md`** Step 2 — replace the "query within that resolved scope" workaround framing (whole-repo query, then prefer in-scope results client-side) with the real mechanism: `project-map.yaml` resolves a directory, then `scripts/rag-query.sh --path <that-directory> "<query>"` is called directly. Targeted prose correction — the rest of each file's structure is unchanged.
+
+### Verified
+
+- Reproduced the eval's own P9 finding: `scripts/rag-query.sh` with no `--path` on "How does check-lib-pins.sh distinguish STALE BROKEN from cannot verify?" ranks `lsa/knowledge/pinned-library-specs.md` (0.8842) above `scripts/check-lib-pins.sh` (0.8697) — matching the raw eval data (`.lsa/observations/2026-08-17-rag-eval/raw-condition-c-vector-only.md`) byte-for-byte on the recorded similarities. The same query with `--path scripts` returns only `scripts/**` results, with `scripts/check-lib-pins.sh` now ranked first (0.8697) within that subset.
+- `--path` pointed at a directory with no relevant content (`nonexistent-dir-xyz`) returns `{"results": []}`, exit 0 — the same miss contract as an ordinary miss, never a new error shape.
+
 ## [0.35.0] — 2026-08-17
 
 Wires the RAG index into `reconcile`'s Step 4 semantic-mapping judgment and extends `scripts/rag-query.sh` with a sha-pinned filter mode. Per pitch `rag-context-engine-and-repo-indexing` (epic 4 of 4, `reconcile-wiring`, last epic of the pitch): epic 1 built `scripts/rag-query.sh`/`scripts/rag-index.sh`; epic 3 wired `discover`/`verify`; this epic wires the remaining consumer, `reconcile`, without weakening its independent-grader constraints. New documented capability (`--sha`) + behavior change to one existing skill → minor bump.

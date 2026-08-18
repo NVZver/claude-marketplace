@@ -3,7 +3,7 @@
 # built by scripts/rag-index.sh, returning top-ranked chunks with
 # "path:start-end" citations by shelling out to `docker run`.
 #
-# Usage: scripts/rag-query.sh [--sha <sha>] "<query text>"
+# Usage: scripts/rag-query.sh [--sha <sha>] [--path <prefix>] "<query text>"
 #
 # Mounts the local index volume (.lsa/.rag-index/, gitignored) at /index.
 #
@@ -11,6 +11,16 @@
 # no chunk is a good match — is reported as {"results": []} on exit 0, NEVER
 # as a non-zero exit or an error message (R4: a miss is not a guess, and
 # must be distinguishable from an error).
+#
+# --path <prefix> (R1-R5 — .lsa/features/rag-context-engine-and-repo-
+# indexing/path-scoped-query-fix/requirements.md): passed straight through
+# as the container's `query --path <prefix>` argument, which applies it as a
+# real LanceDB pre-filter (`.where(..., prefilter=True)`) on the vector
+# search itself — evaluated before the ANN top-K, not a host-side filter on
+# an already-limited result list (see docker/rag_cli.py cmd_query). Independent
+# of --sha; both may be given together (--sha's post-filter then runs on the
+# already path-scoped results). A --path with no matching content reports the
+# same {"results": []} / exit-0 miss contract as an ordinary miss (R5).
 #
 # --sha <sha> (R1, R2 — .lsa/features/rag-context-engine-and-repo-indexing/
 # reconcile-wiring/requirements.md): after the normal query above returns,
@@ -44,15 +54,24 @@ IMAGE_NAME="rag-index:local"
 INDEX_DIR="${repo_root}/.lsa/.rag-index"
 
 SHA=""
+QUERY_PATH=""
 QUERY_TEXT=""
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --sha)
       if [[ $# -lt 2 || -z "${2:-}" ]]; then
-        printf 'Usage: scripts/rag-query.sh [--sha <sha>] "<query text>"\n' >&2
+        printf 'Usage: scripts/rag-query.sh [--sha <sha>] [--path <prefix>] "<query text>"\n' >&2
         exit 1
       fi
       SHA="$2"
+      shift 2
+      ;;
+    --path)
+      if [[ $# -lt 2 || -z "${2:-}" ]]; then
+        printf 'Usage: scripts/rag-query.sh [--sha <sha>] [--path <prefix>] "<query text>"\n' >&2
+        exit 1
+      fi
+      QUERY_PATH="$2"
       shift 2
       ;;
     *)
@@ -63,7 +82,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 if [[ -z "${QUERY_TEXT}" ]]; then
-  printf 'Usage: scripts/rag-query.sh [--sha <sha>] "<query text>"\n' >&2
+  printf 'Usage: scripts/rag-query.sh [--sha <sha>] [--path <prefix>] "<query text>"\n' >&2
   exit 1
 fi
 
@@ -109,12 +128,23 @@ fi
 
 mkdir -p "${INDEX_DIR}"
 
-# No --sha: unchanged from before this epic — same command, stdout streamed
-# straight through, byte-for-byte identical behavior.
+# --path <prefix>, when given, is passed straight through as the container's
+# `query --path <prefix>` argument (R1, R3 — path-scoped-query-fix). Built as
+# an array and expanded with the "${arr[@]+"${arr[@]}"}" idiom below — under
+# `set -u`, bash 3.2 (macOS's /usr/bin/env bash) treats a plain "${arr[@]}"
+# on a zero-element array as an unbound-variable error.
+path_args=()
+if [[ -n "${QUERY_PATH}" ]]; then
+  path_args=(--path "${QUERY_PATH}")
+fi
+
+# No --sha: unchanged from before this epic apart from the optional --path
+# pass-through above (R2: with no --path, path_args is empty and the command
+# is byte-for-byte identical to before this epic).
 if [[ -z "${SHA}" ]]; then
   if ! docker run --rm \
     -v "${INDEX_DIR}:/index:ro" \
-    "${IMAGE_NAME}" query "${QUERY_TEXT}" --index-dir /index; then
+    "${IMAGE_NAME}" query "${QUERY_TEXT}" --index-dir /index "${path_args[@]+"${path_args[@]}"}"; then
     rc=$?
     if ! docker_daemon_reachable; then
       printf 'FAULT: Docker daemon unreachable — was reachable at start, is not now.\n' >&2
@@ -126,11 +156,11 @@ if [[ -z "${SHA}" ]]; then
   exit 0
 fi
 
-# --sha <sha>: same query, captured so the results can be filtered before
-# they're emitted (R1, R2).
+# --sha <sha>: same query (now also path-scoped if --path was given), captured
+# so the results can be filtered before they're emitted (R1, R2).
 docker_output="$(docker run --rm \
   -v "${INDEX_DIR}:/index:ro" \
-  "${IMAGE_NAME}" query "${QUERY_TEXT}" --index-dir /index)"
+  "${IMAGE_NAME}" query "${QUERY_TEXT}" --index-dir /index "${path_args[@]+"${path_args[@]}"}")"
 rc=$?
 if [[ "${rc}" -ne 0 ]]; then
   if ! docker_daemon_reachable; then

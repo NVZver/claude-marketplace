@@ -26,7 +26,7 @@ Produce the intent and the cited codebase facts the spec will be grounded on.
 
 ## Steps
 
-1. Read `.lsa.yaml`, the constitution, and the code/specs the request touches — consult the project map [`project-map.yaml`](../../../project-map.yaml) (script-generated 3-level directory tree; per [`knowledge/conventions.md`](../../knowledge/conventions.md) §"Read protocol") to locate the directory those files live in, then query `scripts/rag-query.sh "<query>"` within that resolved scope before falling back to `Grep`/`Read`; on a miss, stale index, or unavailable Docker daemon, fall back to a `Grep`/`Read` tree-walk exactly as before and print a one-line notice that the fallback path was used. If the project map itself is absent, fall back to a tree-walk directly. Cite each `file:line`; tag any gap `[ASSUMPTION]` (CORE §1). (→ codebase facts)
+1. Read `.lsa.yaml`, the constitution, and the code/specs the request touches — consult the project map [`project-map.yaml`](../../../project-map.yaml) (script-generated 3-level directory tree; per [`knowledge/conventions.md`](../../knowledge/conventions.md) §"Read protocol") to locate the directory those files live in, then query `scripts/rag-query.sh --path <that-directory> "<query>"` directly before falling back to `Grep`/`Read`; on a miss, stale index, or unavailable Docker daemon, fall back to a `Grep`/`Read` tree-walk exactly as before and print a one-line notice that the fallback path was used. If the project map itself is absent, fall back to a tree-walk directly. Cite each `file:line`; tag any gap `[ASSUMPTION]` (CORE §1). (→ codebase facts)
 2. Extract intent — which user flow, for which module. Ask only what isn't derivable from the facts. (→ intent)
 3. Hand intent + facts to `specify`. (→ handoff)
 

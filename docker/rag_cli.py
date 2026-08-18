@@ -3,8 +3,8 @@
 
 Runs inside the rag-index Docker image. Two subcommands:
 
-  index --scope <path> --index-dir <dir>   build/update the index for <path>
-  query --index-dir <dir> "<query text>"   return top-ranked cited chunks
+  index --scope <path> --index-dir <dir>              build/update the index for <path>
+  query --index-dir <dir> [--path <prefix>] "<text>"   return top-ranked cited chunks
 
 Design notes (see .lsa/pitches/rag-context-engine-and-repo-indexing.md):
 - Embeddings: fastembed (ONNX runtime, CPU-only, no persistent daemon). Model
@@ -16,6 +16,20 @@ Design notes (see .lsa/pitches/rag-context-engine-and-repo-indexing.md):
   identity is (path, content_hash, embed_model, chunk_schema) so an unchanged
   chunk is never re-embedded (R2), and rows are namespaced by embed-model +
   schema version so a model/schema bump can't false-positive a cache hit.
+- Path-scoped query (see .lsa/features/rag-context-engine-and-repo-indexing/
+  path-scoped-query-fix/requirements.md): `query --path <prefix>` applies the
+  prefix as a real LanceDB PRE-filter (`.where(..., prefilter=True)`) on the
+  underlying table scan, evaluated BEFORE the ANN top-K search — not a
+  Python-side check on an already-limited result list. Verified against the
+  installed lancedb==0.25.0 (Dockerfile): `LanceVectorQueryBuilder.where`'s
+  own docstring example is `.where("original_width > 1000", prefilter=True)`,
+  and `cmd_index` below already relies on the same `.where(..., prefilter=
+  True)` call for its per-path staleness scan. A post-filter (prefilter=
+  False, or filtering client-side after `.limit()`) would be WRONG, not just
+  suboptimal: if the single best whole-corpus match lies outside the target
+  path and the true best in-path match ranks below TOP_K overall, a
+  post-filter on an already-limited result set silently returns nothing
+  useful even though a real in-path answer exists.
 """
 import argparse
 import hashlib
@@ -367,12 +381,19 @@ def cmd_query(args):
         return 0
 
     qvec = embed_query(args.query_text)
-    hits = (
-        table.search(qvec, vector_column_name="vector")
-        .metric("cosine")
-        .limit(TOP_K)
-        .to_list()
-    )
+    search = table.search(qvec, vector_column_name="vector").metric("cosine")
+    path_prefix = getattr(args, "path", None)
+    if path_prefix:
+        # Real pre-filter (R1): prefilter=True pushes this predicate into the
+        # table scan BEFORE the ANN top-K below, so an in-path match ranked
+        # 6th-20th in the whole corpus still surfaces — see the module
+        # docstring's "Path-scoped query" note for why prefilter=False (a
+        # post-filter) would be wrong here, not just suboptimal. LIKE-escape
+        # single quotes only, matching this file's existing level of SQL
+        # interpolation rigor (cmd_index above does the same for `path =`).
+        escaped_prefix = path_prefix.replace("'", "''")
+        search = search.where(f"path LIKE '{escaped_prefix}%'", prefilter=True)
+    hits = search.limit(TOP_K).to_list()
 
     results = []
     for h in hits:
@@ -409,6 +430,7 @@ def main():
     p_query = sub.add_parser("query")
     p_query.add_argument("query_text")
     p_query.add_argument("--index-dir", required=True)
+    p_query.add_argument("--path", default=None)
 
     args = parser.parse_args()
     if args.cmd == "index":
