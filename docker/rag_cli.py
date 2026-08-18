@@ -99,7 +99,31 @@ FALLBACK_WINDOW = 60
 FALLBACK_OVERLAP = 15
 
 MAX_FILE_BYTES = 2 * 1024 * 1024  # skip anything bigger; not in scope for v1
-SKIP_DIR_NAMES = {".git", "node_modules", ".rag-index", "__pycache__"}
+# `dist` (index-lsa-content epic, found during its own stress-test verification):
+# gitignored Cursor-export build output (.gitignore:7, scripts/generate-for-cursor.sh)
+# containing duplicate copies of already-indexed source files -- not dot-prefixed, so
+# untouched by the R2/R3 changes above/below. Same rationale this repo's own
+# scripts/coverage-skeleton.sh already applies to the identical directory (.gitignore:7's
+# own comment: "untracked build output... silently inflates" whatever counts it).
+#
+# `.remember` (found the same way, same stress-test pass): entirely gitignored by its own
+# nested .remember/.gitignore ("* .remember/"), private-mode on disk (0700) -- personal,
+# machine-local session-continuity notes (the `remember` plugin), not project content.
+# PRAGMATIC PATCH, not the real fix: this is the SECOND gitignored directory found
+# leaking into the index this same pass (after `dist`) -- the actual root cause is that
+# this indexer does not consult .gitignore at all, so any future gitignored directory
+# will keep needing the identical one-line patch. A real fix (host-side git ls-files
+# --others --exclude-standard, or equivalent) is a larger change, flagged for the human
+# to decide on rather than built unilaterally here -- see this epic's conformance.md.
+SKIP_DIR_NAMES = {".git", "node_modules", ".rag-index", "__pycache__", "dist", ".remember"}
+
+# Path-prefix exclusion (index-lsa-content epic, R3): frozen historical
+# record, excluded by its exact repo-root-relative path — NOT by basename,
+# so an unrelated directory elsewhere in the tree that happens to be named
+# "archive" is NOT excluded. Repo-root-relative, POSIX-separated (this CLI
+# only ever runs inside the Linux container, but the comparison is written
+# separator-safe regardless via the `.replace(os.sep, "/")` below).
+ARCHIVE_PATH_PREFIX = ".lsa/archive"
 
 
 # --------------------------------------------------------------------------
@@ -206,12 +230,32 @@ def content_hash(text):
 # Filesystem walk
 # --------------------------------------------------------------------------
 
-def iter_scope_files(scope_path):
+def _is_excluded_dir(root, name, repo_root):
+    """True if the directory `name` under walk-root `root` must be skipped.
+
+    Two independent checks (index-lsa-content epic, R1/R3):
+      - basename, anywhere in the tree (SKIP_DIR_NAMES — pure tool/VCS
+        internals: `.git`, `node_modules`, `.rag-index`, `__pycache__`).
+      - repo-root-relative PATH PREFIX, exact match only (`.lsa/archive`) —
+        deliberately NOT a basename check, so a directory named "archive"
+        anywhere else in the tree is left alone. Computed via `os.path.
+        relpath` against `repo_root` (not against the walk's own top,
+        which may itself be a subdirectory when `--scope` narrows the
+        walk) and normalized to "/" so the string comparison is exact
+        regardless of `os.sep`.
+    """
+    if name in SKIP_DIR_NAMES:
+        return True
+    rel = os.path.relpath(os.path.join(root, name), repo_root).replace(os.sep, "/")
+    return rel == ARCHIVE_PATH_PREFIX or rel.startswith(ARCHIVE_PATH_PREFIX + "/")
+
+
+def iter_scope_files(scope_path, repo_root):
     if os.path.isfile(scope_path):
         yield scope_path
         return
     for root, dirs, files in os.walk(scope_path):
-        dirs[:] = [d for d in dirs if d not in SKIP_DIR_NAMES and not d.startswith(".")]
+        dirs[:] = [d for d in dirs if not _is_excluded_dir(root, d, repo_root)]
         for fn in files:
             yield os.path.join(root, fn)
 
@@ -325,7 +369,7 @@ def cmd_index(args):
     deleted_count = 0
     files_seen = 0
 
-    for fs_path in iter_scope_files(scope_fs):
+    for fs_path in iter_scope_files(scope_fs, repo_root):
         rel_path = os.path.relpath(fs_path, repo_root)
         text = read_text_file(fs_path)
         if text is None:
