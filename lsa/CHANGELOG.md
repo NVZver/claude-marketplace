@@ -2,6 +2,22 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.38.0] — 2026-08-19
+
+Replaces `lsa/docker/rag_cli.py`'s hardcoded, claude-marketplace-specific `CANONICAL_PATH_PREFIXES` tuple with a per-target-repo `.lsa.yaml` `rag: canonical_paths:` config block, so the canonical-vs-historical ranking boost (`rag-context-engine-and-repo-indexing` epic 9) works correctly for any repo the plugin-shipped RAG engine (epic 1, `relocate-and-run-in-place`) runs against, not just this one. Per pitch `rag-plugin-plug-and-play` (epic 2 of 4, `generic-canonical-config`). New documented capability, no removed behavior → minor bump.
+
+### Added
+
+- **`load_canonical_paths_config(repo_root)`** (`lsa/docker/rag_cli.py`) — a minimal, dependency-free line parser (no new pip dependency; matches `scripts/lint.sh`'s existing `libs:`-block parsing style) reading `{repo_root}/.lsa.yaml`'s `rag: canonical_paths:` block at index time (when `/repo` is mounted). Capped at 40 entries (corrected from an initial "5, like `libs:`" suggestion — this repo's own real classification already needs 17). `cmd_index` persists the resolved list to `/index/.canonical-paths.txt` on every run; an empty/absent block still writes an empty file and prints an explicit stderr `NOTICE` naming the seed script — unconfigured repos keep defaulting every chunk to "historical" (unchanged safety), loudly rather than silently.
+- **`load_canonical_paths_index(index_dir)`** — reads that persisted file at query time. `cmd_query` has no `/repo` mount (only `/index`), so this file-passing design (same shape as `.ignored-list.txt`, epic 8) avoids adding a new mount or required argument to the query subcommand.
+- **`lsa/scripts/seed-canonical-paths.sh <target-repo>`** — derives a starting `rag: canonical_paths:` block from a target repo's own `.lsa.yaml` `modules.*.artifact_paths` (one entry per unique top-level path segment before the first wildcard), merging into that repo's `.lsa.yaml` without deleting any existing hand-added entry. Idempotent (a second run against an unchanged source produces byte-identical output). Explicitly a floor, not a complete solution — `modules.*.artifact_paths` alone doesn't capture root docs or other non-module canonical locations; the resulting block stays a normal, hand-editable config.
+
+### Changed
+
+- **`classify_doc_class(path, canonical_prefixes)`** — now takes the canonical-prefix list as a parameter instead of reading the removed module-level `CANONICAL_PATH_PREFIXES` tuple. Matching logic (exact match or `startswith(base + "/")`) is unchanged.
+
+Root-level `docker/rag_cli.py` and this repo's own `.lsa.yaml` are untouched by this epic — `dogfood-migration` (epic 4) does the actual cutover for this repo.
+
 ## [0.37.0] — 2026-08-19
 
 Ships a plugin-hosted, standalone copy of the RAG index/query engine at `lsa/docker/` + `lsa/scripts/`, so any target repo can run it via this plugin without depending on claude-marketplace's own root-level `Dockerfile`/`docker/rag_cli.py`/`scripts/rag-*.sh`. Per pitch `rag-plugin-plug-and-play` (epic 1 of 4, `relocate-and-run-in-place`): this epic **adds** a new, parallel location and proves it works standalone — it does not remove or modify the existing root-level files, which keep serving this repo's own dogfood usage unchanged until `dogfood-migration` (epic 4). New shipped files = user-facing surface addition → minor bump.

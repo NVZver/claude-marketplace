@@ -270,6 +270,114 @@ def load_ignored_list(path):
     return dirs, files
 
 
+def load_canonical_paths_config(repo_root):
+    """Parse `{repo_root}/.lsa.yaml`'s top-level `rag: canonical_paths:` block
+    (generic-canonical-config epic, R1/R6/R7): a minimal, dependency-free,
+    line-based parser over `.lsa.yaml`'s own established 2-space-per-level
+    indentation convention -- the same style precedent `scripts/lint.sh`'s
+    C18 check already applies to the `libs:` block (awk, keyed on
+    indentation, no real YAML library) -- because this file's Dockerfile
+    only installs fastembed/lancedb/pyarrow/numpy and adding a YAML parser
+    would be a new pip dependency this repo's convention forbids (R7).
+
+    Expected shape:
+        rag:
+          canonical_paths:
+            - lsa/
+            - core/
+
+    Called from `cmd_index`, where `/repo/.lsa.yaml` is reachable (this
+    container mounts `/repo` only at index time -- see the module
+    docstring's design note; `cmd_query` has no such mount and instead
+    reads the list `cmd_index` persists into `/index/.canonical-paths.txt`,
+    via `load_canonical_paths_index` below).
+
+    Returns a list of entries (list-item text, in file order). Never
+    raises: a missing `.lsa.yaml`, a missing `rag:` key, a missing or empty
+    `canonical_paths:` key, or any other malformed shape all yield an empty
+    list -- the query-time safety default (every chunk classifies
+    "historical", requirements.md R4) -- since a real target repo may
+    simply not have this block configured yet.
+    """
+    entries = []
+    lsa_yaml_path = os.path.join(repo_root, ".lsa.yaml")
+    try:
+        with open(lsa_yaml_path, "r", encoding="utf-8") as fh:
+            lines = fh.readlines()
+    except OSError:
+        return entries
+
+    in_rag = False
+    in_canonical_paths = False
+    for raw_line in lines:
+        line = raw_line.rstrip("\n")
+        if re.match(r"^rag:\s*$", line):
+            in_rag = True
+            in_canonical_paths = False
+            continue
+        if in_rag and re.match(r"^[^\s#]", line):
+            # Dedent back to column 0 (a sibling top-level key, or EOF
+            # padding) -- the rag: block has ended.
+            in_rag = False
+            in_canonical_paths = False
+            continue
+        if in_rag and not in_canonical_paths:
+            if re.match(r"^  canonical_paths:\s*$", line):
+                in_canonical_paths = True
+            # Any other 2-space-indented key under rag: is a sibling of
+            # canonical_paths: -- ignored, not an error.
+            continue
+        if in_rag and in_canonical_paths:
+            m = re.match(r"^    - (.+?)\s*$", line)
+            if m:
+                entries.append(m.group(1))
+            else:
+                # First non-list-item line ends the canonical_paths: list
+                # (mirrors C18's "first non-matching line ends the block"
+                # rule) -- stay in_rag in case a later sibling key exists.
+                in_canonical_paths = False
+            continue
+
+    CANONICAL_PATHS_CAP = 40
+    if len(entries) > CANONICAL_PATHS_CAP:
+        print(
+            f"WARNING: .lsa.yaml rag: canonical_paths: has {len(entries)} "
+            f"entries, exceeding the {CANONICAL_PATHS_CAP}-entry cap -- "
+            f"truncating to the first {CANONICAL_PATHS_CAP}.",
+            file=sys.stderr,
+        )
+        entries = entries[:CANONICAL_PATHS_CAP]
+
+    return entries
+
+
+def load_canonical_paths_index(index_dir):
+    """Load the per-target-repo canonical-path prefix list `cmd_index`
+    persisted at `{index_dir}/.canonical-paths.txt` (generic-canonical-
+    config epic, R2/R3): one entry per line, rewritten fresh on every index
+    run. Read by `cmd_query`, which has no `/repo` mount and so cannot
+    re-parse `.lsa.yaml` directly -- see the module docstring's design
+    note and `load_canonical_paths_config` above, which is what wrote this
+    file.
+
+    Missing/unreadable/empty file -> empty list, same shape as
+    `load_ignored_list`'s missing-file handling: the query-time safety
+    default (every chunk classifies "historical") holds regardless of why
+    the file is empty.
+    """
+    entries = []
+    path = os.path.join(index_dir, ".canonical-paths.txt")
+    try:
+        with open(path, "r", encoding="utf-8") as fh:
+            for line in fh:
+                entry = line.strip()
+                if entry:
+                    entries.append(entry)
+    except OSError:
+        pass
+    return entries
+
+
 def _is_excluded_dir(root, name, repo_root, ignored_dirs=frozenset()):
     """True if the directory `name` under walk-root `root` must be skipped.
 
@@ -435,6 +543,30 @@ def cmd_index(args):
 
     ignored_dirs, ignored_files = load_ignored_list(getattr(args, "ignored_list", None))
 
+    # generic-canonical-config epic, R1/R2/R4: resolve the target repo's own
+    # canonical-path classification from its .lsa.yaml (the container's
+    # /repo mount is available here, at index time, only -- see the module
+    # docstring's design note), then persist it into /index so cmd_query
+    # (no /repo mount) needs no new mount or argument to read it. Rewritten
+    # fresh on every index run -- never merged with a stale prior run, the
+    # same "regenerated each time" precedent load_ignored_list's own caller
+    # (rag-index.sh) already follows for .ignored-list.txt. An empty
+    # resolved list still writes an empty file (R4: absence of the file is
+    # never overloaded as a distinct signal from "empty list").
+    canonical_paths = load_canonical_paths_config(repo_root)
+    canonical_paths_file = os.path.join(args.index_dir, ".canonical-paths.txt")
+    with open(canonical_paths_file, "w", encoding="utf-8") as fh:
+        for entry in canonical_paths:
+            fh.write(entry + "\n")
+    if not canonical_paths:
+        print(
+            "NOTICE: no rag: canonical_paths: configured in .lsa.yaml — all "
+            "content classified \"historical\" (safe default). Run "
+            "lsa/scripts/seed-canonical-paths.sh <this-repo> to generate a "
+            "starting config from your modules.*.artifact_paths.",
+            file=sys.stderr,
+        )
+
     embedded_count = 0
     skipped_count = 0
     deleted_count = 0
@@ -575,9 +707,9 @@ FTS_OVERFETCH_LIMIT = 100000
 
 # canonical-source-weighting epic, R1: query-time-only classification (R7 —
 # no schema change, no reindex, no new stored field) of each candidate's
-# already-stored `path` into "canonical" (this repo's own maintained specs
-# and tooling) or "historical" (everything else — pitches, dated
-# observations, superseded drafts, etc.). Same path-prefix-matching shape as
+# already-stored `path` into "canonical" (a repo's own maintained specs and
+# tooling) or "historical" (everything else — pitches, dated observations,
+# superseded drafts, etc.). Same path-prefix-matching shape as
 # ARCHIVE_PATH_PREFIX above (line 126): repo-root-relative, exact match OR
 # startswith-with-trailing-slash for directory-shaped entries — so "lsa/"
 # matches both the bare "lsa" path and anything under "lsa/", while
@@ -585,44 +717,30 @@ FTS_OVERFETCH_LIMIT = 100000
 # ".lsa/". Safe to compare as-is (no separator normalization needed, unlike
 # ARCHIVE_PATH_PREFIX's os.walk-time check): this CLI only ever runs inside
 # the Linux container, and `path` is stored exactly as `cmd_index` wrote it
-# — already "/"-separated. UNMATCHED DEFAULTS TO "historical" — a deliberate
-# safety default (requirements.md R1), not a bug: an unlisted path (e.g. a
-# new top-level directory added later) does not silently get
-# canonical-boosted without an explicit decision to add it here.
-CANONICAL_PATH_PREFIXES = (
-    "lsa/",
-    "core/",
-    "manager/",
-    "prompt-engineer/",
-    "observer/",
-    ".lsa/VISION.md",
-    ".lsa/main.spec.md",
-    ".lsa.yaml",
-    ".lsa/roadmap.yaml",
-    ".lsa/standards/",
-    ".lsa/modules/",
-    "README.md",
-    "AGENTS.md",
-    "CLAUDE.md",
-    "CONTRIBUTING.md",
-    "SECURITY.md",
-    "docker/",
-    "scripts/",
-)
+# — already "/"-separated.
+#
+# generic-canonical-config epic, R1/R3: the prefix list itself is no longer
+# a hardcoded, claude-marketplace-specific tuple — it is resolved per
+# TARGET repo, at index time, from that repo's own `.lsa.yaml` `rag:
+# canonical_paths:` block (`load_canonical_paths_config`), persisted into
+# `/index/.canonical-paths.txt`, and loaded once at the start of `cmd_query`
+# (`load_canonical_paths_index`) to be threaded through here as
+# `canonical_prefixes`. UNMATCHED DEFAULTS TO "historical" — a deliberate
+# safety default (requirements.md R4), not a bug: an unconfigured repo (or
+# an unlisted path within a configured one) does not silently get
+# canonical-boosted without an explicit decision to add it.
+def classify_doc_class(path, canonical_prefixes):
+    """Classify a stored chunk `path` as "canonical" or "historical" (R1/R3).
 
-
-def classify_doc_class(path):
-    """Classify a stored chunk `path` as "canonical" or "historical" (R1).
-
-    A match is an exact match against a `CANONICAL_PATH_PREFIXES` entry
-    (with any trailing "/" stripped), or `path` starting with that stripped
-    entry plus "/" — the same exact-or-directory-prefix rule
-    `_is_excluded_dir` already applies to `ARCHIVE_PATH_PREFIX`. Any path
-    that matches none of the entries defaults to "historical" (see the
-    module-level comment above `CANONICAL_PATH_PREFIXES` for why that
-    default is deliberate).
+    A match is an exact match against a `canonical_prefixes` entry (with any
+    trailing "/" stripped), or `path` starting with that stripped entry plus
+    "/" — the same exact-or-directory-prefix rule `_is_excluded_dir` already
+    applies to `ARCHIVE_PATH_PREFIX`. Any path that matches none of the
+    entries — including every path, when `canonical_prefixes` is empty (an
+    unconfigured target repo, R4) — defaults to "historical" (see the
+    module-level comment above for why that default is deliberate).
     """
-    for prefix in CANONICAL_PATH_PREFIXES:
+    for prefix in canonical_prefixes:
         base = prefix.rstrip("/")
         if path == base or path.startswith(base + "/"):
             return "canonical"
@@ -638,7 +756,7 @@ def classify_doc_class(path):
 CANONICAL_BOOST_WINDOW = TOP_K
 
 
-def _boost_canonical_ranking(pre_boost_hits):
+def _boost_canonical_ranking(pre_boost_hits, canonical_prefixes):
     """Reorder RRF-fused hits (R4) to favor canonical (R1) chunks over
     historical ones at equal or near-equal fused relevance, without letting
     a historical chunk that is unambiguously more relevant get pulled below
@@ -676,7 +794,7 @@ def _boost_canonical_ranking(pre_boost_hits):
     """
     def sort_key(item):
         idx, hit = item
-        is_canonical = classify_doc_class(hit["path"]) == "canonical"
+        is_canonical = classify_doc_class(hit["path"], canonical_prefixes) == "canonical"
         adjusted_rank = idx - CANONICAL_BOOST_WINDOW if is_canonical else idx
         return (adjusted_rank, 0 if is_canonical else 1, idx)
 
@@ -685,6 +803,12 @@ def _boost_canonical_ranking(pre_boost_hits):
 
 
 def cmd_query(args):
+    # generic-canonical-config epic, R3: loaded ONCE here, from the file
+    # cmd_index persisted (load_canonical_paths_index) — no /repo mount, no
+    # new required argument on this subcommand (requirements.md design
+    # note). Threaded through to _boost_canonical_ranking below.
+    canonical_prefixes = load_canonical_paths_index(args.index_dir)
+
     db = open_db(args.index_dir)
     if TABLE_NAME not in db.table_names():
         print(json.dumps({"results": []}))
@@ -744,7 +868,7 @@ def cmd_query(args):
     # TOP_K (R3: the widened CANDIDATE_K pool never changes the returned
     # count).
     pre_boost_hits = combined.to_pylist()
-    hits = _boost_canonical_ranking(pre_boost_hits)[:TOP_K]
+    hits = _boost_canonical_ranking(pre_boost_hits, canonical_prefixes)[:TOP_K]
 
     qv = np.asarray(qvec, dtype="float32")
     results = []
