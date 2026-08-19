@@ -7,7 +7,6 @@ tree:  # directories only (depth ≤ 3)
     hooks:
     rules:
   ".claude-plugin":
-  ".githooks":
   ".github":
     workflows:
   ".lsa":
@@ -70,7 +69,6 @@ tree:  # directories only (depth ≤ 3)
       output:
       reuse-first:
     tests:
-  docker:
   knowledge:
   lsa:
     ".claude-plugin":
@@ -81,6 +79,7 @@ tree:  # directories only (depth ≤ 3)
     scripts:
       tests:
     skills:
+      bootstrap-rag:
       delegate:
       discover:
       init:

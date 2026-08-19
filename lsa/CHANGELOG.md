@@ -2,6 +2,10 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.39.1] — 2026-08-19
+
+`lsa/knowledge/conventions.md` and `discover`/`verify`/`reconcile`'s `SKILL.md` Read-protocol prose corrected: `scripts/rag-query.sh` → `lsa/scripts/rag-query.sh`. Per pitch `rag-plugin-plug-and-play` (epic 4 of 4, `dogfood-migration`) — this repo's own root-level `Dockerfile`/`docker/rag_cli.py`/`scripts/rag-*.sh`/`.githooks/pre-commit` are removed, fully superseded by the plugin-shipped equivalents (epics 1-3). Stale-reference correction (the old paths no longer exist on disk) → patch bump, not a behavior change.
+
 ## [0.39.0] — 2026-08-19
 
 New skill `bootstrap-rag`: given a target repo with Docker installed and `init` already run, makes RAG search a fully working, unattended capability of that repo in one invocation. Per pitch `rag-plugin-plug-and-play` (epic 3 of 4, `bootstrap-trigger`). New skill + new `SessionStart` hook entry → minor bump.

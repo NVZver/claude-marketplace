@@ -18,8 +18,8 @@ gate:
   project-map: bash lsa/scripts/project-map-check.sh
   tests: bash scripts/run-tests.sh
   lib-pins: bash scripts/check-lib-pins.sh
-  rag-index-fresh: bash scripts/check-rag-index-fresh.sh
-  rag-index-matches-head: bash scripts/check-rag-index-matches-head.sh
+  rag-index-fresh: bash lsa/scripts/check-rag-index-fresh.sh
+  rag-index-matches-head: bash lsa/scripts/check-rag-index-matches-head.sh
 
 # Reconcile scenario-run count (lsa/skills/reconcile/SKILL.md Step 1).
 # Default when the key is absent: 3 — pass = all 3 runs succeed (≥95% of 3 ⇒ 3/3).
@@ -60,6 +60,46 @@ libs:
   actions-checkout:
     spec: .lsa/libs/actions-checkout.md
     manifest: .github/workflows/lint.yml
+
+rag:
+  canonical_paths:
+    - .lsa/VISION.md
+    - .lsa/main.spec.md
+    - .lsa.yaml
+    - .lsa/roadmap.yaml
+    - .lsa/standards/
+    - .lsa/modules/
+    - README.md
+    - AGENTS.md
+    - CLAUDE.md
+    - CONTRIBUTING.md
+    - SECURITY.md
+    - docker/
+    - scripts/
+    - core/
+    - core/.claude-plugin/plugin.json
+    - core/CLAUDE.md
+    - core/README.md
+    - core/VERIFICATION.md
+    - lsa/
+    - lsa/.claude-plugin/plugin.json
+    - lsa/ARCHITECTURE.md
+    - lsa/CHANGELOG.md
+    - lsa/CORE.md
+    - lsa/README.md
+    - lsa/hooks/hooks.json
+    - lsa/hooks/pre-commit
+    - manager/
+    - manager/.claude-plugin/plugin.json
+    - manager/README.md
+    - observer/
+    - observer/.claude-plugin/plugin.json
+    - observer/CHANGELOG.md
+    - observer/README.md
+    - prompt-engineer/
+    - prompt-engineer/.claude-plugin/plugin.json
+    - prompt-engineer/README.md
+    - prompt-engineer/VERIFICATION.md
 
 modules:
   core:

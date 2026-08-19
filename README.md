@@ -23,7 +23,7 @@ A controlled e2e comparison across four search strategies, 12 fixed ground-truth
 | Vector search only | 83% | 83% | ~29,066 tok | ~1.72s/query |
 | **Both, combined** | **92%** | **92%** | ~35,416 tok | ~1.73s/query |
 
-Directory scoping (`project-map.yaml`) alone beats blind search on *every* metric at once — not a tradeoff. Combining it with local vector retrieval is the accuracy/completeness ceiling of the four, recovering misses neither signal catches alone. Vector search runs fully local — no hosted vector DB, no hosted embedding API, no network call at query time (`Dockerfile`, `docker/rag_cli.py`).
+Directory scoping (`project-map.yaml`) alone beats blind search on *every* metric at once — not a tradeoff. Combining it with local vector retrieval is the accuracy/completeness ceiling of the four, recovering misses neither signal catches alone. Vector search runs fully local — no hosted vector DB, no hosted embedding API, no network call at query time (`lsa/docker/Dockerfile`, `lsa/docker/rag_cli.py`).
 
 ### Manager — selective roadmap load
 

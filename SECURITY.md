@@ -43,7 +43,7 @@ entry."*), a commit-discipline PreToolUse check
 ([`.claude/hooks/commit-discipline-check.sh`](./.claude/hooks/commit-discipline-check.sh),
 registered in [`.claude/settings.json`](./.claude/settings.json) — documented in
 *"The commit-discipline PreToolUse hook"* below), and an opt-in RAG-index
-pre-commit hook ([`.githooks/pre-commit`](./.githooks/pre-commit) — documented
+pre-commit hook ([`lsa/hooks/pre-commit`](./lsa/hooks/pre-commit) — documented
 in *"The RAG-index pre-commit hook"* below). No server, no network service,
 no database, no credential store, no PII processing.
 
@@ -311,20 +311,20 @@ Its specification (EARS + Gherkin) lives at
 
 ---
 
-## The RAG-index pre-commit hook (repo-internal, opt-in — never ships)
+## The RAG-index pre-commit hook (repo-internal, opt-in — never auto-runs)
 
-This repo's `.githooks/` directory carries a third hook,
-[`.githooks/pre-commit`](./.githooks/pre-commit). Like the commit-discipline
-hook above, it is **repo-internal maintainer infrastructure**: it lives outside
-every plugin's `artifact_paths` (`.lsa.yaml` `modules:`), is **not in the
-marketplace catalog**, and **never installs on a consumer's machine.** Unlike
-the other two hooks on this page, it is also **opt-in even for a repo
-contributor** — nothing wires it automatically.
+This repo's `lsa` plugin carries a third hook,
+[`lsa/hooks/pre-commit`](./lsa/hooks/pre-commit). Like the commit-discipline
+hook above, it is **repo-internal maintainer infrastructure**: it is not wired
+into [`lsa/hooks/hooks.json`](./lsa/hooks/hooks.json) (which only auto-installs
+the two `SessionStart` hooks) and **never runs automatically on a consumer's
+machine.** Unlike the other two hooks on this page, it is also **opt-in even
+for a repo contributor** — nothing wires it automatically.
 
 **What it does.** On `git commit`, it runs
-[`scripts/rag-index.sh`](./scripts/rag-index.sh) once per file staged in that
+[`lsa/scripts/rag-index.sh`](./lsa/scripts/rag-index.sh) once per file staged in that
 commit, updating the local RAG vector index used by
-[`scripts/rag-query.sh`](./scripts/rag-query.sh) so it stays current with what
+[`lsa/scripts/rag-query.sh`](./lsa/scripts/rag-query.sh) so it stays current with what
 you're about to commit
 ([`.lsa/features/rag-context-engine-and-repo-indexing/commit-triggered-sync/requirements.md:5-7`](./.lsa/features/rag-context-engine-and-repo-indexing/commit-triggered-sync/requirements.md)
 — R1).
@@ -332,7 +332,7 @@ you're about to commit
 **Its trigger.** Local `git commit` only, and only once you opt in:
 
 ```
-git config core.hooksPath .githooks
+git config core.hooksPath lsa/hooks
 ```
 
 A fresh clone has `core.hooksPath` unset — this hook does not run until you set
@@ -342,14 +342,14 @@ run local git hooks either way, opted in or not — see the CI check below.
 **Least-privilege scope.**
 
 - **It reads the repo and writes only to the gitignored index volume.**
-  `scripts/rag-index.sh` mounts the repo read-only (`-v "${repo_root}:/repo:ro"`)
+  `lsa/scripts/rag-index.sh` mounts the repo read-only (`-v "${repo_root}:/repo:ro"`)
   into the indexing container and writes only to `.lsa/.rag-index/` — a
   directory this repo's [`.gitignore`](./.gitignore) excludes, never committed,
   never pushed.
 - **It never makes network calls.** Embedding runs fully offline inside the
   container (`HF_HUB_OFFLINE=1`, `TRANSFORMERS_OFFLINE=1` — model weights are
   baked into the image at build time, per
-  [`docker/rag_cli.py:9-13`](./docker/rag_cli.py)); the only process boundary
+  [`lsa/docker/rag_cli.py:9-13`](./lsa/docker/rag_cli.py)); the only process boundary
   the hook itself crosses is a local `docker run`.
 - **It never blocks the commit.** This is a hard requirement
   ([`.lsa/features/rag-context-engine-and-repo-indexing/commit-triggered-sync/requirements.md:8-11`](./.lsa/features/rag-context-engine-and-repo-indexing/commit-triggered-sync/requirements.md)
@@ -362,7 +362,7 @@ run local git hooks either way, opted in or not — see the CI check below.
 best-effort, a commit can land with a stale or missing index — hook never
 installed, skipped, bypassed with `--no-verify`, or failed. The backstop is a
 CI check,
-[`scripts/check-rag-index-matches-head.sh`](./scripts/check-rag-index-matches-head.sh)
+[`lsa/scripts/check-rag-index-matches-head.sh`](./lsa/scripts/check-rag-index-matches-head.sh)
 (wired into `.lsa.yaml` `gate:` as `rag-index-matches-head` and into
 [`.github/workflows/lint.yml`](./.github/workflows/lint.yml)), which
 independently rebuilds the index from HEAD's checked-out content on every PR
@@ -397,4 +397,4 @@ regardless.
 | Safe install | source review + pin to reviewed `#<ref>` | [Claude Code docs](https://code.claude.com/docs/en/discover-plugins) |
 | Hook transparency | read-only Git, no writes, no network, exits 0 | [`lsa/hooks/session-start-drift-check.sh`](./lsa/hooks/session-start-drift-check.sh) |
 | Commit-discipline guardrail (repo-internal, not shipped) | PreToolUse on `git commit`: read-only Git, detect-and-report, blocks on violation, no-op in consumer repos | [`.claude/hooks/commit-discipline-check.sh`](./.claude/hooks/commit-discipline-check.sh) |
-| RAG-index pre-commit hook (repo-internal, opt-in, not shipped) | local `git commit`: repo read-only, writes only gitignored index volume, no network, never blocks the commit; CI is the real enforcement point | [`.githooks/pre-commit`](./.githooks/pre-commit), [`scripts/check-rag-index-matches-head.sh`](./scripts/check-rag-index-matches-head.sh) |
+| RAG-index pre-commit hook (repo-internal, opt-in, not auto-run) | local `git commit`: repo read-only, writes only gitignored index volume, no network, never blocks the commit; CI is the real enforcement point | [`lsa/hooks/pre-commit`](./lsa/hooks/pre-commit), [`lsa/scripts/check-rag-index-matches-head.sh`](./lsa/scripts/check-rag-index-matches-head.sh) |
