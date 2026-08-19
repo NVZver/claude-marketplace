@@ -14,6 +14,12 @@ Epic 9 of the `rag-context-engine-and-repo-indexing` pitch, same branch (`featur
 - **SP2** (pure paraphrase, zero literal overlap) is a semantic-understanding gap, not a ranking-order gap. Not expected to be fixed by this design.
 - **SP6** (pitch Appetite section vs. prior-art research doc) is a **historical-vs-historical** mis-ranking under the approved classification (pitches → historical). The canonical boost does not differentiate within the historical bucket. Not expected to be fixed by this epic.
 
+**Known limitation found at reconcile time (live-tested, not fixed): SP3 and SP9, despite being this epic's own design targets, still miss.** Full live evidence in `conformance.md`. Both are honest shortfalls of the chosen mechanism, not bugs:
+- **SP9** (VISION.md principle 10): the correct chunk is indexed and genuinely relevant (confirmed via a `--path`-scoped query: similarity 0.654) but never enters the unscoped top-`TOP_K` candidate set at all — R2's widened `CANDIDATE_K` pool still doesn't reach far enough for this specific query, and R4's boost can only reorder candidates that are already in the pool.
+- **SP3** (arrow-notation meaning): the correct *file* (`lsa/skills/discover/SKILL.md`) now surfaces — a real, partial win from R1's classification — but the specific *chunk* within it that explains the notation (the Steps section, not the frontmatter) isn't the one the boost promoted. A chunking-granularity gap, not something R1-R4 as specified can fix.
+
+Both are consistent with R4's own wording ("favor... at equal or near-equal relevance") — a bounded-window boost improves the odds a canonical source surfaces; it does not guarantee it for every query. `flow-1-canonical-aware-ranking.feature` was revised at reconcile time to only assert SP4 (which did flip) as a passing scenario, rather than asserting SP3/SP9 as certain outcomes that live testing then contradicted.
+
 ## Requirements
 
 - R1. While handling a query request, the system shall classify each pre-fusion candidate chunk's `doc_class` as "canonical" when its stored `path` matches an approved canonical path prefix (`lsa/`, `core/`, `manager/`, `prompt-engineer/`, `observer/`, `.lsa/VISION.md`, `.lsa/main.spec.md`, `.lsa.yaml`, `.lsa/roadmap.yaml`, `.lsa/standards/`, `.lsa/modules/`, `README.md`, `AGENTS.md`, `CLAUDE.md`, `CONTRIBUTING.md`, `SECURITY.md`, `docker/`, `scripts/`), and "historical" otherwise (unmatched defaults to historical, not canonical).
