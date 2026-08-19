@@ -2,6 +2,22 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.39.0] — 2026-08-19
+
+New skill `bootstrap-rag`: given a target repo with Docker installed and `init` already run, makes RAG search a fully working, unattended capability of that repo in one invocation. Per pitch `rag-plugin-plug-and-play` (epic 3 of 4, `bootstrap-trigger`). New skill + new `SessionStart` hook entry → minor bump.
+
+### Added
+
+- **`lsa/skills/bootstrap-rag/SKILL.md`** — new skill (`/lsa:bootstrap-rag`). Invokes the new `lsa/scripts/bootstrap-rag.sh <target-repo-path>` helper, which in order: builds the plugin-shipped image and runs the initial index (`lsa/scripts/rag-index.sh`, epic 1), seeds `rag: canonical_paths:` (`lsa/scripts/seed-canonical-paths.sh`, epic 2 — reused, not reimplemented), sets `git config core.hooksPath` to the plugin's own hooks directory, appends `rag-index-fresh`/`rag-index-matches-head` to the target's `.lsa.yaml` `gate:` block (creating it if absent, never destroying existing keys), and appends a `.lsa/.rag-index/` entry to the target's `.gitignore`. Idempotent by construction — a second run skips entries already present rather than duplicating them.
+- **`lsa/hooks/rag-bootstrap-check.sh`** — new, independently-timed `SessionStart` hook entry (second array entry in `lsa/hooks/hooks.json`, alongside the existing drift-check hook). Offers the `bootstrap-rag` skill (one printed line) only when `.lsa.yaml` exists, has no `rag-index-fresh` gate entry yet, and Docker is on `PATH` and reachable within a bounded ~3s check (scaled down from `rag-index.sh`'s 5s `docker_daemon_reachable()` pattern). Exits 0 and prints nothing in every other case — never blocks session start.
+- **`lsa/hooks/pre-commit`** — portable, plugin-shipped equivalent of `.githooks/pre-commit`, self-locating its sibling `rag-index.sh` via `${BASH_SOURCE[0]}` (same pattern as `check-rag-index-matches-head.sh`) instead of a hardcoded root-relative path, so it works correctly when `core.hooksPath` points at one shared plugin-install location serving multiple different target repos. Same "never blocks the commit" contract as the original.
+
+### Changed
+
+- **`.lsa.yaml`** — `lsa` module `artifact_paths` gains `lsa/hooks/pre-commit` as an explicit entry (git's no-extension hook-naming convention isn't covered by the existing `lsa/hooks/**/*.sh` glob).
+
+Root-level `.githooks/pre-commit`, this repo's own `.lsa.yaml`, and `lsa/hooks/session-start-drift-check.sh` are untouched by this epic.
+
 ## [0.38.0] — 2026-08-19
 
 Replaces `lsa/docker/rag_cli.py`'s hardcoded, claude-marketplace-specific `CANONICAL_PATH_PREFIXES` tuple with a per-target-repo `.lsa.yaml` `rag: canonical_paths:` config block, so the canonical-vs-historical ranking boost (`rag-context-engine-and-repo-indexing` epic 9) works correctly for any repo the plugin-shipped RAG engine (epic 1, `relocate-and-run-in-place`) runs against, not just this one. Per pitch `rag-plugin-plug-and-play` (epic 2 of 4, `generic-canonical-config`). New documented capability, no removed behavior → minor bump.

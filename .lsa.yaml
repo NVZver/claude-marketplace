@@ -79,6 +79,7 @@ modules:
       - lsa/agents/**/*.md
       - lsa/knowledge/**/*.md
       - lsa/hooks/hooks.json
+      - lsa/hooks/pre-commit
       - lsa/hooks/**/*.sh
       - lsa/scripts/**/*.sh
       - lsa/docker/**
