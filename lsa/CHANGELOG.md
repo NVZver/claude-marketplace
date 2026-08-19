@@ -2,6 +2,21 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.37.0] — 2026-08-19
+
+Ships a plugin-hosted, standalone copy of the RAG index/query engine at `lsa/docker/` + `lsa/scripts/`, so any target repo can run it via this plugin without depending on claude-marketplace's own root-level `Dockerfile`/`docker/rag_cli.py`/`scripts/rag-*.sh`. Per pitch `rag-plugin-plug-and-play` (epic 1 of 4, `relocate-and-run-in-place`): this epic **adds** a new, parallel location and proves it works standalone — it does not remove or modify the existing root-level files, which keep serving this repo's own dogfood usage unchanged until `dogfood-migration` (epic 4). New shipped files = user-facing surface addition → minor bump.
+
+### Added
+
+- **`lsa/docker/Dockerfile`, `lsa/docker/rag_cli.py`** — plugin-shipped copies of the root-level RAG container image. Functionally identical: `rag_cli.py` is an exact, byte-for-byte copy (already target-repo-agnostic via its `--scope`/`--index-dir`/`--repo-root` CLI args); the Dockerfile differs only in its `COPY` line (`COPY rag_cli.py /app/rag_cli.py` vs. the root version's `COPY docker/rag_cli.py`), reflecting that this copy's build context is `lsa/docker/` itself, not the repo root.
+- **`lsa/scripts/rag-index.sh`, `lsa/scripts/rag-query.sh`** — plugin-shipped wrapper scripts, adapted from the root-level versions to split "where does the plugin's own Dockerfile live" (`plugin_root` — prefers `$CLAUDE_PLUGIN_ROOT`, falls back to a `${BASH_SOURCE[0]}`-relative path, same dual-mode precedent as `lsa/skills/init/SKILL.md:41`) from "what target repo am I indexing/querying" (`repo_root` — unchanged `git rev-parse --show-toplevel` resolution). Every existing flag and behavior (`--path`, `--sha`, the two-tier cached-then-`--no-cache` rebuild, the Docker-daemon-reachability check, gitignore-aware exclusion) is preserved. Built image tag (`rag-index-plugin:local`) is kept distinct from the root-level scripts' `rag-index:local` so the two build contexts never fight over the same image/label inside this repo before `dogfood-migration` cuts over.
+- **`lsa/scripts/check-rag-index-fresh.sh`** — exact copy of the root-level version (only ever reads `repo_root` for `INDEX_DIR`; no Dockerfile/build-context coupling to adapt).
+- **`lsa/scripts/check-rag-index-matches-head.sh`** — adapted copy: the root-level version invokes its sibling `scripts/rag-index.sh` by a CWD-relative path, which only resolves inside claude-marketplace itself. This copy self-locates its own sibling `rag-index.sh` via `${BASH_SOURCE[0]}`, so it keeps working from any target repo.
+
+### Changed
+
+- **`.lsa.yaml`** — `lsa` module `artifact_paths` gains `lsa/docker/**`, alongside the existing `lsa/scripts/**/*.sh` entry (which already covers the new scripts).
+
 ## [0.36.0] — 2026-08-18
 
 Gives `docker/rag_cli.py query` a real `--path <prefix>` pre-filter, closing a gap the 2026-08-17 e2e eval (`.lsa/observations/2026-08-17-rag-eval/report.md`) found: epic 3's shipped prose already said "query within that resolved scope," but `cmd_query` had no `--path` argument at all — the eval had to work around this by manually filtering RAG's whole-repo top-5 results client-side after the fact. Per pitch `rag-context-engine-and-repo-indexing` (epic 5 of 4-planned, `path-scoped-query-fix`, discovered via the eval rather than pre-shaped). New documented capability + behavior change to two existing skills' prose → minor bump.

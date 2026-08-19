@@ -81,6 +81,7 @@ modules:
       - lsa/hooks/hooks.json
       - lsa/hooks/**/*.sh
       - lsa/scripts/**/*.sh
+      - lsa/docker/**
       - lsa/.claude-plugin/plugin.json
       - lsa/ARCHITECTURE.md
       - lsa/README.md
