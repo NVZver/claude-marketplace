@@ -548,6 +548,21 @@ def cmd_index(args):
 MIN_SIMILARITY = 0.65
 TOP_K = 5
 
+# canonical-source-weighting epic, R2/R3: pre-fusion candidate pool widened
+# from TOP_K to CANDIDATE_K on both the vector and FTS sub-queries (see the
+# two call sites below) so a genuinely relevant canonical chunk that would
+# have been truncated out of a naive top-TOP_K window on either signal (the
+# SP4 stress-probe failure mode: a real match ranked 6th-20th, not present
+# in either raw top-5) still reaches RRF fusion and the R4 canonical boost
+# below. The FINAL result count returned to the caller is unchanged — still
+# exactly TOP_K (R3); only the pre-fusion working set grows. 20 (4x TOP_K)
+# is a coarse, mechanism-level choice, not a tuned constant: large enough to
+# comfortably cover this corpus's observed near-miss depth (SP4/SP9/SP3 in
+# stress-probes.md — none of those chunks were even raw top-5 candidates on
+# either signal), small enough that RRF fusion over up to
+# 2*CANDIDATE_K=40 candidates stays cheap on this ~1,200-chunk corpus.
+CANDIDATE_K = 20
+
 # FTS sub-query over-fetch bound before path-filtering in Python (see the
 # module docstring's "Hybrid" note for why: LanceDB 0.25.0's native FTS
 # `.where(..., prefilter=True)` silently drops in-scope matches, and
@@ -557,6 +572,116 @@ TOP_K = 5
 # per-path scan) — cheap because Lance's native FTS is an exact BM25
 # computation over an inverted index, not an approximate search.
 FTS_OVERFETCH_LIMIT = 100000
+
+# canonical-source-weighting epic, R1: query-time-only classification (R7 —
+# no schema change, no reindex, no new stored field) of each candidate's
+# already-stored `path` into "canonical" (this repo's own maintained specs
+# and tooling) or "historical" (everything else — pitches, dated
+# observations, superseded drafts, etc.). Same path-prefix-matching shape as
+# ARCHIVE_PATH_PREFIX above (line 126): repo-root-relative, exact match OR
+# startswith-with-trailing-slash for directory-shaped entries — so "lsa/"
+# matches both the bare "lsa" path and anything under "lsa/", while
+# ".lsa/VISION.md" matches only that one file, not everything under
+# ".lsa/". Safe to compare as-is (no separator normalization needed, unlike
+# ARCHIVE_PATH_PREFIX's os.walk-time check): this CLI only ever runs inside
+# the Linux container, and `path` is stored exactly as `cmd_index` wrote it
+# — already "/"-separated. UNMATCHED DEFAULTS TO "historical" — a deliberate
+# safety default (requirements.md R1), not a bug: an unlisted path (e.g. a
+# new top-level directory added later) does not silently get
+# canonical-boosted without an explicit decision to add it here.
+CANONICAL_PATH_PREFIXES = (
+    "lsa/",
+    "core/",
+    "manager/",
+    "prompt-engineer/",
+    "observer/",
+    ".lsa/VISION.md",
+    ".lsa/main.spec.md",
+    ".lsa.yaml",
+    ".lsa/roadmap.yaml",
+    ".lsa/standards/",
+    ".lsa/modules/",
+    "README.md",
+    "AGENTS.md",
+    "CLAUDE.md",
+    "CONTRIBUTING.md",
+    "SECURITY.md",
+    "docker/",
+    "scripts/",
+)
+
+
+def classify_doc_class(path):
+    """Classify a stored chunk `path` as "canonical" or "historical" (R1).
+
+    A match is an exact match against a `CANONICAL_PATH_PREFIXES` entry
+    (with any trailing "/" stripped), or `path` starting with that stripped
+    entry plus "/" — the same exact-or-directory-prefix rule
+    `_is_excluded_dir` already applies to `ARCHIVE_PATH_PREFIX`. Any path
+    that matches none of the entries defaults to "historical" (see the
+    module-level comment above `CANONICAL_PATH_PREFIXES` for why that
+    default is deliberate).
+    """
+    for prefix in CANONICAL_PATH_PREFIXES:
+        base = prefix.rstrip("/")
+        if path == base or path.startswith(base + "/"):
+            return "canonical"
+    return "historical"
+
+
+# canonical-source-weighting epic, R4/R5: how far (in pre-boost fused rank
+# positions) a canonical hit is allowed to overtake historical hits. Tied to
+# TOP_K rather than an independent magic number: a canonical hit can only
+# move up past historical hits within one TOP_K-window's worth of rank
+# distance immediately above it, which is what "near-equal relevance" means
+# here — see `_boost_canonical_ranking`'s docstring for the exact mechanism.
+CANONICAL_BOOST_WINDOW = TOP_K
+
+
+def _boost_canonical_ranking(pre_boost_hits):
+    """Reorder RRF-fused hits (R4) to favor canonical (R1) chunks over
+    historical ones at equal or near-equal fused relevance, without letting
+    a historical chunk that is unambiguously more relevant get pulled below
+    a weaker canonical one (R4's explicit "no override" clause).
+
+    `pre_boost_hits` is the fused hit list in `RRFReranker`'s own sorted
+    order (its own fused-relevance ranking, best first) — that list index
+    IS each hit's original relevance rank; no extra column is needed
+    (`RRFReranker().rerank_hybrid(...)`'s output is verified sorted by its
+    own fused rank already, per `cmd_query`'s call site below).
+
+    Mechanism (fully deterministic — R5, no randomness anywhere): a
+    canonical hit's ORIGINAL rank `idx` is adjusted to
+    `idx - CANONICAL_BOOST_WINDOW`; a historical hit's rank is left
+    unadjusted. Stable-sorting by (adjusted_rank, is_historical, idx) lets a
+    canonical hit overtake ONLY the historical hits within
+    CANONICAL_BOOST_WINDOW ranks immediately above its original position —
+    e.g. with CANONICAL_BOOST_WINDOW=5, a canonical hit at rank 15
+    (adjusted 10) still sorts BELOW a historical hit at rank 1 (distance 14,
+    unambiguously more relevant, per R4), but a canonical hit at rank 8
+    (adjusted 3) overtakes a historical hit at rank 5 (near-equal, within
+    the window). The `is_historical` tie-break (0 for canonical, 1 for
+    historical) means an exact tie in adjusted rank favors canonical, per
+    R4's "at equal ... relevance" clause; the final `idx` tie-break makes
+    the ordering fully deterministic and explicit rather than relying
+    incidentally on Python's stable-sort behavior.
+
+    This is deliberately NOT a hard two-tier partition (all canonical
+    hits before all historical hits regardless of relevance) — SP6 in
+    requirements.md documents why that was rejected during spec review: a
+    hard partition would let a barely-related canonical doc outrank a
+    clearly-relevant historical one, which is not what "boost at near-equal
+    relevance" means. Bounding the overtake distance to
+    CANONICAL_BOOST_WINDOW is what keeps this a boost, not a partition.
+    """
+    def sort_key(item):
+        idx, hit = item
+        is_canonical = classify_doc_class(hit["path"]) == "canonical"
+        adjusted_rank = idx - CANONICAL_BOOST_WINDOW if is_canonical else idx
+        return (adjusted_rank, 0 if is_canonical else 1, idx)
+
+    indexed = sorted(enumerate(pre_boost_hits), key=sort_key)
+    return [hit for _, hit in indexed]
 
 
 def cmd_query(args):
@@ -591,7 +716,7 @@ def cmd_query(args):
         # level of SQL interpolation rigor (cmd_index does the same).
         escaped_prefix = path_prefix.replace("'", "''")
         vec_search = vec_search.where(f"path LIKE '{escaped_prefix}%'", prefilter=True)
-    vector_arrow = vec_search.limit(TOP_K).to_arrow()
+    vector_arrow = vec_search.limit(CANDIDATE_K).to_arrow()
 
     # --- Lexical (FTS) sub-query — see the module docstring for why this is
     # fetched generously and filtered by path in Python rather than via
@@ -605,13 +730,21 @@ def cmd_query(args):
     )
     if path_prefix and fts_arrow.num_rows > 0:
         fts_arrow = fts_arrow.filter(pc.starts_with(fts_arrow["path"], path_prefix))
-    if fts_arrow.num_rows > TOP_K:
-        fts_arrow = fts_arrow.slice(0, TOP_K)
+    if fts_arrow.num_rows > CANDIDATE_K:
+        fts_arrow = fts_arrow.slice(0, CANDIDATE_K)
     lexical_rowids = set(fts_arrow["_rowid"].to_pylist()) if fts_arrow.num_rows > 0 else set()
 
     # --- Combine via LanceDB's default reciprocal-rank-fusion reranker (R2).
     combined = RRFReranker().rerank_hybrid(args.query_text, vector_arrow, fts_arrow)
-    hits = combined.slice(0, TOP_K).to_pylist()
+
+    # canonical-source-weighting epic, R4/R5: apply the deterministic
+    # canonical boost (`_boost_canonical_ranking`, above) to the full fused
+    # candidate list — BEFORE the final TOP_K slice, per requirements.md R4
+    # and grounding.md's identified insertion point — then trim to exactly
+    # TOP_K (R3: the widened CANDIDATE_K pool never changes the returned
+    # count).
+    pre_boost_hits = combined.to_pylist()
+    hits = _boost_canonical_ranking(pre_boost_hits)[:TOP_K]
 
     qv = np.asarray(qvec, dtype="float32")
     results = []
