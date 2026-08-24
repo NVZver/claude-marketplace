@@ -2,6 +2,118 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.39.4] — 2026-08-24 — WIP, NOT fully verified (see IMPLEMENTATION_NOTES.md)
+
+Second half of the same PR review pass as 0.39.3: extracts a shared "find a top-level YAML block, replace or append it" mechanism (`splice_yaml_block`) into `lsa/scripts/lib/yaml-block-splice.sh`, used by `seed-canonical-paths.sh` (already re-verified: the append and idempotent-replace cases both reproduce their pre-refactor output byte-for-byte) and `bootstrap-rag.sh`'s `append_gate_entries` (its two simple cases — fresh block creation, and idempotent no-op when both keys already exist — are verified; **the case of an existing `gate:` block with unrelated keys and only one of the two RAG keys present was not confirmed correct before this work was paused** — see `IMPLEMENTATION_NOTES.md` for exactly what to check first before treating this as done).
+
+## [0.39.3] — 2026-08-24
+
+PR review pass (findings from a self-review requested with the lens "what can be removed/optimized/replaced with stdlib"). Two findings fixed and fully live-verified here; two more findings from the same pass (a shared YAML-block-splice helper) landed in a separate WIP commit with one edge case still unverified — see `IMPLEMENTATION_NOTES.md` at the repo root.
+
+### Fixed
+
+- **`rc=$?` inside `if ! docker run ...; then` always read `0`**, not the real exit code (bash's `!` negation overwrites the visible status before a nested `rc=$?` can capture it) — masked genuine, reproducible `docker run` failures behind the self-contradictory message `ERROR: ... (exit 0)`. Fixed in `lsa/scripts/rag-index.sh` and `lsa/scripts/rag-query.sh`'s no-`--sha` path by using a plain command + immediate `rc=$?`, matching the pattern `rag-query.sh`'s own `--sha` path already used correctly. Verified with an isolated proof (a fake command returning 42: old pattern captured `0`, new pattern captured `42`) plus full live reruns of both scripts.
+
+### Changed
+
+- **`docker_daemon_reachable()`** — was four near-identical ~15-line copies (`rag-index.sh`, `rag-query.sh`, `check-rag-index-fresh.sh`, `rag-bootstrap-check.sh`). Extracted to `lsa/scripts/lib/docker-reachable.sh`, now taking an optional timeout-in-seconds argument (default 5; `rag-bootstrap-check.sh` calls it with `3`, preserving its tighter `SessionStart`-budget behavior exactly). Each caller sources it relative to its own already-resolved location. Live-verified: full index rebuild, a real query, and the `SessionStart` offer hook's silent-when-already-bootstrapped case all still pass.
+- `lsa/scripts/check-rag-index-fresh.sh`'s header comment corrected — it still said "NOT shipped in any plugin," true only of the root-level version it replaced (`dogfood-migration`, epic 4).
+
+## [0.39.2] — 2026-08-19
+
+Documentation-completeness fixes found during a post-migration review: `lsa/README.md`'s skill table still described `discover`/`verify`/`reconcile`/`bootstrap-rag` using the pre-`dogfood-migration` `scripts/rag-*.sh`/`scripts/seed-canonical-paths.sh` paths (epic 4 fixed the `SKILL.md` files' own prose but missed this duplicated description in the README table) — corrected to `lsa/scripts/*`. Plugin manifest `description` gains `bootstrap-rag` to the skill list (missing since epic 3 shipped it). New `## RAG-powered search` section in `lsa/README.md`'s Quick Start: concise start-from-scratch and keep-up-to-date guidance, with a link to the measured accuracy table. Doc-only → patch bump.
+
+## [0.39.1] — 2026-08-19
+
+`lsa/knowledge/conventions.md` and `discover`/`verify`/`reconcile`'s `SKILL.md` Read-protocol prose corrected: `scripts/rag-query.sh` → `lsa/scripts/rag-query.sh`. Per pitch `rag-plugin-plug-and-play` (epic 4 of 4, `dogfood-migration`) — this repo's own root-level `Dockerfile`/`docker/rag_cli.py`/`scripts/rag-*.sh`/`.githooks/pre-commit` are removed, fully superseded by the plugin-shipped equivalents (epics 1-3). Stale-reference correction (the old paths no longer exist on disk) → patch bump, not a behavior change.
+
+## [0.39.0] — 2026-08-19
+
+New skill `bootstrap-rag`: given a target repo with Docker installed and `init` already run, makes RAG search a fully working, unattended capability of that repo in one invocation. Per pitch `rag-plugin-plug-and-play` (epic 3 of 4, `bootstrap-trigger`). New skill + new `SessionStart` hook entry → minor bump.
+
+### Added
+
+- **`lsa/skills/bootstrap-rag/SKILL.md`** — new skill (`/lsa:bootstrap-rag`). Invokes the new `lsa/scripts/bootstrap-rag.sh <target-repo-path>` helper, which in order: builds the plugin-shipped image and runs the initial index (`lsa/scripts/rag-index.sh`, epic 1), seeds `rag: canonical_paths:` (`lsa/scripts/seed-canonical-paths.sh`, epic 2 — reused, not reimplemented), sets `git config core.hooksPath` to the plugin's own hooks directory, appends `rag-index-fresh`/`rag-index-matches-head` to the target's `.lsa.yaml` `gate:` block (creating it if absent, never destroying existing keys), and appends a `.lsa/.rag-index/` entry to the target's `.gitignore`. Idempotent by construction — a second run skips entries already present rather than duplicating them.
+- **`lsa/hooks/rag-bootstrap-check.sh`** — new, independently-timed `SessionStart` hook entry (second array entry in `lsa/hooks/hooks.json`, alongside the existing drift-check hook). Offers the `bootstrap-rag` skill (one printed line) only when `.lsa.yaml` exists, has no `rag-index-fresh` gate entry yet, and Docker is on `PATH` and reachable within a bounded ~3s check (scaled down from `rag-index.sh`'s 5s `docker_daemon_reachable()` pattern). Exits 0 and prints nothing in every other case — never blocks session start.
+- **`lsa/hooks/pre-commit`** — portable, plugin-shipped equivalent of `.githooks/pre-commit`, self-locating its sibling `rag-index.sh` via `${BASH_SOURCE[0]}` (same pattern as `check-rag-index-matches-head.sh`) instead of a hardcoded root-relative path, so it works correctly when `core.hooksPath` points at one shared plugin-install location serving multiple different target repos. Same "never blocks the commit" contract as the original.
+
+### Changed
+
+- **`.lsa.yaml`** — `lsa` module `artifact_paths` gains `lsa/hooks/pre-commit` as an explicit entry (git's no-extension hook-naming convention isn't covered by the existing `lsa/hooks/**/*.sh` glob).
+
+Root-level `.githooks/pre-commit`, this repo's own `.lsa.yaml`, and `lsa/hooks/session-start-drift-check.sh` are untouched by this epic.
+
+## [0.38.0] — 2026-08-19
+
+Replaces `lsa/docker/rag_cli.py`'s hardcoded, claude-marketplace-specific `CANONICAL_PATH_PREFIXES` tuple with a per-target-repo `.lsa.yaml` `rag: canonical_paths:` config block, so the canonical-vs-historical ranking boost (`rag-context-engine-and-repo-indexing` epic 9) works correctly for any repo the plugin-shipped RAG engine (epic 1, `relocate-and-run-in-place`) runs against, not just this one. Per pitch `rag-plugin-plug-and-play` (epic 2 of 4, `generic-canonical-config`). New documented capability, no removed behavior → minor bump.
+
+### Added
+
+- **`load_canonical_paths_config(repo_root)`** (`lsa/docker/rag_cli.py`) — a minimal, dependency-free line parser (no new pip dependency; matches `scripts/lint.sh`'s existing `libs:`-block parsing style) reading `{repo_root}/.lsa.yaml`'s `rag: canonical_paths:` block at index time (when `/repo` is mounted). Capped at 40 entries (corrected from an initial "5, like `libs:`" suggestion — this repo's own real classification already needs 17). `cmd_index` persists the resolved list to `/index/.canonical-paths.txt` on every run; an empty/absent block still writes an empty file and prints an explicit stderr `NOTICE` naming the seed script — unconfigured repos keep defaulting every chunk to "historical" (unchanged safety), loudly rather than silently.
+- **`load_canonical_paths_index(index_dir)`** — reads that persisted file at query time. `cmd_query` has no `/repo` mount (only `/index`), so this file-passing design (same shape as `.ignored-list.txt`, epic 8) avoids adding a new mount or required argument to the query subcommand.
+- **`lsa/scripts/seed-canonical-paths.sh <target-repo>`** — derives a starting `rag: canonical_paths:` block from a target repo's own `.lsa.yaml` `modules.*.artifact_paths` (one entry per unique top-level path segment before the first wildcard), merging into that repo's `.lsa.yaml` without deleting any existing hand-added entry. Idempotent (a second run against an unchanged source produces byte-identical output). Explicitly a floor, not a complete solution — `modules.*.artifact_paths` alone doesn't capture root docs or other non-module canonical locations; the resulting block stays a normal, hand-editable config.
+
+### Changed
+
+- **`classify_doc_class(path, canonical_prefixes)`** — now takes the canonical-prefix list as a parameter instead of reading the removed module-level `CANONICAL_PATH_PREFIXES` tuple. Matching logic (exact match or `startswith(base + "/")`) is unchanged.
+
+Root-level `docker/rag_cli.py` and this repo's own `.lsa.yaml` are untouched by this epic — `dogfood-migration` (epic 4) does the actual cutover for this repo.
+
+## [0.37.0] — 2026-08-19
+
+Ships a plugin-hosted, standalone copy of the RAG index/query engine at `lsa/docker/` + `lsa/scripts/`, so any target repo can run it via this plugin without depending on claude-marketplace's own root-level `Dockerfile`/`docker/rag_cli.py`/`scripts/rag-*.sh`. Per pitch `rag-plugin-plug-and-play` (epic 1 of 4, `relocate-and-run-in-place`): this epic **adds** a new, parallel location and proves it works standalone — it does not remove or modify the existing root-level files, which keep serving this repo's own dogfood usage unchanged until `dogfood-migration` (epic 4). New shipped files = user-facing surface addition → minor bump.
+
+### Added
+
+- **`lsa/docker/Dockerfile`, `lsa/docker/rag_cli.py`** — plugin-shipped copies of the root-level RAG container image. Functionally identical: `rag_cli.py` is an exact, byte-for-byte copy (already target-repo-agnostic via its `--scope`/`--index-dir`/`--repo-root` CLI args); the Dockerfile differs only in its `COPY` line (`COPY rag_cli.py /app/rag_cli.py` vs. the root version's `COPY docker/rag_cli.py`), reflecting that this copy's build context is `lsa/docker/` itself, not the repo root.
+- **`lsa/scripts/rag-index.sh`, `lsa/scripts/rag-query.sh`** — plugin-shipped wrapper scripts, adapted from the root-level versions to split "where does the plugin's own Dockerfile live" (`plugin_root` — prefers `$CLAUDE_PLUGIN_ROOT`, falls back to a `${BASH_SOURCE[0]}`-relative path, same dual-mode precedent as `lsa/skills/init/SKILL.md:41`) from "what target repo am I indexing/querying" (`repo_root` — unchanged `git rev-parse --show-toplevel` resolution). Every existing flag and behavior (`--path`, `--sha`, the two-tier cached-then-`--no-cache` rebuild, the Docker-daemon-reachability check, gitignore-aware exclusion) is preserved. Built image tag (`rag-index-plugin:local`) is kept distinct from the root-level scripts' `rag-index:local` so the two build contexts never fight over the same image/label inside this repo before `dogfood-migration` cuts over.
+- **`lsa/scripts/check-rag-index-fresh.sh`** — exact copy of the root-level version (only ever reads `repo_root` for `INDEX_DIR`; no Dockerfile/build-context coupling to adapt).
+- **`lsa/scripts/check-rag-index-matches-head.sh`** — adapted copy: the root-level version invokes its sibling `scripts/rag-index.sh` by a CWD-relative path, which only resolves inside claude-marketplace itself. This copy self-locates its own sibling `rag-index.sh` via `${BASH_SOURCE[0]}`, so it keeps working from any target repo.
+
+### Changed
+
+- **`.lsa.yaml`** — `lsa` module `artifact_paths` gains `lsa/docker/**`, alongside the existing `lsa/scripts/**/*.sh` entry (which already covers the new scripts).
+
+## [0.36.0] — 2026-08-18
+
+Gives `docker/rag_cli.py query` a real `--path <prefix>` pre-filter, closing a gap the 2026-08-17 e2e eval (`.lsa/observations/2026-08-17-rag-eval/report.md`) found: epic 3's shipped prose already said "query within that resolved scope," but `cmd_query` had no `--path` argument at all — the eval had to work around this by manually filtering RAG's whole-repo top-5 results client-side after the fact. Per pitch `rag-context-engine-and-repo-indexing` (epic 5 of 4-planned, `path-scoped-query-fix`, discovered via the eval rather than pre-shaped). New documented capability + behavior change to two existing skills' prose → minor bump.
+
+### Added
+
+- **`docker/rag_cli.py query --path <prefix>`** — applies the prefix as a real LanceDB pre-filter (`.where("path LIKE '<prefix>%'", prefilter=True)`) on the vector search itself, evaluated **before** the ANN top-K limit — not a Python-side check on an already-limited result list. Verified against the installed `lancedb==0.25.0` (pinned in `Dockerfile`): `LanceVectorQueryBuilder.where`'s own docstring example is `.where("original_width > 1000", prefilter=True)`, and `cmd_index` already relied on the identical `.where(..., prefilter=True)` call for its per-path staleness scan. A synthetic pre-filter-vs-post-filter proof (20 rows, 10 outside/ rows all closer to the query than any scripts/ row) confirmed `prefilter=True, limit=3` correctly surfaces the best in-path result even though every out-of-path row ranks higher in the whole corpus — while `prefilter=False` on the same setup returns zero results, reproducing exactly the bug this epic fixes. No `--path` given → behavior byte-for-byte unchanged (verified: two consecutive no-`--path` runs of the same query produce identical stdout).
+- **`scripts/rag-query.sh --path <prefix>`** — optional flag, same argument-parsing pattern as the existing `--sha` flag (epic 4), passed through as the container's `query --path` argument. Independent of `--sha`; both may be given together (sanity-checked, not exhaustively tested in combination).
+
+### Changed
+
+- **`lsa/knowledge/conventions.md`** §"Read protocol", **`skills/discover/SKILL.md`** Step 1, **`skills/verify/SKILL.md`** Step 2 — replace the "query within that resolved scope" workaround framing (whole-repo query, then prefer in-scope results client-side) with the real mechanism: `project-map.yaml` resolves a directory, then `scripts/rag-query.sh --path <that-directory> "<query>"` is called directly. Targeted prose correction — the rest of each file's structure is unchanged.
+
+### Verified
+
+- Reproduced the eval's own P9 finding: `scripts/rag-query.sh` with no `--path` on "How does check-lib-pins.sh distinguish STALE BROKEN from cannot verify?" ranks `lsa/knowledge/pinned-library-specs.md` (0.8842) above `scripts/check-lib-pins.sh` (0.8697) — matching the raw eval data (`.lsa/observations/2026-08-17-rag-eval/raw-condition-c-vector-only.md`) byte-for-byte on the recorded similarities. The same query with `--path scripts` returns only `scripts/**` results, with `scripts/check-lib-pins.sh` now ranked first (0.8697) within that subset.
+- `--path` pointed at a directory with no relevant content (`nonexistent-dir-xyz`) returns `{"results": []}`, exit 0 — the same miss contract as an ordinary miss, never a new error shape.
+
+## [0.35.0] — 2026-08-17
+
+Wires the RAG index into `reconcile`'s Step 4 semantic-mapping judgment and extends `scripts/rag-query.sh` with a sha-pinned filter mode. Per pitch `rag-context-engine-and-repo-indexing` (epic 4 of 4, `reconcile-wiring`, last epic of the pitch): epic 1 built `scripts/rag-query.sh`/`scripts/rag-index.sh`; epic 3 wired `discover`/`verify`; this epic wires the remaining consumer, `reconcile`, without weakening its independent-grader constraints. New documented capability (`--sha`) + behavior change to one existing skill → minor bump.
+
+### Added
+
+- **`scripts/rag-query.sh` `--sha <sha>` mode** — after the normal query returns, filters candidate results to only paths unchanged between `<sha>` and HEAD (`git diff --quiet <sha> HEAD -- <path>`, per path). A changed path, or a `<sha>` that doesn't resolve to a real commit at all, is discarded; if that leaves zero results, it reports the exact same `{"results": []}` / exit-0 miss contract as an ordinary miss — no new error shape. Host-side filter layered on top of the existing query; no change to `docker/rag_cli.py`'s chunk schema or chunking logic. Requires `jq` on `PATH` (only when `--sha` is given, guarded with a clear error). The no-`--sha` path is unchanged — same command, stdout streamed straight through, byte-for-byte identical to before this epic.
+
+### Changed
+
+- **`skills/reconcile/SKILL.md`** Step 4 — its semantic-mapping judgment (which hunk satisfies which requirement) may now query `scripts/rag-query.sh --sha <graded-sha> "<query>"` — the same sha the final verdict names — for exploratory search beyond the diff and spec, falling back to `Grep`/`Read` per-path on any discarded or empty result. Steps 1, 2, 3, 5, and the entire Constraints section (independent-grader rule, never-routed-down rule, independence-must-be-observable rule) are byte-for-byte unchanged — this epic touches only the one sentence in Step 4 that names the new fallback chain.
+
+## [0.34.0] — 2026-08-17
+
+Wires the RAG index (epic 1, `index-query-pipeline`) into `discover`'s and `verify`'s search steps. Per pitch `rag-context-engine-and-repo-indexing` (epic 3 of 4, `discover-verify-wiring`): `scripts/rag-query.sh` already existed and worked but nothing called it — `discover` Step 1 and `verify` Step 2 walked `Grep`/`Read` straight from the `project-map`-resolved directory. New documented capability, behavior change to two existing skills → minor bump.
+
+### Changed
+
+- **`lsa/knowledge/conventions.md`** §"Read protocol" — the directory-scoping paragraph is now a 3-stage order: `project-map.yaml` resolves the directory scope (unchanged) → `scripts/rag-query.sh` ranks/queries within that scope → `Grep`/`Read` is the fallback on a miss, stale index, or unavailable Docker daemon (`rag-query.sh` exit 2). The fallback prints a one-line observable notice, matching this section's existing per-source read-summary convention.
+- **`skills/discover/SKILL.md`** Step 1 — now queries `scripts/rag-query.sh` within the `project-map`-resolved scope before falling back to `Grep`/`Read`, per the updated Read protocol.
+- **`skills/verify/SKILL.md`** Step 2 (the buildability/feasibility check) — now queries `scripts/rag-query.sh` for its broader exploratory search before falling back to `Grep`/`Read`. Step 1's `scripts/resolve-refs.sh` named-symbol resolution is unchanged — the two mechanisms serve different searches (named-symbol lookup vs. open-ended feasibility) and neither replaces the other.
+
 ## [0.33.0] — 2026-07-20
 
 Closes the findings sweep over the 2026-07-20 overnight epic batch. The batch shipped eight epics with a green `gate:` block and, between them, one `conformance.md` — whose verdict was left `@ <pending>`. The metrics layer restored in 0.30.0 emitted zero rows the whole time, because its anti-regression guard (lint C17) greps `reconcile`'s instruction text and cannot observe whether the step ran. `reconcile` gains an output-contract repair step → minor bump.

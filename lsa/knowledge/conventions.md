@@ -34,11 +34,15 @@ Every LSA skill begins with the same protocol — read in this order, print a on
 2. The constitution **digest** — [`.lsa/VISION-digest.md`](../../.lsa/VISION-digest.md), script-generated from the configured `${constitution}` (mandatory; never hand-edited — regenerate with `bash scripts/build-vision-digest.sh`). Load the full `${constitution}` only for constitutional tasks: `lsa:init`, `lsa:revise-constitution`, or an explicit user request.
 3. The skill-specific source list — each skill names its own list under its Steps.
 
-To locate *which* files a request touches (skill lists that resolve to "the code/specs the request touches", e.g. `discover` Step 1), consult the **project map** — [`project-map.yaml`](../../project-map.yaml) at the repo root, a script-generated 3-level tree of **directories** (a navigational map, not a file catalog) — **before** walking the tree. Locate the directory a request touches, then read the files under it. It is a scoping atlas, not a mandatory full read; script-generated, never hand-edited (regenerate with `bash lsa/scripts/project-map-build.sh`, or `${CLAUDE_PLUGIN_ROOT}/scripts/project-map-build.sh` when the plugin is installed). Freshness gate: `bash lsa/scripts/project-map-check.sh`.
+To locate *which* files a request touches (skill lists that resolve to "the code/specs the request touches", e.g. `discover` Step 1), search proceeds in three stages, each narrowing scope before the next:
+
+1. **`project-map.yaml`** (directory scope, unchanged) — [`project-map.yaml`](../../project-map.yaml) at the repo root, a script-generated 3-level tree of **directories** (a navigational map, not a file catalog). Locate the directory a request touches **before** walking the tree. It is a scoping atlas, not a mandatory full read; script-generated, never hand-edited (regenerate with `bash lsa/scripts/project-map-build.sh`, or `${CLAUDE_PLUGIN_ROOT}/scripts/project-map-build.sh` when the plugin is installed). Freshness gate: `bash lsa/scripts/project-map-check.sh`.
+2. **`lsa/scripts/rag-query.sh --path <resolved-dir> "<query text>"`** (query scoped to that directory) — pass the directory `project-map.yaml` resolved straight through as `--path`, which the container applies as a real pre-filter on the vector search itself (`lsa/docker/rag_cli.py cmd_query`, evaluated before the top-K ranking, not a client-side check on an already-limited result set) — so only chunks under that directory are ever considered or ranked. A fresh, good match returns cited chunks (`path:start-end` in its `{"results": [...]}` JSON, exit 0) to use directly, skipping a whole-file `Read` for that content.
+3. **`Grep`/`Read` tree-walk** (fallback) — used exactly as before this order existed, on a miss (`{"results": []}`, exit 0), a stale index, or an unavailable Docker daemon (`rag-query.sh` exit 2). Print a one-line observable notice recording that the fallback path was used, matching the per-source read-summary convention below.
 
 If a source does not exist — including the project map — note the gap and fall back to a direct tree-walk rather than guessing. Per `core/skills/ground-rules/SKILL.md` Rule 3.
 
-Observable result: per-source one-liner printed back to the human.
+Observable result: per-source one-liner printed back to the human, plus the one-line fallback notice above whenever stage 3 is reached.
 
 ---
 

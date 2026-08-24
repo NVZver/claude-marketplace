@@ -41,6 +41,8 @@ tree:  # directories only (depth ≤ 3)
       observer:
       pinned-library-specs:
       pro-tier-token-affordability:
+      rag-context-engine-and-repo-indexing:
+      rag-plugin-plug-and-play:
       restore-tracked-metrics-harvest:
       standards-conformance-agents-md:
     libs:
@@ -51,6 +53,7 @@ tree:  # directories only (depth ≤ 3)
       observer:
       prompt-engineer:
     observations:
+      2026-08-17-rag-eval:
     pitches:
     plans:
     research:
@@ -70,11 +73,14 @@ tree:  # directories only (depth ≤ 3)
   lsa:
     ".claude-plugin":
     agents:
+    docker:
     hooks:
     knowledge:
     scripts:
+      lib:
       tests:
     skills:
+      bootstrap-rag:
       delegate:
       discover:
       init:

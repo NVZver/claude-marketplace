@@ -12,6 +12,11 @@ dist/
 # macOS Finder metadata — never committed
 .DS_Store
 
+# Local-only RAG vector index (scripts/rag-index.sh, Dockerfile). Rebuilt
+# on demand from the repo itself — never committed, machine-local build
+# output, not behavior-bearing.
+.lsa/.rag-index/
+
 # Local-only source material for VISION (.docx originals; not behavior-bearing)
 vision/experience/
 vision/mnt/
