@@ -19,6 +19,18 @@ import matter from "gray-matter";
 export const PLUGINS = ["core", "lsa", "manager"];
 
 /**
+ * The first-slice agent files this epic registers as MCP prompts, as paths
+ * relative to the repo root. Unlike skills/knowledge (scanned directories),
+ * agents are an explicit, fixed list — the pitch's confirmed first-slice
+ * scope (core+lsa+manager), not "every agents/*.md in every plugin".
+ */
+export const AGENT_FILES = [
+  "manager/agents/product-manager.md",
+  "manager/agents/project-manager.md",
+  "lsa/agents/orchestrator.md",
+];
+
+/**
  * List immediate subdirectories of `dir` (skill directories are one level
  * deep: core/skills/<skill-name>/SKILL.md). Returns [] if `dir` doesn't
  * exist rather than throwing, so a plugin with no skills/knowledge dir is
@@ -106,6 +118,67 @@ export function scanSkills(repoRoot, plugins = PLUGINS) {
         read: () => readFileSync(filePath, "utf8"),
       });
     }
+  }
+  return found;
+}
+
+/**
+ * Read each file in `agentFiles` (relative to `repoRoot`) and return one
+ * descriptor per file that has valid frontmatter.
+ *
+ * Same validation contract as `scanSkills`: an agent file missing the
+ * required `name` or `description` frontmatter key is skipped (logged to
+ * stderr) rather than raising — requirement 4 /
+ * prompt-startup.feature "Skips a malformed agent file without crashing
+ * startup". A listed file that doesn't exist on disk is likewise skipped
+ * silently, so a test fixture root that only has some of the listed files
+ * doesn't need every path to be present.
+ *
+ * Each descriptor's `read()` re-reads the file from disk on every call, so
+ * a change to the source file is reflected on the next server start with
+ * no regen step — same zero-copy contract as scanSkills/scanKnowledge.
+ */
+export function scanAgents(repoRoot, agentFiles = AGENT_FILES) {
+  const found = [];
+  for (const relPath of agentFiles) {
+    const filePath = path.join(repoRoot, relPath);
+    try {
+      statSync(filePath);
+    } catch {
+      continue; // listed file doesn't exist here — not an error, just skip
+    }
+    const raw = readFileSync(filePath, "utf8");
+    let parsed;
+    try {
+      parsed = matter(raw);
+    } catch (err) {
+      process.stderr.write(
+        `[marketplace-mcp-server] skipping ${filePath}: frontmatter parse error: ${err.message}\n`,
+      );
+      continue;
+    }
+    const { name, description } = parsed.data ?? {};
+    if (typeof name !== "string" || name.trim() === "") {
+      process.stderr.write(
+        `[marketplace-mcp-server] skipping ${filePath}: missing frontmatter "name"\n`,
+      );
+      continue;
+    }
+    if (typeof description !== "string" || description.trim() === "") {
+      process.stderr.write(
+        `[marketplace-mcp-server] skipping ${filePath}: missing frontmatter "description"\n`,
+      );
+      continue;
+    }
+    found.push({
+      relPath,
+      name,
+      description,
+      filePath,
+      // Re-read on every call — no caching of file content, so the
+      // server always serves what is on disk right now.
+      read: () => readFileSync(filePath, "utf8"),
+    });
   }
   return found;
 }
