@@ -37,6 +37,7 @@ tree:  # directories only (depth ≤ 3)
       2026-07-19-deterministic-work-scripted-hygiene-classes:
       2026-07-19-deterministic-work-scripted-resolve-refs:
       marketplace-ai-engineering-audit:
+      marketplace-mcp-server:
       observable-grader-independence:
       observer:
       pinned-library-specs:
@@ -94,6 +95,10 @@ tree:  # directories only (depth ≤ 3)
       next:
       shape:
     tests:
+  mcp-server:
+    src:
+    test:
+      fixtures:
   observer:
     ".claude-plugin":
     knowledge:
