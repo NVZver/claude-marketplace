@@ -609,6 +609,15 @@ fi
 #
 # Dirs in the baseline are exempt for a stated reason (pre-contract, or dropped
 # at specify and never implemented); that list is shrink-only.
+#
+# Untracked requirements.md files are skipped: an uncommitted spec cannot have
+# "shipped without reconcile" (nothing has shipped yet) — it is mid-loop,
+# between `specify` and `delegate`. Checking `git ls-files` scopes the
+# invariant to what the check's own intent names: epics that *merged* without
+# a conformance.md, not epics still being authored in the working tree
+# (found via `lsa:verify` on `vendor-neutral-agent-skills-home/repo-scaffold`,
+# 2026-07-24 — a freshly `Write`-created requirements.md tripped C20 before
+# its epic ever reached `delegate`).
 # ---------------------------------------------------------------------------
 CONF_EXEMPT="scripts/baselines/conformance-exempt.txt"
 c20_bad=""
@@ -620,6 +629,7 @@ while IFS= read -r rf; do
      && grep -v '^[[:space:]]*#' "${CONF_EXEMPT}" | grep -qxF "${fdir}"; then
     continue
   fi
+  git ls-files --error-unmatch -- "${rf}" >/dev/null 2>&1 || continue
   c20_checked=$((c20_checked + 1))
   [[ -f "${fdir}/conformance.md" ]] || c20_bad="${c20_bad}${fdir}
 "
