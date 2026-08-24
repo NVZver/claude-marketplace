@@ -119,27 +119,11 @@ if [[ -z "${QUERY_TEXT}" ]]; then
   exit 1
 fi
 
-# `docker info` can hang indefinitely (rather than fail fast) when the
-# daemon/socket is gone but the CLI context still resolves — observed with
-# Docker Desktop on macOS once the app is fully quit. Bound the check to ~5s
-# so an unreachable daemon is reported LOUDLY and promptly (R5), never as a
-# silent hang mistaken for a slow retrieval.
-docker_daemon_reachable() {
-  local pid waited
-  ( docker info >/dev/null 2>&1 ) &
-  pid=$!
-  waited=0
-  while kill -0 "${pid}" 2>/dev/null; do
-    sleep 0.5
-    waited=$((waited + 1))
-    if [[ "${waited}" -ge 10 ]]; then
-      kill -9 "${pid}" 2>/dev/null
-      wait "${pid}" 2>/dev/null
-      return 1
-    fi
-  done
-  wait "${pid}"
-}
+# Shared bounded docker_daemon_reachable() — was four near-identical
+# copies across this repo; extracted during a PR review pass. Sourced via
+# plugin_root (already resolved above), not a fresh ${BASH_SOURCE[0]}
+# lookup.
+source "${plugin_root}/scripts/lib/docker-reachable.sh"
 
 if ! command -v docker >/dev/null 2>&1; then
   printf 'FAULT: Docker daemon unreachable — the "docker" CLI is not on PATH.\n' >&2
@@ -199,10 +183,15 @@ fi
 # pass-through above (R2: with no --path, path_args is empty and the command
 # is byte-for-byte identical to before this epic).
 if [[ -z "${SHA}" ]]; then
-  if ! docker run --rm \
+  # Plain command + rc=$? immediately after, not `if ! cmd; then rc=$?` —
+  # bash's `!` negation overwrites the visible exit status before a nested
+  # rc=$? can capture the real code (same bug this script's own --sha path
+  # below never had, since it never used `!` in the first place).
+  docker run --rm \
     -v "${INDEX_DIR}:/index:ro" \
-    "${IMAGE_NAME}" query "${QUERY_TEXT}" --index-dir /index "${path_args[@]+"${path_args[@]}"}"; then
-    rc=$?
+    "${IMAGE_NAME}" query "${QUERY_TEXT}" --index-dir /index "${path_args[@]+"${path_args[@]}"}"
+  rc=$?
+  if [[ "${rc}" -ne 0 ]]; then
     if ! docker_daemon_reachable; then
       printf 'FAULT: Docker daemon unreachable — was reachable at start, is not now.\n' >&2
       exit 2

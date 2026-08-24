@@ -78,27 +78,12 @@ IMAGE_NAME="rag-index-plugin:local"
 INDEX_DIR="${repo_root}/.lsa/.rag-index"
 SCOPE="${1:-.}"
 
-# `docker info` can hang indefinitely (rather than fail fast) when the
-# daemon/socket is gone but the CLI context still resolves — observed with
-# Docker Desktop on macOS once the app is fully quit. Bound the check to ~5s
-# so an unreachable daemon is reported LOUDLY and promptly (R5), never as a
-# silent hang mistaken for the tool being unresponsive.
-docker_daemon_reachable() {
-  local pid waited
-  ( docker info >/dev/null 2>&1 ) &
-  pid=$!
-  waited=0
-  while kill -0 "${pid}" 2>/dev/null; do
-    sleep 0.5
-    waited=$((waited + 1))
-    if [[ "${waited}" -ge 10 ]]; then
-      kill -9 "${pid}" 2>/dev/null
-      wait "${pid}" 2>/dev/null
-      return 1
-    fi
-  done
-  wait "${pid}"
-}
+# Shared bounded docker_daemon_reachable() — was four near-identical
+# copies across this repo (rag-index.sh, rag-query.sh,
+# check-rag-index-fresh.sh, rag-bootstrap-check.sh); extracted during a PR
+# review pass. Sourced via plugin_root (already resolved above), not a
+# fresh ${BASH_SOURCE[0]} lookup — same self-location, no new resolution.
+source "${plugin_root}/scripts/lib/docker-reachable.sh"
 
 if ! command -v docker >/dev/null 2>&1; then
   printf 'FAULT: Docker daemon unreachable — the "docker" CLI is not on PATH.\n' >&2
@@ -190,12 +175,19 @@ trap cleanup_ignored_list EXIT
 git -C "${repo_root}" ls-files --others --ignored --exclude-standard --directory -- "${SCOPE}" \
   >"${IGNORED_LIST_HOST}" 2>/dev/null || true
 
-if ! docker run --rm \
+# Plain command + rc=$? immediately after (NOT `if ! cmd; then rc=$?`) —
+# bash's `!` negation overwrites the visible exit status before a nested
+# `rc=$?` can capture the real code, so a genuine docker run failure would
+# otherwise print the self-contradictory "(exit 0)" (confirmed live,
+# multiple times, on a first index attempt against a freshly created repo).
+# This is the same pattern rag-query.sh's --sha path already used correctly.
+docker run --rm \
   -v "${repo_root}:/repo:ro" \
   -v "${INDEX_DIR}:/index" \
   "${IMAGE_NAME}" index --scope "${SCOPE}" --index-dir /index --repo-root /repo \
-    --ignored-list /index/.ignored-list.txt; then
-  rc=$?
+    --ignored-list /index/.ignored-list.txt
+rc=$?
+if [[ "${rc}" -ne 0 ]]; then
   # A `docker run` that fails because the daemon vanished mid-command is still
   # a daemon fault, not an ordinary tool error — re-check and report as such.
   if ! docker_daemon_reachable; then

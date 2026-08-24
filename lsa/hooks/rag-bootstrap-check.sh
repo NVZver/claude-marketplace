@@ -20,10 +20,11 @@
 #     DETECTION signal, not the rigorous gate:-block parsing epic 2 needed
 #     for actual runtime behavior
 #   - docker is on PATH
-#   - docker is reachable within a bounded ~3s check -- scaled down from
-#     lsa/scripts/rag-index.sh's docker_daemon_reachable() 5s pattern
-#     (lines ~86-101: 10 x 0.5s poll-and-kill) to 6 x 0.5s = 3s, to fit
-#     comfortably inside this hook's 10s SessionStart timeout budget.
+#   - docker is reachable within a bounded ~3s check -- the shared
+#     lsa/scripts/lib/docker-reachable.sh's docker_daemon_reachable(),
+#     called here as `docker_daemon_reachable 3` (6 x 0.5s) instead of its
+#     5s default, to fit comfortably inside this hook's 10s SessionStart
+#     timeout budget.
 #
 # No-op (silent, exit 0) when:
 #   - not in a git repo and $CLAUDE_PROJECT_DIR is unset/not a directory
@@ -52,30 +53,14 @@ grep -q "rag-index-fresh" "${cfg}" 2>/dev/null && exit 0
 
 command -v docker >/dev/null 2>&1 || exit 0
 
-# Bounded ~3s reachability check (6 x 0.5s), scaled down from
-# lsa/scripts/rag-index.sh's docker_daemon_reachable() 5s (10 x 0.5s)
-# pattern -- `docker info` can hang indefinitely rather than fail fast when
-# the daemon/socket is gone but the CLI context still resolves.
-docker_reachable_bounded() {
-  local pid waited rc
-  ( docker info >/dev/null 2>&1 ) &
-  pid=$!
-  waited=0
-  while kill -0 "${pid}" 2>/dev/null; do
-    sleep 0.5
-    waited=$((waited + 1))
-    if [[ "${waited}" -ge 6 ]]; then
-      kill -9 "${pid}" 2>/dev/null || true
-      wait "${pid}" 2>/dev/null || true
-      return 1
-    fi
-  done
-  rc=0
-  wait "${pid}" || rc=$?
-  return "${rc}"
-}
+# Shared bounded docker_daemon_reachable() — was four near-identical
+# copies across this repo; extracted during a PR review pass. Sourced
+# relative to this script's own location (this hook has no plugin_root
+# variable of its own to reuse, unlike rag-index.sh/rag-query.sh).
+hook_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${hook_dir}/../scripts/lib/docker-reachable.sh"
 
-docker_reachable_bounded || exit 0
+docker_daemon_reachable 3 || exit 0
 
 echo "RAG search isn't set up for this repo yet. Run the lsa:bootstrap-rag skill to set it up (Docker build + index + git-hook wiring, unattended)."
 exit 0

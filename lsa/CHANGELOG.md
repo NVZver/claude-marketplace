@@ -2,6 +2,19 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.39.3] — 2026-08-24
+
+PR review pass (findings from a self-review requested with the lens "what can be removed/optimized/replaced with stdlib"). Two findings fixed and fully live-verified here; two more findings from the same pass (a shared YAML-block-splice helper) landed in a separate WIP commit with one edge case still unverified — see `IMPLEMENTATION_NOTES.md` at the repo root.
+
+### Fixed
+
+- **`rc=$?` inside `if ! docker run ...; then` always read `0`**, not the real exit code (bash's `!` negation overwrites the visible status before a nested `rc=$?` can capture it) — masked genuine, reproducible `docker run` failures behind the self-contradictory message `ERROR: ... (exit 0)`. Fixed in `lsa/scripts/rag-index.sh` and `lsa/scripts/rag-query.sh`'s no-`--sha` path by using a plain command + immediate `rc=$?`, matching the pattern `rag-query.sh`'s own `--sha` path already used correctly. Verified with an isolated proof (a fake command returning 42: old pattern captured `0`, new pattern captured `42`) plus full live reruns of both scripts.
+
+### Changed
+
+- **`docker_daemon_reachable()`** — was four near-identical ~15-line copies (`rag-index.sh`, `rag-query.sh`, `check-rag-index-fresh.sh`, `rag-bootstrap-check.sh`). Extracted to `lsa/scripts/lib/docker-reachable.sh`, now taking an optional timeout-in-seconds argument (default 5; `rag-bootstrap-check.sh` calls it with `3`, preserving its tighter `SessionStart`-budget behavior exactly). Each caller sources it relative to its own already-resolved location. Live-verified: full index rebuild, a real query, and the `SessionStart` offer hook's silent-when-already-bootstrapped case all still pass.
+- `lsa/scripts/check-rag-index-fresh.sh`'s header comment corrected — it still said "NOT shipped in any plugin," true only of the root-level version it replaced (`dogfood-migration`, epic 4).
+
 ## [0.39.2] — 2026-08-19
 
 Documentation-completeness fixes found during a post-migration review: `lsa/README.md`'s skill table still described `discover`/`verify`/`reconcile`/`bootstrap-rag` using the pre-`dogfood-migration` `scripts/rag-*.sh`/`scripts/seed-canonical-paths.sh` paths (epic 4 fixed the `SKILL.md` files' own prose but missed this duplicated description in the README table) — corrected to `lsa/scripts/*`. Plugin manifest `description` gains `bootstrap-rag` to the skill list (missing since epic 3 shipped it). New `## RAG-powered search` section in `lsa/README.md`'s Quick Start: concise start-from-scratch and keep-up-to-date guidance, with a link to the measured accuracy table. Doc-only → patch bump.
