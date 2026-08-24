@@ -167,44 +167,22 @@ while IFS= read -r entry; do
     - ${entry}"
 done <<< "${final_entries}"
 
-start_line="$(grep -n '^rag:[[:space:]]*$' "${TARGET_YAML}" | head -n 1 | cut -d: -f1 || true)"
+# Shared splice_yaml_block() — was a structurally-identical implementation
+# duplicated in this script and lsa/scripts/bootstrap-rag.sh's
+# append_gate_entries; extracted during a PR review pass. Sourced relative
+# to this script's own location.
+lib_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${lib_dir}/lib/yaml-block-splice.sh"
 
-if [[ -n "${start_line}" ]]; then
-  # Replace the existing rag: block in place.
-  total_lines="$(wc -l < "${TARGET_YAML}" | tr -d ' ')"
-  end_line="$(awk -v start="${start_line}" '
-    NR > start && /^[^[:space:]#]/ { print NR; exit }
-  ' "${TARGET_YAML}")"
-  if [[ -z "${end_line}" ]]; then
-    end_line=$(( total_lines + 1 ))
-  fi
-  tmp_file="$(mktemp "${TARGET_YAML}.XXXXXX")"
-  {
-    if [[ "${start_line}" -gt 1 ]]; then
-      sed -n "1,$((start_line - 1))p" "${TARGET_YAML}"
-    fi
-    printf '%s\n' "${new_block}"
-    if [[ "${end_line}" -le "${total_lines}" ]]; then
-      # Restore the blank-line section separator this repo's own .lsa.yaml
-      # convention uses (e.g. between libs: and modules:) — the old block's
-      # trailing blank line, if any, was swallowed by end_line's "first
-      # non-blank/non-comment line" definition above and would otherwise be
-      # lost on every replace.
-      printf '\n'
-      sed -n "${end_line},\$p" "${TARGET_YAML}"
-    fi
-  } >"${tmp_file}"
-  mv "${tmp_file}" "${TARGET_YAML}"
-  printf 'Replaced existing rag: canonical_paths: block in %s (%s entries).\n' "${TARGET_YAML}" "$(printf '%s\n' "${final_entries}" | awk 'NF>0' | wc -l | tr -d ' ')" >&2
+action="$(splice_yaml_block "${TARGET_YAML}" "rag" "${new_block}")" || {
+  printf 'ERROR: failed to write %s\n' "${TARGET_YAML}" >&2
+  exit 1
+}
+entry_count="$(printf '%s\n' "${final_entries}" | awk 'NF>0' | wc -l | tr -d ' ')"
+if [[ "${action}" == "replaced" ]]; then
+  printf 'Replaced existing rag: canonical_paths: block in %s (%s entries).\n' "${TARGET_YAML}" "${entry_count}" >&2
 else
-  # No existing rag: block -- append a new one at the end of the file.
-  tmp_file="$(mktemp "${TARGET_YAML}.XXXXXX")"
-  {
-    cat "${TARGET_YAML}"
-    printf '\n%s\n' "${new_block}"
-  } >"${tmp_file}"
-  mv "${tmp_file}" "${TARGET_YAML}"
-  printf 'Appended new rag: canonical_paths: block to %s (%s entries).\n' "${TARGET_YAML}" "$(printf '%s\n' "${final_entries}" | awk 'NF>0' | wc -l | tr -d ' ')" >&2
+  printf 'Appended new rag: canonical_paths: block to %s (%s entries).\n' "${TARGET_YAML}" "${entry_count}" >&2
 fi
 
 exit 0

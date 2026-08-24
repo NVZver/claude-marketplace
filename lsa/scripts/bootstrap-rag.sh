@@ -50,10 +50,17 @@ else
   plugin_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 fi
 
+# Shared splice_yaml_block() — was a structurally-identical implementation
+# duplicated in this function and lsa/scripts/seed-canonical-paths.sh's
+# rag: block splice; extracted during a PR review pass. This function keeps
+# its own business logic (which keys are missing, "append don't destroy")
+# — only the mechanical find/replace-or-append is shared.
+source "${plugin_root}/scripts/lib/yaml-block-splice.sh"
+
 # --- append rag-index-fresh / rag-index-matches-head into gate: -----------
-# "Append, don't destroy" discipline — same shape lsa/scripts/
-# seed-canonical-paths.sh already uses for the rag: block: find the block by
-# name, splice new content in via a temp file + mv, keep every existing line.
+# "Append, don't destroy" discipline: read the existing gate: block's body
+# (if any), keep every line, add only whichever of the two keys is missing,
+# then hand the FULL new block text to splice_yaml_block.
 append_gate_entries() {
   local yaml="$1"
   local fresh_line head_line block_start
@@ -62,63 +69,47 @@ append_gate_entries() {
 
   block_start="$(grep -n '^gate:[[:space:]]*$' "${yaml}" | head -n 1 | cut -d: -f1 || true)"
 
+  local new_block
   if [[ -z "${block_start}" ]]; then
-    # No existing gate: block -- append a new one at the end of the file.
-    {
-      printf '\ngate:\n%s\n%s\n' "${fresh_line}" "${head_line}"
-    } >> "${yaml}" || return 1
-    printf 'Created gate: block in %s with rag-index-fresh/rag-index-matches-head.\n' "${yaml}" >&2
-    return 0
-  fi
-
-  local total_lines end_line
-  total_lines="$(wc -l < "${yaml}" | tr -d ' ')"
-  end_line="$(awk -v start="${block_start}" '
-    NR > start && /^[^[:space:]#]/ { print NR; exit }
-  ' "${yaml}")"
-  if [[ -z "${end_line}" ]]; then
-    end_line=$(( total_lines + 1 ))
-  fi
-
-  local block_body has_fresh=0 has_head=0
-  block_body="$(sed -n "${block_start},$(( end_line - 1 ))p" "${yaml}")"
-  if printf '%s\n' "${block_body}" | grep -q '^[[:space:]]*rag-index-fresh:'; then
-    has_fresh=1
-  fi
-  if printf '%s\n' "${block_body}" | grep -q '^[[:space:]]*rag-index-matches-head:'; then
-    has_head=1
-  fi
-
-  if [[ "${has_fresh}" -eq 1 && "${has_head}" -eq 1 ]]; then
-    printf 'gate: block in %s already has rag-index-fresh and rag-index-matches-head -- nothing to add.\n' "${yaml}" >&2
-    return 0
-  fi
-
-  local tmp
-  tmp="$(mktemp "${yaml}.XXXXXX")" || return 1
-  {
-    if [[ "${end_line}" -gt 1 ]]; then
-      sed -n "1,$(( end_line - 1 ))p" "${yaml}"
+    # No existing gate: block -- the whole thing is new.
+    new_block="gate:
+${fresh_line}
+${head_line}"
+  else
+    local total_lines end_line block_body has_fresh=0 has_head=0
+    total_lines="$(wc -l < "${yaml}" | tr -d ' ')"
+    end_line="$(awk -v start="${block_start}" '
+      NR > start && /^[^[:space:]#]/ { print NR; exit }
+    ' "${yaml}")"
+    if [[ -z "${end_line}" ]]; then
+      end_line=$(( total_lines + 1 ))
     fi
+    block_body="$(sed -n "${block_start},$(( end_line - 1 ))p" "${yaml}")"
+    if printf '%s\n' "${block_body}" | grep -q '^[[:space:]]*rag-index-fresh:'; then
+      has_fresh=1
+    fi
+    if printf '%s\n' "${block_body}" | grep -q '^[[:space:]]*rag-index-matches-head:'; then
+      has_head=1
+    fi
+
+    if [[ "${has_fresh}" -eq 1 && "${has_head}" -eq 1 ]]; then
+      printf 'gate: block in %s already has rag-index-fresh and rag-index-matches-head -- nothing to add.\n' "${yaml}" >&2
+      return 0
+    fi
+
+    new_block="${block_body}"
     if [[ "${has_fresh}" -eq 0 ]]; then
-      printf '%s\n' "${fresh_line}"
+      new_block="${new_block}
+${fresh_line}"
     fi
     if [[ "${has_head}" -eq 0 ]]; then
-      printf '%s\n' "${head_line}"
+      new_block="${new_block}
+${head_line}"
     fi
-    if [[ "${end_line}" -le "${total_lines}" ]]; then
-      # Restore the blank-line section separator this repo's own .lsa.yaml
-      # convention uses (e.g. between gate: and modules:) — same fix
-      # lsa/scripts/seed-canonical-paths.sh already applies for its rag:
-      # block splice, for the same reason (the old separator is swallowed
-      # by end_line's "first non-blank/non-comment line" definition above).
-      printf '\n'
-      sed -n "${end_line},\$p" "${yaml}"
-    fi
-    true
-  } > "${tmp}" || { rm -f "${tmp}"; return 1; }
-  mv "${tmp}" "${yaml}" || return 1
-  printf 'Appended missing gate: entries to %s.\n' "${yaml}" >&2
+  fi
+
+  splice_yaml_block "${yaml}" "gate" "${new_block}" >/dev/null || return 1
+  printf 'Updated gate: block in %s with rag-index-fresh/rag-index-matches-head.\n' "${yaml}" >&2
   return 0
 }
 

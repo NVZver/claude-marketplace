@@ -2,6 +2,10 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.39.4] — 2026-08-24 — WIP, NOT fully verified (see IMPLEMENTATION_NOTES.md)
+
+Second half of the same PR review pass as 0.39.3: extracts a shared "find a top-level YAML block, replace or append it" mechanism (`splice_yaml_block`) into `lsa/scripts/lib/yaml-block-splice.sh`, used by `seed-canonical-paths.sh` (already re-verified: the append and idempotent-replace cases both reproduce their pre-refactor output byte-for-byte) and `bootstrap-rag.sh`'s `append_gate_entries` (its two simple cases — fresh block creation, and idempotent no-op when both keys already exist — are verified; **the case of an existing `gate:` block with unrelated keys and only one of the two RAG keys present was not confirmed correct before this work was paused** — see `IMPLEMENTATION_NOTES.md` for exactly what to check first before treating this as done).
+
 ## [0.39.3] — 2026-08-24
 
 PR review pass (findings from a self-review requested with the lens "what can be removed/optimized/replaced with stdlib"). Two findings fixed and fully live-verified here; two more findings from the same pass (a shared YAML-block-splice helper) landed in a separate WIP commit with one edge case still unverified — see `IMPLEMENTATION_NOTES.md` at the repo root.
