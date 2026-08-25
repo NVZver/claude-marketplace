@@ -38,7 +38,8 @@ This is a real, spec-level primitive, not a workaround, and it's usable
 for confirmation gates today. It is not a full port of Claude Code's
 `AskUserQuestion`, though. Multi-select IS supported natively — the enum
 schema includes a non-experimental `MultiSelectEnumSchemaSchema`
-(`types.js:1687-1719`: an `array` of enum-backed items, with optional
+(`mcp-server/node_modules/@modelcontextprotocol/sdk/dist/esm/types.js:1687-1719`:
+an `array` of enum-backed items, with optional
 per-option titles and `minItems`/`maxItems`). The real remaining gaps:
 
 - No per-option `preview` field.
@@ -55,8 +56,11 @@ per-option titles and `minItems`/`maxItems`). The real remaining gaps:
 The installed SDK ships an experimental server-side tasks feature
 (`mcp-server/node_modules/@modelcontextprotocol/sdk/dist/esm/experimental/tasks/`)
 offering task create/get/list/cancel — a partial analog for checking on
-background work. Both `interfaces.d.ts:1-3` and `server.d.ts:1-5` carry
-the same warning verbatim:
+background work. Both
+`mcp-server/node_modules/@modelcontextprotocol/sdk/dist/esm/experimental/tasks/interfaces.d.ts:1-3`
+and
+`mcp-server/node_modules/@modelcontextprotocol/sdk/dist/esm/experimental/tasks/server.d.ts:1-5`
+carry the same warning verbatim:
 
 > WARNING: These APIs are experimental and may change without notice.
 

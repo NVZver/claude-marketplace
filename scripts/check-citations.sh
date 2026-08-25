@@ -48,7 +48,7 @@ if [[ -t 1 ]]; then GREEN=$'\033[32m'; RED=$'\033[31m'; OFF=$'\033[0m'; else GRE
 
 # A citation token: a path ending in a .ext, then ':' then a line-spec
 # (a number, optionally a ,/-separated list like 18-23 or 40,45).
-CITE_RE='[A-Za-z0-9_./-]+\.[A-Za-z0-9]+:[0-9][0-9,-]*'
+CITE_RE='[A-Za-z0-9_./@-]+\.[A-Za-z0-9]+:[0-9][0-9,-]*'
 
 violations=0
 checked=0
