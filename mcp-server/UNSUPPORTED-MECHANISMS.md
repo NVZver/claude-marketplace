@@ -10,9 +10,8 @@ each with a disposition fact-checked against the installed MCP SDK
 
 Two mechanisms have a genuine partial equivalent in MCP; the other six do
 not. Where no equivalent exists, this doc says so plainly rather than
-inventing one — following the same no-fake-equivalent policy already
-applied to the OpenCode port at
-[`scripts/opencode-dist-generate.sh:50-52`](../scripts/opencode-dist-generate.sh#L50-L52):
+inventing one — following the same no-fake-equivalent policy this repo's
+now-retired OpenCode port used to follow:
 
 > Claude-Code-only mechanisms with no OpenCode equivalent (hooks,
 > ToolSearch, deferred tools, TaskOutput, ScheduleWakeup, CronCreate,
@@ -103,11 +102,11 @@ equivalent concept.
 
 These toggle a client-side UI mode; a server cannot invoke them, and MCP
 defines no such mode-toggle mechanism. Don't overstate a substitute here —
-the same discipline already applied when porting to OpenCode
-(`scripts/opencode-dist-generate.sh:50-52`) noted only that OpenCode's
-Tab-key Plan/Build toggle is a loose analog "if a substitute is genuinely
-needed," without claiming equivalence. No comparable analog is claimed
-for MCP clients generally, since MCP has no UI-mode concept at all.
+the same discipline the repo's now-retired OpenCode port used to follow
+noted only that OpenCode's Tab-key Plan/Build toggle is a loose analog "if
+a substitute is genuinely needed," without claiming equivalence. No
+comparable analog is claimed for MCP clients generally, since MCP has no
+UI-mode concept at all.
 
 ## The `SessionStart` hook
 
