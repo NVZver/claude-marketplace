@@ -83,7 +83,7 @@ For **approval-gated artifacts** — anything whose existence depends on a pendi
 Content counts as delivered ONLY via a channel the harness renders to the user:
 
 - the **final text message of a turn** (no tool calls after it in that turn), or
-- **inside an `AskUserQuestion` gate** (question text, option descriptions, or option `preview`).
+- **inside an interactive confirmation gate** (question text, option descriptions, or option `preview` — `AskUserQuestion` in Claude Code).
 
 NOT delivered: a subagent's transcript or final report (returned to the dispatcher, never rendered to the user); same-turn text emitted before a tool call (the harness may drop it); a file path (*"see the file"* — already forbidden below). A dispatcher that receives a proposal from an agent re-renders it itself before gating.
 

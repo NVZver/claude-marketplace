@@ -2,6 +2,22 @@
 
 All notable changes to the `core` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.21.3] — 2026-08-25
+
+Rewords one unconditioned Claude-Code-tool-name mention in
+`output/SKILL.md` to a generic action + citation, per
+`marketplace-mcp-server/tool-name-rephrase` (epic 3/6 of the
+marketplace-mcp-server pitch — the MCP server exposes this same prose to
+non-Claude-Code clients, so hardcoded tool names need a substrate-neutral
+phrasing). Meaning unchanged, no trigger-relevant wording change → patch
+bump.
+
+### Changed
+
+- **`skills/output/SKILL.md`** — "inside an `AskUserQuestion` gate" → "inside
+  an interactive confirmation gate (... `AskUserQuestion` in Claude Code)",
+  matching the citation idiom `VISION.md` §2 principle 9 already establishes.
+
 ## [0.21.2] — 2026-07-20
 
 Fixes `core/skills/ground-rules/SKILL.md`'s invalid YAML frontmatter (roadmap `agent-skills-strict-yaml-conformance`, found during `standards-claim`, 0.21.1). Description-only, no trigger-relevant wording change → patch bump.

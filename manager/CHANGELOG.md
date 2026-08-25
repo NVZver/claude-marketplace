@@ -2,6 +2,43 @@
 
 All notable changes to the `manager` plugin (formerly `management`) are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.20.1] — 2026-08-25
+
+Rewords unconditioned Claude-Code-tool-name mentions in `product-manager.md`,
+`project-manager.md`, and the `check`/`decompose`/`implement`/`next`/`shape`
+skills to generic action + citation, per
+`marketplace-mcp-server/tool-name-rephrase` (epic 3/6 of the
+marketplace-mcp-server pitch — the MCP server exposes this same prose to
+non-Claude-Code clients, so hardcoded tool names need a substrate-neutral
+phrasing). Meaning unchanged, no trigger-relevant wording change → patch
+bump.
+
+### Changed
+
+- **`agents/product-manager.md`** — "`AskUserQuestion` is unavailable in
+  subagent context" → "an interactive confirmation gate (`AskUserQuestion`
+  in Claude Code) is unavailable in subagent context".
+- **`agents/project-manager.md`** — 4 lines: two "a model-side `Read`" →
+  "a model-side read"; "the `Skill` tool with this seed" → "it directly with
+  this seed (`Skill` in Claude Code)"; "`AskUserQuestion` and the `Skill`
+  tool are unavailable" → "an interactive confirmation gate and direct skill
+  invocation (`AskUserQuestion` and `Skill` in Claude Code) are unavailable".
+- **`skills/check/SKILL.md`** — 2 lines: "via `AskUserQuestion`" → "via an
+  interactive confirmation gate (`AskUserQuestion` in Claude Code)"; a
+  second, previously-missed "model-side `Read`" → "model-side read" (added
+  as a spec amendment after the implementer flagged the gap).
+- **`skills/decompose/SKILL.md`** — "via `AskUserQuestion`" and "via the
+  `Skill` tool" reworded the same way.
+- **`skills/implement/SKILL.md`** — "a model-side `Read`" → "a model-side
+  read"; "message/`AskUserQuestion`" → "message or interactive confirmation
+  gate (`AskUserQuestion` in Claude Code)".
+- **`skills/next/SKILL.md`** — "a model-side `Read`" → "a model-side read";
+  "via `AskUserQuestion`" reworded the same way.
+- **`skills/shape/SKILL.md`** — 7 lines: "via `AskUserQuestion`" (×4), "via
+  the `Agent` tool", "via the `Skill` tool", "`Write` the pitch", and
+  "`SendMessage` continuation" all reworded to generic action + Claude Code
+  citation.
+
 ## [0.20.0] – 2026-07-19
 
 Closes three audit findings: a priority-blind fast path (product bug), a dispatch that bought nothing, and the last large measured read fan-out. Behavior changes to `check` and the agent's Mode 1 → minor bump.

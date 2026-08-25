@@ -8,7 +8,7 @@ description: "Shape a new feature from a vague idea into a structured pitch. Inp
 
 # Start Feature
 
-Orchestrator skill. Accepts a vague idea, dispatches the `product-manager` agent for shaping, runs the agent's returned human gates via `AskUserQuestion`, then hands off to `manager:decompose` for epic decomposition. Does not contain shaping logic or decomposition logic — those live in the agents.
+Orchestrator skill. Accepts a vague idea, dispatches the `product-manager` agent for shaping, runs the agent's returned human gates via an interactive confirmation gate (`AskUserQuestion` in Claude Code), then hands off to `manager:decompose` for epic decomposition. Does not contain shaping logic or decomposition logic — those live in the agents.
 
 ## Goal
 
@@ -23,16 +23,16 @@ Go from a vague idea to a human-approved pitch with epics ready for the LSA buil
 
 1. **Accept input.** Read the argument. If no argument provided, prompt the user for a problem or opportunity description. Observable result: description captured.
 
-2. **Dispatch product-manager agent.** Invoke the `product-manager` agent via the `Agent` tool with the problem description. Wait for the agent to complete. Observable result: agent returns the full draft pitch content + proposed slug + an ordered pending-gates list (role confirmation, shaping forks with recommended defaults, final approve/reshape/reject) per [`../../agents/product-manager.md`](../../agents/product-manager.md) Step 5. Nothing is on disk.
+2. **Dispatch product-manager agent.** Invoke the `product-manager` agent by dispatching it as a sub-agent (`Agent` in Claude Code) with the problem description. Wait for the agent to complete. Observable result: agent returns the full draft pitch content + proposed slug + an ordered pending-gates list (role confirmation, shaping forks with recommended defaults, final approve/reshape/reject) per [`../../agents/product-manager.md`](../../agents/product-manager.md) Step 5. Nothing is on disk.
 
-3. **Deliver the pitch, then run the returned gates.** The agent's payload is invisible to the user — this skill re-renders it. First deliver the full pitch content per the [`core/output`](../../../core/skills/output/SKILL.md) Rule 7 *Delivery test*: as the turn-final message (no tool calls after it in that turn), or carried inside the gates below (option `preview`). Then present each pending gate via `AskUserQuestion` (Rule 5 *Self-contained gates*), in the agent's order: role confirmation first, then each shaping fork (offering the agent's recommended default), then the final approve / reshape / reject.
-   - **Approve:** `Write` the pitch to `${specs_root}/pitches/<slug>.md` with `Status: approved` and the gate decisions (confirmed role, fork choices) in the metadata header; quote the written file inline — show → approve → write per Rule 7 *Authorization boundary*.
-   - **Reshape:** re-dispatch the agent with the user's feedback (`SendMessage` continuation, or a new dispatch if the agent has exited), then deliver + gate the fresh payload again.
+3. **Deliver the pitch, then run the returned gates.** The agent's payload is invisible to the user — this skill re-renders it. First deliver the full pitch content per the [`core/output`](../../../core/skills/output/SKILL.md) Rule 7 *Delivery test*: as the turn-final message (no tool calls after it in that turn), or carried inside the gates below (option `preview`). Then present each pending gate via an interactive confirmation gate (`AskUserQuestion` in Claude Code) (Rule 5 *Self-contained gates*), in the agent's order: role confirmation first, then each shaping fork (offering the agent's recommended default), then the final approve / reshape / reject.
+   - **Approve:** write the pitch to `${specs_root}/pitches/<slug>.md` with `Status: approved` and the gate decisions (confirmed role, fork choices) in the metadata header; quote the written file inline — show → approve → write per Rule 7 *Authorization boundary*.
+   - **Reshape:** re-dispatch the agent with the user's feedback (a continuation message — `SendMessage` in Claude Code — or a new dispatch if the agent has exited), then deliver + gate the fresh payload again.
    - **Reject:** write nothing — no file exists. State the rationale in the conversation and exit cleanly — no downstream work.
 
    Observable result: pitch delivered through a rendered channel; every pending gate resolved by the user; on approve the file exists with `Status: approved` and is quoted inline; on reject no file exists.
 
-4. **Hand off to decompose.** On approve, invoke `manager:decompose` via the `Skill` tool with the approved pitch slug. The project-manager agent handles the roadmap entry (backlog row, priority, sequencing) and epic decomposition — this skill does not write to `${specs_root}/roadmap.yaml` directly. (On reject, Step 3 already exited cleanly.) Observable result: `manager:decompose` executing; pitch added to roadmap and decomposed into epics by project-manager.
+4. **Hand off to decompose.** On approve, invoke `manager:decompose` directly (`Skill` in Claude Code) with the approved pitch slug. The project-manager agent handles the roadmap entry (backlog row, priority, sequencing) and epic decomposition — this skill does not write to `${specs_root}/roadmap.yaml` directly. (On reject, Step 3 already exited cleanly.) Observable result: `manager:decompose` executing; pitch added to roadmap and decomposed into epics by project-manager.
 
 ## Output
 
@@ -58,7 +58,7 @@ Handing off to manager:decompose for backlog entry and epic decomposition…
 ## Constraints
 
 - **Orchestrator only.** Do not duplicate agent logic (shaping, role adaptation, pitch assembly, decomposition) — dispatch, run the gates, hand off.
-- **No silent handoff.** The human gates live in THIS skill (the agent cannot ask — `AskUserQuestion` is unavailable in subagent context): every pending gate the agent returns is presented via `AskUserQuestion` before any downstream step.
+- **No silent handoff.** The human gates live in THIS skill (the agent cannot ask — an interactive confirmation gate, `AskUserQuestion` in Claude Code, is unavailable in subagent context): every pending gate the agent returns is presented via an interactive confirmation gate before any downstream step.
 - **Clean exit on reject.** If the final gate returns reject, write nothing and exit with no side effects — no file, no branch, no downstream invocation.
 - **Show changes inline — and own the delivery.** The agent returns the pitch content in its payload, which the user never sees ([`core/output`](../../../core/skills/output/SKILL.md) Rule 7 *Delivery test*). THIS skill delivers the full pitch through a rendered channel before gating, writes the file only on approve (Rule 7 *Authorization boundary*), and quotes the written file inline. The downstream `manager:decompose` handoff surfaces each roadmap row inline. Never reduce a write to "pitch created" / "added to roadmap" without the content.
 - Outputs follow [`core/output`](../../../core/skills/output/SKILL.md) — citation by link, never restated.

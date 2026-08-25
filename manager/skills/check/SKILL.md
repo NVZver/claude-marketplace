@@ -20,11 +20,11 @@ Keep the roadmap honest — flag rows whose observable state contradicts their s
 
 ## Steps
 
-1. **Get the deterministic hints.** Run `bash scripts/roadmap-query.sh hygiene` — it emits all five hint classes (missing-pitch, backlog-but-branch, stale-in-progress, merged-not-shipped, no-artifacts) from the ledger + git with zero model tokens and no whole-file read. Only if it exits non-zero fall through to a model-side `Read` of `${specs_root}/roadmap.yaml`. Observable result: the script's hint list quoted, or an observable fall-through note.
+1. **Get the deterministic hints.** Run `bash scripts/roadmap-query.sh hygiene` — it emits all five hint classes (missing-pitch, backlog-but-branch, stale-in-progress, merged-not-shipped, no-artifacts) from the ledger + git with zero model tokens and no whole-file read. Only if it exits non-zero fall through to a model-side read of `${specs_root}/roadmap.yaml`. Observable result: the script's hint list quoted, or an observable fall-through note.
 
 2. **Confirm each hint before proposing it.** The hints are input, not verdicts ([`../../agents/project-manager.md`](../../agents/project-manager.md) Step 6). Confirm each against what the roadmap row and any linked pitch actually say; drop hints the context explains away; respect the **recency boundary** — a class-5 hint means *"nothing was ever created for this slug"*, never *"this item went stale"*. Observable result: a confirmed finding list, or the explicit statement that the roadmap is clean.
 
-3. **Gate each row diff one by one.** For each confirmed finding, present previous row + proposed row — each quoted with `file:line` — via `AskUserQuestion` (approve / reject). Deliver the diff *inside the gate* so the user sees it ([`../../../core/skills/output/SKILL.md`](../../../core/skills/output/SKILL.md) Rule 7 *Delivery test*). Observable result: every proposed diff individually gated.
+3. **Gate each row diff one by one.** For each confirmed finding, present previous row + proposed row — each quoted with `file:line` — via an interactive confirmation gate (`AskUserQuestion` in Claude Code) (approve / reject). Deliver the diff *inside the gate* so the user sees it ([`../../../core/skills/output/SKILL.md`](../../../core/skills/output/SKILL.md) Rule 7 *Delivery test*). Observable result: every proposed diff individually gated.
 
 4. **Apply only approved rows, then show them.** Write approved rows to `${specs_root}/roadmap.yaml`; discard rejected ones. Quote each written row inline after writing — never *"roadmap updated"* without the row (Rule 7 *write → show → comment*). Observable result: each approved row written and re-quoted inline; rejected diffs discarded with nothing written.
 

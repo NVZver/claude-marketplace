@@ -2,6 +2,30 @@
 
 All notable changes to the `lsa` plugin are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/). The plugin's authoritative version lives in [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) — bump it in the same commit that adds the changelog entry.
 
+## [0.33.1] — 2026-08-25
+
+Rewords unconditioned Claude-Code-tool-name mentions in `orchestrator.md`,
+`delegate/SKILL.md`, and `verify/SKILL.md` to generic action + citation, per
+`marketplace-mcp-server/tool-name-rephrase` (epic 3/6 of the
+marketplace-mcp-server pitch — the MCP server exposes this same prose to
+non-Claude-Code clients, so hardcoded tool names need a substrate-neutral
+phrasing). Meaning unchanged, no trigger-relevant wording change → patch
+bump.
+
+### Changed
+
+- **`agents/orchestrator.md`** — 4 lines: "invoke... via `Skill`" → "invoke...
+  directly (`Skill` in Claude Code)"; "via `Agent`" (×2) → "by dispatching...
+  as a sub-agent (`Agent` in Claude Code)"; "`AskUserQuestion` is
+  unavailable" → "an interactive confirmation gate (`AskUserQuestion` in
+  Claude Code) is unavailable".
+- **`skills/delegate/SKILL.md`** — 3 lines: "via the `Agent` tool" (×2) →
+  "as a sub-agent (`Agent` in Claude Code)" / "as a sub-agent"; the `Agent`
+  `model` parameter reference generalized to "the sub-agent dispatch's
+  `model` parameter".
+- **`skills/verify/SKILL.md`** — "instead of multi-round `Grep`" → "instead
+  of multiple manual searches".
+
 ## [0.33.0] — 2026-07-20
 
 Closes the findings sweep over the 2026-07-20 overnight epic batch. The batch shipped eight epics with a green `gate:` block and, between them, one `conformance.md` — whose verdict was left `@ <pending>`. The metrics layer restored in 0.30.0 emitted zero rows the whole time, because its anti-regression guard (lint C17) greps `reconcile`'s instruction text and cannot observe whether the step ran. `reconcile` gains an output-contract repair step → minor bump.
