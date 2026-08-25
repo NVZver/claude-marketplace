@@ -2,6 +2,12 @@
 
 [![lint](https://github.com/NVZver/claude-marketplace/actions/workflows/lint.yml/badge.svg)](https://github.com/NVZver/claude-marketplace/actions/workflows/lint.yml)
 
+> **Deprecated as of 2026-08-25, effective 2026-10-06.** This repo's local MCP
+> server has moved to a standalone, client-agnostic repo,
+> [`NVZver/lsa-mcp`](https://github.com/NVZver/lsa-mcp) — see that repo if you
+> want to connect a non-Claude-Code MCP client. This repo remains the source
+> for the Claude Code plugin distribution below until the deprecation date.
+
 > **Ownership over automation.** A personal, agentic engineering system whose single job is **trustworthy output** — every fact traces to a source, every line of code traces to a spec — and whose **ceremony scales to the weight of the task**.
 
 **Proven · Owned · No Fluff · Spec First.**

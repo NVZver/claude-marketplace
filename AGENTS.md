@@ -1,5 +1,10 @@
 # AGENTS.md
 
+> **Deprecated as of 2026-08-25, effective 2026-10-06.** The local MCP server
+> has moved to [`NVZver/lsa-mcp`](https://github.com/NVZver/lsa-mcp), a
+> standalone, client-agnostic repo. This repo remains the source for the
+> Claude Code plugin distribution below until the deprecation date.
+
 This repository is the **NVZver claude-marketplace** — a personal, model-agnostic agentic engineering system distributed via Claude Code's plugin marketplace.
 
 Operating rules live in [`.lsa/VISION.md`](./.lsa/VISION.md) — that file is the constitution. LSA configuration is at [`./.lsa.yaml`](./.lsa.yaml). This file is the slim Claude Code entry point.

@@ -95,10 +95,6 @@ tree:  # directories only (depth ≤ 3)
       next:
       shape:
     tests:
-  mcp-server:
-    src:
-    test:
-      fixtures:
   observer:
     ".claude-plugin":
     knowledge:

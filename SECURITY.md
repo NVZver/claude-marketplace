@@ -1,10 +1,16 @@
 # Security Policy
 
 This is a **personal, open-source** Claude Code plugin marketplace. The product
-is Markdown instruction files, one shell hook, and — additively — a local,
-stdio-spawned MCP server (`mcp-server/`, see below) with no network listener, no
+is Markdown instruction files and one shell hook, with no network listener, no
 outbound calls, no credentials, and no PII handling. There is no hosted service.
 The threat model and controls below are scoped to exactly that.
+
+> **This repo is deprecated as of 2026-08-25, effective 2026-10-06.** The local
+> MCP server that used to ship here (`mcp-server/`) has moved to a standalone
+> repo, [`NVZver/lsa-mcp`](https://github.com/NVZver/lsa-mcp) — see that repo
+> for its own security documentation. This repo's Claude Code plugin
+> distribution (`core`, `lsa`, `manager`, `prompt-engineer`, `observer`)
+> remains as-is until the deprecation date.
 
 Every claim here carries a source (a `path:line` for in-repo facts, a URL for
 external ones), per the repo's #1 rule — fact-grounding (see
@@ -35,17 +41,16 @@ SessionStart shell hook** (described below). Per
 Markdown — porting to another agentic IDE is a routing exercise, not a
 rewrite."*
 
-There is **no executable application** in this repo beyond shell scripts and one
-local MCP server: the one shipped hook
+There is **no executable application** in this repo beyond shell scripts: the
+one shipped hook
 ([`lsa/hooks/session-start-drift-check.sh`](./lsa/hooks/session-start-drift-check.sh)),
-two repo-internal scripts that are **not shipped in any plugin** — a lint
+and two repo-internal scripts that are **not shipped in any plugin** — a lint
 ([`scripts/lint.sh:11-13`](./scripts/lint.sh) — *"Repo-internal only — NOT
 shipped in any plugin … it triggers no plugin version bump or CHANGELOG
 entry."*) and a commit-discipline PreToolUse check
 ([`.claude/hooks/commit-discipline-check.sh`](./.claude/hooks/commit-discipline-check.sh),
 registered in [`.claude/settings.json`](./.claude/settings.json) — documented in
-*"The commit-discipline PreToolUse hook"* below) — and the `mcp-server/` local
-MCP server (documented in *"The MCP server"* below). No network service exposed
+*"The commit-discipline PreToolUse hook"* below). No network service exposed
 externally, no database, no credential store, no PII processing.
 
 **What you are trusting when you install:** the Markdown instructions (which
@@ -249,52 +254,18 @@ install `lsa`.** It is roughly 170 lines of auditable Bash.
 
 ---
 
-## The MCP server (what runs when you connect a non-Claude-Code client)
+## The MCP server (moved)
 
-This repo also ships a local MCP server at [`mcp-server/`](./mcp-server/) —
-Claude Code's own install path (`.claude-plugin/plugin.json`, the `SessionStart`
-hook above) is **unchanged**; this is a **second, independent connection path**
-for other MCP-speaking clients (Cursor, VS Code, Antigravity, etc.), confirmed
-as an additive design decision:
-*"CC scope = additive (Claude Code keeps its native plugin format + SessionStart
-hook; MCP server is the connection layer for other clients …)"*
-([`.lsa/pitches/marketplace-mcp-server.md:4`](./.lsa/pitches/marketplace-mcp-server.md)).
-
-What it does and does not do — read it yourself before trusting it:
-
-- **What it reads.** This repo's own `core/`, `lsa/`, and `manager/` skill,
-  knowledge, and agent Markdown — the same files already shipped in the
-  plugins themselves, unchanged.
-- **What it returns.** Byte-identical passthrough of that Markdown, no
-  reformatting or transformation — proven independently across two reconcile
-  passes: tool calls return the exact `SKILL.md` body
-  ([`.lsa/features/marketplace-mcp-server/core-server/conformance.md:84`](./.lsa/features/marketplace-mcp-server/core-server/conformance.md)),
-  resource reads return the exact knowledge-file content
-  ([`.lsa/features/marketplace-mcp-server/core-server/conformance.md:85`](./.lsa/features/marketplace-mcp-server/core-server/conformance.md)),
-  and prompt requests return the exact agent-file body
-  ([`.lsa/features/marketplace-mcp-server/agent-prompts/conformance.md:124`](./.lsa/features/marketplace-mcp-server/agent-prompts/conformance.md)).
-- **It opens no network listener.** Only `StdioServerTransport` is
-  constructed; a grep for `listen(`/`createServer`/`http.`/`net.` across
-  `src/` and the test scripts finds no matches
-  ([`.lsa/features/marketplace-mcp-server/core-server/conformance.md:87`](./.lsa/features/marketplace-mcp-server/core-server/conformance.md)).
-- **It makes no outbound network or LLM calls.** A grep for
-  fetch/http/net/axios/websocket/anthropic/openai patterns across `src/` and
-  the test scripts finds no matches, and a manual full-file read of the
-  actual callback code confirms nothing but file-read-and-return
-  ([`.lsa/features/marketplace-mcp-server/core-server/conformance.md:86`](./.lsa/features/marketplace-mcp-server/core-server/conformance.md),
-  [`.lsa/features/marketplace-mcp-server/agent-prompts/conformance.md:59`](./.lsa/features/marketplace-mcp-server/agent-prompts/conformance.md),
-  [`.lsa/features/marketplace-mcp-server/agent-prompts/conformance.md:125`](./.lsa/features/marketplace-mcp-server/agent-prompts/conformance.md)).
-- **Only two direct dependencies.** `@modelcontextprotocol/sdk` and
-  `gray-matter` — no credential-handling library, no database client, no
-  PII-processing library
-  ([`mcp-server/package.json`](./mcp-server/package.json)).
-- **How it's spawned.** It is started by the connecting client's own MCP
-  config over stdio — *"local transport = stdio process, spawned by each
-  client's own MCP config"*
-  ([`.lsa/pitches/marketplace-mcp-server.md:4`](./.lsa/pitches/marketplace-mcp-server.md)).
-  It is not a standalone daemon: it has no lifecycle of its own to manage or
-  attack — it runs only for the duration the connecting client keeps its
-  stdio pipe open.
+This repo used to ship a local MCP server at `mcp-server/`, giving
+MCP-speaking clients other than Claude Code (Cursor, VS Code, Antigravity,
+etc.) a second, independent connection path alongside Claude Code's native
+plugin install. As of 2026-08-25 that server — and the `core`/`lsa`/`manager`
+content it exposes — has moved to a standalone repo,
+[`NVZver/lsa-mcp`](https://github.com/NVZver/lsa-mcp). Its own README and
+security documentation live there; the historical spec and conformance
+record for the work done while it lived in this repo remains at
+[`.lsa/features/marketplace-mcp-server/`](./.lsa/features/marketplace-mcp-server/)
+for reference.
 
 ---
 
@@ -373,4 +344,4 @@ Its specification (EARS + Gherkin) lives at
 | Safe install | source review + pin to reviewed `#<ref>` | [Claude Code docs](https://code.claude.com/docs/en/discover-plugins) |
 | Hook transparency | read-only Git, no writes, no network, exits 0 | [`lsa/hooks/session-start-drift-check.sh`](./lsa/hooks/session-start-drift-check.sh) |
 | Commit-discipline guardrail (repo-internal, not shipped) | PreToolUse on `git commit`: read-only Git, detect-and-report, blocks on violation, no-op in consumer repos | [`.claude/hooks/commit-discipline-check.sh`](./.claude/hooks/commit-discipline-check.sh) |
-| MCP server: no network exposure | stdio-only, zero outbound calls, 2 direct deps | [core-server conformance](./.lsa/features/marketplace-mcp-server/core-server/conformance.md), [mcp-server/package.json](./mcp-server/package.json) |
+| MCP server | moved to a standalone repo, 2026-08-25 | [`NVZver/lsa-mcp`](https://github.com/NVZver/lsa-mcp) |
